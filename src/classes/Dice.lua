@@ -6,7 +6,10 @@ Dice.__index = Dice
 function Dice:new()
     local self = setmetatable({}, Dice)
     
+    --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/basic_dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    
     self.faceDimmension = 200 --sets the dimmensions for a face of the dice in px
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {0, 0}, -- 1

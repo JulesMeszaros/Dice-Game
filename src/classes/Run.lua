@@ -4,7 +4,9 @@ local DiceFace = require("src.classes.ui.DiceFace")
 local Run = { 
     dices = {}, --Dices used id the run
     drawedDices = {}, --Current Drawed Dices
-    uiElements = {} ,-- Stores the UI Elements of the Run
+    uiElements = { -- Stores the UI Elements of the Run
+        drawedDicesFaces = {}
+    }, 
     selectedDices = {}, -- Stores the currently selected dices
     selectedFaces = {} -- Stores the currently selected faces
 }
@@ -49,7 +51,26 @@ function Run:setDrawedDices(draw)
     self.drawedDices = draw
 end
 
+function Run:drawDrawedDices()
+    --Dessine les dés tirés
+    if(self.uiElements.drawedDicesFaces) then --check si il y a des dés à afficher
+        for key,uiFace in next,self.uiElements.drawedDicesFaces do
+            uiFace:draw()
+        end
+    end
+end
+
+function Run:drawUIElements() 
+    --Fonction pour afficher les différents élément d'interface graphique
+    self:drawDrawedDices()
+end
+
 function Run:keypressed(key)
+    
+    if(key=='x')then
+        self:resetSelectedDices()
+    end
+    
     if(key=="space") then --Draw The Dices
         draw = self:drawDices()
         self:setDrawedDices(draw)
@@ -64,7 +85,7 @@ function Run:keypressed(key)
                 self.drawedDices[key], --Face represented
                 key*120, --X Position (centerd)
                 love.graphics.getHeight()/2, --Yposition (centerd)
-                50, --Width/Height
+                80, --Width/Height
                 true, --is Selectable
                 true --isHoverable
             )
@@ -74,20 +95,6 @@ function Run:keypressed(key)
         end
 
     end
-end
-
-function Run:drawDrawedDices()
-    --Dessine les dés tirés
-    if(self.uiElements.drawedDicesFaces) then --check si il y a des dés à afficher
-        for key,uiFace in next,self.uiElements.drawedDicesFaces do
-            uiFace:draw()
-        end
-    end
-end
-
-function Run:drawUIElements() 
-    --Fonction pour afficher les différents élément d'interface graphique
-    self:drawDrawedDices()
 end
 
 function Run:mousepressed(x, y, button, istouch, presses)
@@ -137,6 +144,14 @@ function Run:containsDice(diceList, targetDice)
     end
   end
   return false
+end
+
+function Run:resetSelectedDices()
+    self.selectedDices = {} --remove the dices
+    self.selectedFaces = {} --remove the face numbers
+    for key,uiFace in next,self.uiElements.drawedDicesFaces do --unselect the UI Faces
+        uiFace:setSelected(false)
+    end
 end
 
 return Run

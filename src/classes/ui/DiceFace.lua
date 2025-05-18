@@ -19,27 +19,46 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable)
     self.dim = dice:getFaceDim()
     self.x = x
     self.y = y
-    self.size = size
+    self.baseSize = size
+    self.size = self.baseSize
 
     return self
 end
 
 function DiceFace:draw()
-    ratio = self.size/self.dim
+    render = self:render()
 
-    if(self.isSelected) then
-        love.graphics.setColor(0, 1, 0, 1)
-    end
+    love.graphics.draw(render, self.x, self.y, 0, 1, 1, render:getWidth()/2, render:getHeight()/2)
 
-    if(self:isHovered()) then
-        love.graphics.setColor(1, 1, 1, 0.75)
-    end
-
-    love.graphics.draw(self.spriteSheet, self.quad, self.x, self.y, 0, ratio, ratio, self.dim/2, self.dim/2)
-    love.graphics.setColor(1, 1, 1, 1)
 end
 
-function DiceFace:isHovered()
+function DiceFace:render()
+    canvasSize = self.size --sets the base face of the canvas
+
+    ratio = canvasSize/self.dim --ratio between the image size and the canvas size
+
+    faceCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
+    
+    --General settings
+    faceCanvas:setFilter("linear", "linear")
+    love.graphics.setBlendMode("alpha")
+    love.graphics.setCanvas(faceCanvas)
+
+    --Draw the face image
+    love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
+
+    if(self:isHovered())then
+        -- Apply dark filter
+        love.graphics.setColor(0, 0, 0, 0.25)  -- black with 50% opacity
+        love.graphics.rectangle("fill", 0, 0, faceCanvas:getWidth(), faceCanvas:getHeight())
+        love.graphics.setColor(1,1,1,1)  -- black with 50% opacity
+    end
+
+    love.graphics.setCanvas()
+    return faceCanvas
+end
+
+function DiceFace:isHovered() --Check if mouse is above the face
     if(not self.isHoverable) then
         return false
     end
@@ -65,14 +84,19 @@ function DiceFace:clickEvent()
     wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
     
     if(self:isHovered()) then
-        --print("Face clicked : " .. self.face)
         self:selectOrDeselect()
-        --print("This face is selected : "..tostring(self.isSelected))
-        --print("Associated dice : " ..tostring(self.dice))
         wasClicked = true
     end
 
     return wasClicked
+end
+
+function DiceFace:updateSize()
+    if(self:getIsSelected())then
+        self.size = self.baseSize + (self.baseSize/100)*20
+    else
+        self.size = self.baseSize
+    end 
 end
 
 --Get/set Functions--
@@ -85,11 +109,12 @@ function DiceFace:getY()
 end
 
 function DiceFace:setSelected(state)
-    self.isSelected(state)
+    self.isSelected = state
+    self:updateSize()
 end
 
 function DiceFace:selectOrDeselect()
-    self.isSelected = (not self.isSelected) and (self.isSelectable)
+    self:setSelected(not self:getIsSelected())
 end
 
 function DiceFace:setSelectable(state)
