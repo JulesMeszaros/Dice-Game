@@ -1,10 +1,12 @@
 --Classe servant à afficher une face de dé, avec ses propriétés et ses effets et ses interractions
+local UIElement = require("src.classes.ui.UIElement")
 
-local DiceFace = {}
+
+local DiceFace = setmetatable({}, { __index = UIElement })
 DiceFace.__index = DiceFace
 
 function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable)
-    local self = setmetatable({}, DiceFace)
+    local self = setmetatable(UIElement.new(x), DiceFace)
 
     --Parametres d'interractions
     self.isSelectable = true
