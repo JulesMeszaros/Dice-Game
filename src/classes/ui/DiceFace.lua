@@ -26,8 +26,10 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable)
 end
 
 function DiceFace:draw()
+    shadow = self:renderShadow()
     render = self:render()
 
+    love.graphics.draw(shadow, self.x+10, self.y+10, 0, 1, 1, render:getWidth()/2, render:getHeight()/2)
     love.graphics.draw(render, self.x, self.y, 0, 1, 1, render:getWidth()/2, render:getHeight()/2)
 
 end
@@ -56,6 +58,25 @@ function DiceFace:render()
 
     love.graphics.setCanvas()
     return faceCanvas
+end
+
+function DiceFace:renderShadow()
+    canvasSize = self.size --sets the base face of the canvas
+    ratio = canvasSize/self.dim --ratio between the image size and the canvas size
+    shadowCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
+
+    --General settings
+    shadowCanvas:setFilter("linear", "linear")
+    love.graphics.setBlendMode("alpha")
+    love.graphics.setCanvas(shadowCanvas)
+
+    love.graphics.setColor(0, 0, 0, 0.25)  -- black with 50% opacity
+    love.graphics.rectangle("fill", 0, 0, shadowCanvas:getWidth(), shadowCanvas:getHeight())
+    love.graphics.setColor(1,1,1,1)  -- black with 50% opacity
+
+    love.graphics.setCanvas()
+    return shadowCanvas
+
 end
 
 function DiceFace:isHovered() --Check if mouse is above the face
