@@ -6,7 +6,9 @@ local DiceFace = setmetatable({}, { __index = UIElement })
 DiceFace.__index = DiceFace
 
 function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable)
-    local self = setmetatable(UIElement.new(x), DiceFace)
+    self.srite = nil
+        
+    local self = setmetatable(UIElement.new(), DiceFace)
 
     --Parametres d'interractions
     self.isSelectable = true
@@ -123,37 +125,9 @@ function DiceFace:updateSize()
 end
 
 --Get/set Functions--
-function DiceFace:getX()
-    return self.x
-end
-
-function DiceFace:getY()
-    return self.y
-end
-
 function DiceFace:setSelected(state)
     self.isSelected = state
     self:updateSize()
-end
-
-function DiceFace:selectOrDeselect()
-    self:setSelected(not self:getIsSelected())
-end
-
-function DiceFace:setSelectable(state)
-    self.isSelectable = state
-end
-
-function DiceFace:setHoverable(state)
-    self.isHoverable = state
-end
-
-function DiceFace:getSelectable()
-    return self.isSelectable
-end
-
-function DiceFace:setHoverable()
-    return self.isHoverable
 end
 
 function DiceFace:getDice()
@@ -162,10 +136,6 @@ end
 
 function DiceFace:getFace()
     return self.face
-end
-
-function DiceFace:getIsSelected()
-    return self.isSelected
 end
 
 return DiceFace

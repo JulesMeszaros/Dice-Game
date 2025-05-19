@@ -1,11 +1,14 @@
 local Dice = require("src.classes.Dice")
 local DiceFace = require("src.classes.ui.DiceFace")
+local UIElement = require("src.classes.ui.UIElement")
+local Button = require("src.classes.ui.Button")
 
 local Run = { 
     dices = {}, --Dices used id the run
     drawedDices = {}, --Current Drawed Dices
     uiElements = { -- Stores the UI Elements of the Run
-        drawedDicesFaces = {}
+        drawedDicesFaces = {},
+        buttons = {}
     }, 
     selectedDices = {}, -- Stores the currently selected dices
     selectedFaces = {} -- Stores the currently selected faces
@@ -24,6 +27,9 @@ function Run:new()
         Dice:new()
     }
 
+    --Add a button
+    table.insert(self.uiElements.buttons, Button:new(function()self:resetSelectedDices()end, "src/assets/sprites/ui/buttons/reset.png", love.graphics.getWidth()-175, love.graphics.getHeight()-83))
+
     return self
 end
 
@@ -33,6 +39,7 @@ end
 
 function Run:draw()
     self:drawUIElements()
+    self:drawButtons()
 end
 
 function Run:drawDices()
@@ -60,9 +67,20 @@ function Run:drawDrawedDices()
     end
 end
 
+function Run:drawButtons()
+
+    for key,button in next,self.uiElements.buttons do
+        button:draw()
+    end
+
+end
+
 function Run:drawUIElements() 
     --Fonction pour afficher les différents élément d'interface graphique
-    self:drawDrawedDices()
+    self:drawDrawedDices()--Les dés tirés
+    self:drawButtons()--Les boutons
+
+
 end
 
 function Run:keypressed(key)
@@ -101,15 +119,21 @@ function Run:mousepressed(x, y, button, istouch, presses)
     --Active les actions relatives aux UIElements
     --DiceFaces
     if(self.uiElements.drawedDicesFaces) then --check si il y a des dés à afficher
-        print("----")
         for key,uiFace in next,self.uiElements.drawedDicesFaces do 
             faceWasClicked = uiFace:clickEvent() --check if dice was clicked and triggers its UI-related events
             if(faceWasClicked)then --si le dé en question a été clické
                 self:updateSelectedDices(uiFace)
             end
         end
+    end
 
-        print(table.concat(self.selectedFaces, " "))
+    --Buttons
+    for key,button in next,self.uiElements.buttons do 
+        buttonWasClicked = button:clickEvent() --check if dice was clicked and triggers its UI-related events
+        if(buttonWasClicked)then --si le dé en question a été clické
+            print(button:getCallback()())
+            
+        end
     end
 end
 
@@ -147,6 +171,7 @@ function Run:containsDice(diceList, targetDice)
 end
 
 function Run:resetSelectedDices()
+    print(self)
     self.selectedDices = {} --remove the dices
     self.selectedFaces = {} --remove the face numbers
     for key,uiFace in next,self.uiElements.drawedDicesFaces do --unselect the UI Faces
