@@ -131,8 +131,7 @@ function Run:mousepressed(x, y, button, istouch, presses)
     for key,button in next,self.uiElements.buttons do 
         buttonWasClicked = button:clickEvent() --check if dice was clicked and triggers its UI-related events
         if(buttonWasClicked)then --si le dé en question a été clické
-            print(button:getCallback()())
-            
+            button:getCallback()()
         end
     end
 end
