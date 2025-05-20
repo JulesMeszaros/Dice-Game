@@ -16,10 +16,9 @@ function Game:start()
     return self
 end
 
-function Game:update()
+function Game:update(dt)
     if self.currentScreen == PAGES.GAME then
-        run:update()
-        
+        run:update(dt)     
     end
 end
 

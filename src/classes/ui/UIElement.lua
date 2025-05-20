@@ -1,4 +1,4 @@
-local UIElement = {}
+local UIElement = {shadowOnHover=true}
 UIElement.__index = { sprite = nil }
 
 function UIElement:new()
@@ -12,11 +12,19 @@ function UIElement:new()
     self.x = 0
     self.y = 0
 
-    --Graphic parameters
+    --Graphic/Render parameters
     self.width = 0
     self.height = 0
+    self.hasShadow = true
+    --Echelle du boutton (utile quand par exemple la souris est au dessus)
+    self.scale = 1
+    self.targetedScale = 1
 
     return self
+end
+
+function UIElement:update(dt)
+    print(self)
 end
 
 function UIElement:draw()
@@ -50,8 +58,8 @@ function UIElement:renderSprite()
 end
 
 function UIElement:renderShadow()
-    canvasHeight = self.height
-    canvasWidth = self.width
+    canvasHeight = self.height * self.scale
+    canvasWidth = self.width * self.scale
     shadowCanvas = love.graphics.newCanvas(canvasWidth, canvasHeight) -- create the canvas
 
     --General settings
@@ -89,6 +97,14 @@ end
 
 
 --Get/set Functions--
+
+function UIElement:hasShadow(state)
+    self.hasShadow = state
+end
+
+function UIElement:shadowOnHover(state)
+    self.shadowOnHover = state
+end
 
 function UIElement:setSprite(sprite)
     self.sprite = sprite

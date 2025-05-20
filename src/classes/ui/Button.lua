@@ -14,14 +14,27 @@ function Button:new(callback, spritePath, x, y, width, height)
     self:setHeight(125)
     self:setWidth(300)
 
+    self:shadowOnHover(false)
+
     self.callbackFunction = callback
 
     return self
 end
 
+function Button:update(dt)
+    if(self:isHovered())then
+        self.targetedScale = 0.95
+    else
+        self.targetedScale = 1
+    end
+
+    local speed = 30
+    self.scale = self.scale + (self.targetedScale - self.scale)*speed*dt
+end
+
 function Button:renderSprite()
-    canvasHeight = self.height
-    canvasWidth = self.width
+    canvasHeight = self.height * self.scale
+    canvasWidth = self.width *  self.scale
 
     canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
 
@@ -30,14 +43,14 @@ function Button:renderSprite()
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(canvas)
 
-    widthRatio = self.width/self.sprite:getWidth()
-    heightRatio = self.height/self.sprite:getHeight()
+    widthRatio = canvasWidth/self.sprite:getWidth()
+    heightRatio = canvasHeight/self.sprite:getHeight()
 
     --Draw the UI into the canvas
     love.graphics.draw(self.sprite, 0, 0, 0, widthRatio, heightRatio) -- add the image
 
     --If Hovered : draw a shadow above the button
-    if(self:isHovered())then
+    if(self:isHovered() and self.shadowOnHover)then
         -- Apply dark filter
         love.graphics.setColor(0, 0, 0, 0.25)  -- black with 50% opacity
         love.graphics.rectangle("fill", 0, 0, canvas:getWidth(), canvas:getHeight())

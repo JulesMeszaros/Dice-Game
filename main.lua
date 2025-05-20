@@ -5,8 +5,8 @@ function love.load()
     love.graphics.setBackgroundColor(26/255, 79/255, 37/255)
 end
 
-function love.update()
-    game:update()
+function love.update(dt)
+    game:update(dt)
     
 end
 
