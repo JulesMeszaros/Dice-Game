@@ -7,7 +7,7 @@ local Run = {
     dices = {}, --Dices used id the run
     drawedDices = {}, --Current Drawed Dices
     uiElements = { -- Stores the UI Elements of the Run
-        drawedDicesFaces = {},
+        diceFaces = {},
         buttons = {}
     },
     selectedDices = {}, -- Stores the currently selected dices
@@ -24,8 +24,6 @@ local Run = {
 
 Run.__index = Run
 
-local draggedElement = 12890
-
 function Run:new()
     local self = setmetatable({}, Run)
 
@@ -38,7 +36,8 @@ function Run:new()
     }
 
     --Add a button
-    table.insert(self.uiElements.buttons, Button:new(function()self:resetSelectedDices()end, "src/assets/sprites/ui/buttons/reset.png", love.graphics.getWidth()-175, love.graphics.getHeight()-83))
+    table.insert(self.uiElements.buttons, Button:new(function()self:resetSelectedDices()end, "src/assets/sprites/ui/buttons/reset.png", love.graphics.getWidth()-175, love.graphics.getHeight()-83, 200, 84))
+    table.insert(self.uiElements.buttons, Button:new(function()self:makeRoll()end, "src/assets/sprites/ui/buttons/reroll.png", love.graphics.getWidth()-175, love.graphics.getHeight()-(83+83+20), 200, 84))
 
     return self
 end
@@ -50,7 +49,7 @@ function Run:update(dt)
     end
 
     --Update dices UI
-    for key,dice in next,self.uiElements.drawedDicesFaces do
+    for key,dice in next,self.uiElements.diceFaces do
         dice:update(dt)
     end
 end
@@ -84,8 +83,8 @@ end
 
 function Run:drawDrawedDices()
     --Dessine les dés tirés
-    if(self.uiElements.drawedDicesFaces) then --check si il y a des dés à afficher
-        for key,uiFace in next,self.uiElements.drawedDicesFaces do
+    if(self.uiElements.diceFaces) then --check si il y a des dés à afficher
+        for key,uiFace in next,self.uiElements.diceFaces do
             uiFace:draw()
         end
     end
@@ -111,28 +110,7 @@ function Run:keypressed(key)
     end
 
     if(key=="space") then --Draw The Dices
-        draw = self:drawDices()
-        self:setDrawedDices(draw)
-        self:resetSelectedDices()
-
-        --Adds the Faces to the UI Element
-        self.uiElements.drawedDicesFaces = {}
-
-        for key,dice in next,self.dices do
-
-            diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
-                dice, --Dice Object 
-                self.drawedDices[key], --Face represented
-                key*120, --X Position (centerd)
-                love.graphics.getHeight()/2, --Yposition (centerd)
-                80, --Width/Height
-                true, --is Selectable
-                true --isHoverable
-            )
-
-            table.insert(self.uiElements.drawedDicesFaces, diceFaceUI) --Ajoute la face à la liste des éléments UI de Faces de Dés
-
-        end
+        self:makeRoll()
 
     end
 end
@@ -143,12 +121,8 @@ function Run:mousepressed(x, y, button, istouch, presses)
 
     --Active les actions relatives aux UIElements
     --DiceFaces
-    if(self.uiElements.drawedDicesFaces) then --check si il y a des dés à afficher
-        for key,uiFace in next,self.uiElements.drawedDicesFaces do
-            --[[ faceWasClicked = uiFace:clickEvent() --check if dice was clicked and triggers its UI-related events
-            if(faceWasClicked)then --si le dé en question a été clické
-                self:updateSelectedDices(uiFace)
-            end ]]
+    if(self.uiElements.diceFaces) then --check si il y a des dés à afficher
+        for key,uiFace in next,self.uiElements.diceFaces do
             uiFace:clickEvent()
         end
     end
@@ -170,7 +144,7 @@ function Run:mousereleased(x, y, button, istouch, presses)
     end
 
     --release event for dice faces
-    for key,diceface in next,self.uiElements.drawedDicesFaces do
+    for key,diceface in next,self.uiElements.diceFaces do
         wasReleased = diceface:releaseEvent()
         if(wasReleased)then
             self:updateSelectedDices(diceface)
@@ -195,7 +169,7 @@ function Run:mousemoved(x, y, dx, dy)
     end
 
     if(self.isDragging == true)then
-        for key,diceui in next, self.uiElements.drawedDicesFaces do
+        for key,diceui in next, self.uiElements.diceFaces do
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
                 diceui:setX(diceui:getX() + dx)
@@ -247,8 +221,33 @@ end
 function Run:resetSelectedDices()
     self.selectedDices = {} --remove the dices
     self.selectedFaces = {} --remove the face numbers
-    for key,uiFace in next,self.uiElements.drawedDicesFaces do --unselect the UI Faces
+    for key,uiFace in next,self.uiElements.diceFaces do --unselect the UI Faces
         uiFace:setSelected(false)
+    end
+end
+
+function Run:makeRoll()
+    draw = self:drawDices()
+    self:setDrawedDices(draw)
+    self:resetSelectedDices()
+
+    --Adds the Faces to the UI Element
+    self.uiElements.diceFaces = {}
+
+    for key,dice in next,self.dices do
+
+        diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
+            dice, --Dice Object 
+            self.drawedDices[key], --Face represented
+            key*120, --X Position (centerd)
+            love.graphics.getHeight()/2, --Yposition (centerd)
+            80, --Width/Height
+            true, --is Selectable
+            true --isHoverable
+        )
+
+        table.insert(self.uiElements.diceFaces, diceFaceUI) --Ajoute la face à la liste des éléments UI de Faces de Dés
+
     end
 end
 
