@@ -7,6 +7,7 @@ function UIElement:new()
     --Parametres d'interractions
     self.isSelectable = false
     self.isHoverable = false
+    self.isDraggable = false
 
     --Position
     self.x = 0
@@ -21,8 +22,10 @@ function UIElement:new()
     self.scale = 1
     self.targetedScale = 1
 
+    --State functions
     self.isBeingClicked = false
-
+    self.isBeingDragged = false
+    
     return self
 end
 
@@ -101,7 +104,7 @@ end
 function UIElement:releaseEvent() --S'active lorsqu'un click est complété
     wasReleased = false
     
-    if(self:isHovered()==true and self.isBeingClicked == true)then --s'active uniquement si la souris est encore sur l'objet et qu'elle etait en train d'appuyer dessus
+    if(self:isHovered()==true and self.isBeingClicked == true and not self.isBeingDragged)then --s'active uniquement si la souris est encore sur l'objet et qu'elle etait en train d'appuyer dessus
         self:clickAction()
         wasReleased = true
     end

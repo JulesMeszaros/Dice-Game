@@ -13,6 +13,7 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable)
     --Parametres d'interractions
     self.isSelectable = true
     self.isHoverable = true
+    self.isDraggable = true
 
     self.isSelected = false --Etat de sélection de la face
 

@@ -14,6 +14,11 @@ function Button:new(callback, spritePath, x, y, width, height)
     self.height = 125
     self.width = 300
 
+    --Dragging options
+    self.isDraggable = true
+    self.dragOffsetX = 0
+    self.dragOffsetY = 0
+
     self:shadowOnHover(false)
 
     self.callbackFunction = callback

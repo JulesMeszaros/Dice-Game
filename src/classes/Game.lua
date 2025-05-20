@@ -40,4 +40,8 @@ function Game:mousereleased(x, y, button, istouch, presses)
     run:mousereleased(x, y, button, istouch, presses)
 end
 
+function Game:mousemoved(x, y, dx, dy)
+    run:mousemoved(x, y, dx, dy)
+end
+
 return Game
