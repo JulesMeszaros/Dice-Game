@@ -24,20 +24,31 @@ local Run = {
 
 Run.__index = Run
 
-function Run:new()
+function Run:new(dices)
     local self = setmetatable({}, Run)
 
-    self.dices = { -- On définit les 5 dés présents dans la partie
-        Dice:new(),
-        Dice:new(),
-        Dice:new(),
-        Dice:new(),
-        Dice:new()
-    }
+    --On attribue le set de dés
+    self.dices = dices
 
+    --On créée une première fois les faces à afficher
+    for key,dice in next,self.dices do
+
+        diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
+            dice, --Dice Object 
+            1, --Face represented
+            key*120, --X Position (centerd)
+            love.graphics.getHeight()/2, --Yposition (centerd)
+            80, --Width/Height
+            true, --is Selectable
+            true --isHoverable
+        )
+
+        self.uiElements.diceFaces[dice] = diceFaceUI
+    end
+    
     --Add a button
     table.insert(self.uiElements.buttons, Button:new(function()self:resetSelectedDices()end, "src/assets/sprites/ui/buttons/reset.png", love.graphics.getWidth()-175, love.graphics.getHeight()-83, 200, 84))
-    table.insert(self.uiElements.buttons, Button:new(function()self:makeRoll()end, "src/assets/sprites/ui/buttons/reroll.png", love.graphics.getWidth()-175, love.graphics.getHeight()-(83+83+20), 200, 84))
+    table.insert(self.uiElements.buttons, Button:new(function()self:rerollDices()end, "src/assets/sprites/ui/buttons/reroll.png", love.graphics.getWidth()-175, love.graphics.getHeight()-(83+83+20), 200, 84))
 
     return self
 end
@@ -63,18 +74,6 @@ function Run:draw()
         love.graphics.line(self.dragOriginX, self.dragOriginY, love.mouse.getX(), love.mouse.getY())
         love.graphics.setColor(1, 1, 1)
     end ]]
-end
-
-function Run:drawDices()
-    --Tire les 5 dés et retourne leur numéro de face
-
-    local faceNumbers = {}
-
-    for key,dice in next,self.dices do
-        table.insert(faceNumbers, math.random(1, dice:getNbFaces()))
-    end
-
-    return faceNumbers
 end
 
 function Run:setDrawedDices(draw)
@@ -111,7 +110,10 @@ function Run:keypressed(key)
 
     if(key=="space") then --Draw The Dices
         self:makeRoll()
+    end
 
+    if(key=="u")then
+        print(table.concat(self.selectedFaces, " "))
     end
 end
 
@@ -183,6 +185,25 @@ end
 
 --Dices Functions
 
+function Run:rerollDices() --Triggers the makeRoll function after clicking the reroll button
+    self:makeRoll(self.selectedDices)
+end
+
+function Run:drawDices(dices)
+    --Tire uniquement les dés donnés en paramètre et retourne une table avec comme clé les dés et en valeur le numéro de face tiré.
+
+    local faceNumbers = self.drawedDices --On récupère les dés précédemment tirés.
+
+    for key,dice in next,dices do
+        if self:containsDice(dices, dice) then
+            n = math.random(1, dice:getNbFaces())
+            faceNumbers[dice] = n
+        end
+    end
+
+    return faceNumbers
+end
+
 function Run:updateSelectedDices(uiFace)
     --si le dé donné en paramètre est sélectionné et pas encore dans la liste, on l'ajoute à la fin de la liste.
     --si il est sélectionné mais pas dans la liste, on le laisse
@@ -204,8 +225,6 @@ function Run:updateSelectedDices(uiFace)
             end
         end
     end
-
-    --print("Selected dices : " ..tostring(table.getn(self.selectedFaces)))
 end
 
 function Run:containsDice(diceList, targetDice)
@@ -226,28 +245,13 @@ function Run:resetSelectedDices()
     end
 end
 
-function Run:makeRoll()
-    draw = self:drawDices()
-    self:setDrawedDices(draw)
-    self:resetSelectedDices()
-
-    --Adds the Faces to the UI Element
-    self.uiElements.diceFaces = {}
+function Run:makeRoll(dices)
+    draw = self:drawDices(dices) --draw the dices
+    self:setDrawedDices(draw) --stores the draw
+    self:resetSelectedDices() --reset the previously selected dices (ui)
 
     for key,dice in next,self.dices do
-
-        diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
-            dice, --Dice Object 
-            self.drawedDices[key], --Face represented
-            key*120, --X Position (centerd)
-            love.graphics.getHeight()/2, --Yposition (centerd)
-            80, --Width/Height
-            true, --is Selectable
-            true --isHoverable
-        )
-
-        table.insert(self.uiElements.diceFaces, diceFaceUI) --Ajoute la face à la liste des éléments UI de Faces de Dés
-
+        self.uiElements.diceFaces[dice]:setFace(self.drawedDices[dice]) --update the ui
     end
 end
 

@@ -15,8 +15,6 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable)
     self.isHoverable = true
     self.isDraggable = true
 
-    self.isSelected = false --Etat de sélection de la face
-
     self.dice = dice -- sets the dice and the face it represents
     self.face = face
     self.spriteSheet = dice:getSpriteSheet()
@@ -135,6 +133,12 @@ function DiceFace:updateSize()
     end 
 end
 
+function DiceFace:updateSprite()
+    self.spriteSheet = self.dice:getSpriteSheet()
+    self.quad = self.dice:getQuad(self.face)
+    self.dim = self.dice:getFaceDim()
+end
+
 --Get/set Functions--
 function DiceFace:setSelected(state)
     self.isSelected = state
@@ -147,6 +151,15 @@ end
 
 function DiceFace:getFace()
     return self.face
+end
+
+function DiceFace:setDice(dice)
+    self.dice = dice
+end
+
+function DiceFace:setFace(face)
+    self.face = face
+    self:updateSprite()
 end
 
 return DiceFace

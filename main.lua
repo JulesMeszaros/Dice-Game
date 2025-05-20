@@ -1,6 +1,7 @@
 local Game = require("src.classes.Game")
 
 function love.load()
+    math.randomseed(69420)
     game = Game:start()
     love.graphics.setBackgroundColor(26/255, 79/255, 37/255)
 end

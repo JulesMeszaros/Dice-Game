@@ -8,6 +8,7 @@ function UIElement:new()
     self.isSelectable = false
     self.isHoverable = false
     self.isDraggable = false
+    self.isSelected = false
 
     --Position
     self.x = 0

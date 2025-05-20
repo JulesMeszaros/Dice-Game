@@ -1,5 +1,5 @@
 local Run = require("src.classes.run")
-
+local Dice = require("src.classes.dice")
 local Game = { currentScreen = 1}
 Game.__index = Game
 
@@ -11,7 +11,17 @@ local PAGES = {
 function Game:start()
     local self = setmetatable({}, Game)
     self.currentScreen = PAGES.GAME
-    run = Run:new()
+    
+    dices = { -- On définit les 5 dés présents dans la partie
+        Dice:new(),
+        Dice:new(),
+        Dice:new(),
+        Dice:new(),
+        Dice:new()
+    }
+
+    run = Run:new(dices) -- start run
+    run:makeRoll(dices) --make first roll
 
     return self
 end
