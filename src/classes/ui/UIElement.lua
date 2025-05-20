@@ -13,8 +13,9 @@ function UIElement:new()
     self.y = 0
 
     --Graphic/Render parameters
-    self.width = 0
-    self.height = 0
+    self.width = 1
+    self.height = 1
+
     self.hasShadow = true
     --Echelle du boutton (utile quand par exemple la souris est au dessus)
     self.scale = 1
@@ -24,15 +25,14 @@ function UIElement:new()
 end
 
 function UIElement:update(dt)
-    print(self)
+    
 end
 
 function UIElement:draw()
     shadow = self:renderShadow()
     render = self:renderSprite()
-    love.graphics.draw(shadow, self.x+10, self.y+10, 0, 1, 1, render:getWidth()/2, render:getHeight()/2)
-    love.graphics.draw(render, self.x, self.y, 0, 1, 1, render:getWidth()/2, render:getHeight()/2)
-
+    love.graphics.draw(shadow, self.x+10, self.y+10, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
+    love.graphics.draw(render, self.x, self.y, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
 end
 
 function UIElement:renderSprite()
@@ -58,8 +58,8 @@ function UIElement:renderSprite()
 end
 
 function UIElement:renderShadow()
-    canvasHeight = self.height * self.scale
-    canvasWidth = self.width * self.scale
+    canvasHeight = self.height
+    canvasWidth = self.width
     shadowCanvas = love.graphics.newCanvas(canvasWidth, canvasHeight) -- create the canvas
 
     --General settings

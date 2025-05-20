@@ -11,8 +11,8 @@ function Button:new(callback, spritePath, x, y, width, height)
     self:setX(x)
     self:setY(y)
 
-    self:setHeight(125)
-    self:setWidth(300)
+    self.height = 125
+    self.width = 300
 
     self:shadowOnHover(false)
 
@@ -24,6 +24,9 @@ end
 function Button:update(dt)
     if(self:isHovered())then
         self.targetedScale = 0.95
+        if(love.mouse.isDown(1)) then
+            self.targetedScale = 0.90
+        end
     else
         self.targetedScale = 1
     end
@@ -33,8 +36,8 @@ function Button:update(dt)
 end
 
 function Button:renderSprite()
-    canvasHeight = self.height * self.scale
-    canvasWidth = self.width *  self.scale
+    canvasHeight = self.height
+    canvasWidth = self.width
 
     canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
 

@@ -29,12 +29,26 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable)
     return self
 end
 
+function DiceFace:update(dt)
+    if(self:isHovered())then
+        self.targetedScale = 0.95
+        if(love.mouse.isDown(1)) then
+            self.targetedScale = 0.90
+        end
+    else
+        self.targetedScale = 1
+    end
+
+    local speed = 30
+    self.scale = self.scale + (self.targetedScale - self.scale)*speed*dt
+end
+
 function DiceFace:draw()
     shadow = self:renderShadow()
     render = self:render()
 
-    love.graphics.draw(shadow, self.x+10, self.y+10, 0, 1, 1, render:getWidth()/2, render:getHeight()/2)
-    love.graphics.draw(render, self.x, self.y, 0, 1, 1, render:getWidth()/2, render:getHeight()/2)
+    love.graphics.draw(shadow, self.x+10, self.y+10, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
+    love.graphics.draw(render, self.x, self.y, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
 
 end
 
@@ -52,13 +66,6 @@ function DiceFace:render()
 
     --Draw the face image
     love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
-
-    if(self:isHovered())then
-        -- Apply dark filter
-        love.graphics.setColor(0, 0, 0, 0.25)  -- black with 50% opacity
-        love.graphics.rectangle("fill", 0, 0, faceCanvas:getWidth(), faceCanvas:getHeight())
-        love.graphics.setColor(1,1,1,1)  -- black with 50% opacity
-    end
 
     love.graphics.setCanvas()
     return faceCanvas

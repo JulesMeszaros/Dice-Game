@@ -34,8 +34,14 @@ function Run:new()
 end
 
 function Run:update(dt)
+    --Update Buttons
     for key,button in next,self.uiElements.buttons do
         button:update(dt)
+    end
+
+    --Update dices UI
+    for key,dice in next,self.uiElements.drawedDicesFaces do
+        dice:update(dt)
     end
 end
 
