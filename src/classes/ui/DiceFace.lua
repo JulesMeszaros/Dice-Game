@@ -114,13 +114,16 @@ end
 
 function DiceFace:clickEvent()
     wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
-    
     if(self:isHovered()) then
-        self:selectOrDeselect()
+        self.isBeingClicked = true
         wasClicked = true
     end
 
     return wasClicked
+end
+
+function DiceFace:clickAction()
+    self:selectOrDeselect()
 end
 
 function DiceFace:updateSize()

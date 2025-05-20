@@ -21,3 +21,7 @@ end
 function love.mousepressed(x, y, button, istouch, presses)
     game:mousepressed(x, y, button, istouch, presses)
 end
+
+function love.mousereleased(x, y, button, istouch, presses)
+    game:mousereleased(x, y, button, istouch, presses)
+end

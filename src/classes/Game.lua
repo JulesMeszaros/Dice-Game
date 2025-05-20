@@ -36,4 +36,8 @@ function Game:mousepressed(x, y, button, istouch, presses)
     run:mousepressed(x, y, button, istouch, presses)
 end
 
+function Game:mousereleased(x, y, button, istouch, presses)
+    run:mousereleased(x, y, button, istouch, presses)
+end
+
 return Game

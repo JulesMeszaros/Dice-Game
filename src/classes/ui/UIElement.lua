@@ -21,6 +21,8 @@ function UIElement:new()
     self.scale = 1
     self.targetedScale = 1
 
+    self.isBeingClicked = false
+
     return self
 end
 
@@ -85,16 +87,32 @@ function UIElement:isHovered()
         )
 end
 
-function UIElement:clickEvent()
+function UIElement:clickEvent() --S'active lorsqu'un click est commencé
     wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
     
     if(self:isHovered()) then
+        self.isBeingClicked = true
         wasClicked = true
     end
 
     return wasClicked
 end
 
+function UIElement:releaseEvent() --S'active lorsqu'un click est complété
+    wasReleased = false
+    
+    if(self:isHovered()==true and self.isBeingClicked == true)then --s'active uniquement si la souris est encore sur l'objet et qu'elle etait en train d'appuyer dessus
+        self:clickAction()
+        wasReleased = true
+    end
+
+    self.isBeingClicked = false
+    return wasReleased
+end
+
+function UIElement:clickAction()
+    print("Click Action")
+end
 
 --Get/set Functions--
 
