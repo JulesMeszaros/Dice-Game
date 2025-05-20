@@ -17,6 +17,8 @@ local Run = {
     isDragging = false,
     dragOriginX = nil,
     dragOriginY = nil,
+    dragDX = 0,
+    dragDY = 0,
     draggingTreshold = 10
 }
 
@@ -196,8 +198,8 @@ function Run:mousemoved(x, y, dx, dy)
         for key,diceui in next, self.uiElements.drawedDicesFaces do
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
-                diceui:setX(love.mouse.getX())
-                diceui:setY(love.mouse.getY())
+                diceui:setX(diceui:getX() + dx)
+                diceui:setY(diceui:getY() + dy)
             end
         end
     end
