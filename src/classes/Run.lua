@@ -79,40 +79,42 @@ function Run:update(dt)
     self.uiElements.buttons["rerollButton"]:setActivated(self.availableRerolls>0)
 end
 
-function Run:draw()
-    self:drawUIElements()
-    self:drawButtons()
+function Run:draw(gameCanvas) --Render the game into the Game Canvas.
+    --Set the right canvas
+    love.graphics.setCanvas(gameCanvas)
+    self:drawUIElements(gameCanvas) --Draw the UI Elements into the canvas
 
+    --Some text //TODO: Move the text later
     rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.availableRerolls))
     scoreText = love.graphics.newText(font, 'Score : ' ..tostring(0))
     love.graphics.draw(rerollText, 10, 10)
     love.graphics.draw(scoreText, 10, 40)
-
+    love.graphics.setCanvas(gameCanvas)
 end
 
 function Run:setDrawedDices(draw)
     self.drawedDices = draw
 end
 
-function Run:drawDrawedDices()
+function Run:drawDrawedDices(gameCanvas)
     --Dessine les dés tirés
     if(self.uiElements.diceFaces) then --check si il y a des dés à afficher
         for key,uiFace in next,self.uiElements.diceFaces do
-            uiFace:draw()
+            uiFace:draw(gameCanvas)
         end
     end
 end
 
-function Run:drawButtons()
+function Run:drawButtons(gameCanvas)
     for key,button in next,self.uiElements.buttons do
-        button:draw()
+        button:draw(gameCanvas)
     end
 end
 
-function Run:drawUIElements()
+function Run:drawUIElements(gameCanvas)
     --Fonction pour afficher les différents élément d'interface graphique
-    self:drawDrawedDices()--Les dés tirés
-    self:drawButtons()--Les boutons
+    self:drawDrawedDices(gameCanvas)--Les dés tirés
+    self:drawButtons(gameCanvas)--Les boutons
 end
 
 --Inputs functions

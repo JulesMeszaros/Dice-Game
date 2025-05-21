@@ -15,7 +15,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.clear(26/255, 79/255, 37/255)
+    --love.graphics.clear(26/255, 79/255, 37/255)
     game:draw()
     love.graphics.draw(love.graphics.newText(love.graphics.newFont("src/assets/fonts/joystix.otf"), delta), love.graphics.getWidth()-100, 30)
 end

@@ -1,6 +1,8 @@
 --Classe servant à afficher une face de dé, avec ses propriétés et ses effets et ses interractions
 local UIElement = require("src.classes.ui.UIElement")
 
+local InputsUtils = require("src.utils.scripts.inputs")
+local Constants = require("src.utils.constants")
 
 local DiceFace = setmetatable({}, { __index = UIElement })
 DiceFace.__index = DiceFace
@@ -50,16 +52,16 @@ function DiceFace:update(dt)
 
 end
 
-function DiceFace:draw()
-    shadow = self:renderShadow()
-    render = self:render()
+function DiceFace:draw(gameCanvas)
+    shadow = self:renderShadow(gameCanvas)
+    render = self:render(gameCanvas)
 
     love.graphics.draw(shadow, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
     love.graphics.draw(render, self.x, self.y, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
 
 end
 
-function DiceFace:render()
+function DiceFace:render(gameCanvas)
     canvasSize = self.size --sets the base face of the canvas
 
     ratio = canvasSize/self.dim --ratio between the image size and the canvas size
@@ -74,11 +76,11 @@ function DiceFace:render()
     --Draw the face image
     love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
 
-    love.graphics.setCanvas()
+    love.graphics.setCanvas(gameCanvas)
     return faceCanvas
 end
 
-function DiceFace:renderShadow()
+function DiceFace:renderShadow(gameCanvas)
     canvasSize = self.size --sets the base face of the canvas
     ratio = canvasSize/self.dim --ratio between the image size and the canvas size
     shadowCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
@@ -92,17 +94,26 @@ function DiceFace:renderShadow()
     love.graphics.rectangle("fill", 0, 0, shadowCanvas:getWidth(), shadowCanvas:getHeight())
     love.graphics.setColor(1,1,1,1)  -- black with 50% opacity
 
-    love.graphics.setCanvas()
+    love.graphics.setCanvas(gameCanvas)
     return shadowCanvas
 
 end
 
 function DiceFace:isHovered() --Check if mouse is above the face
-    if(not self.isHoverable) then
+    vx, vy = InputsUtils.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+
+    return(
+        self.isHoverable and
+        vx > (self.x-(self.size/2)) and vx < (self.x+(self.size/2))
+        and
+        vy > (self.y-(self.size/2)) and vy < (self.y+(self.size/2))
+        )
+
+    --[[ if(not self.isHoverable) then
         return false
-    end
+    end ]]
     
-    if(
+    --[[ if(
         (love.mouse.getX() > self:getX()-(self.size/2)) 
         and 
         (love.mouse.getX() < (self:getX() + (self.size/2)))
@@ -115,7 +126,7 @@ function DiceFace:isHovered() --Check if mouse is above the face
         return true
     else
         return false
-    end
+    end ]]
     
 end
 

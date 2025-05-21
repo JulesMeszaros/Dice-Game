@@ -1,7 +1,10 @@
+local InputsUtils = require("src.utils.scripts.inputs")
+local Constants = require("src.utils.constants")
+
 local UIElement = {shadowOnHover=true}
 UIElement.__index = { sprite = nil }
 
-function UIElement:new()
+function UIElement:new(gameCanvas)
     local self = setmetatable({}, UIElement)
 
     --Parametres d'interractions
@@ -35,14 +38,14 @@ function UIElement:update(dt)
     
 end
 
-function UIElement:draw()
-    shadow = self:renderShadow()
-    render = self:renderSprite()
+function UIElement:draw(gameCanvas)
+    shadow = self:renderShadow(gameCanvas)
+    render = self:renderSprite(gameCanvas)
     love.graphics.draw(shadow, self.x+10, self.y+10, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
     love.graphics.draw(render, self.x, self.y, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
 end
 
-function UIElement:renderSprite()
+function UIElement:renderSprite(gameCanvas)
     canvasHeight = self.height
     canvasWidth = self.width
 
@@ -59,12 +62,12 @@ function UIElement:renderSprite()
     --Draw the UI into the canvas
     love.graphics.draw(self.sprite, 0, 0, 0, widthRatio, heightRatio) -- add the image
 
-    love.graphics.setCanvas()
+    love.graphics.setCanvas(gameCanvas)
 
     return canvas
 end
 
-function UIElement:renderShadow()
+function UIElement:renderShadow(gameCanvas)
     canvasHeight = self.height
     canvasWidth = self.width
     shadowCanvas = love.graphics.newCanvas(canvasWidth, canvasHeight) -- create the canvas
@@ -78,18 +81,19 @@ function UIElement:renderShadow()
     love.graphics.rectangle("fill", 0, 0, shadowCanvas:getWidth(), shadowCanvas:getHeight())
     love.graphics.setColor(1,1,1,1)  -- black with 50% opacity
 
-    love.graphics.setCanvas()
+    love.graphics.setCanvas(gameCanvas)
     return shadowCanvas 
 end
 
 --Interractions function--
 
 function UIElement:isHovered()
+    vx, vy = InputsUtils.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
     return(
         self.isHoverable and
-        love.mouse:getX() > (self.x-(self.width/2)) and love.mouse:getX() < (self.x+(self.width/2))
+        vx > (self.x-(self.width/2)) and vx < (self.x+(self.width/2))
         and
-        love.mouse:getY() > (self.y-(self.height/2)) and love.mouse:getY() < (self.y+(self.height/2))
+        vy > (self.y-(self.height/2)) and vy < (self.y+(self.height/2))
         )
 end
 

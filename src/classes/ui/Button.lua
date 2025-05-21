@@ -3,7 +3,7 @@ local UIElement = require("src.classes.ui.UIElement")
 local Button = setmetatable({}, { __index = UIElement })
 Button.__index = Button
 
-function Button:new(callback, spritePath, x, y, width, height)
+function Button:new(callback, spritePath, x, y, width, height, gameCanvas)
     local self = setmetatable(UIElement.new(), Button)
 
     self:setSprite(love.graphics.newImage(spritePath))
@@ -42,7 +42,7 @@ function Button:update(dt)
     self.scale = self.scale + (self.targetedScale - self.scale)*speed*dt
 end
 
-function Button:renderSprite()
+function Button:renderSprite(gameCanvas)
     canvasHeight = self.height
     canvasWidth = self.width
 
@@ -85,7 +85,7 @@ function Button:renderSprite()
         love.graphics.setColor(1,1,1,1)  -- black with 50% opacity
     end
 
-    love.graphics.setCanvas()
+    love.graphics.setCanvas(gameCanvas)
 
     return canvas
 end

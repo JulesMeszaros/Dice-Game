@@ -1,6 +1,12 @@
 local Run = require("src.classes.run")
 local Dice = require("src.classes.dice")
-local Game = { currentScreen = 1}
+
+local Constants = require("src.utils.constants")
+local Inputs = require("src.utils.scripts.inputs")
+
+local Game = { 
+    currentScreen = 1,
+}
 Game.__index = Game
 
 local PAGES = {
@@ -23,6 +29,10 @@ function Game:start()
     run = Run:new(dices) -- start run
     run:makeRoll(dices) --make first roll
 
+    --Game dimmensions
+    self.virtualWidth, self.virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT
+    self.gameCanvas = love.graphics.newCanvas(self.virtualWidth, self.virtualHeight)
+
     return self
 end
 
@@ -33,8 +43,28 @@ function Game:update(dt)
 end
 
 function Game:draw()
+
+    love.graphics.setCanvas(self.gameCanvas)
+    love.graphics.clear()
+    --Rendu du jeu--
+    --love.graphics.rectangle("fill", 0, 0, self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
+    run:draw(self.gameCanvas)
+    love.graphics.setCanvas()
+
+    --Affichage du jeu--
+    -- Calcule le scale pour garder le ratio
+    local screenWidth, screenHeight = love.graphics.getDimensions()
+    local scale = math.min(screenWidth / self.virtualWidth, screenHeight / self.virtualHeight)
+
+    local scaledWidth = self.virtualWidth * scale
+    local scaledHeight = self.virtualHeight * scale
+
+    local offsetX = (screenWidth - scaledWidth) / 2
+    local offsetY = (screenHeight - scaledHeight) / 2
+
     if self.currentScreen == PAGES.GAME then
-        run:draw()
+        --
+        love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
     end
 end
 
@@ -43,15 +73,22 @@ function Game:keypressed(key)
 end
 
 function Game:mousepressed(x, y, button, istouch, presses)
-    run:mousepressed(x, y, button, istouch, presses)
+    vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    run:mousepressed(vx, vy, button, istouch, presses)
 end
 
-function Game:mousereleased(x, y, button, istouch, presses)
-    run:mousereleased(x, y, button, istouch, presses)
+function Game:mousereleased(vx, vy, button, istouch, presses)
+    vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    run:mousereleased(vx, vy, button, istouch, presses)
 end
 
 function Game:mousemoved(x, y, dx, dy)
-    run:mousemoved(x, y, dx, dy)
+    vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    
+    scale = Inputs.getCanvasScale(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    
+    vdx, vdy = dx / scale, dy / scale
+    run:mousemoved(vx, vy, vdx, vdy)
 end
 
 return Game
