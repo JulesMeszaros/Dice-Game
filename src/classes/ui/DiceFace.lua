@@ -52,16 +52,17 @@ function DiceFace:update(dt)
 
 end
 
-function DiceFace:draw(gameCanvas)
-    shadow = self:renderShadow(gameCanvas)
-    render = self:render(gameCanvas)
+function DiceFace:draw()
+    shadow = self:renderShadow()
+    render = self:render()
 
     love.graphics.draw(shadow, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
     love.graphics.draw(render, self.x, self.y, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
 
 end
 
-function DiceFace:render(gameCanvas)
+function DiceFace:render()
+    currentCanvas = love.graphics.getCanvas()
     canvasSize = self.size --sets the base face of the canvas
 
     ratio = canvasSize/self.dim --ratio between the image size and the canvas size
@@ -76,11 +77,13 @@ function DiceFace:render(gameCanvas)
     --Draw the face image
     love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
 
-    love.graphics.setCanvas(gameCanvas)
+    love.graphics.setCanvas(currentCanvas)
     return faceCanvas
 end
 
-function DiceFace:renderShadow(gameCanvas)
+function DiceFace:renderShadow()
+    currentCanvas = love.graphics.getCanvas()
+
     canvasSize = self.size --sets the base face of the canvas
     ratio = canvasSize/self.dim --ratio between the image size and the canvas size
     shadowCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
@@ -94,7 +97,7 @@ function DiceFace:renderShadow(gameCanvas)
     love.graphics.rectangle("fill", 0, 0, shadowCanvas:getWidth(), shadowCanvas:getHeight())
     love.graphics.setColor(1,1,1,1)  -- black with 50% opacity
 
-    love.graphics.setCanvas(gameCanvas)
+    love.graphics.setCanvas(currentCanvas)
     return shadowCanvas
 
 end

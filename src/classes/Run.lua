@@ -2,6 +2,7 @@ local Dice = require("src.classes.Dice")
 local DiceFace = require("src.classes.ui.DiceFace")
 local UIElement = require("src.classes.ui.UIElement")
 local Button = require("src.classes.ui.Button")
+local Terrain = require("src.classes.ui.Terrain")
 
 local Run = {
     --Dices variables
@@ -26,7 +27,9 @@ local Run = {
 
     --Gameplay variables
     usedRerolls = 0,
-    availableRerolls = 3
+    availableRerolls = 3,
+
+    
 }
 
 Run.__index = Run
@@ -37,8 +40,6 @@ local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 25)
 function Run:new(dices)
     local self = setmetatable({}, Run)
 
-    
-
     --On attribue le set de dés
     self.dices = dices
 
@@ -48,8 +49,8 @@ function Run:new(dices)
         diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
             dice, --Dice Object 
             1, --Face represented
-            key*120, --X Position (centerd)
-            love.graphics.getHeight()/2, --Yposition (centerd)
+            key*120 - 40, --X Position (centerd)
+            love.graphics.getHeight()-60, --Yposition (centerd)
             80, --Width/Height
             true, --is Selectable
             true --isHoverable
@@ -61,6 +62,9 @@ function Run:new(dices)
     --Add a button
     self.uiElements.buttons["resetButton"] = Button:new(function()self:resetSelectedDices()end, "src/assets/sprites/ui/buttons/reset.png", love.graphics.getWidth()-125, love.graphics.getHeight()-70, 200, 84)
     self.uiElements.buttons["rerollButton"] = Button:new(function()self:rerollDices()end, "src/assets/sprites/ui/buttons/reroll.png", love.graphics.getWidth()-350, love.graphics.getHeight()-70, 200, 84)
+
+    --Terrain setup
+    self.terrain = Terrain:new()
 
     return self
 end
@@ -76,11 +80,13 @@ function Run:update(dt)
         dice:update(dt)
     end
 
-    self.uiElements.buttons["rerollButton"]:setActivated(self.availableRerolls>0)
+    self.uiElements.buttons["rerollButton"]:setActivated(self.availableRerolls>0 and table.getn(self.selectedDices)>0)
+    self.uiElements.buttons["resetButton"]:setActivated(table.getn(self.selectedDices)>0)
 end
 
 function Run:draw(gameCanvas) --Render the game into the Game Canvas.
     --Set the right canvas
+    self:drawTerrain()
     love.graphics.setCanvas(gameCanvas)
     self:drawUIElements(gameCanvas) --Draw the UI Elements into the canvas
 
@@ -92,15 +98,25 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
     love.graphics.setCanvas(gameCanvas)
 end
 
-function Run:setDrawedDices(draw)
-    self.drawedDices = draw
+--==DRAW FUNCTIONS==--
+
+function Run:drawTerrain()
+    currentCanvas = love.graphics.getCanvas()
+    --Dessine le terrain (temporaire j'imagine, on verra...)
+
+    --Espace de dés
+    self.terrain:drawDiceTray(love.graphics.getCanvas():getWidth()-20, 20)
+
+    --love.graphics.draw(self.terrain.dice_tray, love.graphics.getCanvas():getWidth()-20, 20, 0, 1, 1, self.terrain.dice_tray:getWidth(), 0)
+
 end
 
-function Run:drawDrawedDices(gameCanvas)
+function Run:drawDrawedDices()
     --Dessine les dés tirés
     if(self.uiElements.diceFaces) then --check si il y a des dés à afficher
         for key,uiFace in next,self.uiElements.diceFaces do
-            uiFace:draw(gameCanvas)
+            --love.graphics.setCanvas(self.terrain.dice_tray)
+            uiFace:draw()
         end
     end
 end
@@ -113,11 +129,11 @@ end
 
 function Run:drawUIElements(gameCanvas)
     --Fonction pour afficher les différents élément d'interface graphique
-    self:drawDrawedDices(gameCanvas)--Les dés tirés
+    self:drawDrawedDices()--Les dés tirés
     self:drawButtons(gameCanvas)--Les boutons
 end
 
---Inputs functions
+--==Inputs functions==
 
 function Run:keypressed(key)
     if(key=="u")then
@@ -197,7 +213,11 @@ function Run:mousemoved(x, y, dx, dy)
 end
 
 
---Dices Functions
+--==Dices Functions==
+
+function Run:setDrawedDices(draw)
+    self.drawedDices = draw
+end
 
 function Run:rerollDices() --Triggers the makeRoll function after clicking the reroll button
     if(self.availableRerolls > 0) then
