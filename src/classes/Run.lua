@@ -121,6 +121,10 @@ function Run:keypressed(key)
     if(key=="u")then
         print(table.concat(self.selectedFaces, " "))
     end
+
+    if(key=="r") then
+        self.availableRerolls = 10
+    end
 end
 
 function Run:mousepressed(x, y, button, istouch, presses)

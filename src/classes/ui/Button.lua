@@ -31,7 +31,7 @@ end
 function Button:update(dt)
     if(self:isHovered())then
         self.targetedScale = 0.95
-        if(love.mouse.isDown(1)) then
+        if(love.mouse.isDown(1) and self.isActivated) then
             self.targetedScale = 0.90
         end
     else

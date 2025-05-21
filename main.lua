@@ -1,5 +1,7 @@
 local Game = require("src.classes.Game")
 
+local delta = 0
+
 function love.load()
     math.randomseed(69420)
     game = Game:start()
@@ -8,11 +10,14 @@ end
 
 function love.update(dt)
     game:update(dt)
+    delta = math.floor(1/dt)
     
 end
 
 function love.draw()
+    love.graphics.clear(26/255, 79/255, 37/255)
     game:draw()
+    love.graphics.draw(love.graphics.newText(love.graphics.newFont("src/assets/fonts/joystix.otf"), delta), love.graphics.getWidth()-100, 30)
 end
 
 function love.keypressed(key)

@@ -1,6 +1,6 @@
 //TODO: Ajouter le système de reconnaissance de figures
 //TODO: Ajouter un système de points
 //TODO: Ajouter un système de tours
-//TODO: Ajouter un système de rerolls
-//TODO: Ajouter des jolis animations lors du déplacement des dés
 //TODO: développer une UI
+
+//BUG: Parfois il y a des bugs avec la taille des éléments lorsqu'ils sont sélectionnés et/ou hover

@@ -189,11 +189,11 @@ end
 function UIElement:setActivated(state)
     if(state == true) then
         self.isActivated = true
-        self.isHoverable = true
+        --self.isHoverable = true
         self.isSelectable = true
     else
         self.isActivated = false
-        self.isHoverable = false
+        --self.isHoverable = false
         self.isSelectable = false
     end
 end
