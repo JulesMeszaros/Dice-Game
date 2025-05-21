@@ -4,28 +4,40 @@ local UIElement = require("src.classes.ui.UIElement")
 local Button = require("src.classes.ui.Button")
 
 local Run = {
+    --Dices variables
     dices = {}, --Dices used id the run
     drawedDices = {}, --Current Drawed Dices
+    selectedDices = {}, -- Stores the currently selected dices
+    selectedFaces = {}, -- Stores the currently selected faces
+
+    --UI
     uiElements = { -- Stores the UI Elements of the Run
         diceFaces = {},
         buttons = {}
     },
-    selectedDices = {}, -- Stores the currently selected dices
-    selectedFaces = {}, -- Stores the currently selected faces
-
-    --Drag variables
+    
+    --Drag variables (should rather be located in the Game class i guess...)
     isDragging = false,
     dragOriginX = nil,
     dragOriginY = nil,
     dragDX = 0,
     dragDY = 0,
-    draggingTreshold = 10
+    draggingTreshold = 10,
+
+    --Gameplay variables
+    usedRerolls = 0,
+    availableRerolls = 3
 }
 
 Run.__index = Run
 
+--Get the cool ass font
+local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 25)
+
 function Run:new(dices)
     local self = setmetatable({}, Run)
+
+    
 
     --On attribue le set de dés
     self.dices = dices
@@ -47,8 +59,8 @@ function Run:new(dices)
     end
     
     --Add a button
-    table.insert(self.uiElements.buttons, Button:new(function()self:resetSelectedDices()end, "src/assets/sprites/ui/buttons/reset.png", love.graphics.getWidth()-175, love.graphics.getHeight()-83, 200, 84))
-    table.insert(self.uiElements.buttons, Button:new(function()self:rerollDices()end, "src/assets/sprites/ui/buttons/reroll.png", love.graphics.getWidth()-175, love.graphics.getHeight()-(83+83+20), 200, 84))
+    self.uiElements.buttons["resetButton"] = Button:new(function()self:resetSelectedDices()end, "src/assets/sprites/ui/buttons/reset.png", love.graphics.getWidth()-125, love.graphics.getHeight()-70, 200, 84)
+    self.uiElements.buttons["rerollButton"] = Button:new(function()self:rerollDices()end, "src/assets/sprites/ui/buttons/reroll.png", love.graphics.getWidth()-350, love.graphics.getHeight()-70, 200, 84)
 
     return self
 end
@@ -63,17 +75,19 @@ function Run:update(dt)
     for key,dice in next,self.uiElements.diceFaces do
         dice:update(dt)
     end
+
+    self.uiElements.buttons["rerollButton"]:setActivated(self.availableRerolls>0)
 end
 
 function Run:draw()
     self:drawUIElements()
     self:drawButtons()
 
-    --[[ if(love.mouse.isDown(1) and self.dragOriginX and self.dragOriginY) then --debug pour le drag (à supprimer plus tard)
-        if(self.isDragging) then love.graphics.setColor(1, 0, 0) else love.graphics.setColor(1, 1, 1) end
-        love.graphics.line(self.dragOriginX, self.dragOriginY, love.mouse.getX(), love.mouse.getY())
-        love.graphics.setColor(1, 1, 1)
-    end ]]
+    rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.availableRerolls))
+    scoreText = love.graphics.newText(font, 'Score : ' ..tostring(0))
+    love.graphics.draw(rerollText, 10, 10)
+    love.graphics.draw(scoreText, 10, 40)
+
 end
 
 function Run:setDrawedDices(draw)
@@ -104,14 +118,6 @@ end
 --Inputs functions
 
 function Run:keypressed(key)
-    if(key=='x')then
-        self:resetSelectedDices()
-    end
-
-    if(key=="space") then --Draw The Dices
-        self:makeRoll()
-    end
-
     if(key=="u")then
         print(table.concat(self.selectedFaces, " "))
     end
@@ -188,7 +194,10 @@ end
 --Dices Functions
 
 function Run:rerollDices() --Triggers the makeRoll function after clicking the reroll button
-    self:makeRoll(self.selectedDices)
+    if(self.availableRerolls > 0) then
+        self:makeRoll(self.selectedDices)
+        self.availableRerolls = self.availableRerolls-1
+    end
 end
 
 function Run:drawDices(dices)

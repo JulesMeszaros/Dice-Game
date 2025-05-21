@@ -26,6 +26,7 @@ function UIElement:new()
     --State functions
     self.isBeingClicked = false
     self.isBeingDragged = false
+    self.isActivated = true
     
     return self
 end
@@ -85,6 +86,7 @@ end
 
 function UIElement:isHovered()
     return(
+        self.isHoverable and
         love.mouse:getX() > (self.x-(self.width/2)) and love.mouse:getX() < (self.x+(self.width/2))
         and
         love.mouse:getY() > (self.y-(self.height/2)) and love.mouse:getY() < (self.y+(self.height/2))
@@ -182,6 +184,18 @@ end
 
 function UIElement:setHeight(h)
     self.height = h
+end
+
+function UIElement:setActivated(state)
+    if(state == true) then
+        self.isActivated = true
+        self.isHoverable = true
+        self.isSelectable = true
+    else
+        self.isActivated = false
+        self.isHoverable = false
+        self.isSelectable = false
+    end
 end
 
 return UIElement

@@ -14,8 +14,10 @@ function Button:new(callback, spritePath, x, y, width, height)
     self.height = height
     self.width = width
 
+    self.isHoverable = true
+
     --Dragging options
-    self.isDraggable = true
+    self.isDraggable = false
     self.dragOffsetX = 0
     self.dragOffsetY = 0
 
@@ -54,8 +56,26 @@ function Button:renderSprite()
     widthRatio = canvasWidth/self.sprite:getWidth()
     heightRatio = canvasHeight/self.sprite:getHeight()
 
+    --If desactivated : grey the button
+    if self.isActivated==false then
+        grayscaleShader = love.graphics.newShader([[
+        vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords)
+        {
+            vec4 texcolor = Texel(texture, texture_coords);
+            float gray = dot(texcolor.rgb, vec3(0.299, 0.587, 0.114)); // Luminance
+            return vec4(gray, gray, gray, texcolor.a);
+        }
+        ]])
+
+        love.graphics.setShader(grayscaleShader)
+    else
+        love.graphics.setShader()
+    end
+
     --Draw the UI into the canvas
     love.graphics.draw(self.sprite, 0, 0, 0, widthRatio, heightRatio) -- add the image
+
+    love.graphics.setShader()
 
     --If Hovered : draw a shadow above the button
     if(self:isHovered() and self.shadowOnHover)then
