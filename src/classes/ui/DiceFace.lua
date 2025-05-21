@@ -14,6 +14,7 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable)
     self.isSelectable = true
     self.isHoverable = true
     self.isDraggable = true
+    self.dragXspeed = 0
 
     self.dice = dice -- sets the dice and the face it represents
     self.face = face
@@ -25,29 +26,36 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable)
     self.baseSize = size
     self.size = self.baseSize
 
+    self.targetedRotation = 0
+    self.rotation = 0
+
     return self
 end
 
 function DiceFace:update(dt)
     if(self:isHovered())then
-        self.targetedScale = 0.95
+        self.targetedScale = 0.95 --Si hovered
         if(love.mouse.isDown(1)) then
-            self.targetedScale = 0.90
+            self.targetedScale = 0.90 --Si clicked
         end
     else
         self.targetedScale = 1
     end
 
+    self:calculateAngleDrag()
+
     local speed = 30
     self.scale = self.scale + (self.targetedScale - self.scale)*speed*dt
+    self.rotation = self.rotation + (self.targetedRotation - self.rotation)*speed*dt
+
 end
 
 function DiceFace:draw()
     shadow = self:renderShadow()
     render = self:render()
 
-    love.graphics.draw(shadow, self.x+10, self.y+10, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
-    love.graphics.draw(render, self.x, self.y, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
+    love.graphics.draw(shadow, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
+    love.graphics.draw(render, self.x, self.y, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
 
 end
 
@@ -160,6 +168,24 @@ end
 function DiceFace:setFace(face)
     self.face = face
     self:updateSprite()
+end
+
+function DiceFace:calculateAngleDrag()
+    maxRotation = 0.3
+
+    if(self.isBeingDragged)then --Rotation pendant le drag
+        self.targetedRotation = 0.02*self.dragXspeed
+    else
+        self.targetedRotation = 0
+    end
+
+    if self.targetedRotation < 0-maxRotation then
+        self.targetedRotation = 0-maxRotation
+    end
+
+    if self.targetedRotation > maxRotation then
+        self.targetedRotation = maxRotation
+    end
 end
 
 return DiceFace
