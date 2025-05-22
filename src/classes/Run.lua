@@ -4,6 +4,8 @@ local UIElement = require("src.classes.ui.UIElement")
 local Button = require("src.classes.ui.Button")
 local Terrain = require("src.classes.ui.Terrain")
 
+local Inputs = require("src.utils.scripts.inputs")
+
 local Run = {
     --Dices variables
     dices = {}, --Dices used id the run
@@ -37,11 +39,19 @@ Run.__index = Run
 --Get the cool ass font
 local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 25)
 
-function Run:new(dices)
+function Run:new(dices, gameCanvas)
     local self = setmetatable({}, Run)
+
+    --The canvas the game is rendered on.
+    self.gameCanvas = gameCanvas
 
     --On attribue le set de dés
     self.dices = dices
+
+    --Terrain setup
+    self.terrain = Terrain:new()
+
+    print((self.gameCanvas:getWidth()))
 
     --On créée une première fois les faces à afficher
     for key,dice in next,self.dices do
@@ -50,10 +60,11 @@ function Run:new(dices)
             dice, --Dice Object 
             1, --Face represented
             key*120 - 40, --X Position (centerd)
-            love.graphics.getHeight()-60, --Yposition (centerd)
+            self.terrain.dice_tray:getHeight()-60, --Yposition (centerd)
             80, --Width/Height
             true, --is Selectable
-            true --isHoverable
+            true, --isHoverable,
+            function()return Inputs.getMouseInCanvas((self.gameCanvas:getWidth()-20)-self.terrain.dice_tray:getWidth(), 20)end
         )
 
         self.uiElements.diceFaces[dice] = diceFaceUI
@@ -62,9 +73,6 @@ function Run:new(dices)
     --Add a button
     self.uiElements.buttons["resetButton"] = Button:new(function()self:resetSelectedDices()end, "src/assets/sprites/ui/buttons/reset.png", love.graphics.getWidth()-125, love.graphics.getHeight()-70, 200, 84)
     self.uiElements.buttons["rerollButton"] = Button:new(function()self:rerollDices()end, "src/assets/sprites/ui/buttons/reroll.png", love.graphics.getWidth()-350, love.graphics.getHeight()-70, 200, 84)
-
-    --Terrain setup
-    self.terrain = Terrain:new()
 
     return self
 end
@@ -96,6 +104,11 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
     love.graphics.draw(rerollText, 10, 10)
     love.graphics.draw(scoreText, 10, 40)
     love.graphics.setCanvas(gameCanvas)
+
+    --Debug Text
+    mpos = Inputs.getMouseInCanvas((love.graphics.getCanvas():getWidth()-20)-self.terrain.dice_tray:getWidth(), 20)
+    xtext = love.graphics.newText(font, 'Position: '..tostring(mpos.x)..'/'..tostring(mpos.y))
+    love.graphics.draw(xtext, 10, 90)
 end
 
 --==DRAW FUNCTIONS==--
@@ -105,7 +118,8 @@ function Run:drawTerrain()
     --Dessine le terrain (temporaire j'imagine, on verra...)
 
     --Espace de dés
-    self.terrain:drawDiceTray(love.graphics.getCanvas():getWidth()-20, 20)
+    self.terrain:drawDiceTray(love.graphics.getCanvas():getWidth()-20, 20, self.uiElements.diceFaces)
+    --self:drawDrawedDices()
 
     --love.graphics.draw(self.terrain.dice_tray, love.graphics.getCanvas():getWidth()-20, 20, 0, 1, 1, self.terrain.dice_tray:getWidth(), 0)
 
@@ -115,8 +129,10 @@ function Run:drawDrawedDices()
     --Dessine les dés tirés
     if(self.uiElements.diceFaces) then --check si il y a des dés à afficher
         for key,uiFace in next,self.uiElements.diceFaces do
+            --currentCanvas = love.graphics.getCanvas()
             --love.graphics.setCanvas(self.terrain.dice_tray)
             uiFace:draw()
+            --love.graphics.setCanvas(currentCanvas)
         end
     end
 end
@@ -129,7 +145,7 @@ end
 
 function Run:drawUIElements(gameCanvas)
     --Fonction pour afficher les différents élément d'interface graphique
-    self:drawDrawedDices()--Les dés tirés
+    --self:drawDrawedDices()--Les dés tirés
     self:drawButtons(gameCanvas)--Les boutons
 end
 

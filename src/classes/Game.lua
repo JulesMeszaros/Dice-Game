@@ -26,12 +26,12 @@ function Game:start()
         Dice:new()
     }
 
-    run = Run:new(dices) -- start run
-    run:makeRoll(dices) --make first roll
-
     --Game dimmensions
     self.virtualWidth, self.virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT
     self.gameCanvas = love.graphics.newCanvas(self.virtualWidth, self.virtualHeight)
+
+    run = Run:new(dices, self.gameCanvas) -- start run
+    run:makeRoll(dices) --make first roll
 
     return self
 end

@@ -3,4 +3,5 @@ function love.conf(t)
     t.window.height = 720
     t.window.title = "Yatzee"
     t.window.resizable = true
+    t.console = true
 end

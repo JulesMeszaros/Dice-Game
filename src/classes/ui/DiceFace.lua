@@ -7,14 +7,12 @@ local Constants = require("src.utils.constants")
 local DiceFace = setmetatable({}, { __index = UIElement })
 DiceFace.__index = DiceFace
 
-function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable)
-    self.srite = nil
-        
+function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePosition)    
     local self = setmetatable(UIElement.new(), DiceFace)
 
     --Parametres d'interractions
-    self.isSelectable = true
-    self.isHoverable = true
+    self.isSelectable = isSelectable
+    self.isHoverable = isHoverable
     self.isDraggable = true
     self.dragXspeed = 0
 
@@ -31,10 +29,15 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable)
     self.targetedRotation = 0
     self.rotation = 0
 
+    self.mousePosition = mousePosition --The function returning the mousePosition for this dice.
+
     return self
 end
 
 function DiceFace:update(dt)
+
+    --print(self.mousePosition().x)
+
     if(self:isHovered())then
         self.targetedScale = 0.95 --Si hovered
         if(love.mouse.isDown(1)) then
@@ -103,7 +106,7 @@ function DiceFace:renderShadow()
 end
 
 function DiceFace:isHovered() --Check if mouse is above the face
-    vx, vy = InputsUtils.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    vx, vy = self.mousePosition().x, self.mousePosition().y
 
     return(
         self.isHoverable and
