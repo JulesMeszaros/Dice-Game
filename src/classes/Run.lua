@@ -100,6 +100,9 @@ function Run:drawTerrain()
     --Espace de dés
     self.currentRound.terrain:drawDiceTray(love.graphics.getCanvas():getWidth()-20, 20, self.currentRound.diceFaces)
 
+    --Boutons de figures
+    self.currentRound.terrain:drawFigureButtons(20, 102)
+
 end
 
 function Run:drawButtons(gameCanvas)

@@ -29,9 +29,9 @@ function Round.new(n, dices, terrain, gameCanvas)
         diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
             dice, --Dice Object 
             1, --Face represented
-            key*120 - 40, --X Position (centerd)
+            (key*80) - 30, --X Position (centerd)
             self.terrain.dice_tray:getHeight()-60, --Yposition (centerd)
-            80, --Width/Height
+            60, --Width/Height
             true, --is Selectable
             true, --isHoverable,
             function()return Inputs.getMouseInCanvas((self.gameCanvas:getWidth()-20)-self.terrain.dice_tray:getWidth(), 20)end,
