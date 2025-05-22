@@ -6,6 +6,7 @@ local Inputs = require("src.utils.scripts.inputs")
 
 local Game = { 
     currentScreen = 1,
+    gamePaused = false
 }
 Game.__index = Game
 

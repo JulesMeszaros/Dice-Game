@@ -45,10 +45,6 @@ function Dice:update()
     
 end
 
-function Dice:drawFace(face, x, y, w)
-    self:getFace(face):draw(x, y, w)
-end
-
 function Dice:getNbFaces()
     return self.nFaces
 end
