@@ -32,7 +32,7 @@ function Game:start()
     self.gameCanvas = love.graphics.newCanvas(self.virtualWidth, self.virtualHeight)
 
     run = Run:new(dices, self.gameCanvas) -- start run
-    run:makeRoll(dices) --make first roll
+    
 
     return self
 end
