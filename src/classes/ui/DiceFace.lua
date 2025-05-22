@@ -7,7 +7,7 @@ local Constants = require("src.utils.constants")
 local DiceFace = setmetatable({}, { __index = UIElement })
 DiceFace.__index = DiceFace
 
-function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePosition)    
+function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePosition, renderCanvas)    
     local self = setmetatable(UIElement.new(), DiceFace)
 
     --Parametres d'interractions
@@ -31,12 +31,12 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
 
     self.mousePosition = mousePosition --The function returning the mousePosition for this dice.
 
+    self.renderCanvas = renderCanvas --Le canvas dans laquel le dé est dessiné. Permet d'avoir des infos genre sa largeur.
+
     return self
 end
 
 function DiceFace:update(dt)
-
-    --print(self.mousePosition().x)
 
     if(self:isHovered())then
         self.targetedScale = 0.95 --Si hovered
@@ -59,9 +59,11 @@ function DiceFace:draw()
     shadow = self:renderShadow()
     render = self:render()
 
+    currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.renderCanvas)
     love.graphics.draw(shadow, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
     love.graphics.draw(render, self.x, self.y, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
-
+    love.graphics.setCanvas(currentCanvas)
 end
 
 function DiceFace:render()
@@ -106,6 +108,7 @@ function DiceFace:renderShadow()
 end
 
 function DiceFace:isHovered() --Check if mouse is above the face
+    --Utilise la fonction passée en paramètre, qui permet d'avoir la position de la souris dans laquelle elle est rendue.
     vx, vy = self.mousePosition().x, self.mousePosition().y
 
     return(
@@ -114,26 +117,6 @@ function DiceFace:isHovered() --Check if mouse is above the face
         and
         vy > (self.y-(self.size/2)) and vy < (self.y+(self.size/2))
         )
-
-    --[[ if(not self.isHoverable) then
-        return false
-    end ]]
-    
-    --[[ if(
-        (love.mouse.getX() > self:getX()-(self.size/2)) 
-        and 
-        (love.mouse.getX() < (self:getX() + (self.size/2)))
-        and
-        (love.mouse.getY() > self:getY()-(self.size/2)) 
-        and 
-        (love.mouse.getY() < (self:getY() + (self.size/2)))
-    )
-    then
-        return true
-    else
-        return false
-    end ]]
-    
 end
 
 function DiceFace:clickEvent()

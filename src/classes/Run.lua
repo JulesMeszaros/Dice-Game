@@ -18,7 +18,7 @@ local Run = {
         diceFaces = {},
         buttons = {}
     },
-    
+
     --Drag variables (should rather be located in the Game class i guess...)
     isDragging = false,
     dragOriginX = nil,
@@ -30,8 +30,6 @@ local Run = {
     --Gameplay variables
     usedRerolls = 0,
     availableRerolls = 3,
-
-    
 }
 
 Run.__index = Run
@@ -64,7 +62,8 @@ function Run:new(dices, gameCanvas)
             80, --Width/Height
             true, --is Selectable
             true, --isHoverable,
-            function()return Inputs.getMouseInCanvas((self.gameCanvas:getWidth()-20)-self.terrain.dice_tray:getWidth(), 20)end
+            function()return Inputs.getMouseInCanvas((self.gameCanvas:getWidth()-20)-self.terrain.dice_tray:getWidth(), 20)end,
+            self.terrain.dice_tray
         )
 
         self.uiElements.diceFaces[dice] = diceFaceUI
@@ -104,37 +103,16 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
     love.graphics.draw(rerollText, 10, 10)
     love.graphics.draw(scoreText, 10, 40)
     love.graphics.setCanvas(gameCanvas)
-
-    --Debug Text
-    mpos = Inputs.getMouseInCanvas((love.graphics.getCanvas():getWidth()-20)-self.terrain.dice_tray:getWidth(), 20)
-    xtext = love.graphics.newText(font, 'Position: '..tostring(mpos.x)..'/'..tostring(mpos.y))
-    love.graphics.draw(xtext, 10, 90)
 end
 
 --==DRAW FUNCTIONS==--
 
 function Run:drawTerrain()
-    currentCanvas = love.graphics.getCanvas()
     --Dessine le terrain (temporaire j'imagine, on verra...)
 
     --Espace de dés
     self.terrain:drawDiceTray(love.graphics.getCanvas():getWidth()-20, 20, self.uiElements.diceFaces)
-    --self:drawDrawedDices()
-
-    --love.graphics.draw(self.terrain.dice_tray, love.graphics.getCanvas():getWidth()-20, 20, 0, 1, 1, self.terrain.dice_tray:getWidth(), 0)
-
-end
-
-function Run:drawDrawedDices()
-    --Dessine les dés tirés
-    if(self.uiElements.diceFaces) then --check si il y a des dés à afficher
-        for key,uiFace in next,self.uiElements.diceFaces do
-            --currentCanvas = love.graphics.getCanvas()
-            --love.graphics.setCanvas(self.terrain.dice_tray)
-            uiFace:draw()
-            --love.graphics.setCanvas(currentCanvas)
-        end
-    end
+    
 end
 
 function Run:drawButtons(gameCanvas)
@@ -145,7 +123,6 @@ end
 
 function Run:drawUIElements(gameCanvas)
     --Fonction pour afficher les différents élément d'interface graphique
-    --self:drawDrawedDices()--Les dés tirés
     self:drawButtons(gameCanvas)--Les boutons
 end
 
@@ -220,8 +197,13 @@ function Run:mousemoved(x, y, dx, dy)
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
                 diceui.dragXspeed = dx
-                diceui:setX(diceui:getX() + dx)
-                diceui:setY(diceui:getY() + dy)
+                if(diceui:getX()+dx<diceui.renderCanvas:getWidth()-diceui.size/2 and diceui:getX()+dx>0+diceui.size/2) then --Vérification qu'on ne dépasse par les limites horizontales
+                    diceui:setX(diceui:getX() + dx) 
+                end
+                
+                if(diceui:getY()+dy<diceui.renderCanvas:getHeight()-diceui.size/2 and diceui:getY()+dy>0+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
+                    diceui:setY(diceui:getY() + dy) 
+                end
             end
         end
     end
