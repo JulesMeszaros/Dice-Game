@@ -1,9 +1,19 @@
 local UIElement = require("src.classes.ui.UIElement")
+local Inputs = require("src.utils.scripts.inputs")
 
 local Button = setmetatable({}, { __index = UIElement })
 Button.__index = Button
 
-function Button:new(callback, spritePath, x, y, width, height, gameCanvas)
+function Button:new(
+    callback, 
+    spritePath, 
+    x, 
+    y, 
+    width, 
+    height, 
+    gameCanvas, 
+    mousePosition)
+
     local self = setmetatable(UIElement.new(), Button)
 
     self:setSprite(love.graphics.newImage(spritePath))
@@ -14,7 +24,9 @@ function Button:new(callback, spritePath, x, y, width, height, gameCanvas)
     self.height = height
     self.width = width
 
+    --Hover options
     self.isHoverable = true
+    self.mousePosition = mousePosition
 
     --Dragging options
     self.isDraggable = false
@@ -92,6 +104,18 @@ end
 
 function Button:getCallback()
     return self.callbackFunction
+end
+
+function Button:isHovered() --Check if mouse is above the face
+    --Utilise la fonction passée en paramètre, qui permet d'avoir la position de la souris dans laquelle elle est rendue.
+    vx, vy = self.mousePosition().x, self.mousePosition().y
+
+    return(
+        self.isHoverable and
+        vx > (self.x-(self.width/2)) and vx < (self.x+(self.width/2))
+        and
+        vy > (self.y-(self.height/2)) and vy < (self.y+(self.height/2))
+        )
 end
 
 return Button

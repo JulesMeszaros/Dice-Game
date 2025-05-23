@@ -47,8 +47,28 @@ function Run:new(dices, gameCanvas)
     local terrain = Terrain:new()
 
     --Add a button
-    self.uiElements.buttons["resetButton"] = Button:new(function()self.currentRound:resetSelectedDices()end, "src/assets/sprites/ui/buttons/reset.png", love.graphics.getWidth()-125, love.graphics.getHeight()-70, 200, 84)
-    self.uiElements.buttons["rerollButton"] = Button:new(function()self.currentRound:rerollDices()end, "src/assets/sprites/ui/buttons/reroll.png", love.graphics.getWidth()-350, love.graphics.getHeight()-70, 200, 84)
+    self.uiElements.buttons["resetButton"] = Button:new(
+        function()self.currentRound:resetSelectedDices()end, 
+        "src/assets/sprites/ui/buttons/reset.png", 
+        love.graphics.getWidth()-125, 
+        love.graphics.getHeight()-70, 
+        200, 
+        84,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+        )
+        
+
+    self.uiElements.buttons["rerollButton"] = Button:new(
+        function()self.currentRound:rerollDices()end, 
+        "src/assets/sprites/ui/buttons/reroll.png", 
+        love.graphics.getWidth()-350, 
+        love.graphics.getHeight()-70, 
+        200, 
+        84,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
 
     --Create the first Round of the run
     round = Round.new(1, self.dices, terrain, self.gameCanvas)
@@ -59,6 +79,11 @@ function Run:new(dices, gameCanvas)
 end
 
 function Run:update(dt)
+
+    --update Round
+    self.currentRound:update(dt)
+
+
     --Update Buttons
     for key,button in next,self.uiElements.buttons do
         button:update(dt)

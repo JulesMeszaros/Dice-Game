@@ -44,8 +44,8 @@ function Round.new(n, dices, terrain, gameCanvas)
     return self
 end
 
-function Round:update()
-
+function Round:update(dt)
+    self.terrain:update(dt)
 end
 
 function Round:draw()
