@@ -5,9 +5,12 @@ local CalculatePoints = require("src.utils.scripts.calculatePoints")
 local Terrain = {}
 Terrain.__index = Terrain
 
-function Terrain:new()
+function Terrain:new(round)
     local self = setmetatable({}, Terrain)
     currentCanvas = love.graphics.getCanvas()
+
+    self.round = round
+
     --Dice Tray
     self.diceTrayX = 0
     self.diceTrayY = 0
@@ -31,27 +34,27 @@ function Terrain:new()
         "src/assets/sprites/ui/buttons/figure_6.png",
         "src/assets/sprites/ui/buttons/figure_chance.png",
         "src/assets/sprites/ui/buttons/figure_brelan.png",
+        "src/assets/sprites/ui/buttons/figure_full.png",
         "src/assets/sprites/ui/buttons/figure_ptt_suite.png",
         "src/assets/sprites/ui/buttons/figure_gd_suite.png",
         "src/assets/sprites/ui/buttons/figure_carre.png",
-        "src/assets/sprites/ui/buttons/figure_full.png",
         "src/assets/sprites/ui/buttons/figure_yatzee.png"
     }
 
     local calculatePointsFunctions = {
-        function()print(CalculatePoints.numberBasePoints(1))end,
-        function()print(CalculatePoints.numberBasePoints(2))end,
-        function()print(CalculatePoints.numberBasePoints(3))end,
-        function()print(CalculatePoints.numberBasePoints(4))end,
-        function()print(CalculatePoints.numberBasePoints(5))end,
-        function()print(CalculatePoints.numberBasePoints(6))end,
-        function()print(CalculatePoints.brelanBasePoints())end,
-        function()print(CalculatePoints.fullBasePoints())end,
-        function()print(CalculatePoints.carreBasePoints())end,
-        function()print(CalculatePoints.pttSuiteBasePoints())end,
-        function()print(CalculatePoints.gdSuiteBasePoints())end,
-        function()print(CalculatePoints.chanceBasePoints())end,
-        function()print(CalculatePoints.yatzeeBasePoints())end,
+        function()CalculatePoints.numberBasePoints(1, self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.numberBasePoints(2, self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.numberBasePoints(3, self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.numberBasePoints(4, self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.numberBasePoints(5, self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.numberBasePoints(6, self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.chanceBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.brelanBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.fullBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.pttSuiteBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.gdSuiteBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.carreBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
+        function()CalculatePoints.yatzeeBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
     }
 
     self.figureButtons = {}
@@ -85,6 +88,7 @@ function Terrain:update(dt)
 
         if(button:isHovered())then self.currentlyHoveredFigure = key end
     end
+    
 end
 
 --==DRAW FUNCTIONS==--
@@ -145,10 +149,10 @@ function Terrain:getCurrentlyHoveredFigure()
         "Six",
         "Chance",
         "Brelan",
-        "Carré",
         "Full",
         "Petite Suite",
         "Grande Suite",
+        "Carré",
         "Yhatze!",
     }
 

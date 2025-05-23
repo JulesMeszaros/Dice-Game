@@ -43,9 +43,6 @@ function Run:new(dices, gameCanvas)
     --On attribue le set de dés
     self.dices = dices
 
-    --Terrain setup
-    local terrain = Terrain:new()
-
     --Add a button
     self.uiElements.buttons["resetButton"] = Button:new(
         function()self.currentRound:resetSelectedDices()end, 
@@ -82,7 +79,7 @@ function Run:new(dices, gameCanvas)
     )
 
     --Create the first Round of the run
-    round = Round.new(1, self.dices, terrain, self.gameCanvas)
+    round = Round.new(1, self.dices, self.gameCanvas)
     round:makeRoll(dices) --make first roll
     self.currentRound = round
     

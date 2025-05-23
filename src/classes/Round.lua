@@ -1,4 +1,6 @@
 local DiceFace = require("src.classes.ui.DiceFace")
+local Terrain = require("src.classes.ui.Terrain")
+
 local Inputs = require("src.utils.scripts.Inputs")
 
 local Round = {
@@ -12,7 +14,7 @@ local Round = {
 }
 Round.__index = Round
 
-function Round.new(n, dices, terrain, gameCanvas)
+function Round.new(n, dices, gameCanvas)
     local self = setmetatable({}, Round)
 
     self.gameCanvas = gameCanvas
@@ -21,7 +23,8 @@ function Round.new(n, dices, terrain, gameCanvas)
     self.nround = n
     self.availableRerolls = 3
     self.dices = dices
-    self.terrain = terrain
+
+    self.terrain =  Terrain:new(self)
 
     --On créée une première fois les faces à afficher
     for key,dice in next,self.dices do
