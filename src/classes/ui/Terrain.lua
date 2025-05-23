@@ -1,5 +1,7 @@
 local Button = require("src.classes.ui.Button")
 local Inputs = require("src.utils.scripts.inputs")
+local CalculatePoints = require("src.utils.scripts.calculatePoints")
+
 local Terrain = {}
 Terrain.__index = Terrain
 
@@ -36,6 +38,22 @@ function Terrain:new()
         "src/assets/sprites/ui/buttons/figure_yatzee.png"
     }
 
+    local calculatePointsFunctions = {
+        function()print(CalculatePoints.numberBasePoints(1))end,
+        function()print(CalculatePoints.numberBasePoints(2))end,
+        function()print(CalculatePoints.numberBasePoints(3))end,
+        function()print(CalculatePoints.numberBasePoints(4))end,
+        function()print(CalculatePoints.numberBasePoints(5))end,
+        function()print(CalculatePoints.numberBasePoints(6))end,
+        function()print(CalculatePoints.brelanBasePoints())end,
+        function()print(CalculatePoints.fullBasePoints())end,
+        function()print(CalculatePoints.carreBasePoints())end,
+        function()print(CalculatePoints.pttSuiteBasePoints())end,
+        function()print(CalculatePoints.gdSuiteBasePoints())end,
+        function()print(CalculatePoints.chanceBasePoints())end,
+        function()print(CalculatePoints.yatzeeBasePoints())end,
+    }
+
     self.figureButtons = {}
 
     local i = 0
@@ -43,7 +61,7 @@ function Terrain:new()
         local t = i
         print(i)
         button = Button:new(
-            function()print(t)end, 
+            calculatePointsFunctions[key], 
             image, 
             self.figureButtonsCanvas:getWidth()/2, 
             (i*36)+18, 

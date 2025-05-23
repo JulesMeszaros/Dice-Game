@@ -1,7 +1,10 @@
 local Dice = require("src.classes.Dice")
-local Run = require("src.classes.Run")
 
 local CalculatePoints = {}
+
+function CalculatePoints.numberBasePoints(number)
+    return number
+end
 
 function CalculatePoints.brelanBasePoints()
     return 1
@@ -16,6 +19,10 @@ function CalculatePoints.carreBasePoints()
 end
 
 function CalculatePoints.pttSuiteBasePoints()
+    return 4
+end
+
+function CalculatePoints.gdSuiteBasePoints()
     return 4
 end
 

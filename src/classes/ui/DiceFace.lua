@@ -59,7 +59,7 @@ function DiceFace:update(dt)
     self.scale = self.scale + (self.targetedScale - self.scale)*speed*dt
     self.rotation = self.rotation + (self.targetedRotation - self.rotation)*speed*dt
 
-    local moveSpeed = 20
+    local moveSpeed = 15
     self.x = self.x + (self.targetX - self.x)*moveSpeed*dt
     self.y = self.y + (self.targetY - self.y)*moveSpeed*dt
 
