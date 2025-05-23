@@ -111,8 +111,8 @@ end
 function Terrain:reorganiseDiceFaces(dices)
     i = 1
     for key,uiFace in next,dices do
-        uiFace:setX((i*80) - 30)
-        uiFace:setY(self.dice_tray:getHeight()-60)
+        uiFace.targetX = ((i*80) - 30)
+        uiFace.targetY = (self.dice_tray:getHeight()-60)
         i = i+1
     end
 end

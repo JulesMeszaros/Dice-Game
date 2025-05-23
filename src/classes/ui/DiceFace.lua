@@ -21,8 +21,14 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
     self.spriteSheet = dice:getSpriteSheet()
     self.quad = dice:getQuad(face)
     self.dim = dice:getFaceDim()
+    
+    
+    self.targetX = x
+    self.targetY = y
     self.x = x
     self.y = y
+
+
     self.baseSize = size
     self.size = self.baseSize
 
@@ -52,6 +58,11 @@ function DiceFace:update(dt)
     local speed = 30
     self.scale = self.scale + (self.targetedScale - self.scale)*speed*dt
     self.rotation = self.rotation + (self.targetedRotation - self.rotation)*speed*dt
+
+    local moveSpeed = 20
+    self.x = self.x + (self.targetX - self.x)*moveSpeed*dt
+    self.y = self.y + (self.targetY - self.y)*moveSpeed*dt
+
 
 end
 
@@ -169,6 +180,8 @@ function DiceFace:setFace(face)
     self.face = face
     self:updateSprite()
 end
+
+
 
 function DiceFace:calculateAngleDrag()
     maxRotation = 0.3

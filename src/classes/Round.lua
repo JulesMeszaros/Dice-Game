@@ -109,11 +109,11 @@ function Round:mousemoved(x, y, dx, dy, isDragging)
                 diceui.isBeingDragged = true
                 diceui.dragXspeed = dx
                 if(diceui:getX()+dx<diceui.renderCanvas:getWidth()-diceui.size/2 and diceui:getX()+dx>0+diceui.size/2) then --Vérification qu'on ne dépasse par les limites horizontales
-                    diceui:setX(diceui:getX() + dx) 
+                    diceui.targetX = (diceui.targetX + dx) 
                 end
 
                 if(diceui:getY()+dy<diceui.renderCanvas:getHeight()-diceui.size/2 and diceui:getY()+dy>0+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
-                    diceui:setY(diceui:getY() + dy) 
+                    diceui.targetY = (diceui.targetY + dy) 
                 end
             end
         end
