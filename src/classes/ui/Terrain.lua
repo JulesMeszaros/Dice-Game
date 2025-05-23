@@ -36,10 +36,12 @@ function Terrain:new()
 
     self.figureButtons = {}
 
-    i = 0
+    local i = 0
     for key,image in next,image_buttons do
+        local t = i
+        print(i)
         button = Button:new(
-            function()print(i)end, 
+            function()print(t)end, 
             image, 
             self.figureButtonsCanvas:getWidth()/2, 
             (i*36)+18, 
