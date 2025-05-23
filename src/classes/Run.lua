@@ -70,6 +70,17 @@ function Run:new(dices, gameCanvas)
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
+    self.uiElements.buttons["reorganiserButton"] = Button:new(
+        function()self.currentRound.terrain:reorganiseDiceFaces(self.currentRound.diceFaces)end, 
+        "src/assets/sprites/ui/buttons/reorganiser.png", 
+        love.graphics.getWidth()-570, 
+        love.graphics.getHeight()-70, 
+        200, 
+        84,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
     --Create the first Round of the run
     round = Round.new(1, self.dices, terrain, self.gameCanvas)
     round:makeRoll(dices) --make first roll
@@ -110,6 +121,12 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
     love.graphics.draw(rerollText, 10, 10)
     love.graphics.draw(scoreText, 10, 40)
     love.graphics.setCanvas(gameCanvas)
+
+    --Show the currently hovered figure button
+    if(self.currentRound.terrain.currentlyHoveredFigure)then
+        local figureHoveredText = love.graphics.newText(font, self.currentRound.terrain:getCurrentlyHoveredFigure())
+        love.graphics.draw(figureHoveredText, 190, 650, 0, 1, 1, figureHoveredText:getWidth()/2, figureHoveredText:getHeight()/2)
+    end
 end
 
 --==ROUND FUNCTIONS==--

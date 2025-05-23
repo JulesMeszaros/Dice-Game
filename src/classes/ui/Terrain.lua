@@ -10,6 +10,8 @@ function Terrain:new()
     self.diceTrayX = 0
     self.diceTrayY = 0
 
+    self.currentlyHoveredFigure = nil
+
     self.dice_tray = love.graphics.newCanvas(900, 550)
     self.dice_tray:setFilter("linear", "linear")
 
@@ -58,10 +60,16 @@ function Terrain:new()
 end
 
 function Terrain:update(dt)
+    --Reset Bouton de figure survolé
+    self.currentlyHoveredFigure = nil
     for key,button in next, self.figureButtons do
         button:update(dt)
+
+        if(button:isHovered())then self.currentlyHoveredFigure = key end
     end
 end
+
+--==DRAW FUNCTIONS==--
 
 function Terrain:drawDiceTray(x, y, dices)
     targetCanvas = love.graphics.getCanvas()
@@ -98,7 +106,40 @@ function Terrain:drawFigureButtons(x, y)
     love.graphics.draw(self.figureButtonsCanvas, x, y)
 end
 
+--==UTILS FUNCTIONS==--
 
+function Terrain:reorganiseDiceFaces(dices)
+    i = 1
+    for key,uiFace in next,dices do
+        uiFace:setX((i*80) - 30)
+        uiFace:setY(self.dice_tray:getHeight()-60)
+        i = i+1
+    end
+end
+
+function Terrain:getCurrentlyHoveredFigure()
+    figureNames = {
+        "Uns",
+        "Deux",
+        "Trois",
+        "Quatres",
+        "Cinqs",
+        "Six",
+        "Chance",
+        "Brelan",
+        "Carré",
+        "Full",
+        "Petite Suite",
+        "Grande Suite",
+        "Yhatze!",
+    }
+
+    if(self.currentlyHoveredFigure)then
+        return(figureNames[self.currentlyHoveredFigure])
+    else
+        return nil
+    end
+end
 
 return Terrain
 
