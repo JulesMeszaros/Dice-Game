@@ -29,7 +29,12 @@ local Run = {
     --Run variables
     roundNumber = 1,
     totalScore = 0,
-    isInRound = true
+
+    --Run state
+    runStates = {"round", "shop"},
+    currentState = "round",
+    isInRound = true,
+    isInShop = false
 }
 
 Run.__index = Run
@@ -128,7 +133,7 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
         love.graphics.draw(rerollText, 10, 5)
         love.graphics.draw(scoreText, 10, 30)
         love.graphics.draw(currentHands, 10, 55)
-        love.graphics.draw(currentRoundText, 10, love.graphics.getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
+        love.graphics.draw(currentRoundText, 10, love.graphics:getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
 
         love.graphics.setCanvas(gameCanvas)
 
@@ -152,6 +157,7 @@ end
 
 function Run:endRound()
     self.isInRound = false
+    self.currentState = "shop"
     self:startNewRound()
 end
 

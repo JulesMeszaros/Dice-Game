@@ -3,6 +3,7 @@ local UIElement = require("src.classes.ui.UIElement")
 
 local InputsUtils = require("src.utils.scripts.inputs")
 local Constants = require("src.utils.constants")
+local Shaders = require("src.utils.shaders")
 
 local DiceFace = setmetatable({}, { __index = UIElement })
 DiceFace.__index = DiceFace
@@ -39,10 +40,13 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
 
     self.renderCanvas = renderCanvas --Le canvas dans laquel le dé est dessiné. Permet d'avoir des infos genre sa largeur.
 
+    self.time = 0
+
     return self
 end
 
 function DiceFace:update(dt)
+    self.time=self.time+dt
 
     if(self:isHovered())then
         self.targetedScale = 0.95 --Si hovered
@@ -72,8 +76,11 @@ function DiceFace:draw()
 
     currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.renderCanvas)
+    --Render l'ombre
     love.graphics.draw(shadow, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
+    --Render la face du dé    
     love.graphics.draw(render, self.x, self.y, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
+    
     love.graphics.setCanvas(currentCanvas)
 end
 
@@ -91,8 +98,17 @@ function DiceFace:render()
     love.graphics.setCanvas(faceCanvas)
 
     --Draw the face image
-    love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
+     if(self:getIsSelected()==true)then
+        love.graphics.setShader(Shaders.rainbowShader)
+        Shaders.rainbowShader:send("time", self.time/10 % 1)
 
+    else
+        love.graphics.setShader()
+    end
+
+    love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
+    
+    love.graphics.setShader()
     love.graphics.setCanvas(currentCanvas)
     return faceCanvas
 end
