@@ -27,12 +27,14 @@ local Run = {
     usedRerolls = 0, --total rerolls used for this game
 
     roundNumber = 1,
+
+    totalScore = 0,
 }
 
 Run.__index = Run
 
 --Get the cool ass font
-local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 25)
+local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
 
 function Run:new(dices, gameCanvas)
     local self = setmetatable({}, Run)
@@ -114,15 +116,18 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
 
     --Some text //TODO: Move the text later
     rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.currentRound.availableRerolls))
-    scoreText = love.graphics.newText(font, 'Score : ' ..tostring(0))
-    love.graphics.draw(rerollText, 10, 10)
-    love.graphics.draw(scoreText, 10, 40)
+    scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.currentRound.roundScore))
+    currentHands = love.graphics.newText(font, 'Hands : '..tostring(self.currentRound.remainingHands))
+    love.graphics.draw(rerollText, 10, 5)
+    love.graphics.draw(scoreText, 10, 30)
+    love.graphics.draw(currentHands, 10, 55)
+
     love.graphics.setCanvas(gameCanvas)
 
     --Show the currently hovered figure button
     if(self.currentRound.terrain.currentlyHoveredFigure)then
         local figureHoveredText = love.graphics.newText(font, self.currentRound.terrain:getCurrentlyHoveredFigure())
-        love.graphics.draw(figureHoveredText, 190, 650, 0, 1, 1, figureHoveredText:getWidth()/2, figureHoveredText:getHeight()/2)
+        love.graphics.draw(figureHoveredText, 20, 650, 0, 1, 1, 0, figureHoveredText:getHeight()/2)
     end
 end
 

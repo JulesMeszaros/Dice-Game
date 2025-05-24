@@ -40,8 +40,6 @@ function CalculatePoints.brelanBasePoints(faces, dices, drawedDices)
         score = 0
     end
 
-    print(score)
-
     return score
 end
 
@@ -58,8 +56,6 @@ function CalculatePoints.fullBasePoints(faces, dices, drawedDices)
             score = score + f
         end
     end
-
-    print(score)
     
     return score
 end
@@ -88,8 +84,6 @@ function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
 
     end
 
-    print(score)
-
     return score
 end
 
@@ -110,8 +104,6 @@ function CalculatePoints.pttSuiteBasePoints(faces, dices, drawedDices)
     else 
         score = 0
     end
-
-    print(score)
 
     return score
 end
@@ -134,8 +126,6 @@ function CalculatePoints.gdSuiteBasePoints(faces, dices, drawedDices)
         score = 0
     end
 
-    print(score)
-
     return score
 end
 
@@ -144,8 +134,6 @@ function CalculatePoints.chanceBasePoints(faces, dices, drawedDices)
     for key,f in next,drawedDices do
         score = score + f
     end
-
-    print(score)
 
     return score
 end
@@ -171,8 +159,6 @@ function CalculatePoints.yatzeeBasePoints(faces, dices, drawedDices)
         score = 0
 
     end
-
-    print(score)
 
     return score
 end

@@ -11,6 +11,10 @@ local Round = {
 
     dragOriginX = nil,
     dragOriginY = nil,
+
+    remainingHands = 5,
+
+    roundScore = 0
 }
 Round.__index = Round
 
@@ -182,6 +186,18 @@ end
 
 function Round:setDrawedDices(draw)
     self.drawedDices = draw
+end
+
+--==FIGURE FUNCTIONS==--
+function Round:playFigure(points)
+    if(self.remainingHands>=1)then
+        self.roundScore = self.roundScore + points -- On ajoute les points au score
+        self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
+        self:makeRoll(self.dices) -- On effectue un reroll
+        print("hand played")
+    else
+        print("no hand remaining")
+    end
 end
 
 --==UTILS==--
