@@ -32,7 +32,6 @@ function Game:start()
     self.gameCanvas = love.graphics.newCanvas(self.virtualWidth, self.virtualHeight)
 
     run = Run:new(dices, self.gameCanvas) -- start run
-    
 
     return self
 end

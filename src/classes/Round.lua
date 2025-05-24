@@ -18,8 +18,10 @@ local Round = {
 }
 Round.__index = Round
 
-function Round.new(n, dices, gameCanvas)
+function Round.new(n, dices, gameCanvas, run)
     local self = setmetatable({}, Round)
+
+    self.run = run
 
     self.gameCanvas = gameCanvas
 
@@ -57,6 +59,11 @@ end
 
 function Round:draw()
 
+end
+
+--==ROUND FUNCTION==--
+function Round:endRound()
+    print(self.run:endRound())
 end
 
 --==MOUSE/KEYBOARD FUNCTIONS==--
@@ -189,14 +196,17 @@ function Round:setDrawedDices(draw)
 end
 
 --==FIGURE FUNCTIONS==--
-function Round:playFigure(points)
+function Round:playFigure(points) --Function that triggers the hand
     if(self.remainingHands>=1)then
         self.roundScore = self.roundScore + points -- On ajoute les points au score
         self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
         self:makeRoll(self.dices) -- On effectue un reroll
+        self.availableRerolls = 3
         print("hand played")
-    else
-        print("no hand remaining")
+    end
+
+    if(self.remainingHands == 0)then
+        self:endRound()
     end
 end
 

@@ -53,7 +53,7 @@ function CalculatePoints.fullBasePoints(faces, dices, drawedDices)
 
     if(hasFull)then
         for key,f in next,drawedDices do
-            score = score + f
+            score = 25
         end
     end
     
@@ -99,7 +99,7 @@ function CalculatePoints.pttSuiteBasePoints(faces, dices, drawedDices)
 
     if(suite)then
         for i,j in next,suite do
-            score = score + j
+            score = 30
         end
     else 
         score = 0
@@ -120,7 +120,7 @@ function CalculatePoints.gdSuiteBasePoints(faces, dices, drawedDices)
 
     if(suite)then
         for i,j in next,suite do
-            score = score + j
+            score = 40
         end
     else 
         score = 0

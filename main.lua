@@ -3,7 +3,12 @@ local Game = require("src.classes.Game")
 local delta = 0
 
 function love.load()
-    math.randomseed(69420)
+    --bien randomiser le jeu
+    math.randomseed(os.clock() * 1000000)
+    for i=0,os.clock() * 1000000 do
+        math.random()
+    end
+
     game = Game:start()
     love.graphics.setBackgroundColor(26/255, 79/255, 37/255)
 end

@@ -26,9 +26,10 @@ local Run = {
     --Gameplay variables
     usedRerolls = 0, --total rerolls used for this game
 
+    --Run variables
     roundNumber = 1,
-
     totalScore = 0,
+    isInRound = true
 }
 
 Run.__index = Run
@@ -81,7 +82,7 @@ function Run:new(dices, gameCanvas)
     )
 
     --Create the first Round of the run
-    round = Round.new(1, self.dices, self.gameCanvas)
+    round = Round.new(1, self.dices, self.gameCanvas, self)
     round:makeRoll(dices) --make first roll
     self.currentRound = round
     
@@ -90,50 +91,68 @@ end
 
 function Run:update(dt)
 
-    --update Round
-    self.currentRound:update(dt)
+    if(self.isInRound)then
+        --update Round
+        self.currentRound:update(dt)
 
+        --Update round Buttons
+        for key,button in next,self.uiElements.buttons do
+            button:update(dt)
+        end
 
-    --Update Buttons
-    for key,button in next,self.uiElements.buttons do
-        button:update(dt)
+        --Update dices UI
+        for key,dice in next,self.currentRound.diceFaces do
+            dice:update(dt)
+        end
+
+        self.uiElements.buttons["rerollButton"]:setActivated(self.currentRound.availableRerolls>0 and table.getn(self.currentRound.selectedDices)>0)
+        self.uiElements.buttons["resetButton"]:setActivated(table.getn(self.currentRound.selectedDices)>0)
+
     end
-
-    --Update dices UI
-    for key,dice in next,self.currentRound.diceFaces do
-        dice:update(dt)
-    end
-
-    self.uiElements.buttons["rerollButton"]:setActivated(self.currentRound.availableRerolls>0 and table.getn(self.currentRound.selectedDices)>0)
-    self.uiElements.buttons["resetButton"]:setActivated(table.getn(self.currentRound.selectedDices)>0)
 end
 
 function Run:draw(gameCanvas) --Render the game into the Game Canvas.
-    --Set the right canvas
-    self:drawTerrain()
-    love.graphics.setCanvas(gameCanvas)
-    self:drawUIElements(gameCanvas) --Draw the UI Elements into the canvas
+    --==DRAW THE ROUND==--
+    if(self.isInRound==true)then --check if we are in round
+        --Set the right canvas
+        self:drawTerrain()
+        love.graphics.setCanvas(gameCanvas)
+        self:drawUIElements(gameCanvas) --Draw the UI Elements into the canvas
 
-    --Some text //TODO: Move the text later
-    rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.currentRound.availableRerolls))
-    scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.currentRound.roundScore))
-    currentHands = love.graphics.newText(font, 'Hands : '..tostring(self.currentRound.remainingHands))
-    love.graphics.draw(rerollText, 10, 5)
-    love.graphics.draw(scoreText, 10, 30)
-    love.graphics.draw(currentHands, 10, 55)
+        --Some informational text //TODO: Move the text to a dedicated function later
+        local rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.currentRound.availableRerolls))
+        local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.currentRound.roundScore))
+        local currentHands = love.graphics.newText(font, 'Hands : '..tostring(self.currentRound.remainingHands))
+        local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.roundNumber))
+        
+        love.graphics.draw(rerollText, 10, 5)
+        love.graphics.draw(scoreText, 10, 30)
+        love.graphics.draw(currentHands, 10, 55)
+        love.graphics.draw(currentRoundText, 10, love.graphics.getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
 
-    love.graphics.setCanvas(gameCanvas)
+        love.graphics.setCanvas(gameCanvas)
 
-    --Show the currently hovered figure button
-    if(self.currentRound.terrain.currentlyHoveredFigure)then
-        local figureHoveredText = love.graphics.newText(font, self.currentRound.terrain:getCurrentlyHoveredFigure())
-        love.graphics.draw(figureHoveredText, 20, 650, 0, 1, 1, 0, figureHoveredText:getHeight()/2)
+        --Show the currently hovered figure button
+        if(self.currentRound.terrain.currentlyHoveredFigure)then
+            local figureHoveredText = love.graphics.newText(font, self.currentRound.terrain:getCurrentlyHoveredFigure())
+            love.graphics.draw(figureHoveredText, 20, 650, 0, 1, 1, 0, figureHoveredText:getHeight()/2)
+        end
     end
 end
 
 --==ROUND FUNCTIONS==--
 function Run:startNewRound()
+    local newRoundNumber = self.roundNumber + 1 --Increments the number of round
+    self.roundNumber = newRoundNumber
+    newRound = Round.new(newRoundNumber, self.dices, self.gameCanvas, self) --Create a new round object
+    self.currentRound = newRound
 
+    self.isInRound = true
+end
+
+function Run:endRound()
+    self.isInRound = false
+    self:startNewRound()
 end
 
 --==DRAW FUNCTIONS==--
@@ -164,6 +183,11 @@ end
 
 function Run:keypressed(key)
     self.currentRound:keypressed(key)
+
+    if(key=="p")then
+        self.isInRound = true
+        self.currentRound.remainingHands = self.currentRound.remainingHands + 5
+    end
 end
 
 function Run:mousepressed(x, y, button, istouch, presses)
