@@ -9,7 +9,7 @@ local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
 
 function Terrain:new(round)
     local self = setmetatable({}, Terrain)
-    currentCanvas = love.graphics.getCanvas()
+    local currentCanvas = love.graphics.getCanvas()
 
     self.round = round
 
@@ -66,7 +66,7 @@ function Terrain:new(round)
     for key,image in next,image_buttons do
         local t = i
         print(i)
-        button = Button:new(
+        local button = Button:new(
             calculatePointsFunctions[key], 
             image, 
             self.figureButtonsCanvas:getWidth()/2, 
@@ -115,11 +115,11 @@ function Terrain:playFigure(points)
 end
 
 function Terrain:drawDiceTray(x, y, dices)
-    targetCanvas = love.graphics.getCanvas()
+    local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.dice_tray)
     love.graphics.clear()
 
-    matImage = love.graphics.newImage("src/assets/sprites/ui/terrain/dice_mat.png")
+    local matImage = love.graphics.newImage("src/assets/sprites/ui/terrain/dice_mat.png")
     love.graphics.draw(matImage, 0, 0)
 
     --On déssiné les dés
@@ -128,7 +128,7 @@ function Terrain:drawDiceTray(x, y, dices)
     end
 
     --On déssine le nom du dé survolé (si il existe)
-    diceName = love.graphics.newText(font, tostring(self.currentlyHoveredDice))
+    local diceName = love.graphics.newText(font, tostring(self.currentlyHoveredDice))
     if(self.currentlyHoveredDice)then
         love.graphics.draw(diceName, self.dice_tray:getWidth()/2, 20, 0, 1, 1, diceName:getWidth()/2, diceName:getHeight()/2)
     end
@@ -141,7 +141,7 @@ function Terrain:drawDiceTray(x, y, dices)
 end
 
 function Terrain:drawFigureButtons(x, y)
-    targetCanvas = love.graphics.getCanvas()
+    local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.figureButtonsCanvas)
     love.graphics.clear()
 
@@ -160,7 +160,7 @@ end
 --==UTILS FUNCTIONS==--
 
 function Terrain:reorganiseDiceFaces(dices)
-    i = 1
+    local i = 1
     for key,uiFace in next,dices do
         uiFace.targetX = ((i*80) - 30)
         uiFace.targetY = (self.dice_tray:getHeight()-60)
@@ -170,7 +170,7 @@ function Terrain:reorganiseDiceFaces(dices)
 end
 
 function Terrain:getCurrentlyHoveredFigure()
-    figureNames = {
+    local figureNames = {
         "Uns",
         "Deux",
         "Trois",
@@ -186,7 +186,7 @@ function Terrain:getCurrentlyHoveredFigure()
         "Yhatze!",
     }
 
-    calcPoints = {
+    local calcPoints = {
         function()return CalculatePoints.numberBasePoints(1, self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
         function()return CalculatePoints.numberBasePoints(2, self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,
         function()return CalculatePoints.numberBasePoints(3, self.round.selectedFaces, self.round.selectedDices, self.round.drawedDices)end,

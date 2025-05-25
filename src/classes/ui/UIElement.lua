@@ -39,25 +39,25 @@ function UIElement:update(dt)
 end
 
 function UIElement:draw(gameCanvas)
-    shadow = self:renderShadow(gameCanvas)
-    render = self:renderSprite(gameCanvas)
+    local shadow = self:renderShadow(gameCanvas)
+    local render = self:renderSprite(gameCanvas)
     love.graphics.draw(shadow, self.x+10, self.y+10, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
     love.graphics.draw(render, self.x, self.y, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
 end
 
 function UIElement:renderSprite(gameCanvas)
-    canvasHeight = self.height
-    canvasWidth = self.width
+    local canvasHeight = self.height
+    local canvasWidth = self.width
 
-    canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
+    local canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
 
     --General settings
     canvas:setFilter("linear", "linear")
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(canvas)
 
-    widthRatio = self.width/self.sprite:getWidth()
-    heightRatio = self.height/self.sprite:getHeight()
+    local widthRatio = self.width/self.sprite:getWidth()
+    local heightRatio = self.height/self.sprite:getHeight()
 
     --Draw the UI into the canvas
     love.graphics.draw(self.sprite, 0, 0, 0, widthRatio, heightRatio) -- add the image
@@ -68,9 +68,9 @@ function UIElement:renderSprite(gameCanvas)
 end
 
 function UIElement:renderShadow(gameCanvas)
-    canvasHeight = self.height
-    canvasWidth = self.width
-    shadowCanvas = love.graphics.newCanvas(canvasWidth, canvasHeight) -- create the canvas
+    local canvasHeight = self.height
+    local canvasWidth = self.width
+    local shadowCanvas = love.graphics.newCanvas(canvasWidth, canvasHeight) -- create the canvas
 
     --General settings
     shadowCanvas:setFilter("linear", "linear")
@@ -88,7 +88,7 @@ end
 --Interractions function--
 
 function UIElement:isHovered()
-    vx, vy = InputsUtils.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    local vx, vy = InputsUtils.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
     return(
         self.isHoverable and
         vx > (self.x-(self.width/2)) and vx < (self.x+(self.width/2))
@@ -98,7 +98,7 @@ function UIElement:isHovered()
 end
 
 function UIElement:clickEvent() --S'active lorsqu'un click est commencé
-    wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
+    local wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
     
     if(self:isHovered()) then
         self.isBeingClicked = true
@@ -109,7 +109,7 @@ function UIElement:clickEvent() --S'active lorsqu'un click est commencé
 end
 
 function UIElement:releaseEvent() --S'active lorsqu'un click est complété
-    wasReleased = false
+    local wasReleased = false
     
     if(self:isHovered()==true and self.isBeingClicked == true and not self.isBeingDragged)then --s'active uniquement si la souris est encore sur l'objet et qu'elle etait en train d'appuyer dessus
         self:clickAction()

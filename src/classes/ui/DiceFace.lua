@@ -75,10 +75,10 @@ function DiceFace:update(dt)
 end
 
 function DiceFace:draw()
-    shadow = self:renderShadow()
-    render = self:render()
+    local shadow = self:renderShadow()
+    local render = self:render()
 
-    currentCanvas = love.graphics.getCanvas()
+    local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.renderCanvas)
     --Render l'ombre
     love.graphics.draw(shadow, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
@@ -89,12 +89,12 @@ function DiceFace:draw()
 end
 
 function DiceFace:render()
-    currentCanvas = love.graphics.getCanvas()
-    canvasSize = self.size --sets the base face of the canvas
+    local currentCanvas = love.graphics.getCanvas()
+    local canvasSize = self.size --sets the base face of the canvas
 
-    ratio = canvasSize/self.dim --ratio between the image size and the canvas size
+    local ratio = canvasSize/self.dim --ratio between the image size and the canvas size
 
-    faceCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
+    local faceCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
     
     --General settings
     faceCanvas:setFilter("linear", "linear")
@@ -118,11 +118,11 @@ function DiceFace:render()
 end
 
 function DiceFace:renderShadow()
-    currentCanvas = love.graphics.getCanvas()
+    local currentCanvas = love.graphics.getCanvas()
 
-    canvasSize = self.size --sets the base face of the canvas
-    ratio = canvasSize/self.dim --ratio between the image size and the canvas size
-    shadowCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
+    local canvasSize = self.size --sets the base face of the canvas
+    local ratio = canvasSize/self.dim --ratio between the image size and the canvas size
+    local shadowCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
 
     --General settings
     shadowCanvas:setFilter("linear", "linear")
@@ -140,7 +140,7 @@ end
 
 function DiceFace:isHovered() --Check if mouse is above the face
     --Utilise la fonction passée en paramètre, qui permet d'avoir la position de la souris dans laquelle elle est rendue.
-    vx, vy = self.mousePosition().x, self.mousePosition().y
+    local vx, vy = self.mousePosition().x, self.mousePosition().y
 
     return(
         self.isHoverable and
@@ -151,7 +151,7 @@ function DiceFace:isHovered() --Check if mouse is above the face
 end
 
 function DiceFace:clickEvent()
-    wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
+    local wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
     if(self:isHovered()) then
         self.isBeingClicked = true
         wasClicked = true
@@ -209,7 +209,7 @@ end
 
 
 function DiceFace:calculateAngleDrag()
-    maxRotation = 0.3
+    local maxRotation = 0.3
 
     if(self.isBeingDragged)then --Rotation pendant le drag
         self.dragRotation = 0.02*self.dragXspeed

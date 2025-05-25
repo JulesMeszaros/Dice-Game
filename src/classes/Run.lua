@@ -89,7 +89,7 @@ function Run:new(dices, gameCanvas)
     )
 
     --Create the first Round of the run
-    round = Round.new(1, self.dices, self.gameCanvas, self)
+    local round = Round.new(1, self.dices, self.gameCanvas, self)
     round:makeRoll(dices) --make first roll
     self.currentRound = round
     
@@ -137,7 +137,7 @@ end
 function Run:startNewRound()
     local newRoundNumber = self.roundNumber + 1 --Increments the number of round
     self.roundNumber = newRoundNumber
-    newRound = Round.new(newRoundNumber, self.dices, self.gameCanvas, self) --Create a new round object
+    local newRound = Round.new(newRoundNumber, self.dices, self.gameCanvas, self) --Create a new round object
     newRound:makeRoll(self.dices) 
     self.currentRound = newRound
 
@@ -145,7 +145,7 @@ function Run:startNewRound()
 end
 
 function Run:endRound()
-    afterRound = AfterRound:new(self, self.gameCanvas)
+    local afterRound = AfterRound:new(self, self.gameCanvas)
     self.shop = afterRound
 
     self.currentState = "shop" --Change d'état de Run
@@ -237,7 +237,7 @@ function Run:mousereleased(x, y, button, istouch, presses)
 
         --release event on UI elements (buttons)
         for key,button in next,self.uiElements.roundButtons do
-            wasReleased = button:releaseEvent()
+            local wasReleased = button:releaseEvent()
             if(wasReleased) then --Si le click a été complété
                 button:getCallback()()
             end

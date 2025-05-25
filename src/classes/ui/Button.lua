@@ -57,22 +57,21 @@ function Button:update(dt)
 end
 
 function Button:renderSprite(gameCanvas)
-    canvasHeight = self.height
-    canvasWidth = self.width
+    local canvasHeight = self.height
+    local canvasWidth = self.width
 
-    canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
+    local canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
 
     --General settings
     canvas:setFilter("linear", "linear")
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(canvas)
 
-    widthRatio = canvasWidth/self.sprite:getWidth()
-    heightRatio = canvasHeight/self.sprite:getHeight()
+    local widthRatio = canvasWidth/self.sprite:getWidth()
+    local heightRatio = canvasHeight/self.sprite:getHeight()
 
     --If desactivated : grey the button
     if self.isActivated==false then
-
         love.graphics.setShader(Shaders.grayscaleShader)
     else
         love.graphics.setShader()
@@ -102,7 +101,7 @@ end
 
 function Button:isHovered() --Check if mouse is above the face
     --Utilise la fonction passée en paramètre, qui permet d'avoir la position de la souris dans laquelle elle est rendue.
-    vx, vy = self.mousePosition().x, self.mousePosition().y
+    local vx, vy = self.mousePosition().x, self.mousePosition().y
 
     return(
         self.isHoverable and

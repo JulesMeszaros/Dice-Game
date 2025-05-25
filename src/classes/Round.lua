@@ -35,7 +35,7 @@ function Round.new(n, dices, gameCanvas, run)
     --On créée une première fois les faces à afficher
     for key,dice in next,self.dices do
 
-        diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
+        local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
             dice, --Dice Object 
             1, --Face represented
             (key*80) - 30, --X Position (centerd)
@@ -99,7 +99,7 @@ end
 function Round:mousereleased(x, y, button, istouch, presses)
     --release event for dice faces
     for key,diceface in next,self.diceFaces do
-        wasReleased = diceface:releaseEvent()
+        local wasReleased = diceface:releaseEvent()
         if(wasReleased)then
             self:updateSelectedDices(diceface)
         end
@@ -108,7 +108,7 @@ function Round:mousereleased(x, y, button, istouch, presses)
 
     --release event on UI elements (buttons)
     for key,button in next,self.terrain.figureButtons do
-        wasReleased = button:releaseEvent()
+        local wasReleased = button:releaseEvent()
         if(wasReleased) then --Si le click a été complété
             button:getCallback()()
         end
@@ -169,7 +169,7 @@ function Round:rerollDices() --Triggers the makeRoll function after clicking the
 end
 
 function Round:makeRoll(dices)
-    draw = self:drawDices(dices) --draw the dices
+    local draw = self:drawDices(dices) --draw the dices
     self:setDrawedDices(draw) --stores the draw
     self:resetSelectedDices() --reset the previously selected dices (ui)
 
@@ -179,9 +179,9 @@ function Round:makeRoll(dices)
 
     for key,dice in next,dices do --Creates the roll animation for the rerolled dices
 
-        randomXPos = math.random(100, self.diceFaces[dice].renderCanvas:getWidth()-100)
-        randomYPos = math.random(100, self.diceFaces[dice].renderCanvas:getHeight()-100)
-        randomR = ((math.random(0,1000)/1000)*2.5)-1.25 --(1001 angles possibles entre -1.25 et 1.25 radians)
+        local randomXPos = math.random(100, self.diceFaces[dice].renderCanvas:getWidth()-100)
+        local randomYPos = math.random(100, self.diceFaces[dice].renderCanvas:getHeight()-100)
+        local randomR = ((math.random(0,1000)/1000)*2.5)-1.25 --(1001 angles possibles entre -1.25 et 1.25 radians)
 
         --Set initial position (random X axis, under the terrain)
         self.diceFaces[dice]:setX(randomXPos)
@@ -203,7 +203,7 @@ function Round:drawDices(dices)
     local faceNumbers = self.drawedDices --On récupère les dés précédemment tirés.
 
     for key,dice in next,dices do
-        n = math.random(1, dice:getNbFaces())
+        local n = math.random(1, dice:getNbFaces())
         faceNumbers[dice] = n
     end
 

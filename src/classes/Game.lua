@@ -108,7 +108,7 @@ function Game:keypressed(key)
 end
 
 function Game:mousepressed(x, y, button, istouch, presses)
-    vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    local vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 
     if(self.currentScreen == PAGES.MAIN_MENU)then
         self.mainMenu:mousepressed(vx, vy, button, istouch, presses)
@@ -118,7 +118,7 @@ function Game:mousepressed(x, y, button, istouch, presses)
 end
 
 function Game:mousereleased(vx, vy, button, istouch, presses)
-    vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    local vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
     
     if(self.currentScreen == PAGES.MAIN_MENU)then
         self.mainMenu:mousereleased(vx, vy, button, istouch, presses)
@@ -128,11 +128,11 @@ function Game:mousereleased(vx, vy, button, istouch, presses)
 end
 
 function Game:mousemoved(x, y, dx, dy)
-    vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    local vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
     
-    scale = Inputs.getCanvasScale(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    local scale = Inputs.getCanvasScale(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
     
-    vdx, vdy = dx / scale, dy / scale
+    local vdx, vdy = dx / scale, dy / scale
     
     if(self.currentScreen == PAGES.MAIN_MENU)then
         self.mainMenu:mousemoved(vx, vy, vdx, vdy)

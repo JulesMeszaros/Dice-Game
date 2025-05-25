@@ -36,9 +36,9 @@ end
 
 function AfterRound:draw()
     --Score
-    scoreText = love.graphics.newText(Fonts.pixelated, "Round score : "..self.roundPlayed.roundScore)
+    local scoreText = love.graphics.newText(Fonts.pixelated, "Round score : "..self.roundPlayed.roundScore)
     --Texte fin du round
-    endRoundText = love.graphics.newText(Fonts.pixelated, 'End of round '..self.roundPlayed.nround)
+    local endRoundText = love.graphics.newText(Fonts.pixelated, 'End of round '..self.roundPlayed.nround)
 
     love.graphics.draw(endRoundText, self.gameCanvas:getWidth()/2, 40, 0, 1, 1, endRoundText:getWidth()/2, endRoundText:getHeight()/2)
     love.graphics.draw(scoreText, self.gameCanvas:getWidth()/2, 90, 0, 1, 1, scoreText:getWidth()/2, scoreText:getHeight()/2)
@@ -73,7 +73,7 @@ end
 function AfterRound:mousereleased(x, y, button, istouch, presses)
     --release event on UI elements (buttons)
     for key,button in next,self.uiElements.buttons do
-        wasReleased = button:releaseEvent()
+        local wasReleased = button:releaseEvent()
         if(wasReleased) then --Si le click a été complété
             button:getCallback()()
         end

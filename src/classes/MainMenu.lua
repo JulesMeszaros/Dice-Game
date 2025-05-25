@@ -70,7 +70,7 @@ end
 function MainMenu:mousereleased(x, y, button, istouch, presses)
     --release event on UI elements (buttons)
     for key,button in next,self.uiElements.buttons do
-        wasReleased = button:releaseEvent()
+        local wasReleased = button:releaseEvent()
         if(wasReleased) then --Si le click a été complété
             button:getCallback()()
         end
