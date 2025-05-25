@@ -1,6 +1,9 @@
 local Run = require("src.classes.run")
+
+--Import The Dices
 local Dice = require("src.classes.Dices.Dice")
 local EvilDice = require("src.classes.Dices.EvilDice")
+local FrutigerDice = require("src.classes.Dices.FrutigerDice")
 
 local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
@@ -24,7 +27,7 @@ function Game:start()
         Dice:new(),
         Dice:new(),
         Dice:new(),
-        Dice:new(),
+        FrutigerDice:new(),
         EvilDice:new()
     }
 

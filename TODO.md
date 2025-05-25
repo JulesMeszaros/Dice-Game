@@ -4,8 +4,9 @@
 
 ### Général
 
-TODO: Développer un système de Round
+TODO: Développer le système de Round
 TODO: Développer un système de Partie
+TODO: Implémenter une phase inter-round
 
 ### Esthétique
 
@@ -14,11 +15,14 @@ TODO: Passer le jeu en format 1080p
 TODO: Simplifier les paramètres de fonctions de mousePosition pour les rendre plus généralisables
 
 ### Animations
-TODO: Animation de reroll : dés qui glissent sur le terrain avec une position et un angle aléatoire
 
 ### Gameplay
 
 TODO: Réfléchir à des notions de gameplay
+
+### Code
+
+TODO: Simplifier l'import des dés en masse
 
 ## Bugs
 

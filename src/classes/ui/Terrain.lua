@@ -5,6 +5,8 @@ local CalculatePoints = require("src.utils.scripts.calculatePoints")
 local Terrain = {}
 Terrain.__index = Terrain
 
+local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
+
 function Terrain:new(round)
     local self = setmetatable({}, Terrain)
     currentCanvas = love.graphics.getCanvas()
@@ -16,6 +18,7 @@ function Terrain:new(round)
     self.diceTrayY = 0
 
     self.currentlyHoveredFigure = nil
+    self.currentlyHoveredDice = nil
 
     self.dice_tray = love.graphics.newCanvas(900, 550)
     self.dice_tray:setFilter("linear", "linear")
@@ -81,8 +84,10 @@ function Terrain:new(round)
 end
 
 function Terrain:update(dt)
-    --Reset Bouton de figure survolé
+    --Reset Bouton de figure et Dé survolé
     self.currentlyHoveredFigure = nil
+    self.currentlyHoveredDice = nil
+
     for key,button in next, self.figureButtons do
         button:update(dt)
 
@@ -94,6 +99,12 @@ function Terrain:update(dt)
          else
             button.isActivated = true
          end
+    end
+
+    for key,diceface in next,self.round.diceFaces do --On récupère le dé survolé par la souris
+        if(diceface:isHovered())then
+            self.currentlyHoveredDice = diceface.dice.name
+        end
     end
 end
 
@@ -111,12 +122,20 @@ function Terrain:drawDiceTray(x, y, dices)
     matImage = love.graphics.newImage("src/assets/sprites/ui/terrain/dice_mat.png")
     love.graphics.draw(matImage, 0, 0)
 
+    --On déssiné les dés
     for key,uiFace in next,dices do
         uiFace:draw()
     end
 
+    --On déssine le nom du dé survolé (si il existe)
+    diceName = love.graphics.newText(font, tostring(self.currentlyHoveredDice))
+    if(self.currentlyHoveredDice)then
+        love.graphics.draw(diceName, self.dice_tray:getWidth()/2, 20, 0, 1, 1, diceName:getWidth()/2, diceName:getHeight()/2)
+    end
+
+    --On retourne au canvas précédent
     love.graphics.setCanvas(targetCanvas)
-    
+    --On déssine le terrain à dés sur le canvas
     love.graphics.draw(self.dice_tray, x, y, 0, 1, 1, self.dice_tray:getWidth(), 0) --On fixe son offset sur son angle superieur droit
 
 end
