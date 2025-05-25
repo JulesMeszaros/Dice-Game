@@ -1,5 +1,6 @@
 local Run = require("src.classes.run")
-local Dice = require("src.classes.dice")
+local Dice = require("src.classes.Dices.Dice")
+local EvilDice = require("src.classes.Dices.EvilDice")
 
 local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
@@ -24,7 +25,7 @@ function Game:start()
         Dice:new(),
         Dice:new(),
         Dice:new(),
-        Dice:new()
+        EvilDice:new()
     }
 
     --Game dimmensions

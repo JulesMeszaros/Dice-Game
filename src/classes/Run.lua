@@ -1,4 +1,4 @@
-local Dice = require("src.classes.Dice")
+local Dice = require("src.classes.Dices.Dice")
 local DiceFace = require("src.classes.ui.DiceFace")
 local UIElement = require("src.classes.ui.UIElement")
 local Button = require("src.classes.ui.Button")

@@ -6,6 +6,9 @@ Dice.__index = Dice
 function Dice:new()
     local self = setmetatable({}, Dice)
     
+    --Metadatas about the dice
+    self.name = "White Dice"
+
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/basic_dice.png")
     self.spriteSheet:setFilter("linear", "linear")
