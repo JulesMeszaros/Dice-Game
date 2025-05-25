@@ -185,7 +185,7 @@ function Run:drawUIElements(gameCanvas)
     self:drawButtons(gameCanvas)--Les boutons
 end
 
---==Inputs functions==
+--==INPUTS FUNCTIONS==
 
 function Run:keypressed(key)
     self.currentRound:keypressed(key)

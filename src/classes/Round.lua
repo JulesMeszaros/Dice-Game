@@ -176,6 +176,25 @@ function Round:makeRoll(dices)
     for key,dice in next,self.dices do
         self.diceFaces[dice]:setFace(self.drawedDices[dice]) --update the ui
     end
+
+    for key,dice in next,dices do --Creates the roll animation for the rerolled dices
+
+        randomXPos = math.random(100, self.diceFaces[dice].renderCanvas:getWidth()-100)
+        randomYPos = math.random(100, self.diceFaces[dice].renderCanvas:getHeight()-100)
+        randomR = ((math.random(0,1000)/1000)*2.5)-1.25 --(1001 angles possibles entre -1.25 et 1.25 radians)
+
+        --Set initial position (random X axis, under the terrain)
+        self.diceFaces[dice]:setX(randomXPos)
+        self.diceFaces[dice]:setY(1000)
+        self.diceFaces[dice].rotation = 0
+
+        --Change their target position to make them slide
+        self.diceFaces[dice].targetX = randomXPos
+        self.diceFaces[dice].targetY = randomYPos
+        self.diceFaces[dice].baseRotation = randomR
+
+    end
+
 end
 
 function Round:drawDices(dices)

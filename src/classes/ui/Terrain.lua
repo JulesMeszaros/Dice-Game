@@ -95,10 +95,6 @@ function Terrain:update(dt)
             button.isActivated = true
          end
     end
-
-   
-
-    
 end
 
 --==DRAW FUNCTIONS==--

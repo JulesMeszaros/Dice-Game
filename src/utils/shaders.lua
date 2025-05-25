@@ -43,7 +43,7 @@ Shaders.outlineShader = love.graphics.newShader([[
 
 Shaders.rainbowShader = love.graphics.newShader([[
     extern number time;
-    extern number frequency = 0.2; // plus petit = plus étendu
+    extern number frequency = 0.1; // plus petit = plus étendu
 
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
         vec4 texColor = Texel(texture, texture_coords);

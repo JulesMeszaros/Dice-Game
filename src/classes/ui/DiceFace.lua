@@ -33,8 +33,10 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
     self.baseSize = size
     self.size = self.baseSize
 
-    self.targetedRotation = 0
-    self.rotation = 0
+    self.targetedRotation = 0 --Angle the dice is targeting
+    self.baseRotation = 0 --Base angle for the calculation of targetedRotation (basically the targeted angle when nothing happens)
+    self.dragRotation = 0 --Angle calculated based on the drag speed
+    self.rotation = 0 --Angle the dice is actually showed at
 
     self.mousePosition = mousePosition --The function returning the mousePosition for this dice.
 
@@ -58,10 +60,12 @@ function DiceFace:update(dt)
     end
 
     self:calculateAngleDrag()
+    self.targetedRotation = self.baseRotation + self.dragRotation
 
-    local speed = 30
-    self.scale = self.scale + (self.targetedScale - self.scale)*speed*dt
-    self.rotation = self.rotation + (self.targetedRotation - self.rotation)*speed*dt
+    local scaleSpeed = 20
+    self.scale = self.scale + (self.targetedScale - self.scale)*scaleSpeed*dt
+    local rSpeed = 8
+    self.rotation = self.rotation + (self.targetedRotation - self.rotation)*rSpeed*dt
 
     local moveSpeed = 15
     self.x = self.x + (self.targetX - self.x)*moveSpeed*dt
@@ -151,6 +155,7 @@ function DiceFace:clickEvent()
     if(self:isHovered()) then
         self.isBeingClicked = true
         wasClicked = true
+        self:resetBaseAngle()
     end
 
     return wasClicked
@@ -175,6 +180,10 @@ function DiceFace:updateSprite()
 end
 
 --Get/set Functions--
+function DiceFace:resetBaseAngle()
+    self.baseRotation = 0
+end
+
 function DiceFace:setSelected(state)
     self.isSelected = state
     self:updateSize()
@@ -203,17 +212,17 @@ function DiceFace:calculateAngleDrag()
     maxRotation = 0.3
 
     if(self.isBeingDragged)then --Rotation pendant le drag
-        self.targetedRotation = 0.02*self.dragXspeed
+        self.dragRotation = 0.02*self.dragXspeed
     else
-        self.targetedRotation = 0
+        self.dragRotation = 0
     end
 
-    if self.targetedRotation < 0-maxRotation then
-        self.targetedRotation = 0-maxRotation
+    if self.dragRotation < 0-maxRotation then
+        self.dragRotation = 0-maxRotation
     end
 
-    if self.targetedRotation > maxRotation then
-        self.targetedRotation = maxRotation
+    if self.dragRotation > maxRotation then
+        self.dragRotation = maxRotation
     end
 end
 
