@@ -138,7 +138,7 @@ function Run:startNewRound()
     local newRoundNumber = self.roundNumber + 1 --Increments the number of round
     self.roundNumber = newRoundNumber
     newRound = Round.new(newRoundNumber, self.dices, self.gameCanvas, self) --Create a new round object
-    newRound:makeRoll(dices) 
+    newRound:makeRoll(self.dices) 
     self.currentRound = newRound
 
     self.currentState = "round"

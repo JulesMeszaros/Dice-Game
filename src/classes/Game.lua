@@ -1,4 +1,5 @@
-local Run = require("src.classes.run")
+local Run = require("src.classes.Run")
+local MainMenu = require("src.classes.MainMenu")
 
 --Import The Dices
 local Dice = require("src.classes.Dices.Dice")
@@ -10,7 +11,8 @@ local Inputs = require("src.utils.scripts.inputs")
 
 local Game = { 
     currentScreen = 1,
-    gamePaused = false
+    gamePaused = false,
+    run = nil
 }
 Game.__index = Game
 
@@ -18,12 +20,13 @@ local PAGES = {
     MAIN_MENU = 0,
     GAME = 1
 }
+--Game dimmensions
+local virtualWidth, virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT
 
-function Game:start()
-    local self = setmetatable({}, Game)
-    self.currentScreen = PAGES.GAME
-    
-    dices = { -- On définit les 5 dés présents dans la partie
+local gameCanvas = love.graphics.newCanvas(virtualWidth, virtualHeight)
+ 
+
+local dices = { -- On définit les 5 dés présents dans la partie
         Dice:new(),
         Dice:new(),
         Dice:new(),
@@ -31,59 +34,97 @@ function Game:start()
         EvilDice:new()
     }
 
-    --Game dimmensions
-    self.virtualWidth, self.virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT
-    self.gameCanvas = love.graphics.newCanvas(self.virtualWidth, self.virtualHeight)
+function Game:start()
+    local self = setmetatable({}, Game)
+    self.currentScreen = PAGES.MAIN_MENU
 
-    run = Run:new(dices, self.gameCanvas) -- start run
+    --Create a main menu
+    self.mainMenu = MainMenu:new(gameCanvas, self)
 
     return self
 end
 
 function Game:update(dt)
-    if self.currentScreen == PAGES.GAME then
-        run:update(dt)     
+    if self.currentScreen == PAGES.MAIN_MENU then
+        self.mainMenu:update(dt)
+    elseif self.currentScreen == PAGES.GAME then
+        self.run:update(dt)     
     end
 end
 
 function Game:draw()
 
-    love.graphics.setCanvas(self.gameCanvas)
+    love.graphics.setCanvas(gameCanvas)
     love.graphics.clear()
     --Rendu du jeu--
-    --love.graphics.rectangle("fill", 0, 0, self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
-    run:draw(self.gameCanvas)
+    if(self.currentScreen == PAGES.MAIN_MENU)then
+        self.mainMenu:draw()
+    elseif(self.currentScreen == PAGES.GAME)then
+        self.run:draw(gameCanvas)
+    end
+    
     love.graphics.setCanvas()
 
     --Affichage du jeu--
     -- Calcule le scale pour garder le ratio
     local screenWidth, screenHeight = love.graphics.getDimensions()
-    local scale = math.min(screenWidth / self.virtualWidth, screenHeight / self.virtualHeight)
+    local scale = math.min(screenWidth / virtualWidth, screenHeight / virtualHeight)
 
-    local scaledWidth = self.virtualWidth * scale
-    local scaledHeight = self.virtualHeight * scale
+    local scaledWidth = virtualWidth * scale
+    local scaledHeight = virtualHeight * scale
 
     local offsetX = (screenWidth - scaledWidth) / 2
     local offsetY = (screenHeight - scaledHeight) / 2
-
-    if self.currentScreen == PAGES.GAME then
-        --
-        love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
-    end
+              
+    love.graphics.draw(gameCanvas, offsetX, offsetY, 0, scale, scale)
 end
 
+--==GAME FUNCTION==--
+
+function Game:startNewRun()
+    self.currentScreen = PAGES.GAME
+    self.run = Run:new(dices, gameCanvas)
+
+end
+
+--==INPUTS FUNCTIONS==--
+
 function Game:keypressed(key)
-    run:keypressed(key)
+
+    if(key=="b")then
+        self.currentScreen = PAGES.GAME
+        self.run = Run:new(dices, gameCanvas)
+    end
+
+    if(key=="o")then
+        self.currentScreen = PAGES.MAIN_MENU
+    end
+
+    if(self.currentScreen == PAGES.MAIN_MENU)then
+
+    elseif(self.currentScreen == PAGES.GAME)then
+        self.run:keypressed(key)
+    end
 end
 
 function Game:mousepressed(x, y, button, istouch, presses)
     vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
-    run:mousepressed(vx, vy, button, istouch, presses)
+
+    if(self.currentScreen == PAGES.MAIN_MENU)then
+        self.mainMenu:mousepressed(vx, vy, button, istouch, presses)
+    elseif(self.currentScreen == PAGES.GAME)then
+        self.run:mousepressed(vx, vy, button, istouch, presses)
+    end
 end
 
 function Game:mousereleased(vx, vy, button, istouch, presses)
     vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
-    run:mousereleased(vx, vy, button, istouch, presses)
+    
+    if(self.currentScreen == PAGES.MAIN_MENU)then
+        self.mainMenu:mousereleased(vx, vy, button, istouch, presses)
+    elseif(self.currentScreen == PAGES.GAME)then
+        self.run:mousereleased(vx, vy, button, istouch, presses)
+    end
 end
 
 function Game:mousemoved(x, y, dx, dy)
@@ -92,7 +133,12 @@ function Game:mousemoved(x, y, dx, dy)
     scale = Inputs.getCanvasScale(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
     
     vdx, vdy = dx / scale, dy / scale
-    run:mousemoved(vx, vy, vdx, vdy)
+    
+    if(self.currentScreen == PAGES.MAIN_MENU)then
+        self.mainMenu:mousemoved(vx, vy, vdx, vdy)
+    elseif(self.currentScreen == PAGES.GAME)then
+        self.run:mousemoved(vx, vy, vdx, vdy)
+    end
 end
 
 return Game
