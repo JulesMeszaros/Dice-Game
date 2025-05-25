@@ -3,7 +3,9 @@ local DiceFace = require("src.classes.ui.DiceFace")
 local UIElement = require("src.classes.ui.UIElement")
 local Button = require("src.classes.ui.Button")
 local Terrain = require("src.classes.ui.Terrain")
+
 local Round = require("src.classes.Round")
+local AfterRound = require("src.classes.AfterRound")
 
 local Inputs = require("src.utils.scripts.inputs")
 
@@ -13,7 +15,7 @@ local Run = {
 
     --UI
     uiElements = { -- Stores the UI Elements of the Run
-        buttons = {}
+        roundButtons = {}
     },
 
     --Drag variables (should rather be located in the Game class i guess...)
@@ -52,7 +54,7 @@ function Run:new(dices, gameCanvas)
     self.dices = dices
 
     --Add a button
-    self.uiElements.buttons["resetButton"] = Button:new(
+    self.uiElements.roundButtons["resetButton"] = Button:new(
         function()self.currentRound:resetSelectedDices()end, 
         "src/assets/sprites/ui/buttons/reset.png", 
         love.graphics.getWidth()-125, 
@@ -64,7 +66,7 @@ function Run:new(dices, gameCanvas)
         )
         
 
-    self.uiElements.buttons["rerollButton"] = Button:new(
+    self.uiElements.roundButtons["rerollButton"] = Button:new(
         function()self.currentRound:rerollDices()end, 
         "src/assets/sprites/ui/buttons/reroll.png", 
         love.graphics.getWidth()-350, 
@@ -75,7 +77,7 @@ function Run:new(dices, gameCanvas)
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
-    self.uiElements.buttons["reorganiserButton"] = Button:new(
+    self.uiElements.roundButtons["reorganiserButton"] = Button:new(
         function()self.currentRound.terrain:reorganiseDiceFaces(self.currentRound.diceFaces)end, 
         "src/assets/sprites/ui/buttons/reorganiser.png", 
         love.graphics.getWidth()-570, 
@@ -96,12 +98,12 @@ end
 
 function Run:update(dt)
 
-    if(self.isInRound)then
+    if(self.currentState=="round")then
         --update Round
         self.currentRound:update(dt)
 
         --Update round Buttons
-        for key,button in next,self.uiElements.buttons do
+        for key,button in next,self.uiElements.roundButtons do
             button:update(dt)
         end
 
@@ -110,39 +112,25 @@ function Run:update(dt)
             dice:update(dt)
         end
 
-        self.uiElements.buttons["rerollButton"]:setActivated(self.currentRound.availableRerolls>0 and table.getn(self.currentRound.selectedDices)>0)
-        self.uiElements.buttons["resetButton"]:setActivated(table.getn(self.currentRound.selectedDices)>0)
+        --TODO: à déplacer dans la classe Round 
+        self.uiElements.roundButtons["rerollButton"]:setActivated(self.currentRound.availableRerolls>0 and table.getn(self.currentRound.selectedDices)>0)
+        self.uiElements.roundButtons["resetButton"]:setActivated(table.getn(self.currentRound.selectedDices)>0)
 
+    elseif(self.currentState=="shop")then
+        --update shop
+        self.shop:update(dt)
     end
 end
 
 function Run:draw(gameCanvas) --Render the game into the Game Canvas.
     --==DRAW THE ROUND==--
-    if(self.isInRound==true)then --check if we are in round
-        --Set the right canvas
-        self:drawTerrain()
-        love.graphics.setCanvas(gameCanvas)
-        self:drawUIElements(gameCanvas) --Draw the UI Elements into the canvas
-
-        --Some informational text //TODO: Move the text to a dedicated function later
-        local rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.currentRound.availableRerolls))
-        local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.currentRound.roundScore))
-        local currentHands = love.graphics.newText(font, 'Hands : '..tostring(self.currentRound.remainingHands))
-        local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.roundNumber))
-        
-        love.graphics.draw(rerollText, 10, 5)
-        love.graphics.draw(scoreText, 10, 30)
-        love.graphics.draw(currentHands, 10, 55)
-        love.graphics.draw(currentRoundText, 10, love.graphics:getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
-
-        love.graphics.setCanvas(gameCanvas)
-
-        --Show the currently hovered figure button
-        if(self.currentRound.terrain.currentlyHoveredFigure)then
-            local figureHoveredText = love.graphics.newText(font, self.currentRound.terrain:getCurrentlyHoveredFigure())
-            love.graphics.draw(figureHoveredText, 20, 650, 0, 1, 1, 0, figureHoveredText:getHeight()/2)
-        end
+    if(self.currentState=="round")then --check if we are in round
+        self:drawRound() --Draw the round
+    elseif(self.currentState == "shop")then --check if we are in shop
+        self.shop:draw() --Draw the shop
     end
+
+    --==DRAW THE AFTER ROUND==-- (plus tard le shop)
 end
 
 --==ROUND FUNCTIONS==--
@@ -150,18 +138,47 @@ function Run:startNewRound()
     local newRoundNumber = self.roundNumber + 1 --Increments the number of round
     self.roundNumber = newRoundNumber
     newRound = Round.new(newRoundNumber, self.dices, self.gameCanvas, self) --Create a new round object
+    newRound:makeRoll(dices) 
     self.currentRound = newRound
 
-    self.isInRound = true
+    self.currentState = "round"
 end
 
 function Run:endRound()
-    self.isInRound = false
-    self.currentState = "shop"
-    self:startNewRound()
+    afterRound = AfterRound:new(self, self.gameCanvas)
+    self.shop = afterRound
+
+    self.currentState = "shop" --Change d'état de Run
 end
 
 --==DRAW FUNCTIONS==--
+
+function Run:drawRound()
+    --Set the right canvas
+    self:drawTerrain()
+    love.graphics.setCanvas(gameCanvas)
+    self:drawUIElements(gameCanvas) --Draw the UI Elements into the canvas
+
+    --Some informational text //TODO: Move the text to a dedicated function later
+    local rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.currentRound.availableRerolls))
+    local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.currentRound.roundScore))
+    local currentHands = love.graphics.newText(font, 'Hands : '..tostring(self.currentRound.remainingHands))
+    local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.roundNumber))
+    
+    love.graphics.draw(rerollText, 10, 5)
+    love.graphics.draw(scoreText, 10, 30)
+    love.graphics.draw(currentHands, 10, 55)
+    love.graphics.draw(currentRoundText, 10, love.graphics:getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
+
+    love.graphics.setCanvas(gameCanvas)
+
+    --Show the currently hovered figure button
+    if(self.currentRound.terrain.currentlyHoveredFigure)then
+        local figureHoveredText = love.graphics.newText(font, self.currentRound.terrain:getCurrentlyHoveredFigure())
+        love.graphics.draw(figureHoveredText, 20, 650, 0, 1, 1, 0, figureHoveredText:getHeight()/2)
+    end
+
+end
 
 function Run:drawTerrain()
     --Dessine le terrain du round actuel(temporaire j'imagine, on verra...)
@@ -175,7 +192,7 @@ function Run:drawTerrain()
 end
 
 function Run:drawButtons(gameCanvas)
-    for key,button in next,self.uiElements.buttons do
+    for key,button in next,self.uiElements.roundButtons do
         button:draw(gameCanvas)
     end
 end
@@ -188,38 +205,42 @@ end
 --==INPUTS FUNCTIONS==
 
 function Run:keypressed(key)
-    self.currentRound:keypressed(key)
-
-    if(key=="p")then
-        self.isInRound = true
-        self.currentRound.remainingHands = self.currentRound.remainingHands + 5
+    if(self.currentState=="round")then
+        self.currentRound:keypressed(key)
+    elseif(self.currentState=="shop")then
+        self.shop:keypressed(key)
     end
 end
 
 function Run:mousepressed(x, y, button, istouch, presses)
-    self.currentRound:mousepressed(x, y, button, istouch, presses)
-
     --Met les coordonnées de drag à 0
     self.dragOriginX = x ; self.dragOriginY = y
 
-    --Active les actions relatives aux UIElements
-    
+    if(self.currentState == "round")then
+        self.currentRound:mousepressed(x, y, button, istouch, presses)
 
-    --Buttons
-    for key,button in next,self.uiElements.buttons do
-        button:clickEvent()
+        --Buttons
+        for key,button in next,self.uiElements.roundButtons do
+            button:clickEvent()
+        end
+    elseif(self.currentState=="shop")then
+        self.shop:mousepressed(x, y, button, istouch, presses)
     end
 end
 
 function Run:mousereleased(x, y, button, istouch, presses)
-    self.currentRound:mousereleased(x, y, button, istouch, presses)
+    if(self.currentState=="round")then
+        self.currentRound:mousereleased(x, y, button, istouch, presses)
 
-    --release event on UI elements (buttons)
-    for key,button in next,self.uiElements.buttons do
-        wasReleased = button:releaseEvent()
-        if(wasReleased) then --Si le click a été complété
-            button:getCallback()()
+        --release event on UI elements (buttons)
+        for key,button in next,self.uiElements.roundButtons do
+            wasReleased = button:releaseEvent()
+            if(wasReleased) then --Si le click a été complété
+                button:getCallback()()
+            end
         end
+    elseif(self.currentState=='shop')then
+        self.shop:mousereleased(x, y, button, istouch, presses)
     end
 
     --Deactivate dragging
@@ -227,8 +248,11 @@ function Run:mousereleased(x, y, button, istouch, presses)
 end
 
 function Run:mousemoved(x, y, dx, dy)
-    self.currentRound:mousemoved(x, y, dx, dy, self.isDragging)
-
+    if(self.currentState=="round")then
+        self.currentRound:mousemoved(x, y, dx, dy, self.isDragging)
+    elseif(self.currentState=="shop")then
+        self.shop:mousemoved(x, y, dx, dy, self.isDragging)
+    end
     --x et y sont la position, dx et dy sont la vitesse.
 
     if(love.mouse.isDown(1) and self.dragOriginX and self.dragOriginY) then

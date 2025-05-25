@@ -164,6 +164,7 @@ function Terrain:reorganiseDiceFaces(dices)
     for key,uiFace in next,dices do
         uiFace.targetX = ((i*80) - 30)
         uiFace.targetY = (self.dice_tray:getHeight()-60)
+        uiFace.baseRotation = 0
         i = i+1
     end
 end

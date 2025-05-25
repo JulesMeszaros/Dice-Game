@@ -22,7 +22,6 @@ function Round.new(n, dices, gameCanvas, run)
     local self = setmetatable({}, Round)
 
     self.run = run
-
     self.gameCanvas = gameCanvas
 
     --Current Round Parameters
