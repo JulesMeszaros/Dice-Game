@@ -1,7 +1,7 @@
 local DiceFace = require("src.classes.ui.DiceFace")
 local Terrain = require("src.classes.ui.Terrain")
 
-local Inputs = require("src.utils.scripts.Inputs")
+local Inputs = require("src.utils.scripts.inputs")
 
 local Round = {
     diceFaces = {},
@@ -28,6 +28,7 @@ function Round.new(n, dices, gameCanvas, run)
     self.nround = n
     self.availableRerolls = 3
     self.dices = dices
+    self.targetScore = 100
 
     self.terrain =  Terrain:new(self)
 
@@ -220,7 +221,10 @@ function Round:playFigure(points) --Function that triggers the hand
         self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
         self:makeRoll(self.dices) -- On effectue un reroll
         self.availableRerolls = 3
-        print("hand played")
+    end
+
+    if(self.roundScore >= self.targetScore) then
+        self:endRound()
     end
 
     if(self.remainingHands == 0)then

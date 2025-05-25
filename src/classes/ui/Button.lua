@@ -1,4 +1,4 @@
-local Shaders = require("src.utils.Shaders")
+local Shaders = require("src.utils.shaders")
 
 local UIElement = require("src.classes.ui.UIElement")
 local Inputs = require("src.utils.scripts.inputs")

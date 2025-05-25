@@ -1,6 +1,6 @@
 --Utils
-local Fonts = require('src.utils.Fonts')
-local Inputs = require("src.utils.scripts.Inputs")
+local Fonts = require('src.utils.fonts')
+local Inputs = require("src.utils.scripts.inputs")
 
 local Button = require("src.classes.ui.Button")
 
