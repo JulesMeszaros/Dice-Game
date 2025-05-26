@@ -43,6 +43,11 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
     self.dragRotation = 0 --Angle calculated based on the drag speed
     self.rotation = 0 --Angle the dice is actually showed at
 
+    self.velx = 0
+    self.vely = 0
+    self.velrotation = 0
+    self.velscale = 0
+
     self.baseTargetedScale = 1
     self.selectionScale = 0
     self.hoverScale = 0
@@ -271,17 +276,28 @@ function DiceFace:calculateAngleDrag()
     end
 end
 
-function DiceFace:updateAngle(dt)
-    self.rotation = self.rotation + (self.targetedRotation - self.rotation)*rSpeed*dt
+function DiceFace:updatePosition(dt)
+    self.x, self.velx = springUpdate(self.x, self.targetX, self.velx, dt, 4, 0.8)
+    self.y, self.vely = springUpdate(self.y, self.targetY, self.vely, dt, 4, 0.8)
 end
 
-function DiceFace:updatePosition(dt)
-    self.x = self.x + (self.targetX - self.x)*moveSpeed*dt
-    self.y = self.y + (self.targetY - self.y)*moveSpeed*dt
+function DiceFace:updateAngle(dt)
+    self.rotation, self.velrotation = springUpdate(self.rotation, self.targetedRotation, self.velrotation, dt, 5, 0.4)
 end
 
 function DiceFace:updateScale(dt)
-    self.scale = self.scale + (self.targetedScale - self.scale)*scaleSpeed*dt
+    self.scale, self.velscale = springUpdate(self.scale, self.targetedScale, self.velscale, dt, 4, 0.6)
+end
+
+--==Utilities==--
+function springUpdate(current, target, velocity, dt, frequency, damping)
+    local f = frequency * 2 * math.pi
+    local g = damping
+    local delta = target - current
+    local accel = f * f * delta - 2 * g * f * velocity
+    velocity = velocity + accel * dt
+    current = current + velocity * dt
+    return current, velocity
 end
 
 return DiceFace
