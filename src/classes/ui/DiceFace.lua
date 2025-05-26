@@ -38,6 +38,10 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
     self.dragRotation = 0 --Angle calculated based on the drag speed
     self.rotation = 0 --Angle the dice is actually showed at
 
+    self.baseTargetedScale = 1
+    self.selectionScale = 0
+    self.hoverScale = 0
+
     self.mousePosition = mousePosition --The function returning the mousePosition for this dice.
 
     self.renderCanvas = renderCanvas --Le canvas dans laquel le dé est dessiné. Permet d'avoir des infos genre sa largeur.
@@ -52,14 +56,23 @@ end
 function DiceFace:update(dt)
     self.time=self.time+dt
 
+    --Calculate scale
     if(self:isHovered())then
-        self.targetedScale = 0.95 --Si hovered
+        self.hoverScale = -0.1 --Si hovered
         if(love.mouse.isDown(1)) then
-            self.targetedScale = 0.90 --Si clicked
+            self.hoverScale = -0.15 --Si clicked
         end
     else
-        self.targetedScale = 1
+        self.hoverScale = 0
     end
+
+    if(self.isSelected)then
+        self.selectionScale = 0.2
+    else
+        self.selectionScale = 0
+    end
+
+    self.targetedScale = self.baseTargetedScale + self.selectionScale + self.hoverScale
 
     self:calculateAngleDrag()
     self.targetedRotation = self.baseRotation + self.dragRotation
@@ -73,20 +86,22 @@ function DiceFace:update(dt)
     self.x = self.x + (self.targetX - self.x)*moveSpeed*dt
     self.y = self.y + (self.targetY - self.y)*moveSpeed*dt
 
-
+    --update canvas
+    self:updateCanvas()
 end
 
 function DiceFace:draw()
-    local shadow = self:renderShadow()
-    local render = self:render()
+    --local shadow = self:renderShadow()
+    local render = self.diceCanvas
 
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.renderCanvas)
     --Render l'ombre
-    love.graphics.draw(shadow, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
-    --Render la face du dé    
-    love.graphics.draw(render, self.x, self.y, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
+    --love.graphics.draw(shadow, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
     
+    --Render la face du dé   
+    love.graphics.draw(render, self.x, self.y, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
+
     love.graphics.setCanvas(currentCanvas)
 end
 
@@ -140,6 +155,32 @@ function DiceFace:renderShadow()
 
 end
 
+function DiceFace:updateCanvas()
+    local currentCanvas = love.graphics.getCanvas()
+    
+    local canvasSize = self.size --sets the base face of the canvas
+    local ratio = canvasSize/self.dim --ratio between the image size and the canvas size
+
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.diceCanvas)
+    love.graphics.clear()
+
+    --Draw the face image
+    if(self:getIsSelected()==true)then
+        love.graphics.setShader(Shaders.rainbowShader)
+        Shaders.rainbowShader:send("time", self.time/10 % 1)
+
+    else
+        love.graphics.setShader()
+    end
+
+    love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
+    
+    love.graphics.setShader()
+
+    love.graphics.setCanvas(currentCanvas)
+end
+
 function DiceFace:isHovered() --Check if mouse is above the face
     --Utilise la fonction passée en paramètre, qui permet d'avoir la position de la souris dans laquelle elle est rendue.
     local vx, vy = self.mousePosition().x, self.mousePosition().y
@@ -167,14 +208,6 @@ function DiceFace:clickAction()
     self:selectOrDeselect()
 end
 
-function DiceFace:updateSize()
-    if(self:getIsSelected())then
-        self.size = self.baseSize + (self.baseSize/100)*20
-    else
-        self.size = self.baseSize
-    end 
-end
-
 function DiceFace:updateSprite()
     self.spriteSheet = self.dice:getSpriteSheet()
     self.quad = self.dice:getQuad(self.face)
@@ -188,7 +221,6 @@ end
 
 function DiceFace:setSelected(state)
     self.isSelected = state
-    self:updateSize()
 end
 
 function DiceFace:getDice()
