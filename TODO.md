@@ -13,6 +13,7 @@
 - TODO: Se renseigner sur les shaders
 - TODO: Passer le jeu en format 1080p
 - TODO: Simplifier les paramètres de fonctions de **mousePosition** pour les rendre plus généralisables
+- FIXME: Régler l'antialiasing chelou sur tous les graphismes du jeu
 
 ### Animations
 
