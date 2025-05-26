@@ -156,8 +156,8 @@ end
 function Run:drawRound()
     --Set the right canvas
     self:drawTerrain()
-    love.graphics.setCanvas(gameCanvas)
-    self:drawUIElements(gameCanvas) --Draw the UI Elements into the canvas
+    love.graphics.setCanvas(self.gameCanvas)
+    self:drawUIElements(self.gameCanvas) --Draw the UI Elements into the canvas
 
     --Some informational text //TODO: Move the text to a dedicated function later
     local rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.currentRound.availableRerolls))
