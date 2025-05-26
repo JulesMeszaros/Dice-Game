@@ -48,8 +48,9 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
 
     self.time = 0
 
-    self.diceCanvas = self:render()
-
+    --Create canvas and shadow canvas
+    self.diceCanvas = self:createCanvas()
+    self.shadowCanvas = self:createShadow()
     return self
 end
 
@@ -97,7 +98,7 @@ function DiceFace:draw()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.renderCanvas)
     --Render l'ombre
-    --love.graphics.draw(shadow, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
+    love.graphics.draw(self.shadowCanvas, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
     
     --Render la face du dé   
     love.graphics.draw(render, self.x, self.y, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
@@ -105,7 +106,7 @@ function DiceFace:draw()
     love.graphics.setCanvas(currentCanvas)
 end
 
-function DiceFace:render()
+function DiceFace:createCanvas()
     local currentCanvas = love.graphics.getCanvas()
     local canvasSize = self.size --sets the base face of the canvas
 
@@ -134,17 +135,19 @@ function DiceFace:render()
     return faceCanvas
 end
 
-function DiceFace:renderShadow()
+function DiceFace:createShadow()
     local currentCanvas = love.graphics.getCanvas()
-
     local canvasSize = self.size --sets the base face of the canvas
-    local ratio = canvasSize/self.dim --ratio between the image size and the canvas size
-    local shadowCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
 
+    local ratio = canvasSize/self.dim --ratio between the image size and the canvas size
+
+    local shadowCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
+    
     --General settings
     shadowCanvas:setFilter("linear", "linear")
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(shadowCanvas)
+
 
     love.graphics.setColor(0, 0, 0, 0.25)  -- black with 50% opacity
     love.graphics.rectangle("fill", 0, 0, shadowCanvas:getWidth(), shadowCanvas:getHeight())
