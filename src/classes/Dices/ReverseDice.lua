@@ -6,7 +6,7 @@ EvilDice.__index = EvilDice
 function EvilDice:new()
     local self = setmetatable(Dice:new(), EvilDice)
 
-    self.name = "Evil Dice"
+    self.name = "Reverse Dice"
 
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/ReverseDiceTileset.png")

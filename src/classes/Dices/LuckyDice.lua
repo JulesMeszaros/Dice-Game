@@ -6,7 +6,7 @@ FrutigerDice.__index = FrutigerDice
 function FrutigerDice:new()
     local self = setmetatable(Dice:new(), FrutigerDice)
 
-    self.name = "Frutiger Aero Dice"
+    self.name = "Lucky Dice"
 
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/LuckyDiceTileset.png")
