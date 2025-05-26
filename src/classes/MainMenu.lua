@@ -43,7 +43,7 @@ function MainMenu:draw()
     love.graphics.draw(textTitle, self.gameCanvas:getWidth()/2, 100, 0, 1, 1, textTitle:getWidth()/2, textTitle:getHeight()/2)
 
     --Version
-    local versionText = love.graphics.newText(Fonts.pixelated, "AEROSOL DELUXE GAMES — dev0.0.1")
+    local versionText = love.graphics.newText(Fonts.pixelated, "AEROSOL DELUXE GAMES — v0.0.2dev")
     love.graphics.draw(versionText, 20, self.gameCanvas:getHeight()-20, 0, 1, 1, 0, versionText:getHeight())
 
     --Buttons
