@@ -4,4 +4,5 @@ function love.conf(t)
     t.window.title = "Yatzee"
     t.window.resizable = true
     t.console = true
+    t.window.vsync = 0
 end
