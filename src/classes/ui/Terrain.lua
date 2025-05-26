@@ -22,11 +22,11 @@ function Terrain:new(round)
     self.currentlyHoveredDice = nil
 
     self.dice_tray = love.graphics.newCanvas(900, 550)
-    self.dice_tray:setFilter("linear", "linear")
+    self.dice_tray:setFilter("nearest", "nearest")
 
     --Figure buttons
     self.figureButtonsCanvas = love.graphics.newCanvas(330,468)
-    self.figureButtonsCanvas:setFilter("linear", "linear")
+    self.figureButtonsCanvas:setFilter("nearest", "nearest")
 
     --Importation des images
     local image_buttons = {

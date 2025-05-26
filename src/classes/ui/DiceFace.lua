@@ -119,7 +119,7 @@ function DiceFace:createCanvas()
     local faceCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
     
     --General settings
-    faceCanvas:setFilter("linear", "linear")
+    faceCanvas:setFilter("nearest", "nearest")
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(faceCanvas)
 
@@ -148,7 +148,7 @@ function DiceFace:createShadow()
     local shadowCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
     
     --General settings
-    shadowCanvas:setFilter("linear", "linear")
+    shadowCanvas:setFilter("nearest", "nearest")
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(shadowCanvas)
 

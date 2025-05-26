@@ -10,7 +10,7 @@ function FrutigerDice:new()
 
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/LuckyDiceTileset.png")
-    self.spriteSheet:setFilter("linear", "linear")
+    self.spriteSheet:setFilter("nearest", "nearest")
 
     return self
 end

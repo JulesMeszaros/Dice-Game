@@ -25,6 +25,7 @@ local PAGES = {
 local virtualWidth, virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT
 
 local gameCanvas = love.graphics.newCanvas(virtualWidth, virtualHeight)
+gameCanvas:setFilter("nearest", "nearest")
 
 local dices = { -- On définit les 5 dés présents dans la partie
         Dice:new(),

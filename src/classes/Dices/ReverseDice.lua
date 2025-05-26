@@ -10,8 +10,7 @@ function EvilDice:new()
 
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/ReverseDiceTileset.png")
-    self.spriteSheet:setFilter("linear", "linear")
-
+    self.spriteSheet:setFilter("nearest", "nearest")
     return self
 end
 

@@ -10,8 +10,8 @@ function Dice:new()
     self.name = "White Dice"
 
     --Metadatas about the graphics of the dice
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/baseDiceTileset.png")
-    self.spriteSheet:setFilter("linear", "linear")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/BaseDiceTileset.png")
+    self.spriteSheet:setFilter("nearest", "nearest")
     
     self.faceDimmension = 64 --sets the dimmensions for a face of the dice in px
 

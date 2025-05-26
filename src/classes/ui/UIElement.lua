@@ -52,7 +52,7 @@ function UIElement:renderSprite(gameCanvas)
     local canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
 
     --General settings
-    canvas:setFilter("linear", "linear")
+    canvas:setFilter("nearest", "nearest")
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(canvas)
 
@@ -73,7 +73,7 @@ function UIElement:renderShadow(gameCanvas)
     local shadowCanvas = love.graphics.newCanvas(canvasWidth, canvasHeight) -- create the canvas
 
     --General settings
-    shadowCanvas:setFilter("linear", "linear")
+    shadowCanvas:setFilter("nearest", "nearest")
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(shadowCanvas)
 
