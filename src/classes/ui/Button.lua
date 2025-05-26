@@ -16,6 +16,8 @@ function Button:new(
     gameCanvas, 
     mousePosition)
 
+    self.gameCanvas = gameCanvas
+
     local self = setmetatable(UIElement.new(), Button)
 
     self:setSprite(love.graphics.newImage(spritePath))
@@ -39,6 +41,10 @@ function Button:new(
 
     self.callbackFunction = callback
 
+    --Create the canvas ONCE
+    self.uiCanvas = self:createCanvas()
+    print(self.uiCanvas)
+
     return self
 end
 
@@ -54,45 +60,48 @@ function Button:update(dt)
 
     local speed = 30
     self.scale = self.scale + (self.targetedScale - self.scale)*speed*dt
+
+    --update the button canvas
+    self:updateCanvas()
 end
 
-function Button:renderSprite(gameCanvas)
-    local canvasHeight = self.height
-    local canvasWidth = self.width
-
-    local canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
+function Button:createCanvas(gameCanvas)
+    local canvas = love.graphics.newCanvas(self.width, self.height)
 
     --General settings
     canvas:setFilter("linear", "linear")
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(canvas)
 
-    local widthRatio = canvasWidth/self.sprite:getWidth()
-    local heightRatio = canvasHeight/self.sprite:getHeight()
+    love.graphics.setCanvas(gameCanvas)
 
+    return canvas
+end
+
+function Button:updateCanvas()
+    currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.uiCanvas)
+    love.graphics.clear()
     --If desactivated : grey the button
     if self.isActivated==false then
         love.graphics.setShader(Shaders.grayscaleShader)
     else
         love.graphics.setShader()
     end
-
     --Draw the UI into the canvas
+    local widthRatio = self.width/self.sprite:getWidth()
+    local heightRatio = self.height/self.sprite:getHeight()
+
     love.graphics.draw(self.sprite, 0, 0, 0, widthRatio, heightRatio) -- add the image
 
     love.graphics.setShader()
+    love.graphics.setCanvas(currentCanvas)
+end
 
-    --If Hovered : draw a shadow above the button
-    if(self:isHovered() and self.shadowOnHover)then
-        -- Apply dark filter
-        love.graphics.setColor(0, 0, 0, 0.25)  -- black with 50% opacity
-        love.graphics.rectangle("fill", 0, 0, canvas:getWidth(), canvas:getHeight())
-        love.graphics.setColor(1,1,1,1)  -- black with 50% opacity
-    end
-
-    love.graphics.setCanvas(gameCanvas)
-
-    return canvas
+function Button:draw(gameCanvas)
+    --local shadow = self:renderShadow(gameCanvas)
+    --love.graphics.draw(shadow, self.x+10, self.y+10, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
+    love.graphics.draw(self.uiCanvas, self.x, self.y, 0, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
 end
 
 function Button:getCallback()

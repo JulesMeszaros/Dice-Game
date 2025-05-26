@@ -44,6 +44,8 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
 
     self.time = 0
 
+    self.diceCanvas = self:render()
+
     return self
 end
 
