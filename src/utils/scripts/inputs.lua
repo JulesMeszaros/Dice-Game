@@ -27,11 +27,4 @@ function Inputs.getMouseInCanvas(canvasX, canvasY)
     return {x = virtualX - canvasX, y=virtualY - canvasY}
 end
 
-function Inputs.test()
-    --print("testeuh")
-
-    return {x = 10, y = 20}
-end
-
-
 return Inputs

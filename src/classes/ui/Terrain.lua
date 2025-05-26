@@ -6,6 +6,7 @@ local Terrain = {}
 Terrain.__index = Terrain
 
 local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
+local matImage = love.graphics.newImage("src/assets/sprites/ui/terrain/dice_mat.png")
 
 function Terrain:new(round)
     local self = setmetatable({}, Terrain)
@@ -119,7 +120,6 @@ function Terrain:drawDiceTray(x, y, dices)
     love.graphics.setCanvas(self.dice_tray)
     love.graphics.clear()
 
-    local matImage = love.graphics.newImage("src/assets/sprites/ui/terrain/dice_mat.png")
     love.graphics.draw(matImage, 0, 0)
 
     --On déssiné les dés
