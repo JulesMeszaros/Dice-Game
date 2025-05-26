@@ -20,7 +20,7 @@ function Dice:new()
         {65, 1}, -- 2
         {65, 65}, -- 3
         {65, 193}, -- 4
-        {65, 191}, -- 5
+        {65, 129}, -- 5
         {129, 0} -- 6
     }
     self.nFaces = table.getn(self.faceSpritesCoordinates)
