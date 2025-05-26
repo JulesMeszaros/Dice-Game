@@ -9,7 +9,7 @@ function FrutigerDice:new()
     self.name = "Frutiger Aero Dice"
 
     --Metadatas about the graphics of the dice
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/frutiger_dice.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/LuckyDiceTileset.png")
     self.spriteSheet:setFilter("linear", "linear")
 
     return self

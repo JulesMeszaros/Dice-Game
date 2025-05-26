@@ -10,17 +10,18 @@ function Dice:new()
     self.name = "White Dice"
 
     --Metadatas about the graphics of the dice
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/basic_dice.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/baseDiceTileset.png")
     self.spriteSheet:setFilter("linear", "linear")
     
-    self.faceDimmension = 200 --sets the dimmensions for a face of the dice in px
+    self.faceDimmension = 64 --sets the dimmensions for a face of the dice in px
+
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {0, 0}, -- 1
-        {200, 0}, -- 2
-        {200, 200}, -- 3
-        {200, 600}, -- 4
-        {200, 400}, -- 5
-        {400, 0} -- 6
+        {1, 1}, -- 1
+        {65, 1}, -- 2
+        {65, 65}, -- 3
+        {65, 193}, -- 4
+        {65, 191}, -- 5
+        {129, 0} -- 6
     }
     self.nFaces = table.getn(self.faceSpritesCoordinates)
 
@@ -30,13 +31,13 @@ function Dice:new()
 
     for i=1,self.nFaces,1 do
         
-        local quad = love.graphics.newQuad(
+        quad = love.graphics.newQuad(
             self.faceSpritesCoordinates[i][1], self.faceSpritesCoordinates[i][2],     -- x, y dans l'image source
             200, 200,     -- largeur, hauteur de la portion
             self.spriteSheet:getDimensions()  -- taille totale de l'image
         )
 
-        local face = DiceFace:new(self, i, self.spriteSheet, quad, self.faceDimmension)
+        face = DiceFace:new(self, i, self.spriteSheet, quad, self.faceDimmension)
 
         table.insert(self.diceFaces, face)
     end
@@ -61,7 +62,7 @@ function Dice:getSpriteSheet()
 end
 
 function Dice:getQuad(i)
-    local quad = love.graphics.newQuad(
+    quad = love.graphics.newQuad(
             self.faceSpritesCoordinates[i][1], self.faceSpritesCoordinates[i][2],     -- x, y dans l'image source
             200, 200,     -- largeur, hauteur de la portion
             self.spriteSheet:getDimensions()  -- taille totale de l'image

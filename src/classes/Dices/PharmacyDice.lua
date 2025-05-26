@@ -1,0 +1,18 @@
+local Dice = require("src.classes.Dices.Dice")
+
+local EvilDice = setmetatable({}, { __index = Dice })
+EvilDice.__index = EvilDice
+
+function EvilDice:new()
+    local self = setmetatable(Dice:new(), EvilDice)
+
+    self.name = "Evil Dice"
+
+    --Metadatas about the graphics of the dice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/PharmacyDiceTileset.png")
+    self.spriteSheet:setFilter("linear", "linear")
+
+    return self
+end
+
+return EvilDice

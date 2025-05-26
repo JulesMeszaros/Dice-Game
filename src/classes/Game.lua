@@ -3,8 +3,9 @@ local MainMenu = require("src.classes.MainMenu")
 
 --Import The Dices
 local Dice = require("src.classes.Dices.Dice")
-local EvilDice = require("src.classes.Dices.EvilDice")
-local FrutigerDice = require("src.classes.Dices.FrutigerDice")
+local ReverseDice = require("src.classes.Dices.ReverseDice")
+local LuckyDice = require("src.classes.Dices.LuckyDice")
+local PharmacyDice = require("src.classes.Dices.PharmacyDice")
 
 local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
@@ -24,14 +25,13 @@ local PAGES = {
 local virtualWidth, virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT
 
 local gameCanvas = love.graphics.newCanvas(virtualWidth, virtualHeight)
- 
 
 local dices = { -- On définit les 5 dés présents dans la partie
         Dice:new(),
         Dice:new(),
-        Dice:new(),
-        FrutigerDice:new(),
-        EvilDice:new()
+        PharmacyDice:new(),
+        LuckyDice:new(),
+        ReverseDice:new()
     }
 
 function Game:start()

@@ -6,6 +6,11 @@ local Constants = require("src.utils.constants")
 local Shaders = require("src.utils.shaders")
 
 local DiceFace = setmetatable({}, { __index = UIElement })
+
+local scaleSpeed = 20
+local rSpeed = 50
+local moveSpeed = 15
+
 DiceFace.__index = DiceFace
 
 function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePosition, renderCanvas)    
@@ -78,12 +83,11 @@ function DiceFace:update(dt)
     self:calculateAngleDrag()
     self.targetedRotation = self.baseRotation + self.dragRotation
 
-    local scaleSpeed = 20
+    --Update scale, rotation and position
     self.scale = self.scale + (self.targetedScale - self.scale)*scaleSpeed*dt
-    local rSpeed = 8
+    
     self.rotation = self.rotation + (self.targetedRotation - self.rotation)*rSpeed*dt
 
-    local moveSpeed = 15
     self.x = self.x + (self.targetX - self.x)*moveSpeed*dt
     self.y = self.y + (self.targetY - self.y)*moveSpeed*dt
 
@@ -246,7 +250,7 @@ end
 
 
 function DiceFace:calculateAngleDrag()
-    local maxRotation = 0.3
+    local maxRotation = 1
 
     if(self.isBeingDragged)then --Rotation pendant le drag
         self.dragRotation = 0.02*self.dragXspeed

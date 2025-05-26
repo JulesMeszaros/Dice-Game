@@ -9,7 +9,7 @@ function EvilDice:new()
     self.name = "Evil Dice"
 
     --Metadatas about the graphics of the dice
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/evil_dice.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/ReverseDiceTileset.png")
     self.spriteSheet:setFilter("linear", "linear")
 
     return self
