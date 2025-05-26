@@ -17,6 +17,8 @@
 
 ### Animations
 
+- TODO: Créer des fonctions dédiées à la mise à jour de la position, de la taille et de la rotation des dés, afin de les rendre plus modulables
+
 ### Gameplay
 
 - TODO: Ajouter un objectif de score basique

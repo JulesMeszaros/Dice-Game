@@ -84,12 +84,13 @@ function DiceFace:update(dt)
     self.targetedRotation = self.baseRotation + self.dragRotation
 
     --Update scale, rotation and position
-    self.scale = self.scale + (self.targetedScale - self.scale)*scaleSpeed*dt
     
-    self.rotation = self.rotation + (self.targetedRotation - self.rotation)*rSpeed*dt
+    self:updatePosition(dt)
+    self:updateScale(dt)
+    self:updateAngle(dt)
 
-    self.x = self.x + (self.targetX - self.x)*moveSpeed*dt
-    self.y = self.y + (self.targetY - self.y)*moveSpeed*dt
+
+
 
     --update canvas
     self:updateCanvas()
@@ -249,7 +250,10 @@ end
 
 
 
+--==ANGLE/SCALE/POSITION FUNCTIONS==--
+
 function DiceFace:calculateAngleDrag()
+    --Function used to calculate the target angle of the dice base on the drag speed
     local maxRotation = 1
 
     if(self.isBeingDragged)then --Rotation pendant le drag
@@ -265,6 +269,19 @@ function DiceFace:calculateAngleDrag()
     if self.dragRotation > maxRotation then
         self.dragRotation = maxRotation
     end
+end
+
+function DiceFace:updateAngle(dt)
+    self.rotation = self.rotation + (self.targetedRotation - self.rotation)*rSpeed*dt
+end
+
+function DiceFace:updatePosition(dt)
+    self.x = self.x + (self.targetX - self.x)*moveSpeed*dt
+    self.y = self.y + (self.targetY - self.y)*moveSpeed*dt
+end
+
+function DiceFace:updateScale(dt)
+    self.scale = self.scale + (self.targetedScale - self.scale)*scaleSpeed*dt
 end
 
 return DiceFace

@@ -1,3 +1,5 @@
+local Fonts = require("src.utils.fonts")
+
 local Game = require("src.classes.Game")
 
 local delta = 0
@@ -22,7 +24,8 @@ end
 function love.draw()
     --love.graphics.clear(26/255, 79/255, 37/255)
     game:draw()
-    love.graphics.draw(love.graphics.newText(love.graphics.newFont("src/assets/fonts/joystix.otf"), "fps:"..delta), love.graphics.getWidth()-100, 30)
+    fpstext = love.graphics.newText(Fonts.pixelated, "fps:"..delta)
+    love.graphics.draw(fpstext, love.graphics.getWidth()-5, 5, 0, 1, 1, fpstext:getWidth(), 0)
 end
 
 function love.keypressed(key)
