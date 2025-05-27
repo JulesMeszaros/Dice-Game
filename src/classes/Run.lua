@@ -171,7 +171,7 @@ function Run:drawRound()
     love.graphics.draw(targetScoreText, 10, 43)
     love.graphics.draw(scoreText, 10, 63)
 
-    love.graphics.draw(currentRoundText, 10, love.graphics:getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
+    love.graphics.draw(currentRoundText, 10, self.gameCanvas:getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
 
     love.graphics.setCanvas(gameCanvas)
 

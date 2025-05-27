@@ -10,36 +10,6 @@ Shaders.grayscaleShader = love.graphics.newShader([[
     }
 ]])
 
---Outline d'un canvas
-Shaders.outlineShader = love.graphics.newShader([[
-    extern number thickness = 1.0;
-    extern vec4 outlineColor = vec4(0.0, 0.0, 0.0, 1.0); // noir
-
-    vec4 effect(vec4 color, Image texture, vec2 tc, vec2 sc) {
-        vec4 texColor = Texel(texture, tc);
-        if (texColor.a == 0.0) {
-            return vec4(0.0);
-        }
-
-        // Si on est au bord (pixel opaque avec un pixel transparent autour)
-        bool isBorder = false;
-        for (float x = -thickness; x <= thickness; x++) {
-            for (float y = -thickness; y <= thickness; y++) {
-                vec2 offset = vec2(x, y) / love_ScreenSize.xy;
-                if (Texel(texture, tc + offset).a == 0.0) {
-                    isBorder = true;
-                }
-            }
-        }
-
-        if (isBorder) {
-            return outlineColor;
-        }
-
-        // Sinon on garde la couleur originale
-        return texColor;
-    }
-]])
 
 Shaders.rainbowShader = love.graphics.newShader([[
     extern number time;

@@ -25,7 +25,7 @@ function Terrain:new(round)
     self.dice_tray:setFilter("nearest", "nearest")
 
     --Figure buttons
-    self.figureButtonsCanvas = love.graphics.newCanvas(330,468)
+    self.figureButtonsCanvas = love.graphics.newCanvas(495,702)
     self.figureButtonsCanvas:setFilter("nearest", "nearest")
 
     --Importation des images
@@ -71,9 +71,9 @@ function Terrain:new(round)
             calculatePointsFunctions[key], 
             image, 
             self.figureButtonsCanvas:getWidth()/2, 
-            (i*36)+18, 
-            330, 
-            36, 
+            (i*36*1.5)+18*1.5, 
+            330*1.5, 
+            36*1.5, 
             currentCanvas, 
             function()return Inputs.getMouseInCanvas(20, 102)end
         )
@@ -162,7 +162,7 @@ end
 function Terrain:reorganiseDiceFaces(dices)
     local i = 1
     for key,uiFace in next,dices do
-        uiFace.targetX = ((i*80) - 30)
+        uiFace.targetX = ((i*120) - 30)
         uiFace.targetY = (self.dice_tray:getHeight()-60)
         uiFace.baseRotation = 0
         i = i+1

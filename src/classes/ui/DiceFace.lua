@@ -131,7 +131,9 @@ function DiceFace:createCanvas()
 
     --Draw the face image
      if(self:getIsSelected()==true)then
+        
         love.graphics.setShader(Shaders.rainbowShader)
+        
         Shaders.rainbowShader:send("time", self.time/10 % 1)
 
     else
