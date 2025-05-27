@@ -8,11 +8,10 @@
 - TODO: Développer le système de Partie
 - TODO: Implémenter la phase inter-round
 
-### Esthétique
+### Graphismes
 
 - TODO: Se renseigner sur les shaders
-- TODO: Passer le jeu en format 1080p
-- TODO: Simplifier les paramètres de fonctions de **mousePosition** pour les rendre plus généralisables
+- TODO: Améliorer le HUD
 
 ### Animations
 
@@ -22,7 +21,7 @@
 - TODO: Réfléchir à des notions de gameplay (objectif de round)
 
 ### Code
-
+- FIXME: Simplifier les paramètres de fonctions de **mousePosition** pour les rendre plus généralisables
 - TODO: Simplifier l'import des dés en masse
 - TODO: Déplacer les éléments d'interface à l'interieur de la classe **Round** (ou même la classe terrain)
 - TODO: Simplifier la fonction update de la classe **Run**
