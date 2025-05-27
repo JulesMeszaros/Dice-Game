@@ -66,7 +66,6 @@ function Terrain:new(round)
     local i = 0
     for key,image in next,image_buttons do
         local t = i
-        print(i)
         local button = Button:new(
             calculatePointsFunctions[key], 
             image, 
@@ -160,8 +159,27 @@ end
 --==UTILS FUNCTIONS==--
 
 function Terrain:reorganiseDiceFaces(dices)
+    --Reorganise the dice by face (increasing)
+    local reorganisedDices = {}
+    local temp = {}
+
+    for _, dice in next,dices do
+        table.insert(temp, dice)
+    end
+
+    table.sort(temp, function(a, b)
+        return a:getFace() < b:getFace()
+    end)
+    for _, dice in ipairs(temp) do
+        table.insert(reorganisedDices, dice)
+    end
+
+    for key,df in next,reorganisedDices do
+        print(df:getFace())
+    end
+
     local i = 1
-    for key,uiFace in next,dices do
+    for key,uiFace in next,reorganisedDices do
         uiFace.targetX = ((i*120) - 30)
         uiFace.targetY = (self.dice_tray:getHeight()-60)
         uiFace.baseRotation = 0

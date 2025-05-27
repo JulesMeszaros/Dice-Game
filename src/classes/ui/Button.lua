@@ -43,7 +43,6 @@ function Button:new(
 
     --Create the canvas ONCE
     self.uiCanvas = self:createCanvas()
-    print(self.uiCanvas)
 
     return self
 end

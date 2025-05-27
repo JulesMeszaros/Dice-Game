@@ -17,50 +17,57 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
     local self = setmetatable(UIElement.new(), DiceFace)
 
     --Parametres d'interractions
+    self.mousePosition = mousePosition --The function returning the mousePosition for this dice.
     self.isSelectable = isSelectable
     self.isHoverable = isHoverable
     self.isDraggable = true
     self.dragXspeed = 0
 
+    --Dice parameters
     self.dice = dice -- sets the dice and the face it represents
     self.face = face
     self.spriteSheet = dice:getSpriteSheet()
     self.quad = dice:getQuad(face)
     self.dim = dice:getFaceDim()
-    
-    
+
+    --Position
     self.targetX = x
     self.targetY = y
     self.x = x
     self.y = y
+	self.z = 0 --Détermine l'ordre de dessin des dés sur le terrain
 
-
+    --Size
     self.baseSize = size
     self.size = self.baseSize
 
+    --Rotation
     self.targetedRotation = 0 --Angle the dice is targeting
     self.baseRotation = 0 --Base angle for the calculation of targetedRotation (basically the targeted angle when nothing happens)
     self.dragRotation = 0 --Angle calculated based on the drag speed
     self.rotation = 0 --Angle the dice is actually showed at
 
+    --Scale
+    self.baseTargetedScale = 1
+    self.selectionScale = 0
+    self.hoverScale = 0
+
+    --Animations variables
     self.velx = 0
     self.vely = 0
     self.velrotation = 0
     self.velscale = 0
 
-    self.baseTargetedScale = 1
-    self.selectionScale = 0
-    self.hoverScale = 0
-
-    self.mousePosition = mousePosition --The function returning the mousePosition for this dice.
-
+    --The canvas to be rendred in
     self.renderCanvas = renderCanvas --Le canvas dans laquel le dé est dessiné. Permet d'avoir des infos genre sa largeur.
 
+    --Clock
     self.time = 0
 
     --Create canvas and shadow canvas
     self.diceCanvas = self:createCanvas()
     self.shadowCanvas = self:createShadow()
+
     return self
 end
 
@@ -89,13 +96,10 @@ function DiceFace:update(dt)
     self.targetedRotation = self.baseRotation + self.dragRotation
 
     --Update scale, rotation and position
-    
+
     self:updatePosition(dt)
     self:updateScale(dt)
     self:updateAngle(dt)
-
-
-
 
     --update canvas
     self:updateCanvas()
@@ -109,8 +113,8 @@ function DiceFace:draw()
     love.graphics.setCanvas(self.renderCanvas)
     --Render l'ombre
     love.graphics.draw(self.shadowCanvas, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
-    
-    --Render la face du dé   
+
+    --Render la face du dé  
     love.graphics.draw(render, self.x, self.y, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
 
     love.graphics.setCanvas(currentCanvas)
@@ -123,7 +127,7 @@ function DiceFace:createCanvas()
     local ratio = canvasSize/self.dim --ratio between the image size and the canvas size
 
     local faceCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
-    
+
     --General settings
     faceCanvas:setFilter("nearest", "nearest")
     love.graphics.setBlendMode("alpha")
@@ -131,9 +135,9 @@ function DiceFace:createCanvas()
 
     --Draw the face image
      if(self:getIsSelected()==true)then
-        
+
         love.graphics.setShader(Shaders.rainbowShader)
-        
+
         Shaders.rainbowShader:send("time", self.time/10 % 1)
 
     else

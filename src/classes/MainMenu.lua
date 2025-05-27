@@ -78,7 +78,7 @@ function MainMenu:mousereleased(x, y, button, istouch, presses)
 end
 
 function MainMenu:mousemoved(x, y, dx, dy, isDragging)
-    --print("moved")
+    
 end
 
 return MainMenu
