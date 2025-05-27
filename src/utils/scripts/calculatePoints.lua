@@ -112,8 +112,13 @@ function CalculatePoints.pttSuiteBasePoints(faces, dices, drawedDices)
     suite = getStraight(drawedNumbers, 4)
 
     if(suite)then
+        score = 30
         for i,j in next,suite do
-            score = 30
+            for dice,f in next,drawedDices do
+                if(f==j)then
+                    table.insert(usedDices, dice)
+                end
+            end
         end
     else 
         score = 0
