@@ -21,7 +21,7 @@ function Terrain:new(round)
     self.currentlyHoveredFigure = nil
     self.currentlyHoveredDice = nil
 
-    self.dice_tray = love.graphics.newCanvas(900, 550)
+    self.dice_tray = love.graphics.newCanvas(1350, 825)
     self.dice_tray:setFilter("nearest", "nearest")
 
     --Figure buttons
@@ -120,7 +120,7 @@ function Terrain:drawDiceTray(x, y, dices)
     love.graphics.setCanvas(self.dice_tray)
     love.graphics.clear()
 
-    love.graphics.draw(matImage, 0, 0)
+    love.graphics.draw(matImage, 0, 0, 0, 1.5, 1.5)
 
     --On déssiné les dés
     for key,uiFace in next,dices do

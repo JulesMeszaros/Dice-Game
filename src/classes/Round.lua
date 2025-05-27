@@ -40,7 +40,7 @@ function Round.new(n, dices, gameCanvas, run)
             1, --Face represented
             (key*80) - 30, --X Position (centerd)
             self.terrain.dice_tray:getHeight()-60, --Yposition (centerd)
-            64, --Width/Height
+            64*1.5, --Width/Height
             true, --is Selectable
             true, --isHoverable,
             function()return Inputs.getMouseInCanvas((self.gameCanvas:getWidth()-20)-self.terrain.dice_tray:getWidth(), 20)end,

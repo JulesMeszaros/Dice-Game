@@ -57,8 +57,8 @@ function Run:new(dices, gameCanvas)
     self.uiElements.roundButtons["resetButton"] = Button:new(
         function()self.currentRound:resetSelectedDices()end, 
         "src/assets/sprites/ui/buttons/reset.png", 
-        love.graphics.getWidth()-125, 
-        love.graphics.getHeight()-70, 
+        self.gameCanvas:getWidth()-125, 
+        self.gameCanvas:getHeight()-70, 
         200, 
         84,
         self.gameCanvas,
@@ -69,8 +69,8 @@ function Run:new(dices, gameCanvas)
     self.uiElements.roundButtons["rerollButton"] = Button:new(
         function()self.currentRound:rerollDices()end, 
         "src/assets/sprites/ui/buttons/reroll.png", 
-        love.graphics.getWidth()-350, 
-        love.graphics.getHeight()-70, 
+        self.gameCanvas:getWidth()-350, 
+        self.gameCanvas:getHeight()-70, 
         200, 
         84,
         self.gameCanvas,
@@ -80,8 +80,8 @@ function Run:new(dices, gameCanvas)
     self.uiElements.roundButtons["reorganiserButton"] = Button:new(
         function()self.currentRound.terrain:reorganiseDiceFaces(self.currentRound.diceFaces)end, 
         "src/assets/sprites/ui/buttons/reorganiser.png", 
-        love.graphics.getWidth()-570, 
-        love.graphics.getHeight()-70, 
+        self.gameCanvas:getWidth()-570, 
+        self.gameCanvas:getHeight()-70, 
         200, 
         84,
         self.gameCanvas,

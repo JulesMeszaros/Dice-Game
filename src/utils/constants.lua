@@ -1,6 +1,7 @@
 local Constants = {
-    VIRTUAL_GAME_WIDTH = 1280,
-    VIRTUAL_GAME_HEIGHT = 720
+    VIRTUAL_GAME_WIDTH = 1920,
+    VIRTUAL_GAME_HEIGHT = 1080
+    
 }
 
 return Constants
