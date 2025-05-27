@@ -22,6 +22,7 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
     self.isHoverable = isHoverable
     self.isDraggable = true
     self.dragXspeed = 0
+	self.isHighlighted = false
 
     --Dice parameters
     self.dice = dice -- sets the dice and the face it represents
@@ -48,6 +49,7 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
     self.rotation = 0 --Angle the dice is actually showed at
 
     --Scale
+	self.highlightScale = 0
     self.baseTargetedScale = 1
     self.selectionScale = 0
     self.hoverScale = 0
@@ -90,7 +92,13 @@ function DiceFace:update(dt)
         self.selectionScale = 0
     end
 
-    self.targetedScale = self.baseTargetedScale + self.selectionScale + self.hoverScale
+	if(self.isHighlighted==true)then
+		self.highlightScale = 0.3
+	else
+		self.highlightScale = 0
+	end
+
+    self.targetedScale = self.baseTargetedScale + self.selectionScale + self.hoverScale + self.highlightScale
 
     self:calculateAngleDrag()
     self.targetedRotation = self.baseRotation + self.dragRotation
@@ -252,6 +260,10 @@ end
 
 function DiceFace:setDice(dice)
     self.dice = dice
+end
+
+function DiceFace:setHighlighted(state)
+	self.isHighlighted = state
 end
 
 function DiceFace:setFace(face)

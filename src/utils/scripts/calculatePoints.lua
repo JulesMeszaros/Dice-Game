@@ -6,24 +6,29 @@ function CalculatePoints.numberBasePoints(number, faces, dices, drawedDices)
     --Calcul Pour les nombres simples
     
     local score = 0
-    
-    for key,f in next,drawedDices do
+    local usedDices = {}
+
+    for dice,f in next,drawedDices do
         if(f==number)then
+             -- incrementing the score
             score = score + number
+            -- adding the dice to the table of dices used for this face
+            table.insert(usedDices, dice) 
         end
     end
     
-    return score
+    return {score, usedDices}
 end
 
 function CalculatePoints.brelanBasePoints(faces, dices, drawedDices)
     --Calcul pour le Brelan (3 faces similaires)
     local score = 0
+    local usedDices = {}
 
-    distrib = getValueDistribution(drawedDices)
+    local distrib = getValueDistribution(drawedDices)
 
-    maxDistrib = 0
-    maxDistribN = 0
+    local maxDistrib = 0
+    local maxDistribN = 0
 
     for n,v in next,distrib do --get max distributed number
         if v > maxDistrib then
@@ -33,18 +38,20 @@ function CalculatePoints.brelanBasePoints(faces, dices, drawedDices)
     end
 
     if(maxDistrib>=3)then --On vérifie que le numero le plus représenté est superieur ou égal à 3
-        for key,f in next,drawedDices do
+        for dice,f in next,drawedDices do
             score = score + f
+            table.insert(usedDices, dice)
         end
     else
         score = 0
     end
 
-    return score
+    return {score, usedDices}
 end
 
 function CalculatePoints.fullBasePoints(faces, dices, drawedDices)
     local score = 0
+    local usedDices = {}
 
     distrib = getValueDistribution(drawedDices)
 
@@ -57,11 +64,12 @@ function CalculatePoints.fullBasePoints(faces, dices, drawedDices)
         end
     end
     
-    return score
+    return {score, usedDices}
 end
 
 function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
     local score = 0
+    local usedDices = {}
 
     local maxDistrib = 0
     local maxDistribN = 0
@@ -84,11 +92,12 @@ function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
 
     end
 
-    return score
+    return {score, usedDices}
 end
 
 function CalculatePoints.pttSuiteBasePoints(faces, dices, drawedDices)
     local score = 0
+    local usedDices = {}
 
     drawedNumbers = {}
     for f,n in next,drawedDices do
@@ -105,11 +114,12 @@ function CalculatePoints.pttSuiteBasePoints(faces, dices, drawedDices)
         score = 0
     end
 
-    return score
+    return {score, usedDices}
 end
 
 function CalculatePoints.gdSuiteBasePoints(faces, dices, drawedDices)
     local score = 0
+    local usedDices = {}
 
     drawedNumbers = {}
     for f,n in next,drawedDices do
@@ -126,20 +136,23 @@ function CalculatePoints.gdSuiteBasePoints(faces, dices, drawedDices)
         score = 0
     end
 
-    return score
+    return {score, usedDices}
 end
 
 function CalculatePoints.chanceBasePoints(faces, dices, drawedDices)
     local score = 0
+    local usedDices = {}
+
     for key,f in next,drawedDices do
         score = score + f
     end
 
-    return score
+    return {score, usedDices}
 end
 
 function CalculatePoints.yatzeeBasePoints(faces, dices, drawedDices)
     local score = 0
+    local usedDices = {}
 
     local maxDistrib = 0
     local maxDistribN = 0
@@ -160,7 +173,7 @@ function CalculatePoints.yatzeeBasePoints(faces, dices, drawedDices)
 
     end
 
-    return score
+    return {score, usedDices}
 end
 
 --==UTILS==--

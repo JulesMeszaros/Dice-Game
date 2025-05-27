@@ -9,12 +9,11 @@
 - TODO: Développer le système de Partie
 - TODO: Implémenter la phase inter-round
 
-### Graphismes
+### Graphismes/Animations
 
 - TODO: Se renseigner sur les shaders
 - TODO: Améliorer le HUD
-
-### Animations
+- TODO: Highlight les dés utilisés en survolant un bouton de figure
 
 ### Gameplay
 
@@ -26,7 +25,6 @@
 - TODO: Déplacer les éléments d'interface à l'interieur de la classe **Round** (ou même la classe terrain)
 - TODO: Simplifier la fonction update de la classe **Run**
 - FIXME: Simplifier les paramètres de fonctions de **mousePosition** pour les rendre plus généralisables
-- TODO: Modifier la fonction de tri pour trier les dés par ordre numérique
 - TODO: Simplifier l'import des dés en masse
 
 
