@@ -59,8 +59,10 @@ function CalculatePoints.fullBasePoints(faces, dices, drawedDices)
     hasFull = hasAllValues(distrib, {3, 2})
 
     if(hasFull)then
-        for key,f in next,drawedDices do
-            score = 25
+        score = 25
+
+        for dice,f in next,drawedDices do
+            table.insert(usedDices, dice)
         end
     end
     
@@ -84,8 +86,11 @@ function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
     end
 
     if(maxDistrib>=4)then --On vérifie que le numero le plus représenté est superieur ou égal à 3
-        for key,f in next,drawedDices do
+        for dice,f in next,drawedDices do
             score = score + f
+            if(f==maxDistribN)then
+                table.insert(usedDices, dice)
+            end
         end
     else
         score = 0
@@ -129,8 +134,9 @@ function CalculatePoints.gdSuiteBasePoints(faces, dices, drawedDices)
     suite = getStraight(drawedNumbers, 5)
 
     if(suite)then
-        for i,j in next,suite do
-            score = 40
+        score = 40
+        for dice,j in next,drawedDices do
+            table.insert(usedDices, dice)
         end
     else 
         score = 0
@@ -143,8 +149,9 @@ function CalculatePoints.chanceBasePoints(faces, dices, drawedDices)
     local score = 0
     local usedDices = {}
 
-    for key,f in next,drawedDices do
+    for dice,f in next,drawedDices do
         score = score + f
+        table.insert(usedDices, dice)
     end
 
     return {score, usedDices}
@@ -168,6 +175,9 @@ function CalculatePoints.yatzeeBasePoints(faces, dices, drawedDices)
 
     if(maxDistrib>=5)then --On vérifie que le numero le plus représenté est superieur ou égal à 3
         score = 50
+        for dice,f in next,drawedDices do
+            table.insert(usedDices, dice)
+        end
     else
         score = 0
 
