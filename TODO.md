@@ -13,7 +13,6 @@
 
 - TODO: Se renseigner sur les shaders
 - TODO: Améliorer le HUD
-- TODO: Highlight les dés utilisés en survolant un bouton de figure
 
 ### Gameplay
 

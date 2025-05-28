@@ -93,7 +93,7 @@ function DiceFace:update(dt)
     end
 
 	if(self.isHighlighted==true)then
-		self.highlightScale = 0.3
+		self.highlightScale = 0.10 + 0.10 * math.sin(2 * math.pi * self.time / 3)
 	else
 		self.highlightScale = 0
 	end
