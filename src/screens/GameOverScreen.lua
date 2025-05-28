@@ -30,6 +30,17 @@ function GameOverScreen:new(gameCanvas, run)
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
+    self.uiElements.buttons["main Menu"] = Button:new(
+        function()self:goToMainMenu()end,
+        "src/assets/sprites/ui/buttons/new_run.png",
+        self.gameoverCanvas:getWidth()/2,
+        self.gameoverCanvas:getHeight()/2 + 200,
+        400,
+        167,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
     return self
 end
 
@@ -58,6 +69,11 @@ function GameOverScreen:draw()
     love.graphics.setCanvas(self.gameCanvas)
 
     love.graphics.draw(self.gameoverCanvas, 0, 0)
+end
+
+--==BUTTON FUNCTIONS==--
+function GameOverScreen:goToMainMenu()
+    self.run.game.currentScreen = 0
 end
 
 --==INPUT FUNCTIONS==--

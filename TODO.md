@@ -28,6 +28,6 @@
 ## Bugs
 
 ## TodolistRelease 0.0.3-dev
-- Ajouter un bouton retour au menu principal en game over
-- Ajouter un objectif évolutif pour chaque round
+- Changer texture bouton retour au menu principal
+- Tester l'ajout d'une animation sur le menu principal (des dés qui tombent)
 
