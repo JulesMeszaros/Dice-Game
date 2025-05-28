@@ -100,15 +100,17 @@ function MainMenu:addRandomDice()
             math.random(0, self.mainMenuCanvas:getWidth()),
             -100,
             math.random(64,200),
+            true,
             false,
-            false,
-            function()return({0,0})end,
+            function()return(Inputs.getMouseInCanvas(0,0))end,
             self.mainMenuCanvas
         )
         df.isSelected = true
+        local r = math.random(0, 10)
+        df.baseRotation = r
+        df.rotation = r
         table.insert(self.animationDices, df)
     end
-    print(table.getn(self.animationDices))
 end
 
 --==KEYBOARD/MOUSE INPUTS==--
