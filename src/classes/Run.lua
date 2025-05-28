@@ -114,55 +114,8 @@ end
 
 function Run:drawRound()
     --Set the right canvas
-    self:drawTerrain()
-    love.graphics.setCanvas(self.gameCanvas)
-
-    --TODO: à déplacer dans la classe terrain
-    local rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.currentRound.availableRerolls))
-    local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.currentRound.roundScore))
-    local targetScoreText = love.graphics.newText(font, 'Target : '..tostring(self.currentRound.targetScore))
-    local currentHands = love.graphics.newText(font, 'Hands : '..tostring(self.currentRound.remainingHands))
-    local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.roundNumber))
-
-    love.graphics.draw(rerollText, 10, 3)
-    love.graphics.draw(currentHands, 10, 23)
-    love.graphics.draw(targetScoreText, 10, 43)
-    love.graphics.draw(scoreText, 10, 63)
-
-    love.graphics.draw(currentRoundText, 10, self.gameCanvas:getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
-
-    love.graphics.setCanvas(self.gameCanvas)
-
-
-    --Show the currently hovered figure button
-    if(self.currentRound.terrain.currentlyHoveredFigure)then
-        -- Creates a text with the name of the figure and the text
-        local figureHoveredText = love.graphics.newText(font, self.currentRound.terrain:getCurrentlyHoveredFigure()[1])
-        love.graphics.draw(figureHoveredText, 20, 650, 0, 1, 1, 0, figureHoveredText:getHeight()/2)
-
-        --Highlight the used dices
-        local usedDices = self.currentRound.terrain:getCurrentlyHoveredFigure()[2]
-
-        for key,diceface in next,self.currentRound.diceFaces do
-            diceface:setHighlighted(false)
-            for _, dice in next,usedDices do
-                if self.currentRound.diceFaces[dice] == diceface then
-                     diceface:setHighlighted(true)
-                     break
-                end
-            end
-        end
-    else
-        for key,diceface in next,self.currentRound.diceFaces do
-            diceface:setHighlighted(false)
-        end
-    end
-
-end
-
-function Run:drawTerrain()
-    --Dessine le terrain du round actuel
     love.graphics.draw(self.currentRound.terrain.terrainCanvas, 0, 0)
+
 end
 
 --==INPUTS FUNCTIONS==

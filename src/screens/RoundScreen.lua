@@ -178,6 +178,45 @@ function RoundScreen:updateCanvas(dt)
         b:draw()
     end
 
+    --Différents textes
+    local rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.round.availableRerolls))
+    local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.round.roundScore))
+    local targetScoreText = love.graphics.newText(font, 'Target : '..tostring(self.round.targetScore))
+    local currentHands = love.graphics.newText(font, 'Hands : '..tostring(self.round.remainingHands))
+    local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.round.nround))
+
+    love.graphics.draw(rerollText, 10, 3)
+    love.graphics.draw(currentHands, 10, 23)
+    love.graphics.draw(targetScoreText, 10, 43)
+    love.graphics.draw(scoreText, 10, 63)
+
+    love.graphics.draw(currentRoundText, 10, self.gameCanvas:getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
+
+
+    --Highlighted figure
+    if(self.currentlyHoveredFigure)then
+        -- Creates a text with the name of the figure and the text
+        local figureHoveredText = love.graphics.newText(font, self:getCurrentlyHoveredFigure()[1])
+        love.graphics.draw(figureHoveredText, 20, self.terrainCanvas:getHeight()-100, 0, 1, 1, 0, figureHoveredText:getHeight()/2)
+
+        --Highlight the used dices
+        local usedDices = self:getCurrentlyHoveredFigure()[2]
+
+        for key,diceface in next,self.round.diceFaces do
+            diceface:setHighlighted(false)
+            for _, dice in next,usedDices do
+                if self.round.diceFaces[dice] == diceface then
+                     diceface:setHighlighted(true)
+                     break
+                end
+            end
+        end
+    else
+        for key,diceface in next,self.round.diceFaces do
+            diceface:setHighlighted(false)
+        end
+    end
+
     love.graphics.setCanvas(self.gameCanvas)
 end
 

@@ -28,7 +28,7 @@ function Round.new(n, dices, gameCanvas, run)
     self.nround = n
     self.availableRerolls = 3
     self.dices = dices
-    self.targetScore = 50
+    self.targetScore = 100
 
     self.terrain =  RoundScreen:new(self)
 
