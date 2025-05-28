@@ -13,6 +13,7 @@
 
 - TODO: Se renseigner sur les shaders
 - TODO: Améliorer le HUD
+- FIXME: Déplacer les menus d'accueil et le "shop" dans un canvas dédié
 
 ### Gameplay
 

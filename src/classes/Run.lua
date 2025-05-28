@@ -6,6 +6,7 @@ local Terrain = require("src.classes.ui.Terrain")
 
 local Round = require("src.classes.Round")
 local AfterRound = require("src.classes.AfterRound")
+local GameOverScreen = require("src.screens.GameOverScreen")
 
 local Inputs = require("src.utils.scripts.inputs")
 
@@ -49,11 +50,12 @@ Run.__index = Run
 --Get the cool ass font
 local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
 
-function Run:new(dices, gameCanvas)
+function Run:new(dices, gameCanvas, game)
     local self = setmetatable({}, Run)
 
     --The canvas the game is rendered on.
     self.gameCanvas = gameCanvas
+    self.game = game
 
     --On attribue le set de dés
     self.dices = dices
@@ -124,6 +126,8 @@ function Run:update(dt)
     elseif(self.currentState==runStates.SHOP)then
         --update shop
         self.shop:update(dt)
+    elseif(self.currentState==runStates.GAME_OVER)then
+        self.gameOver:update(dt)
     end
 end
 
@@ -133,6 +137,8 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
         self:drawRound() --Draw the round
     elseif(self.currentState == runStates.SHOP)then --check if we are in shop
         self.shop:draw() --Draw the shop
+    elseif(self.currentState == runStates.GAME_OVER)then
+        self.gameOver:draw()
     end
 
     --==DRAW THE AFTER ROUND==-- (plus tard le shop)
@@ -157,6 +163,8 @@ function Run:endRound()
 
         self.currentState = runStates.SHOP --Change d'état de Run
     else --gameover case
+        local gameOver = GameOverScreen:new(self.gameCanvas, self)
+        self.gameOver = gameOver
         self.currentState = runStates.GAME_OVER
     end
 end
@@ -240,6 +248,8 @@ function Run:keypressed(key)
         self.currentRound:keypressed(key)
     elseif(self.currentState==runStates.SHOP)then
         self.shop:keypressed(key)
+    elseif(self.currentState==runStates.GAME_OVER)then
+        self.shop:keypressed(key)
     end
 end
 
@@ -256,6 +266,8 @@ function Run:mousepressed(x, y, button, istouch, presses)
         end
     elseif(self.currentState==runStates.SHOP)then
         self.shop:mousepressed(x, y, button, istouch, presses)
+    elseif(self.currentState==runStates.GAME_OVER)then
+        self.gameOver:mousepressed(x, y, button, istouch, presses)
     end
 end
 
@@ -272,6 +284,8 @@ function Run:mousereleased(x, y, button, istouch, presses)
         end
     elseif(self.currentState==runStates.SHOP)then
         self.shop:mousereleased(x, y, button, istouch, presses)
+    elseif(self.currentState==runStates.GAME_OVER)then
+        self.gameOver:mousereleased(x, y, button, istouch, presses)
     end
 
     --Deactivate dragging
@@ -283,6 +297,8 @@ function Run:mousemoved(x, y, dx, dy)
         self.currentRound:mousemoved(x, y, dx, dy, self.isDragging)
     elseif(self.currentState==runStates.SHOP)then
         self.shop:mousemoved(x, y, dx, dy, self.isDragging)
+    elseif(self.currentState==runStates.GAME_OVER)then
+        self.gameOver:mousemoved(x, y, dx, dy, self.isDragging)
     end
     --x et y sont la position, dx et dy sont la vitesse.
 

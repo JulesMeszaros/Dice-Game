@@ -42,10 +42,13 @@ local dices = { -- On définit les 5 dés présents dans la partie
 
 function Game:start()
     local self = setmetatable({}, Game)
+    self.gameCanvas = gameCanvas
+
     self.currentScreen = PAGES.MAIN_MENU
 
     --Create a main menu
-    self.mainMenu = MainMenu:new(gameCanvas, self)
+    self.mainMenu = MainMenu:new(self.gameCanvas, self)
+
 
     return self
 end
@@ -60,13 +63,13 @@ end
 
 function Game:draw()
 
-    love.graphics.setCanvas(gameCanvas)
+    love.graphics.setCanvas(self.gameCanvas)
     love.graphics.clear()
     --Rendu du jeu--
     if(self.currentScreen == PAGES.MAIN_MENU)then
         self.mainMenu:draw()
     elseif(self.currentScreen == PAGES.GAME)then
-        self.run:draw(gameCanvas)
+        self.run:draw(self.gameCanvas)
     end
     love.graphics.setCanvas()
 
@@ -84,7 +87,7 @@ function Game:draw()
     if(applyCRT)then
         love.graphics.setShader(Shaders.crt)
     end
-    love.graphics.draw(gameCanvas, offsetX, offsetY, 0, scale, scale)
+    love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
     love.graphics.setShader()
 
 end
@@ -93,7 +96,7 @@ end
 
 function Game:startNewRun()
     self.currentScreen = PAGES.GAME
-    self.run = Run:new(dices, gameCanvas)
+    self.run = Run:new(dices, self.gameCanvas, self)
 
 end
 
@@ -107,7 +110,7 @@ function Game:keypressed(key)
 
     if(key=="b")then
         self.currentScreen = PAGES.GAME
-        self.run = Run:new(dices, gameCanvas)
+        self.run = Run:new(dices, self.gameCanvas, self)
     end
 
     if(key=="o")then

@@ -27,6 +27,7 @@ function Button:new(
 
     self.height = height
     self.width = width
+    self.targetedScale = 1
 
     --Hover options
     self.isHoverable = true
@@ -78,7 +79,7 @@ function Button:createCanvas(gameCanvas)
 end
 
 function Button:updateCanvas()
-    currentCanvas = love.graphics.getCanvas()
+    local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.uiCanvas)
     love.graphics.clear()
     --If desactivated : grey the button
@@ -97,7 +98,7 @@ function Button:updateCanvas()
     love.graphics.setCanvas(currentCanvas)
 end
 
-function Button:draw(gameCanvas)
+function Button:draw()
     --local shadow = self:renderShadow(gameCanvas)
     --love.graphics.draw(shadow, self.x+10, self.y+10, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
     love.graphics.draw(self.uiCanvas, self.x, self.y, 0, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)

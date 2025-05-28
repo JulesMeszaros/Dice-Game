@@ -47,7 +47,6 @@ function MainMenu:draw()
     love.graphics.draw(versionText, 20, self.gameCanvas:getHeight()-20, 0, 1, 1, 0, versionText:getHeight())
 
     --Buttons
-    --Buttons
     for key,button in next,self.uiElements.buttons do
         button:draw()
     end
