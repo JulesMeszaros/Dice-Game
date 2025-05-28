@@ -16,6 +16,8 @@ function AfterRound:new(run, gameCanvas)
     local self = setmetatable({}, AfterRound)
 
     self.gameCanvas = gameCanvas
+    self.afterRoundCanvas = love.graphics.newCanvas(gameCanvas:getWidth(), gameCanvas:getHeight())
+    
     --Link to the run/round
     self.run = run
     self.roundPlayed = self.run.currentRound
@@ -35,6 +37,22 @@ function AfterRound:new(run, gameCanvas)
 end
 
 function AfterRound:draw()
+    love.graphics.draw(self.afterRoundCanvas, 0, 0)
+end
+
+function AfterRound:update(dt)
+    --Buttons
+    for key,button in next,self.uiElements.buttons do
+        button:update(dt)
+    end
+
+    self:updateCanvas(dt)
+end
+
+function AfterRound:updateCanvas(dt)
+    love.graphics.setCanvas(self.afterRoundCanvas)
+    love.graphics.clear()
+
     --Score
     local scoreText = love.graphics.newText(Fonts.pixelated, "Round score : "..self.roundPlayed.roundScore)
     --Texte fin du round
@@ -48,13 +66,9 @@ function AfterRound:draw()
     for key,button in next,self.uiElements.buttons do
         button:draw()
     end
-end
 
-function AfterRound:update(dt)
-    --Buttons
-    for key,button in next,self.uiElements.buttons do
-        button:update(dt)
-    end
+    love.graphics.setCanvas(self.gameCanvas)
+
 end
 
 --==KEYBOARD/MOUSE INPUTS==--
