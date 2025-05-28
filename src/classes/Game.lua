@@ -7,8 +7,12 @@ local ReverseDice = require("src.classes.Dices.ReverseDice")
 local LuckyDice = require("src.classes.Dices.LuckyDice")
 local PharmacyDice = require("src.classes.Dices.PharmacyDice")
 
+--Utils
 local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
+local Shaders = require("src.utils.shaders")
+
+local applyCRT = false
 
 local Game = { 
     currentScreen = 1,
@@ -26,6 +30,7 @@ local virtualWidth, virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRT
 
 local gameCanvas = love.graphics.newCanvas(virtualWidth, virtualHeight)
 gameCanvas:setFilter("nearest", "nearest")
+
 
 local dices = { -- On définit les 5 dés présents dans la partie
         Dice:new(),
@@ -63,7 +68,6 @@ function Game:draw()
     elseif(self.currentScreen == PAGES.GAME)then
         self.run:draw(gameCanvas)
     end
-    
     love.graphics.setCanvas()
 
     --Affichage du jeu--
@@ -76,8 +80,13 @@ function Game:draw()
 
     local offsetX = (screenWidth - scaledWidth) / 2
     local offsetY = (screenHeight - scaledHeight) / 2
-              
+    
+    if(applyCRT)then
+        love.graphics.setShader(Shaders.crt)
+    end
     love.graphics.draw(gameCanvas, offsetX, offsetY, 0, scale, scale)
+    love.graphics.setShader()
+
 end
 
 --==GAME FUNCTION==--
@@ -91,6 +100,10 @@ end
 --==INPUTS FUNCTIONS==--
 
 function Game:keypressed(key)
+
+    if(key=="c")then
+        applyCRT = not applyCRT
+    end
 
     if(key=="b")then
         self.currentScreen = PAGES.GAME

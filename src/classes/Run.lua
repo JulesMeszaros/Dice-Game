@@ -9,6 +9,12 @@ local AfterRound = require("src.classes.AfterRound")
 
 local Inputs = require("src.utils.scripts.inputs")
 
+local runStates = {
+    ROUND = 1,
+    SHOP = 2,
+    GAME_OVER = 3
+}
+
 local Run = {
     --Dices variables
     drawedDices = {}, --Current Drawed Dices
@@ -33,8 +39,7 @@ local Run = {
     totalScore = 0,
 
     --Run state
-    runStates = {"round", "shop"},
-    currentState = "round",
+    currentState = runStates.ROUND,
     isInRound = true,
     isInShop = false
 }
@@ -98,7 +103,7 @@ end
 
 function Run:update(dt)
 
-    if(self.currentState=="round")then
+    if(self.currentState==runStates.ROUND)then
         --update Round
         self.currentRound:update(dt)
 
@@ -116,7 +121,7 @@ function Run:update(dt)
         self.uiElements.roundButtons["rerollButton"]:setActivated(self.currentRound.availableRerolls>0 and table.getn(self.currentRound.selectedDices)>0)
         self.uiElements.roundButtons["resetButton"]:setActivated(table.getn(self.currentRound.selectedDices)>0)
 
-    elseif(self.currentState=="shop")then
+    elseif(self.currentState==runStates.SHOP)then
         --update shop
         self.shop:update(dt)
     end
@@ -124,9 +129,9 @@ end
 
 function Run:draw(gameCanvas) --Render the game into the Game Canvas.
     --==DRAW THE ROUND==--
-    if(self.currentState=="round")then --check if we are in round
+    if(self.currentState==runStates.ROUND)then --check if we are in round
         self:drawRound() --Draw the round
-    elseif(self.currentState == "shop")then --check if we are in shop
+    elseif(self.currentState == runStates.SHOP)then --check if we are in shop
         self.shop:draw() --Draw the shop
     end
 
@@ -141,16 +146,20 @@ function Run:startNewRound()
     newRound:makeRoll(self.dices) 
     self.currentRound = newRound
 
-    self.currentState = "round"
+    self.currentState = runStates.ROUND
 end
 
 function Run:endRound()
-    local afterRound = AfterRound:new(self, self.gameCanvas)
-    self.shop = afterRound
+    --checks if the goal was reached during round
+    if(self.currentRound.score == self.currentRound.targetScore)then
+        local afterRound = AfterRound:new(self, self.gameCanvas)
+        self.shop = afterRound
 
-    self.currentState = "shop" --Change d'état de Run
+        self.currentState = runStates.SHOP --Change d'état de Run
+    else --gameover case
+        self.currentState = runStates.GAME_OVER
+    end
 end
-
 --==DRAW FUNCTIONS==--
 
 function Run:drawRound()
@@ -227,9 +236,9 @@ end
 --==INPUTS FUNCTIONS==
 
 function Run:keypressed(key)
-    if(self.currentState=="round")then
+    if(self.currentState==runStates.ROUND)then
         self.currentRound:keypressed(key)
-    elseif(self.currentState=="shop")then
+    elseif(self.currentState==runStates.SHOP)then
         self.shop:keypressed(key)
     end
 end
@@ -238,20 +247,20 @@ function Run:mousepressed(x, y, button, istouch, presses)
     --Met les coordonnées de drag à 0
     self.dragOriginX = x ; self.dragOriginY = y
 
-    if(self.currentState == "round")then
+    if(self.currentState == runStates.ROUND)then
         self.currentRound:mousepressed(x, y, button, istouch, presses)
 
         --Buttons
         for key,button in next,self.uiElements.roundButtons do
             button:clickEvent()
         end
-    elseif(self.currentState=="shop")then
+    elseif(self.currentState==runStates.SHOP)then
         self.shop:mousepressed(x, y, button, istouch, presses)
     end
 end
 
 function Run:mousereleased(x, y, button, istouch, presses)
-    if(self.currentState=="round")then
+    if(self.currentState==runStates.ROUND)then
         self.currentRound:mousereleased(x, y, button, istouch, presses)
 
         --release event on UI elements (buttons)
@@ -261,7 +270,7 @@ function Run:mousereleased(x, y, button, istouch, presses)
                 button:getCallback()()
             end
         end
-    elseif(self.currentState=='shop')then
+    elseif(self.currentState==runStates.SHOP)then
         self.shop:mousereleased(x, y, button, istouch, presses)
     end
 
@@ -270,9 +279,9 @@ function Run:mousereleased(x, y, button, istouch, presses)
 end
 
 function Run:mousemoved(x, y, dx, dy)
-    if(self.currentState=="round")then
+    if(self.currentState==runStates.ROUND)then
         self.currentRound:mousemoved(x, y, dx, dy, self.isDragging)
-    elseif(self.currentState=="shop")then
+    elseif(self.currentState==runStates.SHOP)then
         self.shop:mousemoved(x, y, dx, dy, self.isDragging)
     end
     --x et y sont la position, dx et dy sont la vitesse.

@@ -35,4 +35,38 @@ Shaders.rainbowShader = love.graphics.newShader([[
     }
 ]])
 
+Shaders.crt = love.graphics.newShader([[
+    extern vec2 iResolution;
+    extern number warp = 0.60;
+    extern number scan = 0.3;
+
+    vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+        vec2 uv = texture_coords;
+        vec2 dc = abs(0.5 - uv);
+        dc *= dc;
+
+        // Courbure
+        uv.x -= 0.5;
+        uv.x *= 1.0 + (dc.y * (0.3 * warp));
+        uv.x += 0.5;
+
+        uv.y -= 0.5;
+        uv.y *= 1.0 + (dc.x * (0.4 * warp));
+        uv.y += 0.5;
+
+        // Hors limites
+        if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+            return vec4(0.0, 0.0, 0.0, 1.0);
+        }
+
+        // Scanlines
+        float apply = abs(sin(screen_coords.y) * 0.5 * scan);
+        vec4 texColor = Texel(texture, uv);
+        vec3 finalColor = mix(texColor.rgb, vec3(0.0), apply);
+
+        return vec4(finalColor, texColor.a) * color;
+    }
+]])
+
+
 return Shaders
