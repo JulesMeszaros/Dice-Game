@@ -1,5 +1,5 @@
 local Run = require("src.classes.Run")
-local MainMenu = require("src.classes.MainMenu")
+local MainMenu = require("src.screens.MainMenu")
 
 --Import The Dices
 local Dice = require("src.classes.Dices.Dice")

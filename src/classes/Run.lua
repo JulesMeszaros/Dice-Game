@@ -1,5 +1,5 @@
 local Round = require("src.classes.Round")
-local AfterRound = require("src.classes.AfterRound")
+local AfterRound = require("src.screens.AfterRound")
 local GameOverScreen = require("src.screens.GameOverScreen")
 
 

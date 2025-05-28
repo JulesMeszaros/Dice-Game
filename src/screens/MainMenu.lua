@@ -16,6 +16,9 @@ function MainMenu:new(gameCanvas, game)
     self.gameCanvas = gameCanvas
     self.game = game
 
+    --Creating the canvas
+    self.mainMenuCanvas = love.graphics.newCanvas(self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
+
     self.uiElements.buttons["newRun"] = Button:new(
         function()self.game:startNewRun()end,
         "src/assets/sprites/ui/buttons/new_run.png",
@@ -35,21 +38,33 @@ function MainMenu:update(dt)
     for key,button in next,self.uiElements.buttons do
         button:update(dt)
     end
+
+    --Update the canvas
+    self:updateCanvas(dt)
 end
 
-function MainMenu:draw()
+function MainMenu:updateCanvas(dt)
+    love.graphics.setCanvas(self.mainMenuCanvas)
+    love.graphics.clear()
+
     local textTitle = love.graphics.newText(Fonts.pixelatedBig, "DICE GAME")
     --Main title
-    love.graphics.draw(textTitle, self.gameCanvas:getWidth()/2, 100, 0, 1, 1, textTitle:getWidth()/2, textTitle:getHeight()/2)
+    love.graphics.draw(textTitle, self.mainMenuCanvas:getWidth()/2, 100, 0, 1, 1, textTitle:getWidth()/2, textTitle:getHeight()/2)
 
     --Version
     local versionText = love.graphics.newText(Fonts.pixelated, "AEROSOL DELUXE GAMES — v0.0.2dev")
-    love.graphics.draw(versionText, 20, self.gameCanvas:getHeight()-20, 0, 1, 1, 0, versionText:getHeight())
+    love.graphics.draw(versionText, 20, self.mainMenuCanvas:getHeight()-20, 0, 1, 1, 0, versionText:getHeight())
 
     --Buttons
     for key,button in next,self.uiElements.buttons do
         button:draw()
     end
+
+    love.graphics.setCanvas(self.gameCanvas)
+end
+
+function MainMenu:draw()
+    love.graphics.draw(self.mainMenuCanvas, 0, 0)
 
 end
 
