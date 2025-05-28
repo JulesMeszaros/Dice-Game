@@ -2,19 +2,19 @@ local Button = require("src.classes.ui.Button")
 local Inputs = require("src.utils.scripts.inputs")
 local CalculatePoints = require("src.utils.scripts.calculatePoints")
 
-local Terrain = {
+local RoundScreen = {
     uiElements = {
         roundButtons = {},
         figureButtons = {}
     }
 }
-Terrain.__index = Terrain
+RoundScreen.__index = RoundScreen
 
 local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
 local matImage = love.graphics.newImage("src/assets/sprites/ui/terrain/dice_mat.png")
 
-function Terrain:new(round)
-    local self = setmetatable({}, Terrain)
+function RoundScreen:new(round)
+    local self = setmetatable({}, RoundScreen)
     self.gameCanvas = round.gameCanvas
 
     self.terrainCanvas = love.graphics.newCanvas(round.gameCanvas:getWidth(),round.gameCanvas:getHeight() )
@@ -126,7 +126,7 @@ function Terrain:new(round)
     return self
 end
 
-function Terrain:update(dt)
+function RoundScreen:update(dt)
     --Reset Bouton de figure et Dé survolé
     self.currentlyHoveredFigure = nil
     self.currentlyHoveredDice = nil
@@ -163,7 +163,7 @@ function Terrain:update(dt)
 
 end
 
-function Terrain:updateCanvas(dt)
+function RoundScreen:updateCanvas(dt)
     love.graphics.setCanvas(self.terrainCanvas)
     love.graphics.clear()
 
@@ -183,11 +183,11 @@ end
 
 --==DRAW FUNCTIONS==--
 
-function Terrain:playFigure(points)
+function RoundScreen:playFigure(points)
     self.round:playFigure(points)
 end
 
-function Terrain:drawDiceTray(x, y, dices)
+function RoundScreen:drawDiceTray(x, y, dices)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.dice_tray)
     love.graphics.clear()
@@ -212,7 +212,7 @@ function Terrain:drawDiceTray(x, y, dices)
 
 end
 
-function Terrain:drawFigureButtons(x, y)
+function RoundScreen:drawFigureButtons(x, y)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.figureButtonsCanvas)
     love.graphics.clear()
@@ -231,7 +231,7 @@ end
 
 --==UTILS FUNCTIONS==--
 
-function Terrain:reorganiseDiceFaces(dices)
+function RoundScreen:reorganiseDiceFaces(dices)
     --Reorganise the dice by face (increasing)
     local reorganisedDices = {}
     local temp = {}
@@ -256,7 +256,7 @@ function Terrain:reorganiseDiceFaces(dices)
     end
 end
 
-function Terrain:getCurrentlyHoveredFigure()
+function RoundScreen:getCurrentlyHoveredFigure()
     local figureNames = {
         "Uns",
         "Deux",
@@ -299,5 +299,5 @@ function Terrain:getCurrentlyHoveredFigure()
     end
 end
 
-return Terrain
+return RoundScreen
 

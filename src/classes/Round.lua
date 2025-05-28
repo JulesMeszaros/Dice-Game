@@ -1,5 +1,5 @@
 local DiceFace = require("src.classes.ui.DiceFace")
-local Terrain = require("src.classes.ui.Terrain")
+local RoundScreen = require("src.screens.RoundScreen")
 
 local Inputs = require("src.utils.scripts.inputs")
 
@@ -30,7 +30,7 @@ function Round.new(n, dices, gameCanvas, run)
     self.dices = dices
     self.targetScore = 50
 
-    self.terrain =  Terrain:new(self)
+    self.terrain =  RoundScreen:new(self)
 
     --On créée une première fois les faces à afficher
     for key,dice in next,self.dices do
