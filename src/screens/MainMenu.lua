@@ -100,8 +100,8 @@ function MainMenu:addRandomDice()
             math.random(0, self.mainMenuCanvas:getWidth()),
             -100,
             math.random(64,200),
-            true,
             false,
+            true,
             function()return(Inputs.getMouseInCanvas(0,0))end,
             self.mainMenuCanvas
         )
