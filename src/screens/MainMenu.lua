@@ -10,6 +10,7 @@ local MainMenu = {
         buttons = {}
     }
 }
+
 MainMenu.__index = MainMenu
 
 function MainMenu:new(gameCanvas, game)
