@@ -1,6 +1,7 @@
 --Classe servant à afficher une face de dé, avec ses propriétés et ses effets et ses interractions
 local UIElement = require("src.classes.ui.UIElement")
-
+--Utils
+local AnimationUtils = require("src.utils.scripts.animationUtils")
 local InputsUtils = require("src.utils.scripts.inputs")
 local Constants = require("src.utils.constants")
 local Shaders = require("src.utils.shaders")
@@ -93,7 +94,7 @@ function DiceFace:update(dt)
     end
 
 	if(self.isHighlighted==true)then
-		self.highlightScale = 0.10 + 0.10 * math.sin(2 * math.pi * self.time / 3)
+		self.highlightScale = AnimationUtils.osccilate(self.time, 5, 0.15)
 	else
 		self.highlightScale = 0
 	end
