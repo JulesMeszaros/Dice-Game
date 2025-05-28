@@ -62,16 +62,17 @@ function Game:update(dt)
 end
 
 function Game:draw()
-
     love.graphics.setCanvas(self.gameCanvas)
-    love.graphics.clear()
-    --Rendu du jeu--
+    love.graphics.clear(26/255, 79/255, 37/255)
+    --Rendu du jeu dans le game canvas--
     if(self.currentScreen == PAGES.MAIN_MENU)then
         self.mainMenu:draw()
     elseif(self.currentScreen == PAGES.GAME)then
         self.run:draw(self.gameCanvas)
     end
+
     love.graphics.setCanvas()
+    
 
     --Affichage du jeu--
     -- Calcule le scale pour garder le ratio

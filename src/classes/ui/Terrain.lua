@@ -2,7 +2,12 @@ local Button = require("src.classes.ui.Button")
 local Inputs = require("src.utils.scripts.inputs")
 local CalculatePoints = require("src.utils.scripts.calculatePoints")
 
-local Terrain = {}
+local Terrain = {
+    uiElements = {
+        roundButtons = {},
+        figureButtons = {}
+    }
+}
 Terrain.__index = Terrain
 
 local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
@@ -10,7 +15,9 @@ local matImage = love.graphics.newImage("src/assets/sprites/ui/terrain/dice_mat.
 
 function Terrain:new(round)
     local self = setmetatable({}, Terrain)
-    local currentCanvas = love.graphics.getCanvas()
+    self.gameCanvas = round.gameCanvas
+
+    self.terrainCanvas = love.graphics.newCanvas(round.gameCanvas:getWidth(),round.gameCanvas:getHeight() )
 
     self.round = round
 
@@ -27,7 +34,8 @@ function Terrain:new(round)
     --Figure buttons
     self.figureButtonsCanvas = love.graphics.newCanvas(495,702)
     self.figureButtonsCanvas:setFilter("nearest", "nearest")
-
+    
+    --CREATION DES BOUTONS DE FIGURE
     --Importation des images
     local image_buttons = {
         "src/assets/sprites/ui/buttons/figure_1.png",
@@ -80,6 +88,41 @@ function Terrain:new(round)
         i=i+1
     end
 
+    --BOUTONS
+    self.uiElements.roundButtons["resetButton"] = Button:new(
+        function()self.round:resetSelectedDices()end, 
+        "src/assets/sprites/ui/buttons/reset.png", 
+        self.terrainCanvas:getWidth()-125, 
+        self.terrainCanvas:getHeight()-70, 
+        200, 
+        84,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+        )
+        
+
+    self.uiElements.roundButtons["rerollButton"] = Button:new(
+        function()self.round:rerollDices()end, 
+        "src/assets/sprites/ui/buttons/reroll.png", 
+        self.terrainCanvas:getWidth()-350, 
+        self.terrainCanvas:getHeight()-70, 
+        200, 
+        84,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
+    self.uiElements.roundButtons["reorganiserButton"] = Button:new(
+        function()self:reorganiseDiceFaces(self.round.diceFaces)end, 
+        "src/assets/sprites/ui/buttons/reorganiser.png", 
+        self.terrainCanvas:getWidth()-570, 
+        self.terrainCanvas:getHeight()-70, 
+        200, 
+        84,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
     return self
 end
 
@@ -88,6 +131,7 @@ function Terrain:update(dt)
     self.currentlyHoveredFigure = nil
     self.currentlyHoveredDice = nil
 
+    -- Figure buttons
     for key,button in next, self.figureButtons do
         button:update(dt)
 
@@ -106,6 +150,35 @@ function Terrain:update(dt)
             self.currentlyHoveredDice = diceface.dice.name
         end
     end
+
+    --Utilities buttons
+    for key,button in next,self.uiElements.roundButtons do
+        self.uiElements.roundButtons["rerollButton"]:setActivated(self.round.availableRerolls>0 and table.getn(self.round.selectedDices)>0)
+        self.uiElements.roundButtons["resetButton"]:setActivated(table.getn(self.round.selectedDices)>0)
+
+        button:update(dt)
+    end
+
+    self:updateCanvas(dt)
+
+end
+
+function Terrain:updateCanvas(dt)
+    love.graphics.setCanvas(self.terrainCanvas)
+    love.graphics.clear()
+
+    --Dice Tray
+    self:drawDiceTray(self.terrainCanvas:getWidth()-20, 20, self.round.diceFaces)
+
+    --Figure Buttons
+    self:drawFigureButtons(20, 102)
+
+    --Bouttouns de round
+    for k,b in next,self.uiElements.roundButtons do
+        b:draw()
+    end
+
+    love.graphics.setCanvas(self.gameCanvas)
 end
 
 --==DRAW FUNCTIONS==--

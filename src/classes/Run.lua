@@ -1,14 +1,7 @@
-local Dice = require("src.classes.Dices.Dice")
-local DiceFace = require("src.classes.ui.DiceFace")
-local UIElement = require("src.classes.ui.UIElement")
-local Button = require("src.classes.ui.Button")
-local Terrain = require("src.classes.ui.Terrain")
-
 local Round = require("src.classes.Round")
 local AfterRound = require("src.classes.AfterRound")
 local GameOverScreen = require("src.screens.GameOverScreen")
 
-local Inputs = require("src.utils.scripts.inputs")
 
 local runStates = {
     ROUND = 1,
@@ -19,11 +12,6 @@ local runStates = {
 local Run = {
     --Dices variables
     drawedDices = {}, --Current Drawed Dices
-
-    --UI
-    uiElements = { -- Stores the UI Elements of the Run
-        roundButtons = {}
-    },
 
     --Drag variables (should rather be located in the Game class i guess...)
     isDragging = false,
@@ -60,41 +48,6 @@ function Run:new(dices, gameCanvas, game)
     --On attribue le set de dés
     self.dices = dices
 
-    --Add a button
-    self.uiElements.roundButtons["resetButton"] = Button:new(
-        function()self.currentRound:resetSelectedDices()end, 
-        "src/assets/sprites/ui/buttons/reset.png", 
-        self.gameCanvas:getWidth()-125, 
-        self.gameCanvas:getHeight()-70, 
-        200, 
-        84,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-        )
-        
-
-    self.uiElements.roundButtons["rerollButton"] = Button:new(
-        function()self.currentRound:rerollDices()end, 
-        "src/assets/sprites/ui/buttons/reroll.png", 
-        self.gameCanvas:getWidth()-350, 
-        self.gameCanvas:getHeight()-70, 
-        200, 
-        84,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-    )
-
-    self.uiElements.roundButtons["reorganiserButton"] = Button:new(
-        function()self.currentRound.terrain:reorganiseDiceFaces(self.currentRound.diceFaces)end, 
-        "src/assets/sprites/ui/buttons/reorganiser.png", 
-        self.gameCanvas:getWidth()-570, 
-        self.gameCanvas:getHeight()-70, 
-        200, 
-        84,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-    )
-
     --Create the first Round of the run
     local round = Round.new(1, self.dices, self.gameCanvas, self)
     round:makeRoll(dices) --make first roll
@@ -104,25 +57,14 @@ function Run:new(dices, gameCanvas, game)
 end
 
 function Run:update(dt)
-
     if(self.currentState==runStates.ROUND)then
         --update Round
         self.currentRound:update(dt)
-
-        --Update round Buttons
-        for key,button in next,self.uiElements.roundButtons do
-            button:update(dt)
-        end
 
         --Update dices UI
         for key,dice in next,self.currentRound.diceFaces do
             dice:update(dt)
         end
-
-        --TODO: à déplacer dans la classe Round 
-        self.uiElements.roundButtons["rerollButton"]:setActivated(self.currentRound.availableRerolls>0 and table.getn(self.currentRound.selectedDices)>0)
-        self.uiElements.roundButtons["resetButton"]:setActivated(table.getn(self.currentRound.selectedDices)>0)
-
     elseif(self.currentState==runStates.SHOP)then
         --update shop
         self.shop:update(dt)
@@ -174,9 +116,8 @@ function Run:drawRound()
     --Set the right canvas
     self:drawTerrain()
     love.graphics.setCanvas(self.gameCanvas)
-    self:drawUIElements(self.gameCanvas) --Draw the UI Elements into the canvas
 
-    --Some informational text //TODO: Move the text to a dedicated function later
+    --TODO: à déplacer dans la classe terrain
     local rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.currentRound.availableRerolls))
     local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.currentRound.roundScore))
     local targetScoreText = love.graphics.newText(font, 'Target : '..tostring(self.currentRound.targetScore))
@@ -190,7 +131,7 @@ function Run:drawRound()
 
     love.graphics.draw(currentRoundText, 10, self.gameCanvas:getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
 
-    love.graphics.setCanvas(gameCanvas)
+    love.graphics.setCanvas(self.gameCanvas)
 
 
     --Show the currently hovered figure button
@@ -220,25 +161,8 @@ function Run:drawRound()
 end
 
 function Run:drawTerrain()
-    --Dessine le terrain du round actuel(temporaire j'imagine, on verra...)
-
-    --Espace de dés
-    self.currentRound.terrain:drawDiceTray(love.graphics.getCanvas():getWidth()-20, 20, self.currentRound.diceFaces)
-
-    --Boutons de figures
-    self.currentRound.terrain:drawFigureButtons(20, 102)
-
-end
-
-function Run:drawButtons(gameCanvas)
-    for key,button in next,self.uiElements.roundButtons do
-        button:draw(gameCanvas)
-    end
-end
-
-function Run:drawUIElements(gameCanvas)
-    --Fonction pour afficher les différents élément d'interface graphique
-    self:drawButtons(gameCanvas)--Les boutons
+    --Dessine le terrain du round actuel
+    love.graphics.draw(self.currentRound.terrain.terrainCanvas, 0, 0)
 end
 
 --==INPUTS FUNCTIONS==
@@ -259,11 +183,6 @@ function Run:mousepressed(x, y, button, istouch, presses)
 
     if(self.currentState == runStates.ROUND)then
         self.currentRound:mousepressed(x, y, button, istouch, presses)
-
-        --Buttons
-        for key,button in next,self.uiElements.roundButtons do
-            button:clickEvent()
-        end
     elseif(self.currentState==runStates.SHOP)then
         self.shop:mousepressed(x, y, button, istouch, presses)
     elseif(self.currentState==runStates.GAME_OVER)then
@@ -274,14 +193,6 @@ end
 function Run:mousereleased(x, y, button, istouch, presses)
     if(self.currentState==runStates.ROUND)then
         self.currentRound:mousereleased(x, y, button, istouch, presses)
-
-        --release event on UI elements (buttons)
-        for key,button in next,self.uiElements.roundButtons do
-            local wasReleased = button:releaseEvent()
-            if(wasReleased) then --Si le click a été complété
-                button:getCallback()()
-            end
-        end
     elseif(self.currentState==runStates.SHOP)then
         self.shop:mousereleased(x, y, button, istouch, presses)
     elseif(self.currentState==runStates.GAME_OVER)then

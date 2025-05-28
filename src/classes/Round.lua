@@ -57,10 +57,6 @@ function Round:update(dt)
     self.terrain:update(dt)
 end
 
-function Round:draw()
-
-end
-
 --==ROUND FUNCTION==--
 function Round:endRound()
     self.run:endRound()
@@ -90,6 +86,11 @@ function Round:mousepressed(x, y, button, istouch, presses)
         uiFace:clickEvent()
     end
 
+    --Round Buttons
+    for key,button in next,self.terrain.uiElements.roundButtons do
+        button:clickEvent()
+    end
+
     --Figure Buttons
     for key,button in next,self.terrain.figureButtons do
         button:clickEvent()
@@ -107,6 +108,14 @@ function Round:mousereleased(x, y, button, istouch, presses)
     end
 
     --release event on UI elements (buttons)
+    for key,button in next,self.terrain.uiElements.roundButtons do
+        local wasReleased = button:releaseEvent()
+        if(wasReleased) then --Si le click a été complété
+            button:getCallback()()
+        end
+    end
+
+    --release event on UI elements (figure buttons)
     for key,button in next,self.terrain.figureButtons do
         local wasReleased = button:releaseEvent()
         if(wasReleased) then --Si le click a été complété
