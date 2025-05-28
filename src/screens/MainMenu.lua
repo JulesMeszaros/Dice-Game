@@ -2,6 +2,8 @@ local Fonts = require("src.utils.fonts")
 local Inputs = require("src.utils.scripts.inputs")
 
 local Button = require("src.classes.ui.Button")
+local DiceFace = require("src.classes.ui.DiceFace")
+local Dice = require("src.classes.Dices.Dice")
 
 local MainMenu = {
     uiElements = {
@@ -15,6 +17,8 @@ function MainMenu:new(gameCanvas, game)
 
     self.gameCanvas = gameCanvas
     self.game = game
+
+    self.animationDices = {}
 
     --Creating the canvas
     self.mainMenuCanvas = love.graphics.newCanvas(self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
@@ -41,11 +45,28 @@ function MainMenu:update(dt)
 
     --Update the canvas
     self:updateCanvas(dt)
+
+    --Update Animation
+    self:addRandomDice()
+
+    for k,d in next,self.animationDices do
+        d:updateCanvas()
+        d:update(dt)
+        d.targetY = d.targetY+(500+(d.targetY/2)+(d.size*2))*dt --Dépend de la hauteur et de la taille
+        if(d.targetY>self.mainMenuCanvas:getHeight()+200) then
+            table.remove(self.animationDices, k)
+        end
+    end
 end
 
 function MainMenu:updateCanvas(dt)
     love.graphics.setCanvas(self.mainMenuCanvas)
     love.graphics.clear()
+
+    --==Animation Dices==--
+    for k,d in next,self.animationDices do
+        d:draw()
+    end
 
     local textTitle = love.graphics.newText(Fonts.pixelatedBig, "DICE GAME")
     --Main title
@@ -66,6 +87,28 @@ end
 function MainMenu:draw()
     love.graphics.draw(self.mainMenuCanvas, 0, 0)
 
+end
+
+--==MAIN MENU ANIMATION==--
+function MainMenu:addRandomDice()
+    local rand = math.random(0, 1)
+    if(rand == 1)then
+        local d = Dice:new()
+        local df = DiceFace:new(
+            d,
+            math.random(1,6),
+            math.random(0, self.mainMenuCanvas:getWidth()),
+            -100,
+            math.random(64,200),
+            false,
+            false,
+            function()return({0,0})end,
+            self.mainMenuCanvas
+        )
+        df.isSelected = true
+        table.insert(self.animationDices, df)
+    end
+    print(table.getn(self.animationDices))
 end
 
 --==KEYBOARD/MOUSE INPUTS==--

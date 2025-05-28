@@ -50,6 +50,7 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
     self.rotation = 0 --Angle the dice is actually showed at
 
     --Scale
+    self.targetedScale = 1
 	self.highlightScale = 0
     self.baseTargetedScale = 1
     self.selectionScale = 0
@@ -117,16 +118,15 @@ end
 function DiceFace:draw()
     --local shadow = self:renderShadow()
     local render = self.diceCanvas
-
-    local currentCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.renderCanvas)
+    --local currentCanvas = love.graphics.getCanvas()
+    --love.graphics.setCanvas(self.renderCanvas)
     --Render l'ombre
     love.graphics.draw(self.shadowCanvas, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
 
     --Render la face du dé  
     love.graphics.draw(render, self.x, self.y, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
 
-    love.graphics.setCanvas(currentCanvas)
+    --love.graphics.setCanvas(currentCanvas)
 end
 
 function DiceFace:createCanvas()
