@@ -157,7 +157,7 @@ end
 
 function Run:endRound()
     --checks if the goal was reached during round
-    if(self.currentRound.score == self.currentRound.targetScore)then
+    if(self.currentRound.roundScore >= self.currentRound.targetScore)then
         local afterRound = AfterRound:new(self, self.gameCanvas)
         self.shop = afterRound
 

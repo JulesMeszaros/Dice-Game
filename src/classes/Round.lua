@@ -28,7 +28,7 @@ function Round.new(n, dices, gameCanvas, run)
     self.nround = n
     self.availableRerolls = 3
     self.dices = dices
-    self.targetScore = 100
+    self.targetScore = 50
 
     self.terrain =  Terrain:new(self)
 
@@ -63,7 +63,7 @@ end
 
 --==ROUND FUNCTION==--
 function Round:endRound()
-    print(self.run:endRound())
+    self.run:endRound()
 end
 
 --==MOUSE/KEYBOARD FUNCTIONS==--
@@ -216,18 +216,15 @@ end
 
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points) --Function that triggers the hand
+    self.roundScore = self.roundScore + points -- On ajoute les points au score
+    
     if(self.remainingHands>=1)then
-        self.roundScore = self.roundScore + points -- On ajoute les points au score
         self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
         self:makeRoll(self.dices) -- On effectue un reroll
         self.availableRerolls = 3
     end
 
-    if(self.roundScore >= self.targetScore) then
-        self:endRound()
-    end
-
-    if(self.remainingHands == 0)then
+    if(self.roundScore >= self.targetScore or self.remainingHands == 0) then
         self:endRound()
     end
 end
