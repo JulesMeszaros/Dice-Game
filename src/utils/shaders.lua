@@ -68,5 +68,41 @@ Shaders.crt = love.graphics.newShader([[
     }
 ]])
 
+Shaders.silver = love.graphics.newShader([[extern number time;
+extern number rotation; // Rotation en radians
+
+vec3 hueShift(vec3 color, float shift) {
+    const mat3 toYIQ = mat3(
+        0.299,  0.587,  0.114,
+        0.596, -0.274, -0.322,
+        0.211, -0.523,  0.312
+    );
+
+    const mat3 toRGB = mat3(
+        1.0,  0.956,  0.621,
+        1.0, -0.272, -0.647,
+        1.0, -1.106,  1.703
+    );
+
+    vec3 yiq = toYIQ * color;
+    float hue = atan(yiq.z, yiq.y);
+    float chroma = length(yiq.yz);
+
+    hue += shift;
+    yiq.y = chroma * cos(hue);
+    yiq.z = chroma * sin(hue);
+
+    return clamp(toRGB * yiq, 0.0, 1.0);
+}
+
+vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+    vec4 texColor = Texel(texture, texture_coords);
+
+    // Variation avec le temps + rotation externe
+    float hueOffset = sin(time + texture_coords.y * 10.0 + rotation) * 3.14;
+
+    vec3 shifted = hueShift(texColor.rgb, hueOffset);
+    return vec4(shifted, texColor.a) * color;
+}]])
 
 return Shaders

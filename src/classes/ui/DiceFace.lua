@@ -72,61 +72,47 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
     self.diceCanvas = self:createCanvas()
     self.shadowCanvas = self:createShadow()
 
+    --Triggering variables
+    self.isTriggering = false
+    self.triggerTimer = 0 --Minuteur de trigger 
+    self.triggerTime = 0.3 --Temps que prend un dé à se trigger
+
     return self
 end
 
 function DiceFace:update(dt)
     self.time=self.time+dt
 
-    --Calculate scale
-    if(self:isHovered())then
-        self.hoverScale = -0.1 --Si hovered
-        if(love.mouse.isDown(1)) then
-            self.hoverScale = -0.15 --Si clicked
-        end
-    else
-        self.hoverScale = 0
-    end
-
-    if(self.isSelected)then
-        self.selectionScale = 0.2
-    else
-        self.selectionScale = 0
-    end
-
-	if(self.isHighlighted==true)then
-		self.highlightScale = AnimationUtils.osccilate(self.time, 5, 0.15)
-	else
-		self.highlightScale = 0
-	end
-
-    self.targetedScale = self.baseTargetedScale + self.selectionScale + self.hoverScale + self.highlightScale
-
+    --Calculate targeted Scale and Rotation
     self:calculateAngleDrag()
     self.targetedRotation = self.baseRotation + self.dragRotation
 
     --Update scale, rotation and position
-
     self:updatePosition(dt)
     self:updateScale(dt)
     self:updateAngle(dt)
 
+    --Triggering functions
+    if(self.isTriggering)then
+        self.isHoverable = false
+        self.isSelectable = false
+        self:calculateTriggerScale()
+    else
+        self.isSelectable = true
+        self.isHoverable = true
+        self:calculateScale()
+    end
+
     --update canvas
-    self:updateCanvas()
+    self:updateCanvas(dt)
 end
 
 function DiceFace:draw()
-    --local shadow = self:renderShadow()
     local render = self.diceCanvas
-    --local currentCanvas = love.graphics.getCanvas()
-    --love.graphics.setCanvas(self.renderCanvas)
     --Render l'ombre
     love.graphics.draw(self.shadowCanvas, self.x+10, self.y+10, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
-
     --Render la face du dé  
     love.graphics.draw(render, self.x, self.y, self.rotation, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
-
-    --love.graphics.setCanvas(currentCanvas)
 end
 
 function DiceFace:createCanvas()
@@ -183,7 +169,7 @@ function DiceFace:createShadow()
 
 end
 
-function DiceFace:updateCanvas()
+function DiceFace:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     
     local canvasSize = self.size --sets the base face of the canvas
@@ -202,10 +188,17 @@ function DiceFace:updateCanvas()
         love.graphics.setShader()
     end
 
+    --Update the trigger
+    if(self.isTriggering)then
+        self.triggerTimer = self.triggerTimer + dt
+        if(self.triggerTimer >= self.triggerTime)then
+            self.isTriggering = false
+        end
+    end
+
     love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
     
     love.graphics.setShader()
-
     love.graphics.setCanvas(currentCanvas)
 end
 
@@ -242,7 +235,13 @@ function DiceFace:updateSprite()
     self.dim = self.dice:getFaceDim()
 end
 
---Get/set Functions--
+--==TRIGGER FUNCTIONS==--
+function DiceFace:trigger() --Lance le trigger du dé
+    self.triggerTimer = 0
+    self.isTriggering = true
+end
+
+--==GET/SET FUNCTIONS==--
 function DiceFace:resetBaseAngle()
     self.baseRotation = 0
 end
@@ -293,11 +292,48 @@ function DiceFace:calculateAngleDrag()
     if self.dragRotation > maxRotation then
         self.dragRotation = maxRotation
     end
+
+    
 end
 
 function DiceFace:updatePosition(dt)
     self.x, self.velx = springUpdate(self.x, self.targetX, self.velx, dt, 4, 0.8)
     self.y, self.vely = springUpdate(self.y, self.targetY, self.vely, dt, 4, 0.8)
+end
+
+function DiceFace:calculateScale()
+    --Calculate scale
+    if(self:isHovered())then
+        self.hoverScale = -0.1 --Si hovered
+        if(love.mouse.isDown(1)) then
+            self.hoverScale = -0.15 --Si clicked
+        end
+    else
+        self.hoverScale = 0
+    end
+
+    if(self.isSelected)then
+        self.selectionScale = 0.2
+    else
+        self.selectionScale = 0
+    end
+
+	if(self.isHighlighted==true)then
+		self.highlightScale = AnimationUtils.osccilate(self.time, 5, 0.15)
+	else
+		self.highlightScale = 0
+	end
+
+    --Update targeted scale, rotation and position
+    self.targetedScale = self.baseTargetedScale + self.selectionScale + self.hoverScale + self.highlightScale
+    
+end
+
+function DiceFace:calculateTriggerScale()
+     local t = self.triggerTimer / self.triggerTime
+
+    local s = math.sin(2*t * math.pi) -- varie de 0 à 1 à 0
+    self.targetedScale = 1 + (1.5 - 1) * s
 end
 
 function DiceFace:updateAngle(dt)

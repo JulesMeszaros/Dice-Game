@@ -76,6 +76,12 @@ function Round:keypressed(key)
     if(key=="r") then
         self.availableRerolls = 10
     end
+
+    if(key=="t") then --trigger the trigger animation of the dicefaces
+        for j,df in next,self.diceFaces do
+            df:trigger()
+        end
+    end
 end
 
 function Round:mousepressed(x, y, button, istouch, presses)

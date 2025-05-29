@@ -51,7 +51,7 @@ function MainMenu:update(dt)
     self:addRandomDice()
 
     for k,d in next,self.animationDices do
-        d:updateCanvas()
+        d:updateCanvas(dt)
         d:update(dt)
         d.targetY = d.targetY+(500+(d.targetY/2)+(d.size*2))*dt --Dépend de la hauteur et de la taille
         if(d.targetY>self.mainMenuCanvas:getHeight()+200) then
