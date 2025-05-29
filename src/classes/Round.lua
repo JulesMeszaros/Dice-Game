@@ -18,6 +18,7 @@ local Round = {
 
     --==Triggering Phase==--
     triggeringPhase = false,
+    triggerQueue = {},
     diceFacesOrder = {},
     currentlyTriggeredDice = nil
 }
@@ -49,7 +50,8 @@ function Round.new(n, dices, gameCanvas, run)
             true, --is Selectable
             true, --isHoverable,
             function()return Inputs.getMouseInCanvas((self.gameCanvas:getWidth()-20)-self.terrain.dice_tray:getWidth(), 20)end,
-            self.terrain.dice_tray
+            self.terrain.dice_tray,
+            self
         )
 
         self.diceFaces[dice] = diceFaceUI
@@ -86,9 +88,9 @@ function Round:keypressed(key)
         self.availableRerolls = 10
     end
 
-    if(key=="t") then --trigger the trigger animation of the dicefaces
+    --[[ if(key=="t") then --trigger the trigger animation of the dicefaces
         self:startTriggeringPhase()
-    end
+    end ]]
 end
 
 function Round:mousepressed(x, y, button, istouch, presses)
@@ -164,9 +166,10 @@ function Round:getDicesOrder()
 
     -- Crée une copie de la liste
     self.diceFacesOrder = {} --Reset la liste précédente
+    self.triggerQueue = {}
 
+    --Copie la liste
     local sortedDiceFaces = {}
-
     for i, dice in next,self.diceFaces do
         table.insert(sortedDiceFaces, dice)
     end
@@ -194,14 +197,21 @@ function Round:startTriggeringPhase()
 
     print("---")
     for k,df in next,sortedDices do
-        print(df.face)
-        table.insert(self.diceFacesOrder, df) --Copie la liste
+        --print(df.face)
+        table.insert(self.triggerQueue, df) --Copie la liste dans trigger Queue
     end
 
-    for k,df in next,self.diceFaces do
-        df:trigger()
+    --Triggers the first dice
+    self:triggerNextDice()
+end
+
+function Round:triggerNextDice()
+    if(table.getn(self.triggerQueue)>=1) then
+        self.triggerQueue[1]:trigger()
+        table.remove(self.triggerQueue, 1)
+    else --ends the trigger phase
+        self:endTriggeringPhase()
     end
-    self:endTriggeringPhase()
 end
 
 function Round:updateTriggeringPhase(dt)
@@ -210,6 +220,17 @@ end
 
 function Round:endTriggeringPhase()
     self.triggeringPhase = false
+    print("done triggering!!!")
+
+    if(self.remainingHands>=1)then
+        self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
+        self:makeRoll(self.dices) -- On effectue un reroll
+        self.availableRerolls = 3
+    end
+
+    if(self.roundScore >= self.targetScore or self.remainingHands == 0) then
+        self:endRound()
+    end
 end
 
 --==DICE FUNCTIONS==--
@@ -294,17 +315,11 @@ end
 
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points) --Function that triggers the hand
-    self.roundScore = self.roundScore + points -- On ajoute les points au score
-    
-    if(self.remainingHands>=1)then
-        self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
-        self:makeRoll(self.dices) -- On effectue un reroll
-        self.availableRerolls = 3
-    end
+    local basePoints = points
 
-    if(self.roundScore >= self.targetScore or self.remainingHands == 0) then
-        self:endRound()
-    end
+    self:startTriggeringPhase()
+
+    self.roundScore = self.roundScore + points -- On ajoute les points au score
 end
 
 --==UTILS==--

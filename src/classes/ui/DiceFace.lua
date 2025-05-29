@@ -14,7 +14,7 @@ local moveSpeed = 15
 
 DiceFace.__index = DiceFace
 
-function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePosition, renderCanvas)    
+function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePosition, renderCanvas, round)    
     local self = setmetatable(UIElement.new(), DiceFace)
 
     --Parametres d'interractions
@@ -64,6 +64,7 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
 
     --The canvas to be rendred in
     self.renderCanvas = renderCanvas --Le canvas dans laquel le dé est dessiné. Permet d'avoir des infos genre sa largeur.
+    self.round = round
 
     --Clock
     self.time = 0
@@ -92,7 +93,15 @@ function DiceFace:update(dt)
     self:updateScale(dt)
     self:updateAngle(dt)
 
-    --Triggering functions
+    --==Update the trigger==--
+    if(self.isTriggering)then
+        self.triggerTimer = self.triggerTimer + dt
+        if(self.triggerTimer >= self.triggerTime)then
+            self.isTriggering = false
+            self.round:triggerNextDice() --Triggers the next dice in queue in the round
+        end
+    end
+
     if(self.isTriggering)then
         self.isHoverable = false
         self.isSelectable = false
@@ -186,14 +195,6 @@ function DiceFace:updateCanvas(dt)
 
     else
         love.graphics.setShader()
-    end
-
-    --Update the trigger
-    if(self.isTriggering)then
-        self.triggerTimer = self.triggerTimer + dt
-        if(self.triggerTimer >= self.triggerTime)then
-            self.isTriggering = false
-        end
     end
 
     love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
