@@ -89,25 +89,14 @@ function RoundScreen:new(round)
     end
 
     --BOUTONS
-    self.uiElements.roundButtons["resetButton"] = Button:new(
-        function()self.round:resetSelectedDices()end, 
-        "src/assets/sprites/ui/buttons/reset.png", 
-        self.terrainCanvas:getWidth()-125, 
-        self.terrainCanvas:getHeight()-70, 
-        200, 
-        84,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-        )
-        
 
     self.uiElements.roundButtons["rerollButton"] = Button:new(
         function()self.round:rerollDices()end, 
         "src/assets/sprites/ui/buttons/reroll.png", 
-        self.terrainCanvas:getWidth()-350, 
-        self.terrainCanvas:getHeight()-70, 
-        200, 
-        84,
+        self.terrainCanvas:getWidth()-80, 
+        925, 
+        120, 
+        120,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
@@ -115,10 +104,10 @@ function RoundScreen:new(round)
     self.uiElements.roundButtons["reorganiserButton"] = Button:new(
         function()self:reorganiseDiceFaces(self.round.diceFaces)end, 
         "src/assets/sprites/ui/buttons/reorganiser.png", 
-        self.terrainCanvas:getWidth()-570, 
-        self.terrainCanvas:getHeight()-70, 
-        200, 
-        84,
+        self.terrainCanvas:getWidth()-220, 
+        925, 
+        120, 
+        120,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
@@ -154,7 +143,6 @@ function RoundScreen:update(dt)
     --Utilities buttons
     for key,button in next,self.uiElements.roundButtons do
         self.uiElements.roundButtons["rerollButton"]:setActivated(self.round.availableRerolls>0 and table.getn(self.round.selectedDices)>0)
-        self.uiElements.roundButtons["resetButton"]:setActivated(table.getn(self.round.selectedDices)>0)
 
         button:update(dt)
     end

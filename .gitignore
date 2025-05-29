@@ -1,3 +1,5 @@
 .vscode
 misc
 build
+.DS_Store
+.DS_STORE
