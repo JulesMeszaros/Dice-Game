@@ -25,14 +25,18 @@ function Dice:new()
     }
     self.nFaces = table.getn(self.faceSpritesCoordinates)
 
-    
-
     return self
 end
 
 function Dice:update()
     
 end
+
+function Dice:triggerEffect()
+    print("Dice triggered")
+end
+
+--==GET/SET FUNCTIONS==--
 
 function Dice:getNbFaces()
     return self.nFaces
