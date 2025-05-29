@@ -7,6 +7,7 @@
 - TODO: Développer le système de Round
 - TODO: Développer le système de Partie
 - TODO: Développer la phase inter-round
+- TODO: Continuer d'implémenter la phase de trigger (trigger seulement les dés concernés, déclencher des actions propre aux dés lorsqu'ils sont trigger)
 
 ### Graphismes/Animations
 

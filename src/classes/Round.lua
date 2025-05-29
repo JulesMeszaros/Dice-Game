@@ -62,10 +62,6 @@ end
 
 function Round:update(dt)
     self.terrain:update(dt)
-
-    if(self.triggeringPhase)then
-        self:updateTriggeringPhase(dt)
-    end
 end
 
 --==ROUND FUNCTION==--
@@ -75,7 +71,7 @@ end
 
 --==MOUSE/KEYBOARD FUNCTIONS==--
 
-function Round:keypressed(key)
+function Round:keypressed(key) --(Mainly for debug)
     if(key=="u")then
         print(table.concat(self.selectedFaces, " "))
     end
@@ -212,10 +208,6 @@ function Round:triggerNextDice()
     else --ends the trigger phase
         self:endTriggeringPhase()
     end
-end
-
-function Round:updateTriggeringPhase(dt)
-
 end
 
 function Round:endTriggeringPhase()
