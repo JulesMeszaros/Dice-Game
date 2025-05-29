@@ -76,7 +76,7 @@ function DiceFace:new(dice, face, x, y, size, isSelectable, isHoverable, mousePo
     --Triggering variables
     self.isTriggering = false
     self.triggerTimer = 0 --Minuteur de trigger 
-    self.triggerTime = 0.3 --Temps que prend un dé à se trigger
+    self.triggerTime = Constants.BASE_TRIGGER_ANIMATION_TIME --Temps que prend un dé à se trigger
 
     return self
 end
