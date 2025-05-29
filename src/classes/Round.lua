@@ -14,7 +14,12 @@ local Round = {
 
     remainingHands = 5,
 
-    roundScore = 0
+    roundScore = 0,
+
+    --==Triggering Phase==--
+    triggeringPhase = false,
+    diceFacesOrder = {},
+    currentlyTriggeredDice = nil
 }
 Round.__index = Round
 
@@ -55,6 +60,10 @@ end
 
 function Round:update(dt)
     self.terrain:update(dt)
+
+    if(self.triggeringPhase)then
+        self:updateTriggeringPhase(dt)
+    end
 end
 
 --==ROUND FUNCTION==--
@@ -78,9 +87,7 @@ function Round:keypressed(key)
     end
 
     if(key=="t") then --trigger the trigger animation of the dicefaces
-        for j,df in next,self.diceFaces do
-            df:trigger()
-        end
+        self:startTriggeringPhase()
     end
 end
 
@@ -145,6 +152,64 @@ function Round:mousemoved(x, y, dx, dy, isDragging)
             end
         end
     end
+end
+
+--==TRIGGERING PHASE==--
+function Round:getDicesOrder()
+    --[[
+    Cette fonction permet de récupèrer les dés dans l'ordre de trigger
+    -> Retourne une liste des dés dans l'ordre à trigger
+    L'ordre est le suivant : de gauche à droite et de bas en haut
+    ]]
+
+    -- Crée une copie de la liste
+    self.diceFacesOrder = {} --Reset la liste précédente
+
+    local sortedDiceFaces = {}
+
+    for i, dice in next,self.diceFaces do
+        table.insert(sortedDiceFaces, dice)
+    end
+
+    -- Trie les copies
+    table.sort(sortedDiceFaces, function(a, b)
+        if(a.targetX ~= b.targetX)then
+            return a.targetX < b.targetX
+        elseif a.targetY ~= b.targetY then
+            return a.targetY < b.targetY
+        end
+    end)
+
+    for i, diceFace in next,sortedDiceFaces do
+        table.insert(self.diceFacesOrder, diceFace)
+    end
+
+    return sortedDiceFaces
+end
+
+function Round:startTriggeringPhase()
+    self.triggeringPhase = true --Start triggering phase
+    --Creates the list of dices to trigger, sorted according to their position on the terrain
+    sortedDices = self:getDicesOrder()
+
+    print("---")
+    for k,df in next,sortedDices do
+        print(df.face)
+        table.insert(self.diceFacesOrder, df) --Copie la liste
+    end
+
+    for k,df in next,self.diceFaces do
+        df:trigger()
+    end
+    self:endTriggeringPhase()
+end
+
+function Round:updateTriggeringPhase(dt)
+
+end
+
+function Round:endTriggeringPhase()
+    self.triggeringPhase = false
 end
 
 --==DICE FUNCTIONS==--

@@ -25,22 +25,7 @@ function Dice:new()
     }
     self.nFaces = table.getn(self.faceSpritesCoordinates)
 
-    --Create the UI elements of the faces
-
-    self.diceFaces = {}
-
-    for i=1,self.nFaces,1 do
-        
-        quad = love.graphics.newQuad(
-            self.faceSpritesCoordinates[i][1], self.faceSpritesCoordinates[i][2],     -- x, y dans l'image source
-            200, 200,     -- largeur, hauteur de la portion
-            self.spriteSheet:getDimensions()  -- taille totale de l'image
-        )
-
-        face = DiceFace:new(self, i, self.spriteSheet, quad, self.faceDimmension)
-
-        table.insert(self.diceFaces, face)
-    end
+    
 
     return self
 end
