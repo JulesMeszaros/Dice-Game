@@ -288,8 +288,8 @@ function RoundScreen:reorganiseDiceFaces(dices)
 
     local i = 1
     for key,uiFace in next,reorganisedDices do
-        uiFace.targetX = ((i*120) - 30)
-        uiFace.targetY = (self.dice_tray:getHeight()-60)
+        uiFace.targetX = (i)*(((self.dice_tray:getWidth()-200)/(table.getn(reorganisedDices)+1)))+100
+        uiFace.targetY = (self.dice_tray:getHeight()/2)
         uiFace.baseRotation = 0
         i = i+1
     end

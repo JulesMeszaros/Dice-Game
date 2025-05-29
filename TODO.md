@@ -12,7 +12,6 @@
 
 - TODO: Se renseigner sur les shaders
 - TODO: Améliorer le HUD
-- FIXME: Déplacer les menus d'accueil et le "shop" dans un canvas dédié
 
 ### Gameplay
 
@@ -20,14 +19,9 @@
 - TODO: Réfléchir à des notions de gameplay (objectif de round)
 
 ### Code
+
 - TODO: Ajouter une dimension z aux dés
 - FIXME: Simplifier les paramètres de fonctions de **mousePosition** pour les rendre plus généralisables
 - TODO: Simplifier l'import des dés en masse
 
-
 ## Bugs
-
-## TodolistRelease 0.0.3-dev
-- Changer texture bouton retour au menu principal
-- Tester l'ajout d'une animation sur le menu principal (des dés qui tombent)
-
