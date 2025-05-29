@@ -12,8 +12,11 @@ local AfterRound = {
 }
 AfterRound.__index = AfterRound
 
-function AfterRound:new(run, gameCanvas)
+function AfterRound:new(run, gameCanvas, moneyEarned)
     local self = setmetatable({}, AfterRound)
+
+    --Represents the money earned during the round played
+    self.moneyEarned = moneyEarned
 
     self.gameCanvas = gameCanvas
     self.afterRoundCanvas = love.graphics.newCanvas(gameCanvas:getWidth(), gameCanvas:getHeight())
@@ -57,9 +60,12 @@ function AfterRound:updateCanvas(dt)
     local scoreText = love.graphics.newText(Fonts.pixelated, "Round score : "..self.roundPlayed.roundScore)
     --Texte fin du round
     local endRoundText = love.graphics.newText(Fonts.pixelated, 'End of round '..self.roundPlayed.nround)
+    --Argent gagné
+    local moneyText = love.graphics.newText(Fonts.pixelated, 'Money earned : '..self.moneyEarned)
 
     love.graphics.draw(endRoundText, self.gameCanvas:getWidth()/2, 40, 0, 1, 1, endRoundText:getWidth()/2, endRoundText:getHeight()/2)
     love.graphics.draw(scoreText, self.gameCanvas:getWidth()/2, 90, 0, 1, 1, scoreText:getWidth()/2, scoreText:getHeight()/2)
+    love.graphics.draw(moneyText, self.gameCanvas:getWidth()/2, 150, 0, 2, 2, scoreText:getWidth()/2, scoreText:getHeight()/2)
 
 
     --Buttons

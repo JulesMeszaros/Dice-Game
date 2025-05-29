@@ -69,10 +69,8 @@ function Round:keypressed(key)
         print(table.concat(self.selectedFaces, " "))
     end
 
-    if(key=="f")then
-        for key,d in next, self.drawedDices do
-            print(tostring(key)..' '..tostring(d))
-        end
+    if(key=='h')then
+        self.remainingHands = self.remainingHands + 10
     end
 
     if(key=="r") then

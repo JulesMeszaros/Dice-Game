@@ -30,7 +30,11 @@ local Run = {
     --Run state
     currentState = runStates.ROUND,
     isInRound = true,
-    isInShop = false
+    isInShop = false,
+
+    --Money
+    money = 5
+
 }
 
 Run.__index = Run
@@ -100,7 +104,12 @@ end
 function Run:endRound()
     --checks if the goal was reached during round
     if(self.currentRound.roundScore >= self.currentRound.targetScore)then
-        local afterRound = AfterRound:new(self, self.gameCanvas)
+        --Triggers the next round
+        --Calculate the money earned, based on the number of hands remaining
+        local moneyEarned = self.currentRound.remainingHands
+        self.money = self.money + moneyEarned
+
+        local afterRound = AfterRound:new(self, self.gameCanvas, moneyEarned)
         self.shop = afterRound
 
         self.currentState = runStates.SHOP --Change d'état de Run
@@ -126,7 +135,7 @@ function Run:keypressed(key)
     elseif(self.currentState==runStates.SHOP)then
         self.shop:keypressed(key)
     elseif(self.currentState==runStates.GAME_OVER)then
-        self.shop:keypressed(key)
+        self.gameOver:keypressed(key)
     end
 end
 

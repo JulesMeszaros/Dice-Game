@@ -53,7 +53,7 @@ end
 
 function GameOverScreen:draw()
     love.graphics.setCanvas(self.gameoverCanvas)
-    love.graphics.clear()
+    love.graphics.clear(1, 0, 0)
 
     local text = love.graphics.newText(Fonts.pixelatedBig, "Game Over")
     local summarytext = love.graphics.newText(Fonts.pixelated, "Round : "..tostring(self.run.roundNumber).. ' - Score : '.. tostring(self.run.currentRound.roundScore) .. ' - Target : ' ..tostring(self.run.currentRound.targetScore))

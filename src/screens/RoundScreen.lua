@@ -183,7 +183,7 @@ function RoundScreen:updateCanvas(dt)
     local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.round.roundScore))
     local targetScoreText = love.graphics.newText(font, 'Target : '..tostring(self.round.targetScore))
     local currentHands = love.graphics.newText(font, 'Hands : '..tostring(self.round.remainingHands))
-    local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.round.nround))
+    local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.round.nround).. " - Money : "..tostring(self.round.run.money).."€")
 
     love.graphics.draw(rerollText, 10, 3)
     love.graphics.draw(currentHands, 10, 23)
