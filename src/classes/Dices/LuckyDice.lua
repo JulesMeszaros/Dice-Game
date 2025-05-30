@@ -1,12 +1,13 @@
 local Dice = require("src.classes.Dices.Dice")
 
-local FrutigerDice = setmetatable({}, { __index = Dice })
-FrutigerDice.__index = FrutigerDice
+local LuckyDice = setmetatable({}, { __index = Dice })
+LuckyDice.__index = LuckyDice
 
-function FrutigerDice:new()
-    local self = setmetatable(Dice:new(), FrutigerDice)
+function LuckyDice:new()
+    local self = setmetatable(Dice:new(), LuckyDice)
 
     self.name = "Lucky Dice"
+    self.id = 2
 
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/LuckyDiceTileset.png")
@@ -15,4 +16,8 @@ function FrutigerDice:new()
     return self
 end
 
-return FrutigerDice
+function LuckyDice:triggerEffect(round)
+    round:addToScore(2*self.currentFace)
+end
+
+return LuckyDice

@@ -1,12 +1,13 @@
 local Dice = require("src.classes.Dices.Dice")
 
-local EvilDice = setmetatable({}, { __index = Dice })
-EvilDice.__index = EvilDice
+local ReverseDice = setmetatable({}, { __index = Dice })
+ReverseDice.__index = ReverseDice
 
-function EvilDice:new()
-    local self = setmetatable(Dice:new(), EvilDice)
+function ReverseDice:new()
+    local self = setmetatable(Dice:new(), ReverseDice)
 
     self.name = "Reverse Dice"
+    self.id = 4
 
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/ReverseDiceTileset.png")
@@ -14,4 +15,11 @@ function EvilDice:new()
     return self
 end
 
-return EvilDice
+function ReverseDice:triggerEffect(round)
+    --Stops the triggering phase abruptly
+    round.diceFacesTriggerQueue = {} --Dice queue for the triggers. get modified during the trigger phase
+    round.dicesTriggerQueue = {}  --Same but for the dices
+
+end
+
+return ReverseDice

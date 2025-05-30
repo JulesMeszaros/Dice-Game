@@ -1,12 +1,13 @@
 local Dice = require("src.classes.Dices.Dice")
 
-local EvilDice = setmetatable({}, { __index = Dice })
-EvilDice.__index = EvilDice
+local PharmacyDice = setmetatable({}, { __index = Dice })
+PharmacyDice.__index = PharmacyDice
 
-function EvilDice:new()
-    local self = setmetatable(Dice:new(), EvilDice)
+function PharmacyDice:new()
+    local self = setmetatable(Dice:new(), PharmacyDice)
 
     self.name = "Pharmacy Dice"
+    self.id = 3
 
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/PharmacyDiceTileset.png")
@@ -14,4 +15,8 @@ function EvilDice:new()
     return self
 end
 
-return EvilDice
+function PharmacyDice:triggerEffect(round)
+    round:addToScore(round.roundScore)
+end
+
+return PharmacyDice
