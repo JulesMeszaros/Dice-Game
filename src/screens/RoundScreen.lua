@@ -1,6 +1,7 @@
 local Button = require("src.classes.ui.Button")
 local Inputs = require("src.utils.scripts.inputs")
 local CalculatePoints = require("src.utils.scripts.calculatePoints")
+local DiceHoverInfo = require("src.classes.ui.DiceHoverInfo")
 
 local RoundScreen = {
     uiElements = {
@@ -35,6 +36,9 @@ function RoundScreen:new(round)
     self.figureButtonsCanvas = love.graphics.newCanvas(495,702)
     self.figureButtonsCanvas:setFilter("nearest", "nearest")
     
+    --HoverInfos
+    self.diceTrayHoverInfos = DiceHoverInfo:new("blablabla")
+
     --CREATION DES BOUTONS DE FIGURE
     --Importation des images
     local image_buttons = {
@@ -140,6 +144,19 @@ function RoundScreen:update(dt)
         end
     end
 
+    --Hover infos
+    self.diceTrayHoverInfos.hidden = self.currentlyHoveredDice == nil or love.mouse.isDown(1)
+    if(self.currentlyHoveredDice)then
+        self.diceTrayHoverInfos:setText(self.currentlyHoveredDice)
+    else
+        self.diceTrayHoverInfos:setText("")
+    end
+
+    self.diceTrayHoverInfos:update(dt)
+    self.diceTrayHoverInfos.x = Inputs.getMouseInCanvas(0, 0).x - self.diceTrayHoverInfos.canvas:getWidth()/2
+    self.diceTrayHoverInfos.y = Inputs.getMouseInCanvas(0, 0).y - self.diceTrayHoverInfos.canvas:getHeight() - 60
+
+
     --Utilities buttons
     for key,button in next,self.uiElements.roundButtons do
         self.uiElements.roundButtons["rerollButton"]:setActivated(self.round.availableRerolls>0 and table.getn(self.round.selectedDices)>0)
@@ -205,6 +222,9 @@ function RoundScreen:updateCanvas(dt)
         end
     end
 
+    --Hover Infos
+    self.diceTrayHoverInfos:draw()
+
     love.graphics.setCanvas(self.gameCanvas)
 end
 
@@ -226,12 +246,6 @@ function RoundScreen:drawDiceTray(x, y, dices)
     --On déssiné les dés
     for key,uiFace in next,dices do
         uiFace:draw()
-    end
-
-    --On déssine le nom du dé survolé (si il existe)
-    local diceName = love.graphics.newText(font, tostring(self.currentlyHoveredDice))
-    if(self.currentlyHoveredDice)then
-        love.graphics.draw(diceName, self.dice_tray:getWidth()/2, 20, 0, 1, 1, diceName:getWidth()/2, diceName:getHeight()/2)
     end
 
     --On retourne au canvas précédent
