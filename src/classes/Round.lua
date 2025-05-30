@@ -172,8 +172,6 @@ function Round:getDicesOrder(usedDices)
         table.insert(dices, dice)
     end
 
-    print("--")
-
     local indexes = {} --Liste d'indexes servant de base pour le tri des dés et des dicefaces
     --Remplissage des indexes
     for i=1, table.getn(usedDices) do
@@ -213,8 +211,6 @@ function Round:getDicesOrder(usedDices)
         table.insert(self.dicesOrder, diceFace)
     end
 
-    print("---")
-
     return sortedDiceFaces, sortedDices
 end
 
@@ -223,7 +219,6 @@ function Round:startTriggeringPhase(usedDices)
     --Creates the list of dices to trigger, sorted according to their position on the terrain
     local sortedDiceFaces, sortedDices = self:getDicesOrder(usedDices)
 
-    print("---")
     --Create the dice face trigger queue
     for k,df in next,sortedDiceFaces do
         table.insert(self.diceFacesTriggerQueue, df) --Copie la liste dans trigger Queue
@@ -346,7 +341,6 @@ end
 
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices) --Function that triggers the hand
-    print(table.getn(usedDices))
     self:startTriggeringPhase(usedDices)
 
     self.roundScore = self.roundScore + points -- On ajoute les points au score
