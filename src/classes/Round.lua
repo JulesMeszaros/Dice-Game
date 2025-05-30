@@ -83,10 +83,6 @@ function Round:keypressed(key) --(Mainly for debug)
     if(key=="r") then
         self.availableRerolls = 10
     end
-
-    --[[ if(key=="t") then --trigger the trigger animation of the dicefaces
-        self:startTriggeringPhase()
-    end ]]
 end
 
 function Round:mousepressed(x, y, button, istouch, presses)
@@ -153,7 +149,7 @@ function Round:mousemoved(x, y, dx, dy, isDragging)
 end
 
 --==TRIGGERING PHASE==--
-function Round:getDicesOrder()
+function Round:getDicesOrder(usedDices)
     --[[
     Cette fonction permet de récupèrer les dés dans l'ordre de trigger
     -> Retourne une liste des dés dans l'ordre à trigger
@@ -166,8 +162,8 @@ function Round:getDicesOrder()
 
     --Copie la liste
     local sortedDiceFaces = {}
-    for i, dice in next,self.diceFaces do
-        table.insert(sortedDiceFaces, dice)
+    for i, dice in next,usedDices do
+        table.insert(sortedDiceFaces, self.diceFaces[dice])
     end
 
     -- Trie les copies
@@ -186,10 +182,10 @@ function Round:getDicesOrder()
     return sortedDiceFaces
 end
 
-function Round:startTriggeringPhase()
+function Round:startTriggeringPhase(usedDices)
     self.triggeringPhase = true --Start triggering phase
     --Creates the list of dices to trigger, sorted according to their position on the terrain
-    sortedDices = self:getDicesOrder()
+    local sortedDices = self:getDicesOrder(usedDices)
 
     print("---")
     for k,df in next,sortedDices do
@@ -306,10 +302,9 @@ function Round:setDrawedDices(draw)
 end
 
 --==FIGURE FUNCTIONS==--
-function Round:playFigure(points) --Function that triggers the hand
-    local basePoints = points
-
-    self:startTriggeringPhase()
+function Round:playFigure(points, usedDices) --Function that triggers the hand
+    print(table.getn(usedDices))
+    self:startTriggeringPhase(usedDices)
 
     self.roundScore = self.roundScore + points -- On ajoute les points au score
 end
