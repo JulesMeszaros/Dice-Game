@@ -236,7 +236,7 @@ end
 function Round:triggerNextDice()
     if(table.getn(self.dicesTriggerQueue)>=1) then
         self.diceFacesTriggerQueue[1]:trigger()
-        self.dicesTriggerQueue[1]:trigger()
+        self.dicesTriggerQueue[1]:trigger(self)
         table.remove(self.diceFacesTriggerQueue, 1)
         table.remove(self.dicesTriggerQueue, 1)
     else --ends the trigger phase
@@ -348,6 +348,9 @@ function Round:playFigure(points, usedDices) --Function that triggers the hand
 end
 
 --==UTILS==--
+function Round:addToScore(n)
+    self.roundScore = self.roundScore + n
+end
 
 function Round:resetSelectedDices()
     self.selectedDices = {} --remove the dices

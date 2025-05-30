@@ -37,8 +37,13 @@ end
 
 --==DICE TRIGGER==--
 
-function Dice:trigger()
+function Dice:trigger(round)
     print("Dice triggered!!!!!....."..tostring(self.currentFace))
+    self:triggerEffect(round)
+end
+
+function Dice:triggerEffect(round)
+    round:addToScore(self.currentFace)
 end
 
 --==GET/SET FUNCTIONS==--
