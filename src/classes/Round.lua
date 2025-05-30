@@ -15,11 +15,12 @@ local Round = {
     remainingHands = 5,
 
     roundScore = 0,
-
     --==Triggering Phase==--
     triggeringPhase = false,
-    triggerQueue = {},
-    diceFacesOrder = {},
+    diceFacesOrder = {}, --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
+    dicesOrder = {}, --Same but for the dice objects
+    diceFacesTriggerQueue = {}, --Dice queue for the triggers. get modified during the trigger phase
+    dicesTriggerQueue = {},  --Same but for the dices
     currentlyTriggeredDice = nil
 }
 Round.__index = Round
@@ -156,41 +157,81 @@ function Round:getDicesOrder(usedDices)
     L'ordre est le suivant : de gauche à droite et de bas en haut
     ]]
 
-    -- Crée une copie de la liste
-    self.diceFacesOrder = {} --Reset la liste précédente
-    self.triggerQueue = {}
+    -- Reset les listes précédentes
+    self.diceFacesOrder = {} 
+    self.dicesOrder = {} 
+    self.diceFacesTriggerQueue = {}
+    self.dicesTriggerQueue = {}
+    
+    --Créée deux listes
+    local diceFaces = {}
+    local dices = {}
 
-    --Copie la liste
-    local sortedDiceFaces = {}
     for i, dice in next,usedDices do
-        table.insert(sortedDiceFaces, self.diceFaces[dice])
+        table.insert(diceFaces, self.diceFaces[dice])
+        table.insert(dices, dice)
     end
 
-    -- Trie les copies
-    table.sort(sortedDiceFaces, function(a, b)
-        if(a.targetX ~= b.targetX)then
-            return a.targetX < b.targetX
-        elseif a.targetY ~= b.targetY then
-            return a.targetY < b.targetY
+    print("--")
+
+    local indexes = {} --Liste d'indexes servant de base pour le tri des dés et des dicefaces
+    --Remplissage des indexes
+    for i=1, table.getn(usedDices) do
+        table.insert(indexes, i)
+    end
+
+    -- Trie des indexes
+    table.sort(indexes, function(a, b)
+        local da = diceFaces[a]
+        local db = diceFaces[b]
+
+        if(da.targetX ~= db.targetX)then
+            return da.targetX < db.targetX
+        elseif da.targetY ~= db.targetY then
+            return da.targetY < db.targetY
         end
     end)
 
+    -- Trie les dés à partir des indexes
+    local sortedDices = {}
+    for i,index in ipairs(indexes) do
+        table.insert(sortedDices, dices[index])
+    end
+
+    -- Trie les DiceFaces à partir des dés triés
+    local sortedDiceFaces = {}
+    for k,d in next,sortedDices do
+        table.insert(sortedDiceFaces, self.diceFaces[d])
+    end
+
+    --Ajout aux attributs de classe
     for i, diceFace in next,sortedDiceFaces do
         table.insert(self.diceFacesOrder, diceFace)
     end
 
-    return sortedDiceFaces
+    for i, diceFace in next,sortedDices do
+        table.insert(self.dicesOrder, diceFace)
+    end
+
+    print("---")
+
+    return sortedDiceFaces, sortedDices
 end
 
 function Round:startTriggeringPhase(usedDices)
     self.triggeringPhase = true --Start triggering phase
     --Creates the list of dices to trigger, sorted according to their position on the terrain
-    local sortedDices = self:getDicesOrder(usedDices)
+    local sortedDiceFaces, sortedDices = self:getDicesOrder(usedDices)
 
     print("---")
-    for k,df in next,sortedDices do
-        --print(df.face)
-        table.insert(self.triggerQueue, df) --Copie la liste dans trigger Queue
+    --Create the dice face trigger queue
+    for k,df in next,sortedDiceFaces do
+        table.insert(self.diceFacesTriggerQueue, df) --Copie la liste dans trigger Queue
+    end
+
+    --Create the dice trigger queue
+    for k,d in next,sortedDices do
+        table.insert(self.dicesTriggerQueue, d) --Copie la liste dans trigger Queue
     end
 
     --Triggers the first dice
@@ -198,9 +239,11 @@ function Round:startTriggeringPhase(usedDices)
 end
 
 function Round:triggerNextDice()
-    if(table.getn(self.triggerQueue)>=1) then
-        self.triggerQueue[1]:trigger()
-        table.remove(self.triggerQueue, 1)
+    if(table.getn(self.dicesTriggerQueue)>=1) then
+        self.diceFacesTriggerQueue[1]:trigger()
+        self.dicesTriggerQueue[1]:trigger()
+        table.remove(self.diceFacesTriggerQueue, 1)
+        table.remove(self.dicesTriggerQueue, 1)
     else --ends the trigger phase
         self:endTriggeringPhase()
     end

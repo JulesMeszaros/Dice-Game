@@ -7,12 +7,22 @@
 - TODO: Développer le système de Round
 - TODO: Développer le système de Partie
 - TODO: Développer la phase inter-round
-- TODO: Continuer d'implémenter la phase de trigger (trigger seulement les dés concernés, déclencher des actions propre aux dés lorsqu'ils sont trigger)
+
+#### Phase de trigger
+
+- TODO: Implémenter des fonctions de trigger des dés
+- TODO: Incrémenter le score au fur et à mesure
+- FIXME: Repenser l'animation des dés au trigger
+- TODO: Accentuer l'animation de trigger au fil de la phase (plus rapide, plus grande, plus exagérée)
 
 ### Graphismes/Animations
 
 - TODO: Se renseigner sur les shaders
-- TODO: Améliorer le HUD
+
+#### HUD
+
+- TODO: Réaménager le HUD
+- TODO: Ajouter des info-bulles sur les dés
 
 ### Gameplay
 

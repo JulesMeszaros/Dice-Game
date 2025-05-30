@@ -5,14 +5,14 @@ Dice.__index = Dice
 
 function Dice:new()
     local self = setmetatable({}, Dice)
-    
+
     --Metadatas about the dice
     self.name = "White Dice"
 
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/BaseDiceTileset.png")
     self.spriteSheet:setFilter("nearest", "nearest")
-    
+
     self.faceDimmension = 64 --sets the dimmensions for a face of the dice in px
 
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
@@ -25,14 +25,20 @@ function Dice:new()
     }
     self.nFaces = table.getn(self.faceSpritesCoordinates)
 
-    
-
     return self
 end
 
 function Dice:update()
     
 end
+
+--==DICE TRIGGER==--
+
+function Dice:trigger()
+    print("Dice triggered!!!!!")
+end
+
+--==GET/SET FUNCTIONS==--
 
 function Dice:getNbFaces()
     return self.nFaces

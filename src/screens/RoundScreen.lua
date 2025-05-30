@@ -264,6 +264,7 @@ function RoundScreen:reorganiseDiceFaces(dices)
     --Reorganise the dice by face (increasing)
     local reorganisedDices = {}
     local temp = {}
+    --On créée une liste d'incides, qui sert de base pour trier la liste de dés ET de diceFaces
 
     for _, dice in next,dices do
         table.insert(temp, dice)
