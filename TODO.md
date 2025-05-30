@@ -11,7 +11,6 @@
 #### Phase de trigger
 
 - TODO: Implémenter des fonctions de trigger des dés
-- TODO: Incrémenter le score au fur et à mesure
 - FIXME: Repenser l'animation des dés au trigger
 - TODO: Accentuer l'animation de trigger au fil de la phase (plus rapide, plus grande, plus exagérée)
 
@@ -22,7 +21,9 @@
 #### HUD
 
 - TODO: Réaménager le HUD
-- TODO: Ajouter des info-bulles sur les dés
+- TODO: Ajouter une description aux dés
+- TODO: Styliser les info-bulles
+- TODO: Ajouter un deplacement smooth aux infobulles
 
 ### Gameplay
 
