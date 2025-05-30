@@ -299,6 +299,7 @@ function Round:makeRoll(dices)
     self:resetSelectedDices() --reset the previously selected dices (ui)
 
     for key,dice in next,self.dices do
+        dice:setCurrentFace(self.drawedDices[dice])
         self.diceFaces[dice]:setFace(self.drawedDices[dice]) --update the ui
     end
 

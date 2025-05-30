@@ -25,6 +25,9 @@ function Dice:new()
     }
     self.nFaces = table.getn(self.faceSpritesCoordinates)
 
+    --Round status
+    self.currentFace = nil --The face the dice was drawed on
+
     return self
 end
 
@@ -35,10 +38,14 @@ end
 --==DICE TRIGGER==--
 
 function Dice:trigger()
-    print("Dice triggered!!!!!")
+    print("Dice triggered!!!!!....."..tostring(self.currentFace))
 end
 
 --==GET/SET FUNCTIONS==--
+
+function Dice:setCurrentFace(f)
+    self.currentFace = f
+end
 
 function Dice:getNbFaces()
     return self.nFaces
