@@ -10,13 +10,12 @@
 
 #### Phase de trigger
 
-- TODO: Implémenter des fonctions de trigger des dés
 - FIXME: Repenser l'animation des dés au trigger
 - TODO: Accentuer l'animation de trigger au fil de la phase (plus rapide, plus grande, plus exagérée)
 
 ### Graphismes/Animations
 
-- TODO: Se renseigner sur les shaders
+- TODO: Suivre quelque tutos de shaders
 
 #### HUD
 
@@ -33,6 +32,7 @@
 ### Code
 
 - TODO: Ajouter une dimension z aux dés
+- TODO: Raffiner le drag and drop pour éviter un conflict entre les dés superposés
 - FIXME: Simplifier les paramètres de fonctions de **mousePosition** pour les rendre plus généralisables
 - TODO: Simplifier l'import des dés en masse
 
