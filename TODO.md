@@ -27,6 +27,8 @@
 ### Gameplay
 
 - TODO: Ajouter un objectif de score basique évolutif
+- TODO: Développer un système de reward de fin de round (en plus de l'argent)
+- TODO: Développer un système de choix inter-round (après le shop)
 - TODO: Réfléchir à des notions de gameplay (objectif de round)
 
 ### Code

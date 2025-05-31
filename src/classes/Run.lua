@@ -1,7 +1,7 @@
 local Round = require("src.classes.Round")
 local AfterRound = require("src.screens.AfterRound")
 local GameOverScreen = require("src.screens.GameOverScreen")
-
+local RoundChoice = require("src.screens.RoundChoice")
 
 local runStates = {
     ROUND = 1,
@@ -109,7 +109,7 @@ function Run:endRound()
         local moneyEarned = self.currentRound.remainingHands
         self.money = self.money + moneyEarned
 
-        local afterRound = AfterRound:new(self, self.gameCanvas, moneyEarned)
+        local afterRound = RoundChoice:new()
         self.shop = afterRound
 
         self.currentState = runStates.SHOP --Change d'état de Run
