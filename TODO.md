@@ -39,3 +39,5 @@
 - TODO: Simplifier l'import des dés en masse
 
 ## Bugs
+
+- BUG: Régler progressivement la déclaration de variables communes aux classes (dans la ligne Class = {....})

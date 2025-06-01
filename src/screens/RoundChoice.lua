@@ -5,18 +5,20 @@ local Fonts = require("src.utils.fonts")
 local Button = require("src.classes.ui.Button")
 local Round = require("src.classes.Round")
 
-local RoundChoice = {
-    uiElements = {
-        buttons = {},
-        roundChoiceButtons = {},
-    },
-    possibleRounds = {}
-}
+local RoundChoice = {}
+
 RoundChoice.__index = RoundChoice
 
-local choiceNumber = 1
+local choiceNumber = 4
 
 function RoundChoice:new(previousRound, run)
+
+    self.uiElements = {
+        buttons = {},
+        roundChoiceButtons = {}
+    }
+    self.possibleRounds = {}
+
     local self = setmetatable({}, RoundChoice)
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 
@@ -25,8 +27,7 @@ function RoundChoice:new(previousRound, run)
 
     --Création des différents rounds à jouer
     for i = 1, choiceNumber do
-        local r = Round:new(self.previousRound.nround + 1, self.run.dices, self.run.gameCanvas, self.run)
-        table.insert(self.possibleRounds, r)
+        table.insert(self.possibleRounds, self:generateNewRound())
     end
 
     --Création des différents canvas de choix de round
@@ -40,7 +41,7 @@ function RoundChoice:new(previousRound, run)
 
         --Create the next round button
         local chooseButton = Button:new(
-            function()self.run:startNewRound(self.previousRound.nround + 1)end,
+            function()self.run:startNewRound(self.possibleRounds[i])end,
             "src/assets/sprites/ui/buttons/next_round.png",
             self.choiceCanvasWidth/2,
             self.choiceCanvasHeight-50,
@@ -90,7 +91,8 @@ function RoundChoice:updateChoiceCanvas(c, dt, i)
 end
 
 function RoundChoice:generateNewRound()
-
+    local r = Round:new(self.previousRound.nround + 1, self.run.dices, self.run.gameCanvas, self.run)
+    return r
 end
 
 --==INPUT FUNCTIONS==--
