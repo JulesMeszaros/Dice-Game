@@ -37,5 +37,6 @@
 - TODO: Raffiner le drag and drop pour éviter un conflict entre les dés superposés
 - FIXME: Simplifier les paramètres de fonctions de **mousePosition** pour les rendre plus généralisables
 - TODO: Simplifier l'import des dés en masse
+- FIXME: Déplacer quelques morceaux de codes dans des fichiers **utils** pour aérer les classes
 
 ## Bugs
