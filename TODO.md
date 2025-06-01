@@ -16,6 +16,8 @@
 ### Graphismes/Animations
 
 - TODO: Suivre quelque tutos de shaders
+- TODO: Ajouter une animation de rollback après la phase de triggers
+- TODO: Ajouter un compteur en direct des points gagnés pendant la main jouée
 
 #### HUD
 
