@@ -109,7 +109,9 @@ function Run:endRound()
         local moneyEarned = self.currentRound.remainingHands
         self.money = self.money + moneyEarned
 
-        local afterRound = RoundChoice:new()
+        --Make a local copy of the round to pass in the after round sequence
+        local playedRound = self.currentRound
+        local afterRound = RoundChoice:new(playedRound, self)
         self.shop = afterRound
 
         self.currentState = runStates.SHOP --Change d'état de Run

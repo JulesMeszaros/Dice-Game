@@ -3,6 +3,7 @@ local Inputs = require("src.utils.scripts.inputs")
 local Fonts = require("src.utils.fonts")
 
 local Button = require("src.classes.ui.Button")
+local Round = require("src.classes.Round")
 
 local RoundChoice = {
     uiElements = {
@@ -14,10 +15,14 @@ RoundChoice.__index = RoundChoice
 
 local choiceNumber = 4
 
-function RoundChoice:new()
+function RoundChoice:new(previousRound, run)
     local self = setmetatable({}, RoundChoice)
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 
+    self.previousRound = previousRound
+    self.run = run
+
+    --Création des différents canvas de choix de round
     self.choiceCanvas = {}
     --On calcule la largeur de chaque canvas sachant que : On vaut 50px de marge sur les cotés, et 20px entre chaque canvas
     self.choiceCanvasWidth = ((self.canvas:getWidth()-100)/(choiceNumber))-((20*(choiceNumber-1))/choiceNumber)
@@ -28,7 +33,7 @@ function RoundChoice:new()
 
         --Create the next round button
         local chooseButton = Button:new(
-            function()print("button pressd")end,
+            function()self.run:startNewRound()end,
             "src/assets/sprites/ui/buttons/next_round.png",
             self.choiceCanvasWidth/2,
             self.choiceCanvasHeight-50,
@@ -68,13 +73,17 @@ end
 function RoundChoice:updateChoiceCanvas(c, dt, i)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(c)
-    love.graphics.clear()
+    love.graphics.clear(49/256, 74/256, 50/256)
 
     love.graphics.rectangle("line", 0, 0, c:getWidth(), c:getHeight())
     self.uiElements.roundChoiceButtons[i]:update(dt)
     self.uiElements.roundChoiceButtons[i]:draw()
 
     love.graphics.setCanvas(currentCanvas)
+end
+
+function RoundChoice:generateNewRound()
+
 end
 
 --==INPUT FUNCTIONS==--
@@ -88,11 +97,24 @@ function RoundChoice:mousepressed(x, y, button, istouch, presses)
    for key,button in next,self.uiElements.buttons do
         button:clickEvent()
     end
+
+    --Buttons
+   for key,button in next,self.uiElements.roundChoiceButtons do
+        button:clickEvent()
+    end
 end
 
 function RoundChoice:mousereleased(x, y, button, istouch, presses)
     --release event on UI elements (buttons)
     for key,button in next,self.uiElements.buttons do
+        local wasReleased = button:releaseEvent()
+        if(wasReleased) then --Si le click a été complété
+            button:getCallback()()
+        end
+    end
+
+    --release event on UI elements (choice buttons)
+    for key,button in next,self.uiElements.roundChoiceButtons do
         local wasReleased = button:releaseEvent()
         if(wasReleased) then --Si le click a été complété
             button:getCallback()()
