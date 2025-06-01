@@ -6,7 +6,7 @@ local Inputs = require("src.utils.scripts.inputs")
 local Round = {}
 Round.__index = Round
 
-function Round:new(n, dices, gameCanvas, run, baseReward)
+function Round:new(n, dices, gameCanvas, run, baseReward, target)
     local self = setmetatable({}, Round)
 
     self.drawedDices = {}
@@ -33,7 +33,7 @@ function Round:new(n, dices, gameCanvas, run, baseReward)
     self.nround = n
     self.availableRerolls = 3
     self.dices = dices
-    self.targetScore = 0 + 20*(n-1) --Calcul à revoir bien sur
+    self.targetScore = target or 0 + 20*(n-1) --Calcul à revoir bien sur
 
     self.terrain =  RoundScreen:new(self)
 

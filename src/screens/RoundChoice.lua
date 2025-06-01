@@ -84,6 +84,13 @@ function RoundChoice:updateChoiceCanvas(c, dt, i)
     love.graphics.clear(49/256, 74/256, 50/256)
 
     love.graphics.rectangle("line", 0, 0, c:getWidth(), c:getHeight())
+
+    local rewardText = love.graphics.newText(Fonts.pixelated, "Reward : "..tostring(self.possibleRounds[i].baseReward).."€")
+    local targetText = love.graphics.newText(Fonts.pixelatedMedium, "Target : "..tostring(self.possibleRounds[i].targetScore).." pts")
+    
+    love.graphics.draw(rewardText, c:getWidth()/2, c:getHeight()-150, 0, 1, 1, rewardText:getWidth()/2, rewardText:getHeight()/2)
+    love.graphics.draw(targetText, c:getWidth()/2, 50, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
+
     self.uiElements.roundChoiceButtons[i]:update(dt)
     self.uiElements.roundChoiceButtons[i]:draw()
 
@@ -92,9 +99,10 @@ end
 
 function RoundChoice:generateNewRound()
     local baseReward = 3 + math.random(0, 3)
+    local targetScore = 0 + 20*(self.previousRound.nround) + (math.random(0, 5) * 10)
     print(baseReward)
 
-    local r = Round:new(self.previousRound.nround + 1, self.run.dices, self.run.gameCanvas, self.run, baseReward)
+    local r = Round:new(self.previousRound.nround + 1, self.run.dices, self.run.gameCanvas, self.run, baseReward, targetScore)
     return r
 end
 
