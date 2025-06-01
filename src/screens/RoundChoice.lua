@@ -8,12 +8,13 @@ local Round = require("src.classes.Round")
 local RoundChoice = {
     uiElements = {
         buttons = {},
-        roundChoiceButtons = {}
+        roundChoiceButtons = {},
+        possibleRounds = {}
     }
 }
 RoundChoice.__index = RoundChoice
 
-local choiceNumber = 4
+local choiceNumber = 1
 
 function RoundChoice:new(previousRound, run)
     local self = setmetatable({}, RoundChoice)
@@ -21,6 +22,12 @@ function RoundChoice:new(previousRound, run)
 
     self.previousRound = previousRound
     self.run = run
+
+    --Création des différents rounds à jouer
+    for i = 1, choiceNumber do
+        local r = Round.new(self.previousRound.nround + 1, self.run.dices, self.run.gameCanvas, self.run)
+        table.insert(self.possibleRounds, r)
+    end
 
     --Création des différents canvas de choix de round
     self.choiceCanvas = {}
@@ -33,7 +40,7 @@ function RoundChoice:new(previousRound, run)
 
         --Create the next round button
         local chooseButton = Button:new(
-            function()self.run:startNewRound()end,
+            function()self.run:startNewRound(self.previousRound.nround + 1)end,
             "src/assets/sprites/ui/buttons/next_round.png",
             self.choiceCanvasWidth/2,
             self.choiceCanvasHeight-50,

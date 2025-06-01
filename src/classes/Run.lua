@@ -91,11 +91,10 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
 end
 
 --==ROUND FUNCTIONS==--
-function Run:startNewRound()
-    local newRoundNumber = self.roundNumber + 1 --Increments the number of round
-    self.roundNumber = newRoundNumber
-    local newRound = Round.new(newRoundNumber, self.dices, self.gameCanvas, self) --Create a new round object
-    newRound:makeRoll(self.dices) 
+function Run:startNewRound(roundNumber)
+    self.roundNumber = roundNumber
+    local newRound = Round.new(roundNumber, self.dices, self.gameCanvas, self) --Create a new round object
+    newRound:makeRoll(self.dices)
     self.currentRound = newRound
 
     self.currentState = runStates.ROUND
