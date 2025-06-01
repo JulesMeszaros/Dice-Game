@@ -48,10 +48,9 @@ function Run:new(dices, gameCanvas, game)
     self.dices = dices
 
     --Create the first Round of the run
-    local round = Round:new(1, self.dices, self.gameCanvas, self)
+    local round = Round:new(1, self.dices, self.gameCanvas, self, 0)
 
-    round:makeRoll(dices) --make first roll<
-    self.currentRound = round
+    self:startNewRound(round)
     
     return self
 end
@@ -88,6 +87,7 @@ end
 
 --==ROUND FUNCTIONS==--
 function Run:startNewRound(round)
+    print("----")
     self.roundNumber = round.nround
     round:makeRoll(self.dices)
 
@@ -101,7 +101,7 @@ function Run:endRound()
     if(self.currentRound.roundScore >= self.currentRound.targetScore)then
         --Triggers the next round
         --Calculate the money earned, based on the number of hands remaining
-        local moneyEarned = self.currentRound.remainingHands
+        local moneyEarned = self.currentRound.remainingHands + self.currentRound.baseReward
         self.money = self.money + moneyEarned
 
         --Make a local copy of the round to pass in the after round sequence

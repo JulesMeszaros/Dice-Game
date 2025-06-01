@@ -38,8 +38,6 @@ function Button:new(
     self.dragOffsetX = 0
     self.dragOffsetY = 0
 
-    self:shadowOnHover(false)
-
     self.callbackFunction = callback
 
     --Create the canvas ONCE

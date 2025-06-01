@@ -91,7 +91,10 @@ function RoundChoice:updateChoiceCanvas(c, dt, i)
 end
 
 function RoundChoice:generateNewRound()
-    local r = Round:new(self.previousRound.nround + 1, self.run.dices, self.run.gameCanvas, self.run)
+    local baseReward = 3 + math.random(0, 3)
+    print(baseReward)
+
+    local r = Round:new(self.previousRound.nround + 1, self.run.dices, self.run.gameCanvas, self.run, baseReward)
     return r
 end
 

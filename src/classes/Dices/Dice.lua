@@ -1,6 +1,6 @@
 local DiceFace = require("src.classes.ui.DiceFace")
 
-local Dice = { }
+local Dice = {}
 Dice.__index = Dice
 
 function Dice:new()

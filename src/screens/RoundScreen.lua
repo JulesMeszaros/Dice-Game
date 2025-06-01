@@ -4,10 +4,7 @@ local CalculatePoints = require("src.utils.scripts.calculatePoints")
 local DiceHoverInfo = require("src.classes.ui.DiceHoverInfo")
 
 local RoundScreen = {
-    uiElements = {
-        roundButtons = {},
-        figureButtons = {}
-    }
+    
 }
 RoundScreen.__index = RoundScreen
 
@@ -17,6 +14,11 @@ local matImage = love.graphics.newImage("src/assets/sprites/ui/terrain/dice_mat.
 function RoundScreen:new(round)
     local self = setmetatable({}, RoundScreen)
     self.gameCanvas = round.gameCanvas
+
+    self.uiElements = {
+        roundButtons = {},
+        figureButtons = {}
+    }
 
     self.terrainCanvas = love.graphics.newCanvas(round.gameCanvas:getWidth(),round.gameCanvas:getHeight() )
 

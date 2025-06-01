@@ -6,7 +6,7 @@ local Inputs = require("src.utils.scripts.inputs")
 local Round = {}
 Round.__index = Round
 
-function Round:new(n, dices, gameCanvas, run)
+function Round:new(n, dices, gameCanvas, run, baseReward)
     local self = setmetatable({}, Round)
 
     self.drawedDices = {}
@@ -24,6 +24,7 @@ function Round:new(n, dices, gameCanvas, run)
     self.dicesTriggerQueue = {}  --Same but for the dices
     self.currentlyTriggeredDice = nil
     self.diceFaces = {}
+    self.baseReward = baseReward
 
     self.run = run
     self.gameCanvas = gameCanvas
