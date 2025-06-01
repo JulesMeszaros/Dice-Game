@@ -6,15 +6,17 @@ local DiceFace = require("src.classes.ui.DiceFace")
 local Dice = require("src.classes.Dices.Dice")
 
 local MainMenu = {
-    uiElements = {
-        buttons = {}
-    }
+    
 }
 
 MainMenu.__index = MainMenu
 
 function MainMenu:new(gameCanvas, game)
     local self = setmetatable({}, MainMenu)
+
+    self.uiElements = {
+        buttons = {}
+    }
 
     self.gameCanvas = gameCanvas
     self.game = game

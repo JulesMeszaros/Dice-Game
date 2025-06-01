@@ -5,15 +5,15 @@ local Inputs = require("src.utils.scripts.inputs")
 local Button = require("src.classes.ui.Button")
 
 --Temp class for the screen happening after the round
-local AfterRound = {
-    uiElements = {
-        buttons = {}
-    }
-}
+local AfterRound = {}
 AfterRound.__index = AfterRound
 
 function AfterRound:new(run, gameCanvas, moneyEarned)
     local self = setmetatable({}, AfterRound)
+
+    self.uiElements = {
+        buttons = {}
+    }
 
     --Represents the money earned during the round played
     self.moneyEarned = moneyEarned

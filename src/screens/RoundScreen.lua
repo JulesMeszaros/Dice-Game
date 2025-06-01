@@ -3,9 +3,8 @@ local Inputs = require("src.utils.scripts.inputs")
 local CalculatePoints = require("src.utils.scripts.calculatePoints")
 local DiceHoverInfo = require("src.classes.ui.DiceHoverInfo")
 
-local RoundScreen = {
-    
-}
+local RoundScreen = {}
+
 RoundScreen.__index = RoundScreen
 
 local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)

@@ -2,15 +2,15 @@ local Fonts = require("src.utils.fonts")
 local Button = require("src.classes.ui.Button")
 local Inputs = require("src.utils.scripts.inputs")
 
-local GameOverScreen = {
-    uiElements = {
-        buttons = {}
-    }
-}
+local GameOverScreen = {}
 GameOverScreen.__index = GameOverScreen
 
 function GameOverScreen:new(gameCanvas, run)
     local self = setmetatable({}, GameOverScreen)
+
+    self.uiElements = {
+        buttons = {}
+    }
 
     self.gameCanvas = gameCanvas
     self.run = run

@@ -14,11 +14,7 @@ local Shaders = require("src.utils.shaders")
 
 local applyCRT = false
 
-local Game = { 
-    currentScreen = 1,
-    gamePaused = false,
-    run = nil
-}
+local Game = {}
 Game.__index = Game
 
 local PAGES = {
@@ -42,6 +38,11 @@ local dices = { -- On définit les 5 dés présents dans la partie
 
 function Game:start()
     local self = setmetatable({}, Game)
+
+    self.currentScreen = 1
+    self.gamePaused = false
+    self.run = nil
+
     self.gameCanvas = gameCanvas
 
     self.currentScreen = PAGES.MAIN_MENU
