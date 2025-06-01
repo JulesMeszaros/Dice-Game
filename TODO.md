@@ -26,10 +26,8 @@
 
 ### Gameplay
 
-- TODO: Ajouter un objectif de score basique évolutif
 - TODO: Développer un système de reward de fin de round (en plus de l'argent)
-- TODO: Développer un système de choix inter-round (après le shop)
-- TODO: Réfléchir à des notions de gameplay (objectif de round)
+- TODO: Réfléchir à des notions de gameplay (exemple : objectif facultatif de round)
 
 ### Code
 
@@ -39,5 +37,3 @@
 - TODO: Simplifier l'import des dés en masse
 
 ## Bugs
-
-- BUG: Régler progressivement la déclaration de variables communes aux classes (dans la ligne Class = {....})
