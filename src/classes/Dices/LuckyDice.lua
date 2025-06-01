@@ -8,6 +8,7 @@ function LuckyDice:new()
 
     self.name = "Lucky Dice"
     self.id = 2
+    self.description = "Ajoute le double de la face obtenue au score"
 
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/LuckyDiceTileset.png")

@@ -8,6 +8,7 @@ function ReverseDice:new()
 
     self.name = "Reverse Dice"
     self.id = 4
+    self.description = "Stop la main en cours"
 
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/ReverseDiceTileset.png")

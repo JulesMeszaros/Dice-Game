@@ -9,6 +9,7 @@ function Dice:new()
     --Metadatas about the dice
     self.name = "White Dice"
     self.id = 1
+    self.description = "Ajoute la valeur de la face obtenue au score"
 
     --Metadatas about the graphics of the dice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/BaseDiceTileset.png")
