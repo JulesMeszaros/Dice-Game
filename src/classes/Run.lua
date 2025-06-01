@@ -3,39 +3,15 @@ local AfterRound = require("src.screens.AfterRound")
 local GameOverScreen = require("src.screens.GameOverScreen")
 local RoundChoice = require("src.screens.RoundChoice")
 
+local Dice = require("src.classes.dices.Dice")
+
 local runStates = {
     ROUND = 1,
     SHOP = 2,
     GAME_OVER = 3
 }
 
-local Run = {
-    --Dices variables
-    drawedDices = {}, --Current Drawed Dices
-
-    --Drag variables (should rather be located in the Game class i guess...)
-    isDragging = false,
-    dragOriginX = nil,
-    dragOriginY = nil,
-
-    draggingTreshold = 10,
-
-    --Gameplay variables
-    usedRerolls = 0, --total rerolls used for this game
-
-    --Run variables
-    roundNumber = 1,
-    totalScore = 0,
-
-    --Run state
-    currentState = runStates.ROUND,
-    isInRound = true,
-    isInShop = false,
-
-    --Money
-    money = 5
-
-}
+local Run = {}
 
 Run.__index = Run
 
@@ -45,6 +21,25 @@ local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
 function Run:new(dices, gameCanvas, game)
     local self = setmetatable({}, Run)
 
+    --Dices variables
+    self.drawedDices = {} --Current Drawed Dices
+    --Drag variables (should rather be located in the Game class i guess...)
+    self.isDragging = false
+    self.dragOriginX = nil
+    self.dragOriginY = nil
+    self.draggingTreshold = 10
+    --Gameplay variables
+    self.usedRerolls = 0 --total rerolls used for this game
+    --Run variables
+    self.roundNumber = 1
+    self.totalScore = 0
+    --Run state
+    self.currentState = runStates.ROUND
+    self.isInRound = true
+    self.isInShop = false
+    --Money
+    self.money = 5
+
     --The canvas the game is rendered on.
     self.gameCanvas = gameCanvas
     self.game = game
@@ -53,8 +48,9 @@ function Run:new(dices, gameCanvas, game)
     self.dices = dices
 
     --Create the first Round of the run
-    local round = Round.new(1, self.dices, self.gameCanvas, self)
-    round:makeRoll(dices) --make first roll
+    local round = Round:new(1, self.dices, self.gameCanvas, self)
+
+    round:makeRoll(dices) --make first roll<
     self.currentRound = round
     
     return self
@@ -93,7 +89,7 @@ end
 --==ROUND FUNCTIONS==--
 function Run:startNewRound(roundNumber)
     self.roundNumber = roundNumber
-    local newRound = Round.new(roundNumber, self.dices, self.gameCanvas, self) --Create a new round object
+    local newRound = Round:new(roundNumber, self.dices, self.gameCanvas, self) --Create a new round object
     newRound:makeRoll(self.dices)
     self.currentRound = newRound
 

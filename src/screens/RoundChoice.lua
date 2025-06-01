@@ -9,8 +9,8 @@ local RoundChoice = {
     uiElements = {
         buttons = {},
         roundChoiceButtons = {},
-        possibleRounds = {}
-    }
+    },
+    possibleRounds = {}
 }
 RoundChoice.__index = RoundChoice
 
@@ -25,7 +25,7 @@ function RoundChoice:new(previousRound, run)
 
     --Création des différents rounds à jouer
     for i = 1, choiceNumber do
-        local r = Round.new(self.previousRound.nround + 1, self.run.dices, self.run.gameCanvas, self.run)
+        local r = Round:new(self.previousRound.nround + 1, self.run.dices, self.run.gameCanvas, self.run)
         table.insert(self.possibleRounds, r)
     end
 

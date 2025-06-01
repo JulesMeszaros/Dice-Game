@@ -3,30 +3,27 @@ local RoundScreen = require("src.screens.RoundScreen")
 
 local Inputs = require("src.utils.scripts.inputs")
 
-local Round = {
-    diceFaces = {},
-    drawedDices = {},
-    selectedDices = {},
-    selectedFaces = {},
-
-    dragOriginX = nil,
-    dragOriginY = nil,
-
-    remainingHands = 5,
-
-    roundScore = 0,
-    --==Triggering Phase==--
-    triggeringPhase = false,
-    diceFacesOrder = {}, --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
-    dicesOrder = {}, --Same but for the dice objects
-    diceFacesTriggerQueue = {}, --Dice queue for the triggers. get modified during the trigger phase
-    dicesTriggerQueue = {},  --Same but for the dices
-    currentlyTriggeredDice = nil
-}
+local Round = {}
 Round.__index = Round
 
-function Round.new(n, dices, gameCanvas, run)
+function Round:new(n, dices, gameCanvas, run)
     local self = setmetatable({}, Round)
+
+    self.drawedDices = {}
+    self.selectedDices = {}
+    self.selectedFaces = {}
+    self.dragOriginX = nil
+    self.dragOriginY = nil
+    self.remainingHands = 5
+    self.roundScore = 0
+    --==Triggering Phase==--
+    self.triggeringPhase = false
+    self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
+    self.dicesOrder = {} --Same but for the dice objects
+    self.diceFacesTriggerQueue = {} --Dice queue for the triggers. get modified during the trigger phase
+    self.dicesTriggerQueue = {}  --Same but for the dices
+    self.currentlyTriggeredDice = nil
+    self.diceFaces = {}
 
     self.run = run
     self.gameCanvas = gameCanvas
@@ -58,10 +55,13 @@ function Round.new(n, dices, gameCanvas, run)
         self.diceFaces[dice] = diceFaceUI
     end
 
+    
+
     return self
 end
 
 function Round:update(dt)
+    
     self.terrain:update(dt)
 end
 
