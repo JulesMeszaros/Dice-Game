@@ -1,4 +1,4 @@
-local DiceFace2 = require("src.classes.ui.DiceFace2")
+local DiceFace = require("src.classes.ui.DiceFace")
 local RoundScreen = require("src.screens.RoundScreen")
 
 local Inputs = require("src.utils.scripts.inputs")
@@ -50,7 +50,7 @@ function Round:new(n, gameCanvas, run, baseReward, target, diceObjects)
     --On créé des objets pour les nouveaux diceFaces
     for key,diceobject in next,self.diceObjects do
 
-        local diceFaceUI = DiceFace2:new( --Créée l'élément UI de la face de dé
+        local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
             diceobject, --Dice Object 
             1, --Face represented
             (key*80) - 30, --X Position (centerd)
