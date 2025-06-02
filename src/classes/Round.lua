@@ -1,4 +1,3 @@
-local DiceFace = require("src.classes.ui.DiceFace")
 local DiceFace2 = require("src.classes.ui.DiceFace2")
 local RoundScreen = require("src.screens.RoundScreen")
 
@@ -7,7 +6,7 @@ local Inputs = require("src.utils.scripts.inputs")
 local Round = {}
 Round.__index = Round
 
-function Round:new(n, dices, gameCanvas, run, baseReward, target, diceObjects)
+function Round:new(n, gameCanvas, run, baseReward, target, diceObjects)
     local self = setmetatable({}, Round)
 
     self.drawedDices = {}
@@ -43,30 +42,10 @@ function Round:new(n, dices, gameCanvas, run, baseReward, target, diceObjects)
     self.availableRerolls = 3
 
     --Dices
-    self.dices = dices
     self.diceObjects = diceObjects
     self.targetScore = target or 0 + 20*(n-1) --Calcul à revoir bien sur
 
     self.terrain = RoundScreen:new(self)
-
-    --On créée une première fois les faces à afficher
-    for key,dice in next,self.dices do
-
-        local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
-            dice, --Dice Object 
-            1, --Face represented
-            (key*80) - 30, --X Position (centerd)
-            self.terrain.dice_tray:getHeight()-60, --Yposition (centerd)
-            64*1.5, --Width/Height
-            true, --is Selectable
-            true, --isHoverable,
-            function()return Inputs.getMouseInCanvas((self.gameCanvas:getWidth()-20)-self.terrain.dice_tray:getWidth(), 20)end,
-            self.terrain.dice_tray,
-            self
-        )
-
-        self.diceFaces[dice] = diceFaceUI
-    end
 
     --On créé des objets pour les nouveaux diceFaces
     for key,diceobject in next,self.diceObjects do
@@ -308,7 +287,7 @@ function Round:endTriggeringPhase()
 
     if(self.remainingHands>=1)then
         self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
-        self:makeRoll(self.dices) -- On effectue un reroll
+        self:makeRoll2(self.diceObjects) -- On effectue un reroll
         self.availableRerolls = 3
     end
 
@@ -365,66 +344,6 @@ function Round:updateSelectedDices2(uiFace)
     end
 end
 
---==REROLL FUNCTIONS==--
-
-function Round:rerollDices() --Triggers the makeRoll function after clicking the reroll button
-    if(self.availableRerolls > 0) then
-        self:makeRoll(self.selectedDices)
-        self.availableRerolls = self.availableRerolls-1
-    end
-end
-
-function Round:makeRoll(dices)
-    local draw = self:drawDices(dices) --draw the dices
-    self:setDrawedDices(draw) --stores the draw
-    self:resetSelectedDices() --reset the previously selected dices (ui)
-
-    for key,dice in next,self.dices do
-        dice:setCurrentFace(self.drawedDices[dice])
-        self.diceFaces[dice]:setFace(self.drawedDices[dice]) --update the ui
-    end
-
-    for key,dice in next,dices do --Creates the roll animation for the rerolled dices
-
-        local randomXPos = math.random(100, self.diceFaces[dice].renderCanvas:getWidth()-100)
-        local randomYPos = math.random(100, self.diceFaces[dice].renderCanvas:getHeight()-100)
-        local randomR = ((math.random(0,1000)/1000)*2.5)-1.25 --(1001 angles possibles entre -1.25 et 1.25 radians)
-
-        --Set initial position (random X axis, under the terrain)
-        self.diceFaces[dice]:setX(randomXPos)
-        self.diceFaces[dice]:setY(1000)
-        self.diceFaces[dice].rotation = 0
-
-        --Change their target position to make them slide
-        self.diceFaces[dice].targetX = randomXPos
-        self.diceFaces[dice].targetY = randomYPos
-        self.diceFaces[dice].baseRotation = randomR
-
-    end
-
-end
-
-function Round:drawDices(dices)
-    --Tire uniquement les dés donnés en paramètre et retourne une table avec comme clé les dés et en valeur le numéro de face tiré.
-
-    local faceNumbers = self.drawedDices --On récupère les dés précédemment tirés.
-
-    for key,dice in next,dices do
-        local n = math.random(1, dice:getNbFaces())
-        faceNumbers[dice] = n
-    end
-
-    return faceNumbers
-end
-
-function Round:setDrawedDices(draw)
-    self.drawedDices = draw
-end
-
-function Round:setDrawedDices2(draw)
-    self.drawedDices2 = draw
-end
-
 --==REROLL FUNCTIONS (NEW)==--
 function Round:rerollDices2() --Triggers the makeRoll function after clicking the reroll button
     if(self.availableRerolls > 0) then
@@ -472,6 +391,10 @@ function Round:drawDices2(dices)
     end
     --Retourne les indexes des faces dans l'objet dé
     return faceNumbers
+end
+
+function Round:setDrawedDices2(draw)
+    self.drawedDices2 = draw
 end
 
 --==FIGURE FUNCTIONS==--

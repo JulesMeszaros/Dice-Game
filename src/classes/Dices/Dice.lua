@@ -1,4 +1,3 @@
-local DiceFace = require("src.classes.ui.DiceFace")
 
 local Dice = {}
 Dice.__index = Dice

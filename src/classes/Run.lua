@@ -45,10 +45,10 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.game = game
 
     --On attribue le set de dés
-    self.dices = dices
+    self.dices = nil
     self.diceObjects = diceObjects
     --Create the first Round of the run
-    local round = Round:new(1, self.dices, self.gameCanvas, self, 0, 0, self.diceObjects)
+    local round = Round:new(1, self.gameCanvas, self, 0, 0, self.diceObjects)
 
     self:startNewRound(round)
     
@@ -95,7 +95,6 @@ end
 function Run:startNewRound(round)
     print("----")
     self.roundNumber = round.nround
-    round:makeRoll(self.dices)
     round:makeRoll2(self.diceObjects)
 
 

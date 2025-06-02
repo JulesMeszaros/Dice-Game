@@ -102,7 +102,7 @@ function RoundChoice:generateNewRound()
     local targetScore = 0 + 20*(self.previousRound.nround) + (math.random(0, 5) * 10)
     print(baseReward)
 
-    local r = Round:new(self.previousRound.nround + 1, self.run.dices, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects)
+    local r = Round:new(self.previousRound.nround + 1, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects)
     return r
 end
 

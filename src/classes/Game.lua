@@ -32,15 +32,6 @@ local virtualWidth, virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRT
 local gameCanvas = love.graphics.newCanvas(virtualWidth, virtualHeight)
 gameCanvas:setFilter("nearest", "nearest")
 
-
-local dices = { -- On définit les 5 dés présents dans la partie
-        Dice:new(),
-        Dice:new(),
-        PharmacyDice:new(),
-        LuckyDice:new(),
-        ReverseDice:new()
-    }
-
 --Testing the new faces system implementation
 local diceObjects = {} --liste des 6 dés blancs
 

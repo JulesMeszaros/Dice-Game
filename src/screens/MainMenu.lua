@@ -2,7 +2,6 @@ local Fonts = require("src.utils.fonts")
 local Inputs = require("src.utils.scripts.inputs")
 
 local Button = require("src.classes.ui.Button")
-local DiceFace = require("src.classes.ui.DiceFace")
 local Dice = require("src.classes.Dices.Dice")
 
 local MainMenu = {
@@ -49,7 +48,7 @@ function MainMenu:update(dt)
     --Update the canvas
     self:updateCanvas(dt)
 
-    --Update Animation
+    --[[ --Update Animation
     self:addRandomDice()
 
     for k,d in next,self.animationDices do
@@ -59,7 +58,7 @@ function MainMenu:update(dt)
         if(d.targetY>self.mainMenuCanvas:getHeight()+200) then
             table.remove(self.animationDices, k)
         end
-    end
+    end ]]
 end
 
 function MainMenu:updateCanvas(dt)
