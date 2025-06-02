@@ -11,6 +11,7 @@ function Round:new(n, dices, gameCanvas, run, baseReward, target, diceObjects)
     local self = setmetatable({}, Round)
 
     self.drawedDices = {}
+    self.drawedDices2 = {}
 
     self.selectedDices = {}
     self.selectedFaces = {}
@@ -22,6 +23,7 @@ function Round:new(n, dices, gameCanvas, run, baseReward, target, diceObjects)
     self.dragOriginY = nil
     self.remainingHands = 5
     self.roundScore = 0
+
     --==Triggering Phase==--
     self.triggeringPhase = false
     self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
@@ -342,13 +344,13 @@ function Round:updateSelectedDices2(uiFace)
     --si il est désélectionné et dans la liste, on le retire.
 
     if(uiFace:getIsSelected())then -- Dé sélectionné
-        if(not self:containsDice(self.selectedDices, uiFace:getDiceObject()))then
+        if(not self:containsDice(self.selectedDices2, uiFace:getDiceObject()))then
             table.insert(self.selectedDices2, uiFace:getDiceObject()) -- Ajoute le dé à la fin-
             table.insert(self.selectedFaces2, uiFace:getDiceObject()) -- Ajoute le numéro de face
         end
     else
-        if(self:containsDice(self.selectedDices, uiFace:getDiceObject())) then -- Dé non sélectionné
-            for i, dice in ipairs(self.selectedDices) do
+        if(self:containsDice(self.selectedDices2, uiFace:getDiceObject())) then -- Dé non sélectionné
+            for i, dice in ipairs(self.selectedDices2) do
                 if dice == uiFace:getDiceObject() then
                     table.remove(self.selectedDices2, i) --Trouve le dé dans la liste et le supprime
                     table.remove(self.selectedFaces2, i)
@@ -415,6 +417,64 @@ function Round:setDrawedDices(draw)
     self.drawedDices = draw
 end
 
+function Round:setDrawedDices2(draw)
+    self.drawedDices2 = draw
+end
+
+--==REROLL FUNCTIONS (NEW)==--
+function Round:rerollDices2() --Triggers the makeRoll function after clicking the reroll button
+    if(self.availableRerolls > 0) then
+        self:makeRoll2(self.selectedDices2)
+        self.availableRerolls = self.availableRerolls-1
+    end
+end
+
+function Round:makeRoll2(dices)
+    local draw = self:drawDices2(dices) --draw the dices
+    self:setDrawedDices2(draw) --stores the draw
+    self:resetSelectedDices2() --reset the previously selected dices (ui)
+
+    for key,dice in next,self.diceObjects do
+        dice:setCurrentActiveFace(self.drawedDices2[dice])
+        self.diceFaces2[dice]:setFace(self.drawedDices2[dice]) --update the ui
+    end
+
+    for key,dice in next,dices do --Creates the roll animation for the rerolled dices
+
+        local randomXPos = math.random(100, self.terrain.dice_tray:getWidth()-100)
+        local randomYPos = math.random(100, self.terrain.dice_tray:getHeight()-100)
+        local randomR = ((math.random(0,1000)/1000)*2.5)-1.25 --(1001 angles possibles entre -1.25 et 1.25 radians)
+
+        --Set initial position (random X axis, under the terrain)
+        self.diceFaces2[dice]:setX(randomXPos)
+        self.diceFaces2[dice]:setY(1000)
+        self.diceFaces2[dice].rotation = 0
+
+        --Change their target position to make them slide
+        self.diceFaces2[dice].targetX = randomXPos
+        self.diceFaces2[dice].targetY = randomYPos
+        self.diceFaces2[dice].baseRotation = randomR
+
+    end
+
+    for k,v in next,self.drawedDices2 do
+        print("Dice : "..tostring(k).." face : "..tostring(v))
+    end
+end 
+
+function Round:drawDices2(dices)
+    --Tire uniquement les dés donnés en paramètre et retourne une table avec comme clé les dés et en valeur le numéro de face tiré.
+
+    local faceNumbers = self.drawedDices2 --On récupère les dés précédemment tirés.
+    
+    for key,dice in next,dices do
+        local n = math.random(1, dice:getNbFaces())
+        faceNumbers[dice] = n 
+    end
+    --Retourne les indexes des faces dans l'objet dé
+    return faceNumbers
+end
+
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices) --Function that triggers the hand
     self:startTriggeringPhase(usedDices)
@@ -431,6 +491,14 @@ function Round:resetSelectedDices()
     self.selectedDices = {} --remove the dices
     self.selectedFaces = {} --remove the face numbers
     for key,uiFace in next,self.diceFaces do --unselect the UI Faces
+        uiFace:setSelected(false)
+    end
+end
+
+function Round:resetSelectedDices2()
+    self.selectedDices2 = {} --remove the dices
+    self.selectedFaces2 = {} --remove the face numbers
+    for key,uiFace in next,self.diceFaces2 do --unselect the UI Faces
         uiFace:setSelected(false)
     end
 end

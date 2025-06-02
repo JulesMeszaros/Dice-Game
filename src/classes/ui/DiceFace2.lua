@@ -207,6 +207,12 @@ function DiceFace2:updateCanvas(dt)
     love.graphics.setCanvas(currentCanvas)
 end
 
+function DiceFace2:updateSprite()
+    self.spriteSheet = self.diceObject:getFace(self.faceNumber):getSpriteSheet()
+    self.quad = self.diceObject:getFace(self.faceNumber):getQuad(self.faceNumber)
+    self.dim = self.diceObject:getFace(self.faceNumber):getFaceDim()
+end
+
 function DiceFace2:calculateScale()
     --Calculate scale
     if(self:isHovered())then
@@ -261,6 +267,11 @@ end
 
 function DiceFace2:setHighlighted(state)
 	self.isHighlighted = state
+end
+
+function DiceFace2:setFace(n) --Sets the index of the face of the dice to get the image from
+    self.faceNumber = n
+    self:updateSprite()
 end
 
 --==UTILS==--

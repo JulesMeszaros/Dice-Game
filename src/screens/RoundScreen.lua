@@ -96,7 +96,7 @@ function RoundScreen:new(round)
     --BOUTONS
 
     self.uiElements.roundButtons["rerollButton"] = Button:new(
-        function()self.round:rerollDices()end, 
+        function()self.round:rerollDices2()end, 
         "src/assets/sprites/ui/buttons/reroll.png", 
         self.terrainCanvas:getWidth()-80, 
         925, 
@@ -160,7 +160,7 @@ function RoundScreen:update(dt)
 
     --Utilities buttons
     for key,button in next,self.uiElements.roundButtons do
-        self.uiElements.roundButtons["rerollButton"]:setActivated(self.round.availableRerolls>0 and table.getn(self.round.selectedDices)>0)
+        self.uiElements.roundButtons["rerollButton"]:setActivated(self.round.availableRerolls>0 and table.getn(self.round.selectedDices2)>0)
 
         button:update(dt)
     end
@@ -246,7 +246,7 @@ function RoundScreen:drawDiceTray(x, y, dices, dices2)
 
     --On déssiné les dés
     for key,uiFace in next,dices do
-        uiFace:draw()
+        --uiFace:draw()
     end
 
     --On déssine les autres dés
