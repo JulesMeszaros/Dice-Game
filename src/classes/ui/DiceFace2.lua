@@ -133,6 +133,21 @@ function DiceFace2:isHovered() --Check if mouse is above the face
         )
 end
 
+function DiceFace2:clickEvent()
+    local wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
+    if(self:isHovered()) then
+        self.isBeingClicked = true
+        wasClicked = true
+        self:resetBaseAngle()
+    end
+
+    return wasClicked
+end
+
+function DiceFace2:clickAction()
+    self:selectOrDeselect()
+end
+
 --==VISUAL FUNCTIONS==--
 
 function DiceFace2:createCanvas()
@@ -267,8 +282,6 @@ function DiceFace2:calculateAngleDrag()
     if self.dragRotation > maxRotation then
         self.dragRotation = maxRotation
     end
-
-    
 end
 
 function DiceFace2:updatePosition(dt)
@@ -317,6 +330,17 @@ end
 
 function DiceFace2:updateScale(dt)
     self.scale, self.velscale = springUpdate(self.scale, self.targetedScale, self.velscale, dt, 4, 0.6)
+end
+
+--==Utilities==--
+function springUpdate(current, target, velocity, dt, frequency, damping)
+    local f = frequency * 2 * math.pi
+    local g = damping
+    local delta = target - current
+    local accel = f * f * delta - 2 * g * f * velocity
+    velocity = velocity + accel * dt
+    current = current + velocity * dt
+    return current, velocity
 end
 
 return DiceFace2

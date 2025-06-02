@@ -293,7 +293,6 @@ function DiceFace:calculateAngleDrag()
     if self.dragRotation > maxRotation then
         self.dragRotation = maxRotation
     end
-
     
 end
 

@@ -11,8 +11,13 @@ function Round:new(n, dices, gameCanvas, run, baseReward, target, diceObjects)
     local self = setmetatable({}, Round)
 
     self.drawedDices = {}
+
     self.selectedDices = {}
     self.selectedFaces = {}
+
+    self.selectedDices2 = {}
+    self.selectedFaces2 = {}
+
     self.dragOriginX = nil
     self.dragOriginY = nil
     self.remainingHands = 5
@@ -113,6 +118,9 @@ function Round:mousepressed(x, y, button, istouch, presses)
     for key,uiFace in next,self.diceFaces do
         uiFace:clickEvent()
     end
+    for key,uiFace in next,self.diceFaces2 do
+        uiFace:clickEvent()
+    end
 
     --Round Buttons
     for key,button in next,self.terrain.uiElements.roundButtons do
@@ -131,6 +139,14 @@ function Round:mousereleased(x, y, button, istouch, presses)
         local wasReleased = diceface:releaseEvent()
         if(wasReleased)then
             self:updateSelectedDices(diceface)
+        end
+        diceface.isBeingDragged = false
+    end
+
+    for key,diceface in next,self.diceFaces2 do
+        local wasReleased = diceface:releaseEvent()
+        if(wasReleased)then
+            self:updateSelectedDices2(diceface)
         end
         diceface.isBeingDragged = false
     end
@@ -299,6 +315,29 @@ function Round:updateSelectedDices(uiFace)
                 if dice == uiFace:getDice() then
                     table.remove(self.selectedDices, i) --Trouve le dé dans la liste et le supprime
                     table.remove(self.selectedFaces, i)
+                    break
+                end
+            end
+        end
+    end
+end
+
+function Round:updateSelectedDices2(uiFace)
+    --si le dé donné en paramètre est sélectionné et pas encore dans la liste, on l'ajoute à la fin de la liste.
+    --si il est sélectionné mais pas dans la liste, on le laisse
+    --si il est désélectionné et dans la liste, on le retire.
+
+    if(uiFace:getIsSelected())then -- Dé sélectionné
+        if(not self:containsDice(self.selectedDices, uiFace:getDiceObject()))then
+            table.insert(self.selectedDices2, uiFace:getDiceObject()) -- Ajoute le dé à la fin-
+            table.insert(self.selectedFaces2, uiFace:getDiceObject()) -- Ajoute le numéro de face
+        end
+    else
+        if(self:containsDice(self.selectedDices, uiFace:getDiceObject())) then -- Dé non sélectionné
+            for i, dice in ipairs(self.selectedDices) do
+                if dice == uiFace:getDiceObject() then
+                    table.remove(self.selectedDices2, i) --Trouve le dé dans la liste et le supprime
+                    table.remove(self.selectedFaces2, i)
                     break
                 end
             end
