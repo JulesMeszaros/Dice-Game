@@ -43,7 +43,7 @@ function Round:new(n, gameCanvas, run, baseReward, target, diceObjects)
 
     --Dices
     self.diceObjects = diceObjects
-    self.targetScore = target or 0 + 20*(n-1) --Calcul à revoir bien sur
+    self.targetScore = target or (0 + 20*(n-1)) --Calcul à revoir bien sur
 
     self.terrain = RoundScreen:new(self)
 

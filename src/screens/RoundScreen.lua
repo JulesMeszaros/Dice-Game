@@ -107,7 +107,7 @@ function RoundScreen:new(round)
     )
 
     self.uiElements.roundButtons["reorganiserButton"] = Button:new(
-        function()self:reorganiseDiceFaces(self.round.diceFaces)end, 
+        function()self:reorganiseDiceFaces(self.round.diceFaces2)end, 
         "src/assets/sprites/ui/buttons/reorganiser.png", 
         self.terrainCanvas:getWidth()-220, 
         925, 
@@ -291,7 +291,7 @@ function RoundScreen:reorganiseDiceFaces(dices)
     end
 
     table.sort(temp, function(a, b)
-        return a:getFace() < b:getFace()
+        return a.faceNumber < b.faceNumber
     end)
     for _, dice in ipairs(temp) do
         table.insert(reorganisedDices, dice)
