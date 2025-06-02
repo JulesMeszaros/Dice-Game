@@ -10,6 +10,11 @@ function DiceObject:new(faces)
     return self
 end
 
+function DiceObject:trigger()
+    --Triggers the current active face function
+    self.faces[self.currentActiveFace]:triggerEffect()
+end
+
 --==GET/SET FUNCTIONS==--
 function DiceObject:getFace(numFace)
     return self.faces[numFace]

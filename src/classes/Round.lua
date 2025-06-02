@@ -222,16 +222,16 @@ function Round:getDicesOrder(usedDices)
     local dices = {}
 
     for i, dice in next,usedDices do
-        table.insert(diceFaces, self.diceFaces[dice])
+        print(dice)
+        table.insert(diceFaces, self.diceFaces2[dice])
         table.insert(dices, dice)
     end
-
+    
     local indexes = {} --Liste d'indexes servant de base pour le tri des dés et des dicefaces
     --Remplissage des indexes
     for i=1, table.getn(usedDices) do
         table.insert(indexes, i)
     end
-
     -- Trie des indexes
     table.sort(indexes, function(a, b)
         local da = diceFaces[a]
@@ -253,7 +253,7 @@ function Round:getDicesOrder(usedDices)
     -- Trie les DiceFaces à partir des dés triés
     local sortedDiceFaces = {}
     for k,d in next,sortedDices do
-        table.insert(sortedDiceFaces, self.diceFaces[d])
+        table.insert(sortedDiceFaces, self.diceFaces2[d])
     end
 
     --Ajout aux attributs de classe
@@ -263,6 +263,10 @@ function Round:getDicesOrder(usedDices)
 
     for i, diceFace in next,sortedDices do
         table.insert(self.dicesOrder, diceFace)
+    end
+
+    for k,v in ipairs(sortedDiceFaces) do
+        print(v.faceNumber)
     end
 
     return sortedDiceFaces, sortedDices
