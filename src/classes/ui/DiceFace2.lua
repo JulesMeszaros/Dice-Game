@@ -81,8 +81,56 @@ function DiceFace2:new(diceObject, faceNumber, x, y, size, isSelectable, isHover
     return self
 end
 
+function DiceFace2:update(dt)
+    self.time=self.time+dt
+
+    --Calculate targeted Scale and Rotation
+    self:calculateAngleDrag()
+    self.targetedRotation = self.baseRotation + self.dragRotation
+
+    --Update scale, rotation and position
+    self:updatePosition(dt)
+    self:updateScale(dt)
+    self:updateAngle(dt)
+
+    --==Update the trigger==--
+    if(self.isTriggering)then
+        self.triggerTimer = self.triggerTimer + dt
+        if(self.triggerTimer >= self.triggerTime)then
+            self.isTriggering = false
+            self.round:triggerNextDice() --Triggers the next dice in queue in the round
+        end
+    end
+
+    if(self.isTriggering)then
+        self.isHoverable = false
+        self.isSelectable = false
+        self:calculateTriggerScale()
+    else
+        self.isSelectable = true
+        self.isHoverable = true
+        self:calculateScale()
+    end
+
+    --update canvas
+    self:updateCanvas(dt)
+end
+
 function DiceFace2:draw()
     love.graphics.draw(self.diceCanvas, self.x, self.y, self.rotation, self.scale, self.scale, self.diceCanvas:getWidth()/2, self.diceCanvas:getHeight()/2)
+end
+
+--==INTERACTION==--
+function DiceFace2:isHovered() --Check if mouse is above the face
+    --Utilise la fonction passée en paramètre, qui permet d'avoir la position de la souris dans laquelle elle est rendue.
+    local vx, vy = self.mousePosition().x, self.mousePosition().y
+
+    return(
+        self.isHoverable and
+        vx > (self.x-(self.size/2)) and vx < (self.x+(self.size/2))
+        and
+        vy > (self.y-(self.size/2)) and vy < (self.y+(self.size/2))
+        )
 end
 
 --==VISUAL FUNCTIONS==--
@@ -119,6 +167,66 @@ function DiceFace2:createCanvas()
     return faceCanvas
 end
 
+function DiceFace2:updateCanvas(dt)
+    local currentCanvas = love.graphics.getCanvas()
+    
+    local canvasSize = self.size --sets the base face of the canvas
+    local ratio = canvasSize/self.dim --ratio between the image size and the canvas size
+
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.diceCanvas)
+    love.graphics.clear()
+
+    --Draw the face image
+    if(self:getIsSelected()==true)then
+        love.graphics.setShader(Shaders.rainbowShader)
+        Shaders.rainbowShader:send("time", self.time/10 % 1)
+
+    else
+        love.graphics.setShader()
+    end
+
+    love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
+    
+    love.graphics.setShader()
+    love.graphics.setCanvas(currentCanvas)
+end
+
+function DiceFace2:calculateScale()
+    --Calculate scale
+    if(self:isHovered())then
+        self.hoverScale = -0.1 --Si hovered
+        if(love.mouse.isDown(1)) then
+            self.hoverScale = -0.15 --Si clicked
+        end
+    else
+        self.hoverScale = 0
+    end
+
+    if(self.isSelected)then
+        self.selectionScale = 0.2
+    else
+        self.selectionScale = 0
+    end
+
+	if(self.isHighlighted==true)then
+		self.highlightScale = AnimationUtils.osccilate(self.time, 5, 0.15)
+	else
+		self.highlightScale = 0
+	end
+
+    --Update targeted scale, rotation and position
+    self.targetedScale = self.baseTargetedScale + self.selectionScale + self.hoverScale + self.highlightScale
+    
+end
+
+function DiceFace2:calculateTriggerScale()
+     local t = self.triggerTimer / self.triggerTime
+
+    local s = math.sin(2*t * math.pi) -- varie de 0 à 1 à 0
+    self.targetedScale = 1 + (1.5 - 1) * s
+end
+
 --==GET/SET FUNCTIONS==--
 function DiceFace2:resetBaseAngle()
     self.baseRotation = 0
@@ -140,5 +248,75 @@ function DiceFace2:setHighlighted(state)
 	self.isHighlighted = state
 end
 
+--==UTILS==--
+
+function DiceFace2:calculateAngleDrag()
+    --Function used to calculate the target angle of the dice base on the drag speed
+    local maxRotation = 1
+
+    if(self.isBeingDragged)then --Rotation pendant le drag
+        self.dragRotation = 0.02*self.dragXspeed
+    else
+        self.dragRotation = 0
+    end
+
+    if self.dragRotation < 0-maxRotation then
+        self.dragRotation = 0-maxRotation
+    end
+
+    if self.dragRotation > maxRotation then
+        self.dragRotation = maxRotation
+    end
+
+    
+end
+
+function DiceFace2:updatePosition(dt)
+    self.x, self.velx = springUpdate(self.x, self.targetX, self.velx, dt, 4, 0.8)
+    self.y, self.vely = springUpdate(self.y, self.targetY, self.vely, dt, 4, 0.8)
+end
+
+function DiceFace2:calculateScale()
+    --Calculate scale
+    if(self:isHovered())then
+        self.hoverScale = -0.1 --Si hovered
+        if(love.mouse.isDown(1)) then
+            self.hoverScale = -0.15 --Si clicked
+        end
+    else
+        self.hoverScale = 0
+    end
+
+    if(self.isSelected)then
+        self.selectionScale = 0.2
+    else
+        self.selectionScale = 0
+    end
+
+	if(self.isHighlighted==true)then
+		self.highlightScale = AnimationUtils.osccilate(self.time, 5, 0.15)
+	else
+		self.highlightScale = 0
+	end
+
+    --Update targeted scale, rotation and position
+    self.targetedScale = self.baseTargetedScale + self.selectionScale + self.hoverScale + self.highlightScale
+    
+end
+
+function DiceFace2:calculateTriggerScale()
+     local t = self.triggerTimer / self.triggerTime
+
+    local s = math.sin(2*t * math.pi) -- varie de 0 à 1 à 0
+    self.targetedScale = 1 + (1.5 - 1) * s
+end
+
+function DiceFace2:updateAngle(dt)
+    self.rotation, self.velrotation = springUpdate(self.rotation, self.targetedRotation, self.velrotation, dt, 5, 0.4)
+end
+
+function DiceFace2:updateScale(dt)
+    self.scale, self.velscale = springUpdate(self.scale, self.targetedScale, self.velscale, dt, 4, 0.6)
+end
 
 return DiceFace2
