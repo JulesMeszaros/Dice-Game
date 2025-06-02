@@ -6,16 +6,12 @@ local InputsUtils = require("src.utils.scripts.inputs")
 local Constants = require("src.utils.constants")
 local Shaders = require("src.utils.shaders")
 
-local DiceFace2 = setmetatable({}, { __index = UIElement })
+local DiceFace = setmetatable({}, { __index = UIElement })
 
-local scaleSpeed = 20
-local rSpeed = 50
-local moveSpeed = 15
+DiceFace.__index = DiceFace
 
-DiceFace2.__index = DiceFace2
-
-function DiceFace2:new(diceObject, faceNumber, x, y, size, isSelectable, isHoverable, mousePosition, round)    
-    local self = setmetatable(UIElement.new(), DiceFace2)
+function DiceFace:new(diceObject, faceNumber, x, y, size, isSelectable, isHoverable, mousePosition, round)    
+    local self = setmetatable(UIElement.new(), DiceFace)
 
     --Parametres d'interractions
     self.mousePosition = mousePosition --The function returning the mousePosition for this dice.
@@ -81,7 +77,7 @@ function DiceFace2:new(diceObject, faceNumber, x, y, size, isSelectable, isHover
     return self
 end
 
-function DiceFace2:update(dt)
+function DiceFace:update(dt)
     self.time=self.time+dt
 
     --Calculate targeted Scale and Rotation
@@ -116,12 +112,12 @@ function DiceFace2:update(dt)
     self:updateCanvas(dt)
 end
 
-function DiceFace2:draw()
+function DiceFace:draw()
     love.graphics.draw(self.diceCanvas, self.x, self.y, self.rotation, self.scale, self.scale, self.diceCanvas:getWidth()/2, self.diceCanvas:getHeight()/2)
 end
 
 --==INTERACTION==--
-function DiceFace2:isHovered() --Check if mouse is above the face
+function DiceFace:isHovered() --Check if mouse is above the face
     --Utilise la fonction passée en paramètre, qui permet d'avoir la position de la souris dans laquelle elle est rendue.
     local vx, vy = self.mousePosition().x, self.mousePosition().y
 
@@ -133,7 +129,7 @@ function DiceFace2:isHovered() --Check if mouse is above the face
         )
 end
 
-function DiceFace2:clickEvent()
+function DiceFace:clickEvent()
     local wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
     if(self:isHovered()) then
         self.isBeingClicked = true
@@ -144,13 +140,13 @@ function DiceFace2:clickEvent()
     return wasClicked
 end
 
-function DiceFace2:clickAction()
+function DiceFace:clickAction()
     self:selectOrDeselect()
 end
 
 --==VISUAL FUNCTIONS==--
 
-function DiceFace2:createCanvas()
+function DiceFace:createCanvas()
     local currentCanvas = love.graphics.getCanvas()
     local canvasSize = self.size --sets the base face of the canvas
 
@@ -182,7 +178,7 @@ function DiceFace2:createCanvas()
     return faceCanvas
 end
 
-function DiceFace2:updateCanvas(dt)
+function DiceFace:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     
     local canvasSize = self.size --sets the base face of the canvas
@@ -207,13 +203,13 @@ function DiceFace2:updateCanvas(dt)
     love.graphics.setCanvas(currentCanvas)
 end
 
-function DiceFace2:updateSprite()
+function DiceFace:updateSprite()
     self.spriteSheet = self.diceObject:getFace(self.faceNumber):getSpriteSheet()
     self.quad = self.diceObject:getFace(self.faceNumber):getQuad(self.faceNumber)
     self.dim = self.diceObject:getFace(self.faceNumber):getFaceDim()
 end
 
-function DiceFace2:calculateScale()
+function DiceFace:calculateScale()
     --Calculate scale
     if(self:isHovered())then
         self.hoverScale = -0.1 --Si hovered
@@ -241,7 +237,7 @@ function DiceFace2:calculateScale()
     
 end
 
-function DiceFace2:calculateTriggerScale()
+function DiceFace:calculateTriggerScale()
      local t = self.triggerTimer / self.triggerTime
 
     local s = math.sin(2*t * math.pi) -- varie de 0 à 1 à 0
@@ -249,40 +245,40 @@ function DiceFace2:calculateTriggerScale()
 end
 
 --==TRIGGER FUNCTIONS==--
-function DiceFace2:trigger() --Lance le trigger du dé
+function DiceFace:trigger() --Lance le trigger du dé
     self.triggerTimer = 0
     self.isTriggering = true
 end
 
 --==GET/SET FUNCTIONS==--
-function DiceFace2:resetBaseAngle()
+function DiceFace:resetBaseAngle()
     self.baseRotation = 0
 end
 
-function DiceFace2:setSelected(state)
+function DiceFace:setSelected(state)
     self.isSelected = state
 end
 
-function DiceFace2:getDiceObject()
+function DiceFace:getDiceObject()
     return self.diceObject
 end
 
-function DiceFace2:setDiceObject(diceObject)
+function DiceFace:setDiceObject(diceObject)
     self.diceObject = diceObject
 end
 
-function DiceFace2:setHighlighted(state)
+function DiceFace:setHighlighted(state)
 	self.isHighlighted = state
 end
 
-function DiceFace2:setFace(n) --Sets the index of the face of the dice to get the image from
+function DiceFace:setFace(n) --Sets the index of the face of the dice to get the image from
     self.faceNumber = n
     self:updateSprite()
 end
 
 --==UTILS==--
 
-function DiceFace2:calculateAngleDrag()
+function DiceFace:calculateAngleDrag()
     --Function used to calculate the target angle of the dice base on the drag speed
     local maxRotation = 1
 
@@ -301,12 +297,12 @@ function DiceFace2:calculateAngleDrag()
     end
 end
 
-function DiceFace2:updatePosition(dt)
+function DiceFace:updatePosition(dt)
     self.x, self.velx = springUpdate(self.x, self.targetX, self.velx, dt, 4, 0.8)
     self.y, self.vely = springUpdate(self.y, self.targetY, self.vely, dt, 4, 0.8)
 end
 
-function DiceFace2:calculateScale()
+function DiceFace:calculateScale()
     --Calculate scale
     if(self:isHovered())then
         self.hoverScale = -0.1 --Si hovered
@@ -334,18 +330,18 @@ function DiceFace2:calculateScale()
     
 end
 
-function DiceFace2:calculateTriggerScale()
+function DiceFace:calculateTriggerScale()
      local t = self.triggerTimer / self.triggerTime
 
     local s = math.sin(2*t * math.pi) -- varie de 0 à 1 à 0
     self.targetedScale = 1 + (1.5 - 1) * s
 end
 
-function DiceFace2:updateAngle(dt)
+function DiceFace:updateAngle(dt)
     self.rotation, self.velrotation = springUpdate(self.rotation, self.targetedRotation, self.velrotation, dt, 5, 0.4)
 end
 
-function DiceFace2:updateScale(dt)
+function DiceFace:updateScale(dt)
     self.scale, self.velscale = springUpdate(self.scale, self.targetedScale, self.velscale, dt, 4, 0.6)
 end
 
@@ -360,4 +356,4 @@ function springUpdate(current, target, velocity, dt, frequency, damping)
     return current, velocity
 end
 
-return DiceFace2
+return DiceFace
