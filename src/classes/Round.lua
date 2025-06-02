@@ -456,10 +456,6 @@ function Round:makeRoll2(dices)
         self.diceFaces2[dice].baseRotation = randomR
 
     end
-
-    for k,v in next,self.drawedDices2 do
-        print("Dice : "..tostring(k).." face : "..tostring(v))
-    end
 end 
 
 function Round:drawDices2(dices)
