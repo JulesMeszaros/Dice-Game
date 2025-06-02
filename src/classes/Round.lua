@@ -184,6 +184,20 @@ function Round:mousemoved(x, y, dx, dy, isDragging)
                 end
             end
         end
+
+        for key,diceui in next, self.diceFaces2 do
+            if(diceui.isDraggable and diceui.isBeingClicked) then
+                diceui.isBeingDragged = true
+                diceui.dragXspeed = dx
+                if(diceui.targetX+dx<self.terrain.dice_tray:getWidth()-diceui.size/2 and diceui.targetX+dx>0+diceui.size/2) then --Vérification qu'on ne dépasse par les limites horizontales
+                    diceui.targetX = (diceui.targetX + dx) 
+                end
+
+                if(diceui.targetY+dy<self.terrain.dice_tray:getHeight()-diceui.size/2 and diceui.targetY+dy>0+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
+                    diceui.targetY = (diceui.targetY + dy) 
+                end
+            end
+        end
     end
 end
 
