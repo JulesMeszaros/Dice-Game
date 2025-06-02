@@ -454,7 +454,6 @@ function Round:makeRoll2(dices)
         self.diceFaces2[dice].targetX = randomXPos
         self.diceFaces2[dice].targetY = randomYPos
         self.diceFaces2[dice].baseRotation = randomR
-
     end
 end 
 

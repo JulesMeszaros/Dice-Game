@@ -96,6 +96,8 @@ function Run:startNewRound(round)
     print("----")
     self.roundNumber = round.nround
     round:makeRoll(self.dices)
+    round:makeRoll2(self.diceObjects)
+
 
     self.currentRound = round
 

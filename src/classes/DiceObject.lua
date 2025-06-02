@@ -20,7 +20,7 @@ function DiceObject:getAllFaces()
 end
 
 function DiceObject:setFace(face, numface) --replaces one of the dice's faces by a new one
-    self.faces[numFace] = face
+    self.faces[numface] = face
 end
 
 function DiceObject:setCurrentActiveFace(n)

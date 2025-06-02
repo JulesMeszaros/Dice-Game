@@ -15,6 +15,7 @@ local Shaders = require("src.utils.shaders")
 --Dice Face Types
 local DiceObject = require("src.classes.DiceObject") 
 local WhiteFace = require("src.classes.FaceTypes.WhiteDice")
+local PharmacyFace = require("src.classes.FaceTypes.PharmacyDice")
 
 local applyCRT = false
 
@@ -51,6 +52,9 @@ for i=1, 5 do
     end
     table.insert(diceObjects, DiceObject:new(fs))
 end
+
+local pharmaFace = PharmacyFace:new(2)
+diceObjects[2]:setFace(pharmaFace, 2)
 
 function Game:start()
     local self = setmetatable({}, Game)
