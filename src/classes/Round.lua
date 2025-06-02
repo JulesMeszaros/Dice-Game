@@ -9,12 +9,7 @@ Round.__index = Round
 function Round:new(n, gameCanvas, run, baseReward, target, diceObjects)
     local self = setmetatable({}, Round)
 
-    self.drawedDices = {}
     self.drawedDices2 = {}
-
-    self.selectedDices = {}
-    self.selectedFaces = {}
-
     self.selectedDices2 = {}
     self.selectedFaces2 = {}
 
@@ -30,7 +25,6 @@ function Round:new(n, gameCanvas, run, baseReward, target, diceObjects)
     self.diceFacesTriggerQueue = {} --Dice queue for the triggers. get modified during the trigger phase
     self.dicesTriggerQueue = {}  --Same but for the dices
     self.currentlyTriggeredDice = nil
-    self.diceFaces = {}
     self.diceFaces2 = {}
     self.baseReward = baseReward
 
@@ -96,9 +90,6 @@ end
 
 function Round:mousepressed(x, y, button, istouch, presses)
     --DiceFaces
-    for key,uiFace in next,self.diceFaces do
-        uiFace:clickEvent()
-    end
     for key,uiFace in next,self.diceFaces2 do
         uiFace:clickEvent()
     end
@@ -116,13 +107,6 @@ end
 
 function Round:mousereleased(x, y, button, istouch, presses)
     --release event for dice faces
-    for key,diceface in next,self.diceFaces do
-        local wasReleased = diceface:releaseEvent()
-        if(wasReleased)then
-            self:updateSelectedDices(diceface)
-        end
-        diceface.isBeingDragged = false
-    end
 
     for key,diceface in next,self.diceFaces2 do
         local wasReleased = diceface:releaseEvent()
@@ -152,20 +136,6 @@ end
 function Round:mousemoved(x, y, dx, dy, isDragging)
     --Drag and drop dice
     if(isDragging == true)then 
-        for key,diceui in next, self.diceFaces do
-            if(diceui.isDraggable and diceui.isBeingClicked) then
-                diceui.isBeingDragged = true
-                diceui.dragXspeed = dx
-                if(diceui.targetX+dx<diceui.renderCanvas:getWidth()-diceui.size/2 and diceui.targetX+dx>0+diceui.size/2) then --Vérification qu'on ne dépasse par les limites horizontales
-                    diceui.targetX = (diceui.targetX + dx) 
-                end
-
-                if(diceui.targetY+dy<diceui.renderCanvas:getHeight()-diceui.size/2 and diceui.targetY+dy>0+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
-                    diceui.targetY = (diceui.targetY + dy) 
-                end
-            end
-        end
-
         for key,diceui in next, self.diceFaces2 do
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true

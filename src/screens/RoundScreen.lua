@@ -139,12 +139,6 @@ function RoundScreen:update(dt)
          end
     end
 
-    for key,diceface in next,self.round.diceFaces do --On récupère le dé survolé par la souris
-        if(diceface:isHovered())then
-            self.currentlyHoveredDice = diceface.dice.name
-        end
-    end
-
     --Hover infos
     self.diceTrayHoverInfos.hidden = self.currentlyHoveredDice == nil or love.mouse.isDown(1)
     if(self.currentlyHoveredDice)then
@@ -174,7 +168,7 @@ function RoundScreen:updateCanvas(dt)
     love.graphics.clear()
 
     --Dice Tray
-    self:drawDiceTray(self.terrainCanvas:getWidth()-20, 20, self.round.diceFaces, self.round.diceFaces2)
+    self:drawDiceTray(self.terrainCanvas:getWidth()-20, 20, self.round.diceFaces2)
 
     --Figure Buttons
     self:drawFigureButtons(20, 102)
@@ -237,17 +231,12 @@ function RoundScreen:playFigure(params)
     self.round:playFigure(points, usedDices)
 end
 
-function RoundScreen:drawDiceTray(x, y, dices, dices2)
+function RoundScreen:drawDiceTray(x, y, dices2)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.dice_tray)
     love.graphics.clear()
 
     love.graphics.draw(matImage, 0, 0, 0, 1.5, 1.5)
-
-    --On déssiné les dés
-    for key,uiFace in next,dices do
-        --uiFace:draw()
-    end
 
     --On déssine les autres dés
     for key,uiFace in next,dices2 do

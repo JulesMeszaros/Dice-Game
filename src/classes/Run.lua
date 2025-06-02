@@ -61,11 +61,6 @@ function Run:update(dt)
         self.currentRound:update(dt)
 
         --Update dices UI
-        for key,dice in next,self.currentRound.diceFaces do
-            dice:update(dt)
-        end
-
-        --Update dices UI
         for key,dice2 in next,self.currentRound.diceFaces2 do
             dice2:update(dt)
         end
