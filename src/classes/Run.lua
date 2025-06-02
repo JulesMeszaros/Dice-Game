@@ -18,7 +18,7 @@ Run.__index = Run
 --Get the cool ass font
 local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
 
-function Run:new(dices, gameCanvas, game)
+function Run:new(dices, gameCanvas, game, diceObjects)
     local self = setmetatable({}, Run)
 
     --Dices variables
@@ -46,9 +46,9 @@ function Run:new(dices, gameCanvas, game)
 
     --On attribue le set de dés
     self.dices = dices
-
+    self.diceObjects = diceObjects
     --Create the first Round of the run
-    local round = Round:new(1, self.dices, self.gameCanvas, self, 0)
+    local round = Round:new(1, self.dices, self.gameCanvas, self, 0, 0, self.diceObjects)
 
     self:startNewRound(round)
     

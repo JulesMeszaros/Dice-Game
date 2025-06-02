@@ -1,4 +1,5 @@
 local DiceFace = require("src.classes.ui.DiceFace")
+local DiceFace2 = require("src.classes.ui.DiceFace2")
 local RoundScreen = require("src.screens.RoundScreen")
 
 local Inputs = require("src.utils.scripts.inputs")
@@ -6,7 +7,7 @@ local Inputs = require("src.utils.scripts.inputs")
 local Round = {}
 Round.__index = Round
 
-function Round:new(n, dices, gameCanvas, run, baseReward, target)
+function Round:new(n, dices, gameCanvas, run, baseReward, target, diceObjects)
     local self = setmetatable({}, Round)
 
     self.drawedDices = {}
@@ -24,6 +25,7 @@ function Round:new(n, dices, gameCanvas, run, baseReward, target)
     self.dicesTriggerQueue = {}  --Same but for the dices
     self.currentlyTriggeredDice = nil
     self.diceFaces = {}
+    self.diceFaces2 = {}
     self.baseReward = baseReward
 
     self.run = run
@@ -32,10 +34,13 @@ function Round:new(n, dices, gameCanvas, run, baseReward, target)
     --Current Round Parameters
     self.nround = n
     self.availableRerolls = 3
+
+    --Dices
     self.dices = dices
+    self.diceObjects = diceObjects
     self.targetScore = target or 0 + 20*(n-1) --Calcul à revoir bien sur
 
-    self.terrain =  RoundScreen:new(self)
+    self.terrain = RoundScreen:new(self)
 
     --On créée une première fois les faces à afficher
     for key,dice in next,self.dices do
@@ -56,7 +61,23 @@ function Round:new(n, dices, gameCanvas, run, baseReward, target)
         self.diceFaces[dice] = diceFaceUI
     end
 
-    
+    --On créé des objets pour les nouveaux diceFaces
+    for key,diceobject in next,self.diceObjects do
+
+        local diceFaceUI = DiceFace2:new( --Créée l'élément UI de la face de dé
+            diceobject, --Dice Object 
+            1, --Face represented
+            (key*80) - 30, --X Position (centerd)
+            self.terrain.dice_tray:getHeight()-60, --Yposition (centerd)
+            64*1.5, --Width/Height
+            true, --is Selectable
+            true, --isHoverable,
+            function()return Inputs.getMouseInCanvas((self.gameCanvas:getWidth()-20)-self.terrain.dice_tray:getWidth(), 20)end,
+            self
+        )
+
+        self.diceFaces2[diceobject] = diceFaceUI
+    end
 
     return self
 end

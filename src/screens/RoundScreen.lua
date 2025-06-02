@@ -174,7 +174,7 @@ function RoundScreen:updateCanvas(dt)
     love.graphics.clear()
 
     --Dice Tray
-    self:drawDiceTray(self.terrainCanvas:getWidth()-20, 20, self.round.diceFaces)
+    self:drawDiceTray(self.terrainCanvas:getWidth()-20, 20, self.round.diceFaces, self.round.diceFaces2)
 
     --Figure Buttons
     self:drawFigureButtons(20, 102)
@@ -237,7 +237,7 @@ function RoundScreen:playFigure(params)
     self.round:playFigure(points, usedDices)
 end
 
-function RoundScreen:drawDiceTray(x, y, dices)
+function RoundScreen:drawDiceTray(x, y, dices, dices2)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.dice_tray)
     love.graphics.clear()
@@ -246,6 +246,11 @@ function RoundScreen:drawDiceTray(x, y, dices)
 
     --On déssiné les dés
     for key,uiFace in next,dices do
+        uiFace:draw()
+    end
+
+    --On déssine les autres dés
+    for key,uiFace in next,dices2 do
         uiFace:draw()
     end
 

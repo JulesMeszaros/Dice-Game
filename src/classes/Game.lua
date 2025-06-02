@@ -12,6 +12,10 @@ local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
 local Shaders = require("src.utils.shaders")
 
+--Dice Face Types
+local DiceObject = require("src.classes.DiceObject") 
+local WhiteFace = require("src.classes.FaceTypes.WhiteDice")
+
 local applyCRT = false
 
 local Game = {}
@@ -36,8 +40,23 @@ local dices = { -- On définit les 5 dés présents dans la partie
         ReverseDice:new()
     }
 
+--Testing the new faces system implementation
+local diceObjects = {} --liste des 6 dés blancs
+
+for i=1, 5 do 
+    local fs = {}
+    for i=1,6 do
+        local f = WhiteFace:new(i)
+        table.insert(fs,f)
+    end
+    table.insert(diceObjects, DiceObject:new(fs))
+end
+
 function Game:start()
     local self = setmetatable({}, Game)
+
+    --New dice objects
+    self.diceObjects = diceObjects
 
     self.currentScreen = 1
     self.gamePaused = false
@@ -98,7 +117,7 @@ end
 
 function Game:startNewRun()
     self.currentScreen = PAGES.GAME
-    self.run = Run:new(dices, self.gameCanvas, self)
+    self.run = Run:new(dices, self.gameCanvas, self, self.diceObjects)
 
 end
 
