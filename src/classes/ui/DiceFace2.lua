@@ -248,6 +248,12 @@ function DiceFace2:calculateTriggerScale()
     self.targetedScale = 1 + (1.5 - 1) * s
 end
 
+--==TRIGGER FUNCTIONS==--
+function DiceFace2:trigger() --Lance le trigger du dé
+    self.triggerTimer = 0
+    self.isTriggering = true
+end
+
 --==GET/SET FUNCTIONS==--
 function DiceFace2:resetBaseAngle()
     self.baseRotation = 0

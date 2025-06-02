@@ -16,7 +16,7 @@ function CalculatePoints.numberBasePoints(number, faces, dices, drawedDices)
             table.insert(usedDices, dice) 
         end
     end
-    
+    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -45,7 +45,7 @@ function CalculatePoints.brelanBasePoints(faces, dices, drawedDices)
     else
         score = 0
     end
-
+    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -53,7 +53,7 @@ function CalculatePoints.fullBasePoints(faces, dices, drawedDices)
     local score = 0
     local usedDices = {}
 
-    distrib = getValueDistribution(drawedDices)
+    local distrib = getValueDistribution(drawedDices)
 
     --On vérifie qu'on a a la fois une face présente 3 fois et une autre présente 2 fois
     hasFull = hasAllValues(distrib, {3, 2})
@@ -65,7 +65,7 @@ function CalculatePoints.fullBasePoints(faces, dices, drawedDices)
             table.insert(usedDices, dice)
         end
     end
-    
+    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -76,7 +76,7 @@ function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
     local maxDistrib = 0
     local maxDistribN = 0
 
-    distrib = getValueDistribution(drawedDices)
+    local distrib = getValueDistribution(drawedDices)
 
     for n,v in next,distrib do --get max distributed number
         if v > maxDistrib then
@@ -96,7 +96,7 @@ function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
         score = 0
 
     end
-
+    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -123,7 +123,7 @@ function CalculatePoints.pttSuiteBasePoints(faces, dices, drawedDices)
     else 
         score = 0
     end
-
+    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -146,7 +146,7 @@ function CalculatePoints.gdSuiteBasePoints(faces, dices, drawedDices)
     else 
         score = 0
     end
-
+    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -158,7 +158,7 @@ function CalculatePoints.chanceBasePoints(faces, dices, drawedDices)
         score = score + f
         table.insert(usedDices, dice)
     end
-
+    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -187,7 +187,7 @@ function CalculatePoints.yatzeeBasePoints(faces, dices, drawedDices)
         score = 0
 
     end
-
+    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
