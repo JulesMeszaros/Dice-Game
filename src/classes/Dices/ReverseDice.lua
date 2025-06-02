@@ -1,4 +1,4 @@
-local Dice = require("src.classes.FaceTypes.Dice")
+local Dice = require("src.classes.Dices.Dice")
 
 local ReverseDice = setmetatable({}, { __index = Dice })
 ReverseDice.__index = ReverseDice

@@ -3,7 +3,7 @@ local Inputs = require("src.utils.scripts.inputs")
 
 local Button = require("src.classes.ui.Button")
 local DiceFace = require("src.classes.ui.DiceFace")
-local Dice = require("src.classes.FaceTypes.Dice")
+local Dice = require("src.classes.Dices.Dice")
 
 local MainMenu = {
     
