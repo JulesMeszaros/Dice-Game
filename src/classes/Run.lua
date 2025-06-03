@@ -89,7 +89,7 @@ end
 --==ROUND FUNCTIONS==--
 function Run:startNewRound(round)
     self.roundNumber = round.nround
-    round:makeRoll2(self.diceObjects)
+    round:makeRoll(self.diceObjects)
 
     self.currentRound = round
 

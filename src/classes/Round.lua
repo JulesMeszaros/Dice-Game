@@ -9,9 +9,8 @@ Round.__index = Round
 function Round:new(n, gameCanvas, run, baseReward, target, diceObjects)
     local self = setmetatable({}, Round)
 
-    self.drawedDices2 = {}
-    self.selectedDices2 = {}
-    self.selectedFaces2 = {}
+    self.selectedDices = {}
+    self.selectedFaces = {}
     self.drawedFaceObjects = {}
 
     self.dragOriginX = nil
@@ -76,10 +75,6 @@ end
 --==MOUSE/KEYBOARD FUNCTIONS==--
 
 function Round:keypressed(key) --(Mainly for debug)
-    if(key=="u")then
-        print(table.concat(self.selectedFaces, " "))
-    end
-
     if(key=='h')then
         self.remainingHands = self.remainingHands + 10
     end
@@ -112,7 +107,7 @@ function Round:mousereleased(x, y, button, istouch, presses)
     for key,diceface in next,self.diceFaces2 do
         local wasReleased = diceface:releaseEvent()
         if(wasReleased)then
-            self:updateSelectedDices2(diceface)
+            self:updateselectedDices(diceface)
         end
         diceface.isBeingDragged = false
     end
@@ -258,7 +253,7 @@ function Round:endTriggeringPhase()
 
     if(self.remainingHands>=1)then
         self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
-        self:makeRoll2(self.diceObjects) -- On effectue un reroll
+        self:makeRoll(self.diceObjects) -- On effectue un reroll
         self.availableRerolls = 3
     end
 
@@ -269,20 +264,20 @@ end
 
 --==DICE FUNCTIONS==--
 
-function Round:updateSelectedDices(uiFace)
+function Round:updateselectedDices(uiFace)
     --si le dé donné en paramètre est sélectionné et pas encore dans la liste, on l'ajoute à la fin de la liste.
     --si il est sélectionné mais pas dans la liste, on le laisse
     --si il est désélectionné et dans la liste, on le retire.
 
     if(uiFace:getIsSelected())then -- Dé sélectionné
-        if(not self:containsDice(self.selectedDices, uiFace:getDice()))then
-            table.insert(self.selectedDices, uiFace:getDice()) -- Ajoute le dé à la fin-
-            table.insert(self.selectedFaces, uiFace:getFace()) -- Ajoute le numéro de face
+        if(not self:containsDice(self.selectedDices, uiFace:getDiceObject()))then
+            table.insert(self.selectedDices, uiFace:getDiceObject()) -- Ajoute le dé à la fin-
+            table.insert(self.selectedFaces, uiFace:getDiceObject()) -- Ajoute le numéro de face
         end
     else
-        if(self:containsDice(self.selectedDices, uiFace:getDice())) then -- Dé non sélectionné
+        if(self:containsDice(self.selectedDices, uiFace:getDiceObject())) then -- Dé non sélectionné
             for i, dice in ipairs(self.selectedDices) do
-                if dice == uiFace:getDice() then
+                if dice == uiFace:getDiceObject() then
                     table.remove(self.selectedDices, i) --Trouve le dé dans la liste et le supprime
                     table.remove(self.selectedFaces, i)
                     break
@@ -292,40 +287,17 @@ function Round:updateSelectedDices(uiFace)
     end
 end
 
-function Round:updateSelectedDices2(uiFace)
-    --si le dé donné en paramètre est sélectionné et pas encore dans la liste, on l'ajoute à la fin de la liste.
-    --si il est sélectionné mais pas dans la liste, on le laisse
-    --si il est désélectionné et dans la liste, on le retire.
-
-    if(uiFace:getIsSelected())then -- Dé sélectionné
-        if(not self:containsDice(self.selectedDices2, uiFace:getDiceObject()))then
-            table.insert(self.selectedDices2, uiFace:getDiceObject()) -- Ajoute le dé à la fin-
-            table.insert(self.selectedFaces2, uiFace:getDiceObject()) -- Ajoute le numéro de face
-        end
-    else
-        if(self:containsDice(self.selectedDices2, uiFace:getDiceObject())) then -- Dé non sélectionné
-            for i, dice in ipairs(self.selectedDices2) do
-                if dice == uiFace:getDiceObject() then
-                    table.remove(self.selectedDices2, i) --Trouve le dé dans la liste et le supprime
-                    table.remove(self.selectedFaces2, i)
-                    break
-                end
-            end
-        end
-    end
-end
-
 --==REROLL FUNCTIONS (NEW)==--
-function Round:rerollDices2() --Triggers the makeRoll function after clicking the reroll button
+function Round:rerollDices() --Triggers the makeRoll function after clicking the reroll button
     if(self.availableRerolls > 0) then
-        self:makeRoll2(self.selectedDices2)
+        self:makeRoll(self.selectedDices)
         self.availableRerolls = self.availableRerolls-1
     end
 end
 
-function Round:makeRoll2(dices)
-    local draw = self:drawDices2(dices) --draw the dices
-    self:resetSelectedDices2() --reset the previously selected dices (ui)
+function Round:makeRoll(dices)
+    local draw = self:drawDices(dices) --draw the dices
+    self:resetselectedDices() --reset the previously selected dices (ui)
     print("~~~~~~~~")
     for key,dice in next,self.diceObjects do
         print(self.drawedFaceObjects[dice].name)
@@ -353,7 +325,7 @@ function Round:makeRoll2(dices)
 
 end 
 
-function Round:drawDices2(dices)
+function Round:drawDices(dices)
     --Tire uniquement les dés donnés en paramètre et retourne une table avec comme clé les dés et en valeur le numéro de face tiré.
 
     local faceObjects = self.drawedFaceObjects
@@ -369,10 +341,6 @@ function Round:drawDices2(dices)
     self.drawedFaceObjects = faceObjects--Sets the drawed face objects
 end
 
-function Round:setDrawedDices2(draw)
-    self.drawedDices2 = draw
-end
-
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices) --Function that triggers the hand
     self:startTriggeringPhase(usedDices)
@@ -385,17 +353,9 @@ function Round:addToScore(n)
     self.roundScore = self.roundScore + n
 end
 
-function Round:resetSelectedDices()
+function Round:resetselectedDices()
     self.selectedDices = {} --remove the dices
     self.selectedFaces = {} --remove the face numbers
-    for key,uiFace in next,self.diceFaces do --unselect the UI Faces
-        uiFace:setSelected(false)
-    end
-end
-
-function Round:resetSelectedDices2()
-    self.selectedDices2 = {} --remove the dices
-    self.selectedFaces2 = {} --remove the face numbers
     for key,uiFace in next,self.diceFaces2 do --unselect the UI Faces
         uiFace:setSelected(false)
     end
