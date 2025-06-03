@@ -2,7 +2,6 @@ local Fonts = require("src.utils.fonts")
 local Inputs = require("src.utils.scripts.inputs")
 
 local Button = require("src.classes.ui.Button")
-local Dice = require("src.classes.Dices.Dice")
 
 local MainMenu = {
     

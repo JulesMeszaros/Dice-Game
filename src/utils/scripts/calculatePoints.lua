@@ -1,5 +1,3 @@
-local Dice = require("src.classes.Dices.Dice")
-
 local CalculatePoints = {}
 
 function CalculatePoints.numberBasePoints(number, faces, dices, drawedDices)

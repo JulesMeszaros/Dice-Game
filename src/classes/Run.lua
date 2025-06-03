@@ -1,9 +1,6 @@
 local Round = require("src.classes.Round")
-local AfterRound = require("src.screens.AfterRound")
 local GameOverScreen = require("src.screens.GameOverScreen")
 local RoundChoice = require("src.screens.RoundChoice")
-
-local Dice = require("src.classes.Dices.Dice")
 
 local runStates = {
     ROUND = 1,

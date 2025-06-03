@@ -1,12 +1,6 @@
 local Run = require("src.classes.Run")
 local MainMenu = require("src.screens.MainMenu")
 
---Import The Dices
-local Dice = require("src.classes.Dices.Dice")
-local ReverseDice = require("src.classes.Dices.ReverseDice")
-local LuckyDice = require("src.classes.Dices.LuckyDice")
-local PharmacyDice = require("src.classes.Dices.PharmacyDice")
-
 --Utils
 local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
