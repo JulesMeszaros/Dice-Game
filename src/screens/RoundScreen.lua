@@ -12,6 +12,7 @@ local RoundScreen = {}
 RoundScreen.__index = RoundScreen
 
 local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
+local font30 = love.graphics.newFont("src/assets/fonts/joystix.otf", 30)
 local matImage = love.graphics.newImage("src/assets/sprites/ui/terrain/dice_mat.png")
 
 function RoundScreen:new(round)
@@ -43,9 +44,6 @@ function RoundScreen:new(round)
     self.figureButtonsCanvas = love.graphics.newCanvas(440,702)
     self.figureButtonsCanvas:setFilter("nearest", "nearest")
     
-    --HoverInfos
-    self.diceTrayHoverInfos = DiceHoverInfo:new("blablabla")
-
     --CREATION DES BOUTONS DE FIGURE
     --Importation des images
     local image_buttons = {
@@ -104,6 +102,9 @@ function RoundScreen:new(round)
 
     --DICE DETAILS
     self.diceDetailsCanvas = love.graphics.newCanvas(420, 490)
+    self.diceDetailsTimer = 0
+    self.diceDetailsTime = 0.5
+
     self:createDiceNet()
 
     --Creating the different ui faces that will be shown
@@ -221,16 +222,15 @@ function RoundScreen:updateCanvas(dt)
         end
     end
 
-    --Hover Infos
-    self.diceTrayHoverInfos:draw()
-
     --Face Details
     self:drawFaceDetails(self.terrainCanvas:getWidth()-20, self.terrainCanvas:getHeight()-20)
 
     --Dice Details
-    self:updateDiceNet()
+    self:updateDiceNet(dt)
     for k,df in next,self.infoFaces do
+        df.targetedScale = self.diceDetailsTimer/self.diceDetailsTime
         df:updateCanvas(dt)
+        df:update(dt)
     end
     self:drawDiceDetails(self.terrainCanvas:getWidth()-20, self.terrainCanvas:getHeight()-40-self.faceDetailsCanvas:getHeight())
     
@@ -287,15 +287,15 @@ function RoundScreen:drawFaceDetails(x, y)
     if(self.currentlyHoveredDice) then
         --Face Name
         local faceName = self.currentlyHoveredDice:getCurrentFaceObject().name
-        local nameText = love.graphics.newText(font, faceName)
+        local nameText = love.graphics.newText(font30, faceName)
 
         --Description
         local faceDescription = self.currentlyHoveredDice:getCurrentFaceObject().description
         local descWidth, descWrappedtext = font:getWrap( faceDescription, self.faceDetailsCanvas:getWidth()-10 )
         local descText = love.graphics.newText(font, table.concat(descWrappedtext, "\n"))
 
-        love.graphics.draw(nameText, self.faceDetailsCanvas:getWidth()/2, 5, 0, 1, 1, nameText:getWidth()/2, 0)
-        love.graphics.draw(descText, self.faceDetailsCanvas:getWidth()/2, 40, 0, 1, 1, descText:getWidth()/2, 0)
+        love.graphics.draw(nameText, self.faceDetailsCanvas:getWidth()/2, 10, 0, 1, 1, nameText:getWidth()/2, 0)
+        love.graphics.draw(descText, self.faceDetailsCanvas:getWidth()/2, 50, 0, 1, 1, descText:getWidth()/2, 0)
     end
 
     love.graphics.setCanvas(currentCanvas)
@@ -309,10 +309,24 @@ function RoundScreen:drawDiceDetails(x, y)
     love.graphics.clear(60/255, 99/255, 60/255)
 
     love.graphics.rectangle("line", 0, 0, self.diceDetailsCanvas:getWidth(), self.diceDetailsCanvas:getHeight())
-
+    love.graphics.draw(
+        love.graphics.newText(font30, "Dice"),
+        self.diceDetailsCanvas:getWidth()/2,
+        40,
+        0,
+        1,
+        1,
+        love.graphics.newText(font30, "Dice"):getWidth()/2,
+        love.graphics.newText(font30, "Dice"):getHeight()/2
+    )
     --Draw the dice net
     if self.currentlyHoveredDice then
         for k,df in next,self.infoFaces do
+            if(df.representedFace == self.currentlyHoveredDice:getCurrentFaceObject())then
+                love.graphics.setColor(1, 0, 0, 1)
+                love.graphics.rectangle("fill", df.x-5-df.size/2, df.y-5-df.size/2, 106, 106)
+                love.graphics.setColor(1, 1, 1, 1)
+            end
             df:draw()
         end
     end
@@ -323,12 +337,19 @@ function RoundScreen:drawDiceDetails(x, y)
 end
 
 --==UTILS FUNCTIONS==--
-function RoundScreen:updateDiceNet()
+function RoundScreen:updateDiceNet(dt)
     if(self.currentlyHoveredDice) then
         for i = 1, 6 do
             self.infoFaces[i]:setRepresentedFace(self.currentlyHoveredDice:getFace(i))
             self.infoFaces[i]:updateSprite()
         end
+        if(self.diceDetailsTimer+100*dt<self.diceDetailsTime)then
+            self.diceDetailsTimer = self.diceDetailsTimer+100*dt
+        else
+            self.diceDetailsTimer = self.diceDetailsTime
+        end
+    else
+        self.diceDetailsTimer = 0
     end
 
     
@@ -341,12 +362,12 @@ function RoundScreen:createDiceNet()
 
     --Create the coordinates of each dice face
     local diceFacesCoords = {
-        {self.diceDetailsCanvas:getWidth()/2-80, self.diceDetailsCanvas:getHeight()/2}, --1
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-80}, --2
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2}, --3
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+160}, --4
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+80}, --5
-        {self.diceDetailsCanvas:getWidth()/2+80, self.diceDetailsCanvas:getHeight()/2}, --6
+        {self.diceDetailsCanvas:getWidth()/2-100, self.diceDetailsCanvas:getHeight()/2-10}, --1
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-100-10}, --2
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-10}, --3
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+200-10}, --4
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+100-10}, --5
+        {self.diceDetailsCanvas:getWidth()/2+100, self.diceDetailsCanvas:getHeight()/2-10}, --6
     }
     
     -- Create the uiFaces objects
@@ -358,7 +379,7 @@ function RoundScreen:createDiceNet()
             d, --La face représentée
             diceFacesCoords[k][1], --X Position (centerd)
             diceFacesCoords[k][2], --Yposition (centerd)
-            80, --Width/Height
+            100, --Width/Height
             false, --is Selectable
             false, --isHoverable,
             function()return Inputs.getMouseInCanvas(0,0)end,
