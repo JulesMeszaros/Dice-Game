@@ -3,6 +3,10 @@ local Inputs = require("src.utils.scripts.inputs")
 local CalculatePoints = require("src.utils.scripts.calculatePoints")
 local DiceHoverInfo = require("src.classes.ui.DiceHoverInfo")
 
+local DiceObject = require("src.classes.DiceObject")
+local FaceObject = require("src.classes.FaceTypes.WhiteDice")
+local DiceFace = require("src.classes.ui.DiceFace")
+
 local RoundScreen = {}
 
 RoundScreen.__index = RoundScreen
@@ -100,6 +104,9 @@ function RoundScreen:new(round)
 
     --DICE DETAILS
     self.diceDetailsCanvas = love.graphics.newCanvas(420, 490)
+
+    --Creating the different ui faces that will be shown
+
     --BOUTONS
 
     self.uiElements.roundButtons["reorganiserButton"] = Button:new(
@@ -302,6 +309,14 @@ function RoundScreen:drawDiceDetails(x, y)
 end
 
 --==UTILS FUNCTIONS==--
+function RoundScreen:createDiceNet()
+    --Create a temp dice with a temp face repeated 6 times
+    local tempFace = FaceObject:new(1)
+    local tempDice = DiceObject:new({tempFace, tempFace, tempFace, tempFace, tempFace, tempFace})
+    -- Create the uiFaces objects
+    local infoFaces = {}
+end
+
 function RoundScreen:getCurrentlyHoveredDice()
     self.currentlyHoveredDice = nil
 
