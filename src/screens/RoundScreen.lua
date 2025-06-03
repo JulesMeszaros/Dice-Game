@@ -29,6 +29,7 @@ function RoundScreen:new(round)
     self.diceTrayY = 0
 
     self.currentlyHoveredFigure = nil
+    
     self.currentlyHoveredDice = nil
 
     self.dice_tray = love.graphics.newCanvas(980, 700)
@@ -129,7 +130,6 @@ end
 function RoundScreen:update(dt)
     --Reset Bouton de figure et Dé survolé
     self.currentlyHoveredFigure = nil
-    self.currentlyHoveredDice = nil
 
     -- Figure buttons
     for key,button in next, self.figureButtons do
@@ -146,16 +146,7 @@ function RoundScreen:update(dt)
     end
 
     --Hover infos
-    self.diceTrayHoverInfos.hidden = self.currentlyHoveredDice == nil or love.mouse.isDown(1)
-    if(self.currentlyHoveredDice)then
-        self.diceTrayHoverInfos:setText(self.currentlyHoveredDice)
-    else
-        self.diceTrayHoverInfos:setText("")
-    end
-
-    self.diceTrayHoverInfos:update(dt)
-    self.diceTrayHoverInfos.x = Inputs.getMouseInCanvas(0, 0).x - self.diceTrayHoverInfos.canvas:getWidth()/2
-    self.diceTrayHoverInfos.y = Inputs.getMouseInCanvas(0, 0).y - self.diceTrayHoverInfos.canvas:getHeight() - 60
+    self:getCurrentlyHoveredDice()
 
 
     --Utilities buttons
@@ -279,6 +270,20 @@ function RoundScreen:drawFaceDetails(x, y)
 
     love.graphics.rectangle("line", 0, 0, self.faceDetailsCanvas:getWidth(), self.faceDetailsCanvas:getHeight())
 
+    if(self.currentlyHoveredDice) then
+        --Face Name
+        local faceName = self.currentlyHoveredDice:getCurrentFaceObject().name
+        local nameText = love.graphics.newText(font, faceName)
+
+        --Description
+        local faceDescription = self.currentlyHoveredDice:getCurrentFaceObject().description
+        local descWidth, descWrappedtext = font:getWrap( faceDescription, self.faceDetailsCanvas:getWidth()-10 )
+        local descText = love.graphics.newText(font, table.concat(descWrappedtext, "\n"))
+
+        love.graphics.draw(nameText, self.faceDetailsCanvas:getWidth()/2, 5, 0, 1, 1, nameText:getWidth()/2, 0)
+        love.graphics.draw(descText, self.faceDetailsCanvas:getWidth()/2, 40, 0, 1, 1, descText:getWidth()/2, 0)
+    end
+
     love.graphics.setCanvas(currentCanvas)
 
     love.graphics.draw(self.faceDetailsCanvas, x, y, 0, 1, 1, self.faceDetailsCanvas:getWidth(), self.faceDetailsCanvas:getHeight())
@@ -297,6 +302,17 @@ function RoundScreen:drawDiceDetails(x, y)
 end
 
 --==UTILS FUNCTIONS==--
+function RoundScreen:getCurrentlyHoveredDice()
+    self.currentlyHoveredDice = nil
+
+    for key,diceface in next,self.round.diceFaces2 do
+        if diceface:isHovered() then
+            self.currentlyHoveredDice = diceface.diceObject
+            break
+        end
+    end
+end
+
 function RoundScreen:playFigure(params)
     local points, usedDices = params[1], params[2]
     
