@@ -229,10 +229,11 @@ function RoundScreen:updateCanvas(dt)
 
     --Dice Details
     self:updateDiceNet()
-    self:drawDiceDetails(self.terrainCanvas:getWidth()-20, self.terrainCanvas:getHeight()-40-self.faceDetailsCanvas:getHeight())
     for k,df in next,self.infoFaces do
         df:updateCanvas(dt)
     end
+    self:drawDiceDetails(self.terrainCanvas:getWidth()-20, self.terrainCanvas:getHeight()-40-self.faceDetailsCanvas:getHeight())
+    
     
 
     love.graphics.setCanvas(self.gameCanvas)
