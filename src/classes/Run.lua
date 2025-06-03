@@ -88,10 +88,8 @@ end
 
 --==ROUND FUNCTIONS==--
 function Run:startNewRound(round)
-    print("----")
     self.roundNumber = round.nround
     round:makeRoll2(self.diceObjects)
-
 
     self.currentRound = round
 

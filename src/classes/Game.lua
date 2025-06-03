@@ -45,7 +45,14 @@ for i=1, 5 do
 end
 
 local pharmaFace = PharmacyFace:new(2)
-diceObjects[2]:setFace(pharmaFace, 2)
+local pharmaFace2 = PharmacyFace:new(1)
+diceObjects[2]:setFace(pharmaFace, 6)
+diceObjects[1]:setFace(pharmaFace2, 6)
+print("----")
+for k,v in ipairs (diceObjects[1]:getAllFaces()) do
+    print("-----")
+    print(v.name.." "..tostring(v.faceNumber))
+end
 
 function Game:start()
     local self = setmetatable({}, Game)

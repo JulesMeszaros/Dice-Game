@@ -32,7 +32,7 @@ function WhiteDice:new(faceNumber)
 end
 
 function WhiteDice:triggerEffect()
-    print("Dice triggered")
+    print("Dice triggered "..tostring(self.faceNumber))
 end
 
 function WhiteDice:getSpriteSheet()

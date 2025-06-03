@@ -12,7 +12,7 @@ end
 
 function DiceObject:trigger()
     --Triggers the current active face function
-    self.faces[self.currentActiveFace]:triggerEffect()
+    self.currentFaceObject:triggerEffect()
 end
 
 --==GET/SET FUNCTIONS==--
@@ -30,6 +30,14 @@ end
 
 function DiceObject:setCurrentActiveFace(n)
     self.currentActiveFace = n
+end
+
+function DiceObject:setCurrentFaceObject(faceobject)
+    self.currentFaceObject = faceobject
+end
+
+function DiceObject:getCurrentFaceObject()
+    return self.currentFaceObject
 end
 
 function DiceObject:getCurrentActiveFace()

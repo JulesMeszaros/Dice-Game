@@ -23,7 +23,7 @@ function DiceFace:new(diceObject, faceNumber, x, y, size, isSelectable, isHovera
 
     --Dice parameters
     self.diceObject = diceObject -- link to the diceObject it represents
-    self.faceNumber = faceNumber -- Sets the number of the face
+    self.faceNumber = faceNumber -- Indice des faces du dé affiché
 
     self.spriteSheet = self.diceObject:getFace(self.faceNumber):getSpriteSheet()
     self.quad = self.diceObject:getFace(self.faceNumber):getQuad(self.faceNumber)
@@ -204,9 +204,14 @@ function DiceFace:updateCanvas(dt)
 end
 
 function DiceFace:updateSprite()
-    self.spriteSheet = self.diceObject:getFace(self.faceNumber):getSpriteSheet()
-    self.quad = self.diceObject:getFace(self.faceNumber):getQuad(self.faceNumber)
-    self.dim = self.diceObject:getFace(self.faceNumber):getFaceDim()
+    --print("----")
+    for k,v in ipairs(self.diceObject:getAllFaces())do
+        --print(tostring(v.faceNumber).." "..tostring(v.name))
+    end
+
+    self.spriteSheet = self.representedFace:getSpriteSheet()
+    self.quad = self.representedFace:getQuad(self.representedFace.faceNumber)
+    self.dim = self.representedFace:getFaceDim()
 end
 
 function DiceFace:calculateScale()
@@ -271,8 +276,8 @@ function DiceFace:setHighlighted(state)
 	self.isHighlighted = state
 end
 
-function DiceFace:setFace(n) --Sets the index of the face of the dice to get the image from
-    self.faceNumber = n
+function DiceFace:setFaceObject(faceObject)
+    self.representedFace = faceObject
     self:updateSprite()
 end
 

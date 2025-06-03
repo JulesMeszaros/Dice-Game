@@ -280,7 +280,7 @@ function RoundScreen:reorganiseDiceFaces(dices)
     end
 
     table.sort(temp, function(a, b)
-        return a.faceNumber < b.faceNumber
+        return a.representedFace.faceNumber < b.representedFace.faceNumber
     end)
     for _, dice in ipairs(temp) do
         table.insert(reorganisedDices, dice)

@@ -27,9 +27,14 @@ function PharmacyDice:new(faceNumber)
     }
     
     --Round status
-    self.faceNumber = faceNumber --The face the WhiteDice was drawed on
+    self.faceNumber = faceNumber --Le numéro de face que le dé représente
 
     return self
+end
+
+
+function PharmacyDice:triggerEffect()
+    print("PharmaDice triggered")
 end
 
 return PharmacyDice

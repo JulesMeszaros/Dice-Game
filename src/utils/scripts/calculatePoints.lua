@@ -16,7 +16,6 @@ function CalculatePoints.numberBasePoints(number, faces, dices, drawedDices)
             table.insert(usedDices, dice) 
         end
     end
-    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -45,7 +44,6 @@ function CalculatePoints.brelanBasePoints(faces, dices, drawedDices)
     else
         score = 0
     end
-    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -65,7 +63,6 @@ function CalculatePoints.fullBasePoints(faces, dices, drawedDices)
             table.insert(usedDices, dice)
         end
     end
-    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -96,7 +93,6 @@ function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
         score = 0
 
     end
-    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -123,7 +119,6 @@ function CalculatePoints.pttSuiteBasePoints(faces, dices, drawedDices)
     else 
         score = 0
     end
-    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -146,7 +141,6 @@ function CalculatePoints.gdSuiteBasePoints(faces, dices, drawedDices)
     else 
         score = 0
     end
-    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -158,7 +152,6 @@ function CalculatePoints.chanceBasePoints(faces, dices, drawedDices)
         score = score + f
         table.insert(usedDices, dice)
     end
-    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
@@ -187,7 +180,6 @@ function CalculatePoints.yatzeeBasePoints(faces, dices, drawedDices)
         score = 0
 
     end
-    print(table.getn(usedDices))
     return {score, usedDices}
 end
 
