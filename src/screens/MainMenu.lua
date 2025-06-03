@@ -47,17 +47,6 @@ function MainMenu:update(dt)
     --Update the canvas
     self:updateCanvas(dt)
 
-    --[[ --Update Animation
-    self:addRandomDice()
-
-    for k,d in next,self.animationDices do
-        d:updateCanvas(dt)
-        d:update(dt)
-        d.targetY = d.targetY+(500+(d.targetY/2)+(d.size*2))*dt --Dépend de la hauteur et de la taille
-        if(d.targetY>self.mainMenuCanvas:getHeight()+200) then
-            table.remove(self.animationDices, k)
-        end
-    end ]]
 end
 
 function MainMenu:updateCanvas(dt)
@@ -65,9 +54,6 @@ function MainMenu:updateCanvas(dt)
     love.graphics.clear()
 
     --==Animation Dices==--
-    for k,d in next,self.animationDices do
-        d:draw()
-    end
 
     local textTitle = love.graphics.newText(Fonts.pixelatedBig, "DICE GAME")
     --Main title
@@ -91,28 +77,6 @@ function MainMenu:draw()
 end
 
 --==MAIN MENU ANIMATION==--
-function MainMenu:addRandomDice()
-    local rand = math.random(0, 1)
-    if(rand == 1)then
-        local d = Dice:new()
-        local df = DiceFace:new(
-            d,
-            math.random(1,6),
-            math.random(0, self.mainMenuCanvas:getWidth()),
-            -100,
-            math.random(64,200),
-            false,
-            true,
-            function()return(Inputs.getMouseInCanvas(0,0))end,
-            self.mainMenuCanvas
-        )
-        df.isSelected = true
-        local r = math.random(0, 10)
-        df.baseRotation = r
-        df.rotation = r
-        table.insert(self.animationDices, df)
-    end
-end
 
 --==KEYBOARD/MOUSE INPUTS==--
 
