@@ -104,6 +104,7 @@ function RoundScreen:new(round)
 
     --DICE DETAILS
     self.diceDetailsCanvas = love.graphics.newCanvas(420, 490)
+    self:createDiceNet()
 
     --Creating the different ui faces that will be shown
 
@@ -227,7 +228,12 @@ function RoundScreen:updateCanvas(dt)
     self:drawFaceDetails(self.terrainCanvas:getWidth()-20, self.terrainCanvas:getHeight()-20)
 
     --Dice Details
+    self:updateDiceNet()
     self:drawDiceDetails(self.terrainCanvas:getWidth()-20, self.terrainCanvas:getHeight()-40-self.faceDetailsCanvas:getHeight())
+    for k,df in next,self.infoFaces do
+        df:updateCanvas(dt)
+    end
+    
 
     love.graphics.setCanvas(self.gameCanvas)
 end
@@ -303,18 +309,65 @@ function RoundScreen:drawDiceDetails(x, y)
 
     love.graphics.rectangle("line", 0, 0, self.diceDetailsCanvas:getWidth(), self.diceDetailsCanvas:getHeight())
 
+    --Draw the dice net
+    if self.currentlyHoveredDice then
+        for k,df in next,self.infoFaces do
+            df:draw()
+        end
+    end
+
     love.graphics.setCanvas(currentCanvas)
 
     love.graphics.draw(self.diceDetailsCanvas, x, y, 0, 1, 1, self.diceDetailsCanvas:getWidth(), self.diceDetailsCanvas:getHeight())
 end
 
 --==UTILS FUNCTIONS==--
+function RoundScreen:updateDiceNet()
+    if(self.currentlyHoveredDice) then
+        for i = 1, 6 do
+            self.infoFaces[i]:setRepresentedFace(self.currentlyHoveredDice:getFace(i))
+            self.infoFaces[i]:updateSprite()
+        end
+    end
+
+    
+end
+
 function RoundScreen:createDiceNet()
     --Create a temp dice with a temp face repeated 6 times
-    local tempFace = FaceObject:new(1)
-    local tempDice = DiceObject:new({tempFace, tempFace, tempFace, tempFace, tempFace, tempFace})
+    local tempFace = FaceObject:new(6)
+    self.tempDice = DiceObject:new({tempFace, tempFace, tempFace, tempFace, tempFace, tempFace})
+
+    --Create the coordinates of each dice face
+    local diceFacesCoords = {
+        {self.diceDetailsCanvas:getWidth()/2-80, self.diceDetailsCanvas:getHeight()/2}, --1
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-80}, --2
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2}, --3
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+160}, --4
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+80}, --5
+        {self.diceDetailsCanvas:getWidth()/2+80, self.diceDetailsCanvas:getHeight()/2}, --6
+    }
+    
     -- Create the uiFaces objects
     local infoFaces = {}
+
+    for k,d in next,self.tempDice:getAllFaces() do
+        local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
+            self.tempDice, --Dice Object 
+            d, --La face représentée
+            diceFacesCoords[k][1], --X Position (centerd)
+            diceFacesCoords[k][2], --Yposition (centerd)
+            80, --Width/Height
+            false, --is Selectable
+            false, --isHoverable,
+            function()return Inputs.getMouseInCanvas(0,0)end,
+            self.round
+        )
+
+        table.insert(infoFaces, diceFaceUI)
+    end
+
+    self.infoFaces = infoFaces
 end
 
 function RoundScreen:getCurrentlyHoveredDice()
