@@ -9,7 +9,7 @@ function PharmacyDice:new(faceValue)
     --Metadatas about the WhiteDice
     self.name = "Pharmacy Dice"
     self.id = 2
-    self.description = "Ajoute la valeur de la face obtenue au score"
+    self.description = "Multiplie par deux le score de la main"
 
     --Metadatas about the graphics of the WhiteDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/Dices/PharmacyDiceTileset.png")

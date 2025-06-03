@@ -19,22 +19,23 @@ function RoundScreen:new(round)
         figureButtons = {}
     }
 
+    --Create the terrain canvas
     self.terrainCanvas = love.graphics.newCanvas(round.gameCanvas:getWidth(),round.gameCanvas:getHeight() )
 
     self.round = round
 
-    --Dice Tray
+    --DICE TRAY
     self.diceTrayX = 0
     self.diceTrayY = 0
 
     self.currentlyHoveredFigure = nil
     self.currentlyHoveredDice = nil
 
-    self.dice_tray = love.graphics.newCanvas(1350, 825)
+    self.dice_tray = love.graphics.newCanvas(980, 700)
     self.dice_tray:setFilter("nearest", "nearest")
 
-    --Figure buttons
-    self.figureButtonsCanvas = love.graphics.newCanvas(495,702)
+    --FIGURE BUTTONS
+    self.figureButtonsCanvas = love.graphics.newCanvas(440,702)
     self.figureButtonsCanvas:setFilter("nearest", "nearest")
     
     --HoverInfos
@@ -80,39 +81,44 @@ function RoundScreen:new(round)
     for key,image in next,image_buttons do
         local t = i
         local button = Button:new(
-            calculatePointsFunctions[key], 
+            calculatePointsFunctions[key],
             image, 
             self.figureButtonsCanvas:getWidth()/2, 
             (i*36*1.5)+18*1.5, 
-            330*1.5, 
+            440, 
             36*1.5, 
             currentCanvas, 
-            function()return Inputs.getMouseInCanvas(20, 102)end
+            function()return Inputs.getMouseInCanvas(20, 20)end
         )
         table.insert(self.figureButtons, button)
         i=i+1
     end
 
-    --BOUTONS
+    --FACE DETAILS
+    self.faceDetailsCanvas = love.graphics.newCanvas(420, 300)
 
-    self.uiElements.roundButtons["rerollButton"] = Button:new(
-        function()self.round:rerollDices()end, 
-        "src/assets/sprites/ui/buttons/reroll.png", 
-        self.terrainCanvas:getWidth()-80, 
-        925, 
-        120, 
-        120,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-    )
+    --DICE DETAILS
+    self.diceDetailsCanvas = love.graphics.newCanvas(420, 490)
+    --BOUTONS
 
     self.uiElements.roundButtons["reorganiserButton"] = Button:new(
         function()self:reorganiseDiceFaces(self.round.diceFaces2)end, 
         "src/assets/sprites/ui/buttons/reorganiser.png", 
-        self.terrainCanvas:getWidth()-220, 
-        925, 
-        120, 
-        120,
+        self.terrainCanvas:getWidth()/2-100, 
+        self.terrainCanvas:getHeight()-65, 
+        90, 
+        90,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
+    self.uiElements.roundButtons["rerollButton"] = Button:new(
+        function()self.round:rerollDices()end, 
+        "src/assets/sprites/ui/buttons/reroll.png", 
+        self.terrainCanvas:getWidth()/2+100, 
+        self.terrainCanvas:getHeight()-65, 
+        90, 
+        90,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
@@ -166,12 +172,11 @@ end
 function RoundScreen:updateCanvas(dt)
     love.graphics.setCanvas(self.terrainCanvas)
     love.graphics.clear()
-
     --Dice Tray
-    self:drawDiceTray(self.terrainCanvas:getWidth()-20, 20, self.round.diceFaces2)
+    self:drawDiceTray(480+self.dice_tray:getWidth()/2, self.terrainCanvas:getHeight()/2+60, self.round.diceFaces2)
 
     --Figure Buttons
-    self:drawFigureButtons(20, 102)
+    self:drawFigureButtons(20, 20)
 
     --Bouttouns de round
     for k,b in next,self.uiElements.roundButtons do
@@ -185,10 +190,10 @@ function RoundScreen:updateCanvas(dt)
     local currentHands = love.graphics.newText(font, 'Hands : '..tostring(self.round.remainingHands))
     local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.round.nround).. " - Money : "..tostring(self.round.run.money).."€")
 
-    love.graphics.draw(rerollText, 10, 3)
-    love.graphics.draw(currentHands, 10, 23)
-    love.graphics.draw(targetScoreText, 10, 43)
-    love.graphics.draw(scoreText, 10, 63)
+    love.graphics.draw(rerollText, 10, 750)
+    love.graphics.draw(currentHands, 10, 773)
+    love.graphics.draw(targetScoreText, 10, 793)
+    love.graphics.draw(scoreText, 10, 813)
 
     love.graphics.draw(currentRoundText, 10, self.gameCanvas:getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
 
@@ -220,23 +225,23 @@ function RoundScreen:updateCanvas(dt)
     --Hover Infos
     self.diceTrayHoverInfos:draw()
 
+    --Face Details
+    self:drawFaceDetails(self.terrainCanvas:getWidth()-20, self.terrainCanvas:getHeight()-20)
+
+    --Dice Details
+    self:drawDiceDetails(self.terrainCanvas:getWidth()-20, self.terrainCanvas:getHeight()-40-self.faceDetailsCanvas:getHeight())
+
     love.graphics.setCanvas(self.gameCanvas)
 end
 
 --==DRAW FUNCTIONS==--
 
-function RoundScreen:playFigure(params)
-    local points, usedDices = params[1], params[2]
-    
-    self.round:playFigure(points, usedDices)
-end
-
 function RoundScreen:drawDiceTray(x, y, dices2)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.dice_tray)
-    love.graphics.clear()
+    love.graphics.clear(60/255, 99/255, 60/255)
 
-    love.graphics.draw(matImage, 0, 0, 0, 1.5, 1.5)
+    love.graphics.draw(matImage, 0, 0, 0, 1, 1)
 
     --On déssine les autres dés
     for key,uiFace in next,dices2 do
@@ -246,7 +251,7 @@ function RoundScreen:drawDiceTray(x, y, dices2)
     --On retourne au canvas précédent
     love.graphics.setCanvas(targetCanvas)
     --On déssine le terrain à dés sur le canvas
-    love.graphics.draw(self.dice_tray, x, y, 0, 1, 1, self.dice_tray:getWidth(), 0) --On fixe son offset sur son angle superieur droit
+    love.graphics.draw(self.dice_tray, x, y, 0, 1, 1, self.dice_tray:getWidth()/2, self.dice_tray:getHeight()/2) --On fixe son offset sur son angle superieur droit
 
 end
 
@@ -267,7 +272,36 @@ function RoundScreen:drawFigureButtons(x, y)
     love.graphics.draw(self.figureButtonsCanvas, x, y)
 end
 
+function RoundScreen:drawFaceDetails(x, y)
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.faceDetailsCanvas)
+    love.graphics.clear(60/255, 99/255, 60/255)
+
+    love.graphics.rectangle("line", 0, 0, self.faceDetailsCanvas:getWidth(), self.faceDetailsCanvas:getHeight())
+
+    love.graphics.setCanvas(currentCanvas)
+
+    love.graphics.draw(self.faceDetailsCanvas, x, y, 0, 1, 1, self.faceDetailsCanvas:getWidth(), self.faceDetailsCanvas:getHeight())
+end
+
+function RoundScreen:drawDiceDetails(x, y)
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.diceDetailsCanvas)
+    love.graphics.clear(60/255, 99/255, 60/255)
+
+    love.graphics.rectangle("line", 0, 0, self.diceDetailsCanvas:getWidth(), self.diceDetailsCanvas:getHeight())
+
+    love.graphics.setCanvas(currentCanvas)
+
+    love.graphics.draw(self.diceDetailsCanvas, x, y, 0, 1, 1, self.diceDetailsCanvas:getWidth(), self.diceDetailsCanvas:getHeight())
+end
+
 --==UTILS FUNCTIONS==--
+function RoundScreen:playFigure(params)
+    local points, usedDices = params[1], params[2]
+    
+    self.round:playFigure(points, usedDices)
+end
 
 function RoundScreen:reorganiseDiceFaces(dices)
     --Reorganise the dice by face (increasing)
