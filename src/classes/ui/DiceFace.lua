@@ -23,10 +23,9 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
 
     --Dice parameters
     self.diceObject = diceObject -- link to the diceObject it represents
-    self.representedFace = representedFace
-    self:updateSprite()
+    self.representedFace = representedFace --Sets the represented face of the dice
+    self:updateSprite() --Updates the sprite a first time with the given parameters
     
-
     --Position
     self.targetX = x
     self.targetY = y
