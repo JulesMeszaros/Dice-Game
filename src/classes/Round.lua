@@ -46,7 +46,7 @@ function Round:new(n, gameCanvas, run, baseReward, target, diceObjects)
 
         local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
             diceobject, --Dice Object 
-            1, --Face represented
+            diceobject:getFace(1), --La face représentée
             (key*80) - 30, --X Position (centerd)
             self.terrain.dice_tray:getHeight()-60, --Yposition (centerd)
             90*1.5, --Width/Height
@@ -211,7 +211,7 @@ function Round:getDicesOrder(usedDices)
     end
 
     for k,v in ipairs(sortedDiceFaces) do
-        print(v.faceNumber)
+        print(v.faceValue)
     end
 
     return sortedDiceFaces, sortedDices

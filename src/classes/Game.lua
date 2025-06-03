@@ -45,7 +45,7 @@ diceObjects[1]:setFace(pharmaFace2, 6)
 print("----")
 for k,v in ipairs (diceObjects[1]:getAllFaces()) do
     print("-----")
-    print(v.name.." "..tostring(v.faceNumber))
+    print(v.name.." "..tostring(v.faceValue))
 end
 
 function Game:start()

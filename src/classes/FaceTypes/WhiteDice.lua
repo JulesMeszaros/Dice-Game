@@ -2,7 +2,7 @@
 local WhiteDice = {}
 WhiteDice.__index = WhiteDice
 
-function WhiteDice:new(faceNumber)
+function WhiteDice:new(faceValue)
     local self = setmetatable({}, WhiteDice)
 
     --Metadatas about the WhiteDice
@@ -26,13 +26,13 @@ function WhiteDice:new(faceNumber)
     }
     
     --Round status
-    self.faceNumber = faceNumber --The face the WhiteDice was drawed on
+    self.faceValue = faceValue --The face the WhiteDice was drawed on
 
     return self
 end
 
 function WhiteDice:triggerEffect()
-    print("Dice triggered "..tostring(self.faceNumber))
+    print("Dice triggered "..tostring(self.faceValue))
 end
 
 function WhiteDice:getSpriteSheet()

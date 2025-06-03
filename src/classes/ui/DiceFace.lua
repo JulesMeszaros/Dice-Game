@@ -10,7 +10,7 @@ local DiceFace = setmetatable({}, { __index = UIElement })
 
 DiceFace.__index = DiceFace
 
-function DiceFace:new(diceObject, faceNumber, x, y, size, isSelectable, isHoverable, mousePosition, round)    
+function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isHoverable, mousePosition, round)    
     local self = setmetatable(UIElement.new(), DiceFace)
 
     --Parametres d'interractions
@@ -23,11 +23,9 @@ function DiceFace:new(diceObject, faceNumber, x, y, size, isSelectable, isHovera
 
     --Dice parameters
     self.diceObject = diceObject -- link to the diceObject it represents
-    self.faceNumber = faceNumber -- Indice des faces du dé affiché
-
-    self.spriteSheet = self.diceObject:getFace(self.faceNumber):getSpriteSheet()
-    self.quad = self.diceObject:getFace(self.faceNumber):getQuad(self.faceNumber)
-    self.dim = self.diceObject:getFace(self.faceNumber):getFaceDim()
+    self.representedFace = representedFace
+    self:updateSprite()
+    
 
     --Position
     self.targetX = x
@@ -74,6 +72,7 @@ function DiceFace:new(diceObject, faceNumber, x, y, size, isSelectable, isHovera
     self.triggerTimer = 0 --Minuteur de trigger 
     self.triggerTime = Constants.BASE_TRIGGER_ANIMATION_TIME --Temps que prend un dé à se trigger
 
+    
     return self
 end
 
@@ -206,11 +205,11 @@ end
 function DiceFace:updateSprite()
     --print("----")
     for k,v in ipairs(self.diceObject:getAllFaces())do
-        --print(tostring(v.faceNumber).." "..tostring(v.name))
+        --print(tostring(v.faceValue).." "..tostring(v.name))
     end
 
     self.spriteSheet = self.representedFace:getSpriteSheet()
-    self.quad = self.representedFace:getQuad(self.representedFace.faceNumber)
+    self.quad = self.representedFace:getQuad(self.representedFace.faceValue)
     self.dim = self.representedFace:getFaceDim()
 end
 

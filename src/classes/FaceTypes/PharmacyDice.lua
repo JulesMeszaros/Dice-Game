@@ -3,7 +3,7 @@ local WhiteDice = require("src.classes.FaceTypes.WhiteDice")
 local PharmacyDice = setmetatable({}, { __index = WhiteDice })
 PharmacyDice.__index = PharmacyDice
 
-function PharmacyDice:new(faceNumber)
+function PharmacyDice:new(faceValue)
     local self = setmetatable(WhiteDice:new(), PharmacyDice)
 
     --Metadatas about the WhiteDice
@@ -27,7 +27,7 @@ function PharmacyDice:new(faceNumber)
     }
     
     --Round status
-    self.faceNumber = faceNumber --Le numéro de face que le dé représente
+    self.faceValue = faceValue --Le numéro de face que le dé représente
 
     return self
 end
