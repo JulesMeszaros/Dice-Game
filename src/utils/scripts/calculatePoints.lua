@@ -9,7 +9,7 @@ function CalculatePoints.numberBasePoints(number, faces, dices, drawedDices)
     local usedDices = {}
 
     for dice,f in next,drawedDices do
-        if(f==number)then
+        if(f.faceNumber==number)then
              -- incrementing the score
             score = score + number
             -- adding the dice to the table of dices used for this face
@@ -38,7 +38,7 @@ function CalculatePoints.brelanBasePoints(faces, dices, drawedDices)
 
     if(maxDistrib>=3)then --On vérifie que le numero le plus représenté est superieur ou égal à 3
         for dice,f in next,drawedDices do
-            score = score + f
+            score = score + f.faceNumber
             table.insert(usedDices, dice)
         end
     else
@@ -84,8 +84,8 @@ function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
 
     if(maxDistrib>=4)then --On vérifie que le numero le plus représenté est superieur ou égal à 3
         for dice,f in next,drawedDices do
-            score = score + f
-            if(f==maxDistribN)then
+            score = score + f.faceNumber
+            if(f.faceNumber==maxDistribN)then
                 table.insert(usedDices, dice)
             end
         end
@@ -100,18 +100,18 @@ function CalculatePoints.pttSuiteBasePoints(faces, dices, drawedDices)
     local score = 0
     local usedDices = {}
 
-    drawedNumbers = {}
+    local drawedNumbers = {}
     for f,n in next,drawedDices do
-        table.insert(drawedNumbers, n)
+        table.insert(drawedNumbers, n.faceNumber)
     end
 
-    suite = getStraight(drawedNumbers, 4)
+    local suite = getStraight(drawedNumbers, 4)
 
     if(suite)then
         score = 30
         for i,j in next,suite do
             for dice,f in next,drawedDices do
-                if(f==j)then
+                if(f.faceNumber==j)then
                     table.insert(usedDices, dice)
                 end
             end
@@ -126,12 +126,12 @@ function CalculatePoints.gdSuiteBasePoints(faces, dices, drawedDices)
     local score = 0
     local usedDices = {}
 
-    drawedNumbers = {}
+    local drawedNumbers = {}
     for f,n in next,drawedDices do
-        table.insert(drawedNumbers, n)
+        table.insert(drawedNumbers, n.faceNumber)
     end
 
-    suite = getStraight(drawedNumbers, 5)
+    local suite = getStraight(drawedNumbers, 5)
 
     if(suite)then
         score = 40
@@ -149,7 +149,7 @@ function CalculatePoints.chanceBasePoints(faces, dices, drawedDices)
     local usedDices = {}
 
     for dice,f in next,drawedDices do
-        score = score + f
+        score = score + f.faceNumber
         table.insert(usedDices, dice)
     end
     return {score, usedDices}
@@ -189,8 +189,8 @@ function getValueDistribution(tbl)
     local distribution = {}
 
     for _, value in pairs(tbl) do
-        if type(value) == "number" then
-            distribution[value] = (distribution[value] or 0) + 1
+        if type(value.faceNumber) == "number" then
+            distribution[value.faceNumber] = (distribution[value.faceNumber] or 0) + 1
         end
     end
 

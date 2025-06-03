@@ -28,20 +28,12 @@ function DiceObject:setFace(face, numface) --replaces one of the dice's faces by
     self.faces[numface] = face
 end
 
-function DiceObject:setCurrentActiveFace(n)
-    self.currentActiveFace = n
-end
-
 function DiceObject:setCurrentFaceObject(faceobject)
     self.currentFaceObject = faceobject
 end
 
 function DiceObject:getCurrentFaceObject()
     return self.currentFaceObject
-end
-
-function DiceObject:getCurrentActiveFace()
-    return self.currentActiveFace
 end
 
 function DiceObject:getNbFaces()

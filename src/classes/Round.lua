@@ -325,7 +325,6 @@ end
 
 function Round:makeRoll2(dices)
     local draw = self:drawDices2(dices) --draw the dices
-    self:setDrawedDices2(draw) --stores the draw
     self:resetSelectedDices2() --reset the previously selected dices (ui)
     print("~~~~~~~~")
     for key,dice in next,self.diceObjects do
@@ -357,22 +356,17 @@ end
 function Round:drawDices2(dices)
     --Tire uniquement les dés donnés en paramètre et retourne une table avec comme clé les dés et en valeur le numéro de face tiré.
 
-    local faceNumbers = self.drawedDices2 --On récupère les dés précédemment tirés.
     local faceObjects = self.drawedFaceObjects
 
     print("----")
     for key,dice in next,dices do
         local n = math.random(1, dice:getNbFaces()) --Prend un index dans les faces du dé
         --print(tostring(n).." "..tostring(dice:getFace(n).name))
-        local faceNumber = dice:getFace(n).faceNumber --Prend le numéro associé à cette face
         local faceObject = dice:getFace(n)
-        faceNumbers[dice] = faceNumber
         faceObjects[dice] = faceObject
     end
     --Retourne les indexes des faces dans l'objet dé
     self.drawedFaceObjects = faceObjects--Sets the drawed face objects
-
-    return faceNumbers
 end
 
 function Round:setDrawedDices2(draw)
