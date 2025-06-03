@@ -3,9 +3,7 @@ local Inputs = require("src.utils.scripts.inputs")
 
 local Button = require("src.classes.ui.Button")
 
-local MainMenu = {
-    
-}
+local MainMenu = {}
 
 MainMenu.__index = MainMenu
 

@@ -1,4 +1,8 @@
-
+--[[
+    This class represents the basic white dice face.
+    It is used as the default class for every dice faces, who inherits
+    from this one.
+]]
 local WhiteDice = {}
 WhiteDice.__index = WhiteDice
 
