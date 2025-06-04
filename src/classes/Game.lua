@@ -26,7 +26,7 @@ local PAGES = {
 local virtualWidth, virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT
 
 local gameCanvas = love.graphics.newCanvas(virtualWidth, virtualHeight)
-gameCanvas:setFilter("linear", "linear")
+gameCanvas:setFilter("nearest", "nearest")
 
 --Testing the new faces system implementation
 local diceObjects = {} --liste des 6 dés blancs
