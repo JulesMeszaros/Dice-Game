@@ -10,6 +10,8 @@ local Shaders = require("src.utils.shaders")
 local DiceObject = require("src.classes.DiceObject") 
 local WhiteFace = require("src.classes.FaceTypes.WhiteDice")
 local PharmacyFace = require("src.classes.FaceTypes.PharmacyDice")
+local ReverseFace = require("src.classes.FaceTypes.ReverseFace")
+local LuckyFace = require("src.classes.FaceTypes.LuckyFace")
 
 local applyCRT = false
 
@@ -40,8 +42,14 @@ end
 
 local pharmaFace = PharmacyFace:new(2)
 local pharmaFace2 = PharmacyFace:new(1)
+local luckyFace = LuckyFace:new(4)
+local reverseFace = ReverseFace:new(3)
+
 diceObjects[2]:setFace(pharmaFace, 6)
 diceObjects[1]:setFace(pharmaFace2, 6)
+diceObjects[1]:setFace(luckyFace, 3)
+diceObjects[4]:setFace(reverseFace, 5)
+
 print("----")
 for k,v in ipairs (diceObjects[1]:getAllFaces()) do
     print("-----")

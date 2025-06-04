@@ -1,7 +1,7 @@
 local Button = require("src.classes.ui.Button")
 local Inputs = require("src.utils.scripts.inputs")
 local CalculatePoints = require("src.utils.scripts.calculatePoints")
-local DiceHoverInfo = require("src.classes.ui.DiceHoverInfo")
+local Fonts = require("src.utils.fonts")
 
 local DiceObject = require("src.classes.DiceObject")
 local FaceObject = require("src.classes.FaceTypes.WhiteDice")
@@ -11,8 +11,8 @@ local RoundScreen = {}
 
 RoundScreen.__index = RoundScreen
 
-local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
-local font30 = love.graphics.newFont("src/assets/fonts/joystix.otf", 30)
+local font = Fonts.nexaSmall
+local font30 = Fonts.nexaMedium
 local matImage = love.graphics.newImage("src/assets/sprites/ui/terrain/dice_mat.png")
 
 function RoundScreen:new(round)
@@ -104,13 +104,13 @@ function RoundScreen:new(round)
     self.diceDetailsCanvas = love.graphics.newCanvas(420, 490)
     self.diceDetailsTimer = 0
     self.diceDetailsTime = 0.5
-
+    --Creating the different ui faces that will be shown
     self:createDiceNet()
 
-    --Creating the different ui faces that will be shown
+    --ROUND DETAILS
+    self:createRoundInfos()
 
     --BOUTONS
-
     self.uiElements.roundButtons["reorganiserButton"] = Button:new(
         function()self:reorganiseDiceFaces(self.round.diceFaces2)end, 
         "src/assets/sprites/ui/buttons/reorganiser.png", 
@@ -184,19 +184,10 @@ function RoundScreen:updateCanvas(dt)
     end
 
     --Différents textes
-    local rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.round.availableRerolls))
     local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.round.roundScore))
     local targetScoreText = love.graphics.newText(font, 'Target : '..tostring(self.round.targetScore))
-    local currentHands = love.graphics.newText(font, 'Hands : '..tostring(self.round.remainingHands))
-    local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.round.nround).. " - Money : "..tostring(self.round.run.money).."€")
-
-    love.graphics.draw(rerollText, 10, 750)
-    love.graphics.draw(currentHands, 10, 773)
-    love.graphics.draw(targetScoreText, 10, 793)
-    love.graphics.draw(scoreText, 10, 813)
-
-    love.graphics.draw(currentRoundText, 10, self.gameCanvas:getHeight()-10, 0, 1, 1, 0, currentRoundText:getHeight())
-
+    love.graphics.draw(targetScoreText, self.terrainCanvas:getWidth()/2, 40)
+    love.graphics.draw(scoreText, self.terrainCanvas:getWidth()/2, 70)
 
     --Highlighted figure
     if(self.currentlyHoveredFigure)then
@@ -234,7 +225,8 @@ function RoundScreen:updateCanvas(dt)
     end
     self:drawDiceDetails(self.terrainCanvas:getWidth()-20, self.terrainCanvas:getHeight()-40-self.faceDetailsCanvas:getHeight())
     
-    
+    --ROUND DETAILS
+    self:drawRoundDetails()
 
     love.graphics.setCanvas(self.gameCanvas)
 end
@@ -275,6 +267,7 @@ function RoundScreen:drawFigureButtons(x, y)
     love.graphics.setCanvas(targetCanvas)
     
     love.graphics.draw(self.figureButtonsCanvas, x, y)
+    
 end
 
 function RoundScreen:drawFaceDetails(x, y)
@@ -289,13 +282,20 @@ function RoundScreen:drawFaceDetails(x, y)
         local faceName = self.currentlyHoveredDice:getCurrentFaceObject().name
         local nameText = love.graphics.newText(font30, faceName)
 
+        --Face tier
+        local tierText = love.graphics.newText(
+            font,
+            self.currentlyHoveredDice:getCurrentFaceObject().tier
+        )
+
         --Description
         local faceDescription = self.currentlyHoveredDice:getCurrentFaceObject().description
-        local descWidth, descWrappedtext = font:getWrap( faceDescription, self.faceDetailsCanvas:getWidth()-10 )
+        local descWidth, descWrappedtext = font:getWrap( faceDescription, self.faceDetailsCanvas:getWidth()-20 )
         local descText = love.graphics.newText(font, table.concat(descWrappedtext, "\n"))
 
-        love.graphics.draw(nameText, self.faceDetailsCanvas:getWidth()/2, 10, 0, 1, 1, nameText:getWidth()/2, 0)
-        love.graphics.draw(descText, self.faceDetailsCanvas:getWidth()/2, 50, 0, 1, 1, descText:getWidth()/2, 0)
+        love.graphics.draw(nameText, self.faceDetailsCanvas:getWidth()/2, 5, 0, 1, 1, nameText:getWidth()/2, 0)
+        love.graphics.draw(tierText, self.faceDetailsCanvas:getWidth()/2, 45, 0, 1, 1, tierText:getWidth()/2, 0)
+        love.graphics.draw(descText, self.faceDetailsCanvas:getWidth()/2, 80, 0, 1, 1, descText:getWidth()/2, 0)
     end
 
     love.graphics.setCanvas(currentCanvas)
@@ -336,25 +336,51 @@ function RoundScreen:drawDiceDetails(x, y)
     love.graphics.draw(self.diceDetailsCanvas, x, y, 0, 1, 1, self.diceDetailsCanvas:getWidth(), self.diceDetailsCanvas:getHeight())
 end
 
---==UTILS FUNCTIONS==--
-function RoundScreen:updateDiceNet(dt)
-    if(self.currentlyHoveredDice) then
-        for i = 1, 6 do
-            self.infoFaces[i]:setRepresentedFace(self.currentlyHoveredDice:getFace(i))
-            self.infoFaces[i]:updateSprite()
-        end
-        if(self.diceDetailsTimer+100*dt<self.diceDetailsTime)then
-            self.diceDetailsTimer = self.diceDetailsTimer+100*dt
-        else
-            self.diceDetailsTimer = self.diceDetailsTime
-        end
-    else
-        self.diceDetailsTimer = 0
-    end
+function RoundScreen:drawRoundDetails()
+    local currentCanvas = love.graphics.getCanvas()
+    --Create the texts
+    local rerollText = love.graphics.newText(font, "Rerolls : " ..tostring(self.round.availableRerolls))
+    local currentHands = love.graphics.newText(font, 'Hands : '..tostring(self.round.remainingHands))
+    local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.round.nround))
+    local moneyText = love.graphics.newText(font, "Money : "..tostring(self.round.run.money).."€")
 
-    
+    --ROUND
+    love.graphics.setCanvas(self.roundNumberCanvas)
+    love.graphics.clear(0, 0, 1)
+    love.graphics.draw(currentRoundText, self.roundNumberCanvas:getWidth()/2, self.roundNumberCanvas:getHeight()/2, 0, 1, 1, currentRoundText:getWidth()/2, currentRoundText:getHeight()/2)
+
+    --HANDS
+    love.graphics.setCanvas(self.handsCanvas)
+    love.graphics.clear(1, 0, 0)
+    love.graphics.draw(currentHands, 10, 773)
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2)
+    love.graphics.setColor(1, 1, 1, 1)
+
+    --REROLLS
+    love.graphics.setCanvas(self.rerollsCanvas)
+    love.graphics.clear(0, 1, 0)
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2)
+    love.graphics.setColor(1, 1, 1, 1)
+
+    --MONEY
+    love.graphics.setCanvas(self.moneyCanvas)
+    love.graphics.clear(1, 1, 0)
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2)
+    love.graphics.setColor(1, 1, 1, 1)
+
+
+    --DRAW ALL THE CANVAS
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.roundNumberCanvas, 20, 740)
+    love.graphics.draw(self.handsCanvas, 20, 810)
+    love.graphics.draw(self.rerollsCanvas, 250, 810)
+    love.graphics.draw(self.moneyCanvas, 20, 930)
 end
 
+--==CREATE CANVAS FUNCTIONS==--
 function RoundScreen:createDiceNet()
     --Create a temp dice with a temp face repeated 6 times
     local tempFace = FaceObject:new(6)
@@ -392,6 +418,15 @@ function RoundScreen:createDiceNet()
     self.infoFaces = infoFaces
 end
 
+function RoundScreen:createRoundInfos()
+    --Create the canvas
+    self.rerollsCanvas = love.graphics.newCanvas(210, 100)
+    self.handsCanvas = love.graphics.newCanvas(210, 100)
+    self.roundNumberCanvas = love.graphics.newCanvas(440, 50)
+    self.moneyCanvas = love.graphics.newCanvas(440, 50)
+end
+
+--==UTILS FUNCTIONS==--
 function RoundScreen:getCurrentlyHoveredDice()
     self.currentlyHoveredDice = nil
 
@@ -401,6 +436,24 @@ function RoundScreen:getCurrentlyHoveredDice()
             break
         end
     end
+end
+
+function RoundScreen:updateDiceNet(dt)
+    if(self.currentlyHoveredDice) then
+        for i = 1, 6 do
+            self.infoFaces[i]:setRepresentedFace(self.currentlyHoveredDice:getFace(i))
+            self.infoFaces[i]:updateSprite()
+        end
+        if(self.diceDetailsTimer+100*dt<self.diceDetailsTime)then
+            self.diceDetailsTimer = self.diceDetailsTimer+100*dt
+        else
+            self.diceDetailsTimer = self.diceDetailsTime
+        end
+    else
+        self.diceDetailsTimer = 0
+    end
+
+    
 end
 
 function RoundScreen:playFigure(params)
