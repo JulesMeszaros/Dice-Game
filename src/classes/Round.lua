@@ -140,7 +140,7 @@ function Round:mousemoved(x, y, dx, dy, isDragging)
                     diceui.targetX = (diceui.targetX + dx) 
                 end
 
-                if(diceui.targetY+dy<self.terrain.dice_tray:getHeight()-diceui.size/2 and diceui.targetY+dy>0+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
+                if(diceui.targetY+dy<self.terrain.dice_tray:getHeight()-diceui.size/2-85 and diceui.targetY+dy>165+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
                     diceui.targetY = (diceui.targetY + dy) 
                 end
             end
