@@ -269,7 +269,7 @@ function RoundScreen:drawFigureButtons(x, y)
     love.graphics.clear()
 
     love.graphics.setLineWidth(4)
-    love.graphics.rectangle("line", 0, 0, self.figureButtonsCanvas:getWidth(), self.figureButtonsCanvas:getHeight())
+    love.graphics.draw(TableauFiguresSprite, 0, 0)
 
     for key,button in next,self.figureButtons do
         button:draw(self.figureButtonsCanvas)
