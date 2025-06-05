@@ -212,6 +212,10 @@ function DiceFace:updateSprite()
     self.dim = self.representedFace:getFaceDim()
 end
 
+function DiceFace:setRepresentedFace(face)
+    self.representedFace = face
+end
+
 function DiceFace:calculateScale()
     --Calculate scale
     if(self:isHovered())then

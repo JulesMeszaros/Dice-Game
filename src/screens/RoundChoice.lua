@@ -65,7 +65,7 @@ function RoundChoice:update(dt)
         love.graphics.draw(self.choiceCanvas[i], 50+(i-1)*(20+self.choiceCanvasWidth), 200)
     end
 
-    local topText = love.graphics.newText(Fonts.pixelatedMedium, "Choisissez votre round...")
+    local topText = love.graphics.newText(Fonts.nexaMedium, "Choisissez votre round...")
     love.graphics.draw(topText, self.canvas:getWidth()/2, 50, 0, 1, 1, topText:getWidth()/2, 0)
 
 
@@ -85,8 +85,8 @@ function RoundChoice:updateChoiceCanvas(c, dt, i)
 
     love.graphics.rectangle("line", 0, 0, c:getWidth(), c:getHeight())
 
-    local rewardText = love.graphics.newText(Fonts.pixelated, "Reward : "..tostring(self.possibleRounds[i].baseReward).."€")
-    local targetText = love.graphics.newText(Fonts.pixelatedMedium, "Target : "..tostring(self.possibleRounds[i].targetScore).." pts")
+    local rewardText = love.graphics.newText(Fonts.nexaSmall, "Reward : "..tostring(self.possibleRounds[i].baseReward).."€")
+    local targetText = love.graphics.newText(Fonts.nexaMedium, "Target : "..tostring(self.possibleRounds[i].targetScore).." pts")
     
     love.graphics.draw(rewardText, c:getWidth()/2, c:getHeight()-150, 0, 1, 1, rewardText:getWidth()/2, rewardText:getHeight()/2)
     love.graphics.draw(targetText, c:getWidth()/2, 50, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)

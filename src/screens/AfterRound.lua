@@ -57,11 +57,11 @@ function AfterRound:updateCanvas(dt)
     love.graphics.clear()
 
     --Score
-    local scoreText = love.graphics.newText(Fonts.pixelated, "Round score : "..self.roundPlayed.roundScore)
+    local scoreText = love.graphics.newText(Fonts.nexaSmall, "Round score : "..self.roundPlayed.roundScore)
     --Texte fin du round
-    local endRoundText = love.graphics.newText(Fonts.pixelated, 'End of round '..self.roundPlayed.nround)
+    local endRoundText = love.graphics.newText(Fonts.nexaSmall, 'End of round '..self.roundPlayed.nround)
     --Argent gagné
-    local moneyText = love.graphics.newText(Fonts.pixelated, 'Money earned : '..self.moneyEarned)
+    local moneyText = love.graphics.newText(Fonts.nexaSmall, 'Money earned : '..self.moneyEarned)
 
     love.graphics.draw(endRoundText, self.gameCanvas:getWidth()/2, 40, 0, 1, 1, endRoundText:getWidth()/2, endRoundText:getHeight()/2)
     love.graphics.draw(scoreText, self.gameCanvas:getWidth()/2, 90, 0, 1, 1, scoreText:getWidth()/2, scoreText:getHeight()/2)

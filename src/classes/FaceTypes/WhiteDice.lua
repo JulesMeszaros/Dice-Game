@@ -10,9 +10,10 @@ function WhiteDice:new(faceValue)
     local self = setmetatable({}, WhiteDice)
 
     --Metadatas about the WhiteDice
-    self.name = "White Dice"
+    self.name = "White Face"
     self.id = 1
-    self.description = "Ajoute la valeur de la face obtenue au score"
+    self.tier = "Common"
+    self.description = "When triggered, adds its face value to the hand's score"
 
     --Metadatas about the graphics of the WhiteDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/Dices/BaseDiceTileset.png")

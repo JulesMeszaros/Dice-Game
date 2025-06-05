@@ -1,19 +1,19 @@
 local WhiteDice = require("src.classes.FaceTypes.WhiteDice")
 
-local PharmacyDice = setmetatable({}, { __index = WhiteDice })
-PharmacyDice.__index = PharmacyDice
+local ReverseFace = setmetatable({}, { __index = WhiteDice })
+ReverseFace.__index = ReverseFace
 
-function PharmacyDice:new(faceValue)
-    local self = setmetatable(WhiteDice:new(), PharmacyDice)
+function ReverseFace:new(faceValue)
+    local self = setmetatable(WhiteDice:new(), ReverseFace)
 
     --Metadatas about the WhiteDice
-    self.name = "Pharmacy Face"
+    self.name = "Reverse Face"
     self.tier = "Uncommon"
     self.id = 2
-    self.description = "When triggered, doubles the hand's points"
+    self.description = "When triggered, adds its face value to the hand's score. Triggers twice"
 
     --Metadatas about the graphics of the WhiteDice
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/Dices/PharmacyDiceTileset.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/Dices/ReverseDiceTileset.png")
     self.spriteSheet:setFilter("nearest", "nearest")
 
     self.faceDimmension = 64 --sets the dimmensions for a face of the WhiteDice in px (in the png)
@@ -34,8 +34,8 @@ function PharmacyDice:new(faceValue)
 end
 
 
-function PharmacyDice:triggerEffect()
+function ReverseFace:triggerEffect()
     print("PharmaDice triggered")
 end
 
-return PharmacyDice
+return ReverseFace
