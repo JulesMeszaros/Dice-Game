@@ -12,7 +12,7 @@ local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/
 local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Dice Info-proto.png")
 local EnemyInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Enemy-proto.png")
 local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Floor-proto.png")
-local PlayerInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Joueur infos-proto.png")
+local PlayerInfosSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Joueur infos-proto.png")
 --local MenuBtnSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Menu_btn-proto.png")
 local MoneySprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Money-proto.png")
 --local OrderBtnSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Order_btn-proto.png")
@@ -34,6 +34,7 @@ local font30 = Fonts.nexaMedium
 function RoundScreen:new(round)
     local self = setmetatable({}, RoundScreen)
     self.gameCanvas = round.gameCanvas
+    self.round = round
 
     self.uiElements = {
         roundButtons = {},
@@ -43,18 +44,13 @@ function RoundScreen:new(round)
     --Create the terrain canvas
     self.terrainCanvas = love.graphics.newCanvas(round.gameCanvas:getWidth(),round.gameCanvas:getHeight() )
 
-    self.round = round
-
     --DICE TRAY
-    self.diceTrayX = 0
-    self.diceTrayY = 0
-
-    self.currentlyHoveredFigure = nil
-    
-    self.currentlyHoveredDice = nil
-
     self.dice_tray = love.graphics.newCanvas(885, 750)
     self.dice_tray:setFilter("linear", "linear")
+
+    --Hovered infos
+    self.currentlyHoveredFigure = nil 
+    self.currentlyHoveredDice = nil
 
     --FIGURE BUTTONS
     self.figureButtonsCanvas = love.graphics.newCanvas(495,630)
@@ -126,7 +122,7 @@ function RoundScreen:new(round)
     --ROUND DETAILS
     self:createRoundInfos()
 
-    --BOUTONS
+    --LEFT PANNEL BUTTONS
     self.uiElements.roundButtons["reorganiserButton"] = Button:new(
         function()self:reorganiseDiceFaces(self.round.diceFaces2)end, 
         "src/assets/sprites/ui/terrain/Order_btn-proto.png", 
@@ -171,6 +167,10 @@ function RoundScreen:new(round)
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
+    --PLAYERS INFOS
+    self.playerInfos = love.graphics.newCanvas(612,255)
+    self.enemyInfos = love.graphics.newCanvas(612,255)
+
     return self
 end
 
@@ -210,6 +210,10 @@ end
 function RoundScreen:updateCanvas(dt)
     love.graphics.setCanvas(self.terrainCanvas)
     love.graphics.clear()
+
+    --PlayersInfos
+    self:drawPlayersInfos()
+
     --Dice Tray
     self:drawDiceTray(self.terrainCanvas:getWidth()-60-self.faceDetailsCanvas:getWidth(), self.terrainCanvas:getHeight()-30, self.round.diceFaces2)
 
@@ -220,12 +224,6 @@ function RoundScreen:updateCanvas(dt)
     for k,b in next,self.uiElements.roundButtons do
         b:draw()
     end
-
-    --Différents textes
-    local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.round.roundScore))
-    local targetScoreText = love.graphics.newText(font, 'Target : '..tostring(self.round.targetScore))
-    love.graphics.draw(targetScoreText, self.terrainCanvas:getWidth()/2, 40)
-    love.graphics.draw(scoreText, self.terrainCanvas:getWidth()/2, 70)
 
     --Highlighted figure
     if(self.currentlyHoveredFigure)then
@@ -416,6 +414,31 @@ function RoundScreen:drawRoundDetails()
     love.graphics.draw(self.moneyCanvas, 295, 690)
 end
 
+function RoundScreen:drawPlayersInfos()
+    local currentCanvas = love.graphics.getCanvas()
+    --Player
+    love.graphics.setCanvas(self.playerInfos)
+    love.graphics.clear()
+    love.graphics.draw(PlayerInfosSprite, 0, 0)
+    local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.round.roundScore))
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.draw(scoreText, self.playerInfos:getWidth()-10, 72, 0, 1, 1, scoreText:getWidth(), 0)
+    love.graphics.setColor(1, 1, 1, 1)
+
+    --Ennemy
+    love.graphics.setCanvas(self.enemyInfos)
+    love.graphics.clear()
+    love.graphics.draw(EnemyInfosSprite, 0, 0)
+    local targetScoreText = love.graphics.newText(font, 'Target : '..tostring(self.round.targetScore))
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.draw(targetScoreText, 10, 207)
+    love.graphics.setColor(1, 1, 1, 1)
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.playerInfos, 552, 12)
+    love.graphics.draw(self.enemyInfos, 828, 30)
+end
+
 --==CREATE CANVAS FUNCTIONS==--
 function RoundScreen:createDiceNet()
     --Create a temp dice with a temp face repeated 6 times
@@ -461,6 +484,17 @@ function RoundScreen:createRoundInfos()
     self.roundNumberCanvas = love.graphics.newCanvas(240, 90)
     self.moneyCanvas = love.graphics.newCanvas(240, 90)
 end
+
+--[[ function RoundScreen:createPlayersInfos()
+    local currentCanvas = love.graphics.getCanvas()
+    --Player
+    love.graphics.setCanvas(self.playerInfo)
+
+    --Ennemy
+    love.graphics.setCanvas(self.enemyInfos)
+
+    
+end ]]
 
 --==UTILS FUNCTIONS==--
 function RoundScreen:getCurrentlyHoveredDice()
