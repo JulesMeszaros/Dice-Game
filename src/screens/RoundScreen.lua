@@ -154,8 +154,6 @@ function RoundScreen:update(dt)
 
     --Hover infos
     self:getCurrentlyHoveredDice() --Le dé survolé
-    self:getCurrentlyHoveredLine() --La figure survolée
-
 
     --Utilities buttons
     for key,button in next,self.uiElements.roundButtons do
@@ -179,15 +177,15 @@ function RoundScreen:updateCanvas(dt)
     self:drawDiceTray(self.terrainCanvas:getWidth()-60-self.faceDetailsCanvas:getWidth(), self.terrainCanvas:getHeight()-30, self.round.diceFaces2)
 
     --Figure Buttons
+
     self:drawFigureButtons(30, 30)
+    self:getCurrentlyHoveredLine() --La figure survolée
+
 
     --Bouttouns de round
     for k,b in next,self.uiElements.roundButtons do
         b:draw()
     end
-
-    --Highlight dices
-    self:highlightDices()
 
     --Face Details
     self:drawFaceDetails(self.terrainCanvas:getWidth()-30, self.terrainCanvas:getHeight()-30)
@@ -440,11 +438,23 @@ end ]]
 
 --==FIGURES TABLE==--
 function RoundScreen:getCurrentlyHoveredLine()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.figureButtonsCanvas)
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
     local i = math.floor(mv.y/45)
     if(i>0 and i<=13)then
         print(self.calcBasePoints[i]()[1])
+        if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
+            self:highlightDices(self.calcBasePoints[i]()[2])
+            --Draw a shadow on the line
+            love.graphics.setColor(1, 0, 0, 1)
+            love.graphics.rectangle("fill", 0, 0, self.figureButtonsCanvas:getWidth(), 100)
+            love.graphics.setColor(1, 1, 1, 1)
+        end
+    else
+        self:highlightDices({})
     end
+    love.graphics.setCanvas(currentCanvas)
 end
 
 --==UTILS FUNCTIONS==--
@@ -552,24 +562,14 @@ function RoundScreen:getCurrentlyHoveredFigure()
     end
 end
 
-function RoundScreen:highlightDices()
-    --Highlighted figure (à supprimer)
-    if(self.currentlyHoveredFigure)then
-        --Highlight the used dices
-        local usedDices = self:getCurrentlyHoveredFigure()[2]
-
-        for key,diceface in next,self.round.diceFaces2 do
-            diceface:setHighlighted(false)
-            for _, dice in next,usedDices do
-                if self.round.diceFaces2[dice] == diceface then
-                     diceface:setHighlighted(true)
-                     break
-                end
+function RoundScreen:highlightDices(usedDices)
+    for key,diceface in next,self.round.diceFaces2 do
+        diceface:setHighlighted(false)
+        for _, dice in next,usedDices do
+            if self.round.diceFaces2[dice] == diceface then
+                    diceface:setHighlighted(true)
+                    break
             end
-        end
-    else
-        for key,diceface in next,self.round.diceFaces2 do
-            diceface:setHighlighted(false)
         end
     end
 end
