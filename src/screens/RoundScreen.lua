@@ -1,28 +1,24 @@
-local Button = require("src.classes.ui.Button")
+--Utils
 local Inputs = require("src.utils.scripts.inputs")
 local CalculatePoints = require("src.utils.scripts.calculatePoints")
 local Fonts = require("src.utils.fonts")
-
+--UI
+local Button = require("src.classes.ui.Button")
+--Dices
 local DiceObject = require("src.classes.DiceObject")
 local FaceObject = require("src.classes.FaceTypes.WhiteDice")
 local DiceFace = require("src.classes.ui.DiceFace")
-
---Import the sprites
+--Sprites
 local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Description-proto.png")
 local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Dice Info-proto.png")
 local EnemyInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Enemy-proto.png")
 local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Floor-proto.png")
 local PlayerInfosSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Joueur infos-proto.png")
---local MenuBtnSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Menu_btn-proto.png")
 local MoneySprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Money-proto.png")
---local OrderBtnSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Order_btn-proto.png")
---local PlanBtnSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Plan_btn-proto.png")
---local RerollBtnSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Reroll-proto.png")
 local RerollsSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Rerolls-proto.png")
 local TableauFiguresSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Tableau-proto.png")
 local DiceMatSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Tapis-png.png")
 local TurnsSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Turns-proto.png")
-
 
 local RoundScreen = {}
 
@@ -225,38 +221,17 @@ function RoundScreen:updateCanvas(dt)
         b:draw()
     end
 
-    --Highlighted figure
-    if(self.currentlyHoveredFigure)then
-        -- Creates a text with the name of the figure and the text
-        local figureHoveredText = love.graphics.newText(font, self:getCurrentlyHoveredFigure()[1])
-        love.graphics.draw(figureHoveredText, 20, self.terrainCanvas:getHeight()-100, 0, 1, 1, 0, figureHoveredText:getHeight()/2)
-
-        --Highlight the used dices
-        local usedDices = self:getCurrentlyHoveredFigure()[2]
-
-        for key,diceface in next,self.round.diceFaces2 do
-            diceface:setHighlighted(false)
-            for _, dice in next,usedDices do
-                if self.round.diceFaces2[dice] == diceface then
-                     diceface:setHighlighted(true)
-                     break
-                end
-            end
-        end
-    else
-        for key,diceface in next,self.round.diceFaces2 do
-            diceface:setHighlighted(false)
-        end
-    end
+    --Highlight dices
+    self:highlightDices()
 
     --Face Details
     self:drawFaceDetails(self.terrainCanvas:getWidth()-30, self.terrainCanvas:getHeight()-30)
 
     --Dice Details
     self:updateDiceNet(dt)
-    for k,df in next,self.infoFaces do
+    for k,df in next,self.infoFaces do --éventuellement à bouger dans la fonction drawFaceDetails
         df.targetedScale = self.diceDetailsTimer/self.diceDetailsTime
-        df:updateCanvas(dt)
+        df:updateCanvas(dt) 
         df:update(dt)
     end
     self:drawDiceDetails(self.terrainCanvas:getWidth()-30, 30)
@@ -369,8 +344,8 @@ end
 function RoundScreen:drawRoundDetails()
     local currentCanvas = love.graphics.getCanvas()
     --Create the texts
-    local rerollText = love.graphics.newText(font, tostring(self.round.availableRerolls))
-    local currentHands = love.graphics.newText(font, tostring(self.round.remainingHands))
+    local rerollText = love.graphics.newText(Fonts.nexaBig, tostring(self.round.availableRerolls))
+    local currentHands = love.graphics.newText(Fonts.nexaBig, tostring(self.round.remainingHands))
     local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.round.nround))
     local moneyText = love.graphics.newText(font, tostring(self.round.run.money).."€")
 
@@ -384,9 +359,8 @@ function RoundScreen:drawRoundDetails()
     love.graphics.setCanvas(self.handsCanvas)
     love.graphics.clear()
     love.graphics.draw(TurnsSprite, 0, 0)
-    love.graphics.draw(currentHands, 10, 773)
     love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2)
+    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2)
     love.graphics.setColor(1, 1, 1, 1)
 
     --REROLLS
@@ -394,7 +368,7 @@ function RoundScreen:drawRoundDetails()
     love.graphics.clear()
     love.graphics.draw(RerollsSprite, 0, 0)
     love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2)
+    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2)
     love.graphics.setColor(1, 1, 1, 1)
 
     --MONEY
@@ -551,7 +525,7 @@ function RoundScreen:reorganiseDiceFaces(dices)
 
     local i = 1
     for key,uiFace in next,reorganisedDices do
-        uiFace.targetX = (i)*(((self.dice_tray:getWidth()-200)/(table.getn(reorganisedDices)+1)))+100
+        uiFace.targetX = (i)*(((self.dice_tray:getWidth()-100)/(table.getn(reorganisedDices)+1)))+50
         uiFace.targetY = (self.dice_tray:getHeight()/2)
         uiFace.baseRotation = 0
         i = i+1
@@ -601,5 +575,26 @@ function RoundScreen:getCurrentlyHoveredFigure()
     end
 end
 
-return RoundScreen
+function RoundScreen:highlightDices()
+    --Highlighted figure (à supprimer)
+    if(self.currentlyHoveredFigure)then
+        --Highlight the used dices
+        local usedDices = self:getCurrentlyHoveredFigure()[2]
 
+        for key,diceface in next,self.round.diceFaces2 do
+            diceface:setHighlighted(false)
+            for _, dice in next,usedDices do
+                if self.round.diceFaces2[dice] == diceface then
+                     diceface:setHighlighted(true)
+                     break
+                end
+            end
+        end
+    else
+        for key,diceface in next,self.round.diceFaces2 do
+            diceface:setHighlighted(false)
+        end
+    end
+end
+
+return RoundScreen
