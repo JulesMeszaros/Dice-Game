@@ -94,11 +94,6 @@ function Round:mousepressed(x, y, button, istouch, presses)
     for key,button in next,self.terrain.uiElements.roundButtons do
         button:clickEvent()
     end
-
-    --Figure Buttons
-    for key,button in next,self.terrain.figureButtons do
-        button:clickEvent()
-    end
 end
 
 function Round:mousereleased(x, y, button, istouch, presses)
@@ -114,14 +109,6 @@ function Round:mousereleased(x, y, button, istouch, presses)
 
     --release event on UI elements (buttons)
     for key,button in next,self.terrain.uiElements.roundButtons do
-        local wasReleased = button:releaseEvent()
-        if(wasReleased) then --Si le click a été complété
-            button:getCallback()()
-        end
-    end
-
-    --release event on UI elements (figure buttons)
-    for key,button in next,self.terrain.figureButtons do
         local wasReleased = button:releaseEvent()
         if(wasReleased) then --Si le click a été complété
             button:getCallback()()

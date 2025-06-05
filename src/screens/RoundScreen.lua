@@ -34,7 +34,6 @@ function RoundScreen:new(round)
 
     self.uiElements = {
         roundButtons = {},
-        figureButtons = {}
     }
 
     --Create the terrain canvas
@@ -85,25 +84,6 @@ function RoundScreen:new(round)
         function()self:playFigure(CalculatePoints.carreBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
         function()self:playFigure(CalculatePoints.yatzeeBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
     }
-
-    self.figureButtons = {}
-
-    local i = 0
-    for key,image in next,image_buttons do
-        local t = i
-        local button = Button:new(
-            calculatePointsFunctions[key],
-            image, 
-            self.figureButtonsCanvas:getWidth()/2, 
-            (i*36*1.5)+18*1.5, 
-            440, 
-            36*1.5, 
-            currentCanvas, 
-            function()return Inputs.getMouseInCanvas(20, 20)end
-        )
-        table.insert(self.figureButtons, button)
-        i=i+1
-    end
 
     --FACE DETAILS
     self.faceDetailsCanvas = love.graphics.newCanvas(420, 390)
@@ -173,20 +153,6 @@ end
 function RoundScreen:update(dt)
     --Reset Bouton de figure et Dé survolé
     self.currentlyHoveredFigure = nil
-
-    -- Figure buttons
-    for key,button in next, self.figureButtons do
-        button:update(dt)
-
-        if(button:isHovered())then self.currentlyHoveredFigure = key end
-
-         --Deactivate buttons if no hand remaining (temporaire)
-         if(self.round.remainingHands <= 0)then
-            button.isActivated = false
-         else
-            button.isActivated = true
-         end
-    end
 
     --Hover infos
     self:getCurrentlyHoveredDice()
@@ -268,12 +234,7 @@ function RoundScreen:drawFigureButtons(x, y)
     love.graphics.setCanvas(self.figureButtonsCanvas)
     love.graphics.clear()
 
-    love.graphics.setLineWidth(4)
     love.graphics.draw(TableauFiguresSprite, 0, 0)
-
-    for key,button in next,self.figureButtons do
-        button:draw(self.figureButtonsCanvas)
-    end
 
     love.graphics.setCanvas(targetCanvas)
     
