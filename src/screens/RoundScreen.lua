@@ -7,6 +7,23 @@ local DiceObject = require("src.classes.DiceObject")
 local FaceObject = require("src.classes.FaceTypes.WhiteDice")
 local DiceFace = require("src.classes.ui.DiceFace")
 
+--Import the sprites
+local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Description-proto.png")
+local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Dice Info-proto.png")
+local EnemyInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Enemy-proto.png")
+local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Floor-proto.png")
+local PlayerInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Joueur infos-proto.png")
+local MenuBtnSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Menu_btn-proto.png")
+local MoneySprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Money-proto.png")
+local OrderBtnSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Order_btn-proto.png")
+local PlanBtnSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Plan_btn-proto.png")
+local RerollBtnSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Reroll-proto.png")
+local RerollsSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Rerolls-proto.png")
+local TableauFiguresSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Tableau-proto.png")
+local DiceMatSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Tapis-png.png")
+local TurnsSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Turns-proto.png")
+
+
 local RoundScreen = {}
 
 RoundScreen.__index = RoundScreen
@@ -98,10 +115,10 @@ function RoundScreen:new(round)
     end
 
     --FACE DETAILS
-    self.faceDetailsCanvas = love.graphics.newCanvas(420, 300)
+    self.faceDetailsCanvas = love.graphics.newCanvas(420, 390)
 
     --DICE DETAILS
-    self.diceDetailsCanvas = love.graphics.newCanvas(420, 490)
+    self.diceDetailsCanvas = love.graphics.newCanvas(420, 600)
     self.diceDetailsTimer = 0
     self.diceDetailsTime = 0.5
     --Creating the different ui faces that will be shown
@@ -214,7 +231,7 @@ function RoundScreen:updateCanvas(dt)
     end
 
     --Face Details
-    self:drawFaceDetails(self.terrainCanvas:getWidth()-20, self.terrainCanvas:getHeight()-20)
+    self:drawFaceDetails(self.terrainCanvas:getWidth()-30, self.terrainCanvas:getHeight()-30)
 
     --Dice Details
     self:updateDiceNet(dt)
@@ -223,7 +240,7 @@ function RoundScreen:updateCanvas(dt)
         df:updateCanvas(dt)
         df:update(dt)
     end
-    self:drawDiceDetails(self.terrainCanvas:getWidth()-20, self.terrainCanvas:getHeight()-40-self.faceDetailsCanvas:getHeight())
+    self:drawDiceDetails(self.terrainCanvas:getWidth()-30, 30)
     
     --ROUND DETAILS
     self:drawRoundDetails()
@@ -238,7 +255,7 @@ function RoundScreen:drawDiceTray(x, y, dices2)
     love.graphics.setCanvas(self.dice_tray)
     love.graphics.clear(60/255, 99/255, 60/255)
 
-    love.graphics.draw(matImage, 0, 0, 0, 1, 1)
+    love.graphics.draw(DiceMatSprite, 0, 0, 0, 1, 1)
 
     --On déssine les autres dés
     for key,uiFace in next,dices2 do
@@ -274,8 +291,8 @@ function RoundScreen:drawFaceDetails(x, y)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.faceDetailsCanvas)
     love.graphics.clear(60/255, 99/255, 60/255)
-
-    love.graphics.rectangle("line", 0, 0, self.faceDetailsCanvas:getWidth(), self.faceDetailsCanvas:getHeight())
+    --Draw Sprite
+    love.graphics.draw(descriptionSprite, 0, 0)
 
     if(self.currentlyHoveredDice) then
         --Face Name
@@ -292,10 +309,12 @@ function RoundScreen:drawFaceDetails(x, y)
         local faceDescription = self.currentlyHoveredDice:getCurrentFaceObject().description
         local descWidth, descWrappedtext = font:getWrap( faceDescription, self.faceDetailsCanvas:getWidth()-20 )
         local descText = love.graphics.newText(font, table.concat(descWrappedtext, "\n"))
+        love.graphics.setColor(0, 0, 0, 1)
+        love.graphics.draw(nameText, self.faceDetailsCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
+        love.graphics.draw(tierText, self.faceDetailsCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
+        love.graphics.draw(descText, self.faceDetailsCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
+        love.graphics.setColor(1, 1, 1, 1)
 
-        love.graphics.draw(nameText, self.faceDetailsCanvas:getWidth()/2, 5, 0, 1, 1, nameText:getWidth()/2, 0)
-        love.graphics.draw(tierText, self.faceDetailsCanvas:getWidth()/2, 45, 0, 1, 1, tierText:getWidth()/2, 0)
-        love.graphics.draw(descText, self.faceDetailsCanvas:getWidth()/2, 80, 0, 1, 1, descText:getWidth()/2, 0)
     end
 
     love.graphics.setCanvas(currentCanvas)
@@ -308,7 +327,9 @@ function RoundScreen:drawDiceDetails(x, y)
     love.graphics.setCanvas(self.diceDetailsCanvas)
     love.graphics.clear(60/255, 99/255, 60/255)
 
-    love.graphics.rectangle("line", 0, 0, self.diceDetailsCanvas:getWidth(), self.diceDetailsCanvas:getHeight())
+    --Draw sprite
+    love.graphics.draw(DiceInfosSprite, 0, 0)
+    
     love.graphics.draw(
         love.graphics.newText(font30, "Dice"),
         self.diceDetailsCanvas:getWidth()/2,
@@ -324,7 +345,7 @@ function RoundScreen:drawDiceDetails(x, y)
         for k,df in next,self.infoFaces do
             if(df.representedFace == self.currentlyHoveredDice:getCurrentFaceObject())then
                 love.graphics.setColor(1, 0, 0, 1)
-                love.graphics.rectangle("fill", df.x-5-df.size/2, df.y-5-df.size/2, 106, 106)
+                love.graphics.rectangle("fill", df.x-5-df.size/2, df.y-5-df.size/2, 125, 125)
                 love.graphics.setColor(1, 1, 1, 1)
             end
             df:draw()
@@ -333,7 +354,7 @@ function RoundScreen:drawDiceDetails(x, y)
 
     love.graphics.setCanvas(currentCanvas)
 
-    love.graphics.draw(self.diceDetailsCanvas, x, y, 0, 1, 1, self.diceDetailsCanvas:getWidth(), self.diceDetailsCanvas:getHeight())
+    love.graphics.draw(self.diceDetailsCanvas, x, y, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
 end
 
 function RoundScreen:drawRoundDetails()
@@ -388,12 +409,12 @@ function RoundScreen:createDiceNet()
 
     --Create the coordinates of each dice face
     local diceFacesCoords = {
-        {self.diceDetailsCanvas:getWidth()/2-100, self.diceDetailsCanvas:getHeight()/2-10}, --1
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-100-10}, --2
+        {self.diceDetailsCanvas:getWidth()/2-120, self.diceDetailsCanvas:getHeight()/2-10}, --1
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-120-10}, --2
         {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-10}, --3
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+200-10}, --4
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+100-10}, --5
-        {self.diceDetailsCanvas:getWidth()/2+100, self.diceDetailsCanvas:getHeight()/2-10}, --6
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+240-10}, --4
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+120-10}, --5
+        {self.diceDetailsCanvas:getWidth()/2+120, self.diceDetailsCanvas:getHeight()/2-10}, --6
     }
     
     -- Create the uiFaces objects
@@ -405,7 +426,7 @@ function RoundScreen:createDiceNet()
             d, --La face représentée
             diceFacesCoords[k][1], --X Position (centerd)
             diceFacesCoords[k][2], --Yposition (centerd)
-            100, --Width/Height
+            120, --Width/Height
             false, --is Selectable
             false, --isHoverable,
             function()return Inputs.getMouseInCanvas(0,0)end,
