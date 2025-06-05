@@ -50,6 +50,7 @@ function RoundScreen:new(round)
     --FIGURE BUTTONS
     self.figureButtonsCanvas = love.graphics.newCanvas(495,630)
     self.figureButtonsCanvas:setFilter("linear", "linear")
+    self.clickedFigure = nil
     --Calculate points functions
     self.calcBasePoints = {
         function()return CalculatePoints.numberBasePoints(1, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
@@ -67,7 +68,7 @@ function RoundScreen:new(round)
         function()return CalculatePoints.yatzeeBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end
     }
 
-    --[[ self.calculatePointsFunctions = {
+    self.calculatePointsFunctions = {
         function()self:playFigure(CalculatePoints.numberBasePoints(1, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
         function()self:playFigure(CalculatePoints.numberBasePoints(2, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
         function()self:playFigure(CalculatePoints.numberBasePoints(3, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
@@ -81,7 +82,7 @@ function RoundScreen:new(round)
         function()self:playFigure(CalculatePoints.gdSuiteBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
         function()self:playFigure(CalculatePoints.carreBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
         function()self:playFigure(CalculatePoints.yatzeeBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
-    } ]]
+    }
     
     --FACE DETAILS
     self.faceDetailsCanvas = love.graphics.newCanvas(420, 390)
@@ -244,7 +245,6 @@ function RoundScreen:drawFigureButtons(x, y)
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
     local i = math.floor(mv.y/45)
     if(i>0 and i<=13)then
-        print(self.calcBasePoints[i]()[1])
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             self:highlightDices(self.calcBasePoints[i]()[2])
             --Draw a shadow on the line
@@ -455,24 +455,20 @@ end ]]
 
 --==FIGURES TABLE==--
 function RoundScreen:getCurrentlyHoveredLine()
-    local currentCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.figureButtonsCanvas)
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
     local i = math.floor(mv.y/45)
     if(i>0 and i<=13)then
-        print(self.calcBasePoints[i]()[1])
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             self:highlightDices(self.calcBasePoints[i]()[2])
-            --Draw a shadow on the line
-            love.graphics.setColor(1, 0, 0, 1)
-            love.graphics.rectangle("fill", 0, 0, self.figureButtonsCanvas:getWidth(), 100)
-            love.graphics.setColor(1, 1, 1, 1)
+            return i
         end
     else
         self:highlightDices({})
-    end
-    love.graphics.setCanvas(currentCanvas)
+        return nil
+    end 
 end
+
+
 
 --==UTILS FUNCTIONS==--
 function RoundScreen:getCurrentlyHoveredDice()

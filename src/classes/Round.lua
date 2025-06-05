@@ -94,6 +94,9 @@ function Round:mousepressed(x, y, button, istouch, presses)
     for key,button in next,self.terrain.uiElements.roundButtons do
         button:clickEvent()
     end
+
+    --Figure buttons
+    self.terrain.clickedFigure = self.terrain:getCurrentlyHoveredLine()
 end
 
 function Round:mousereleased(x, y, button, istouch, presses)
@@ -112,6 +115,13 @@ function Round:mousereleased(x, y, button, istouch, presses)
         local wasReleased = button:releaseEvent()
         if(wasReleased) then --Si le click a été complété
             button:getCallback()()
+        end
+    end
+
+    --Figure buttons
+    if(self.terrain.clickedFigure)then
+        if(self.terrain.clickedFigure == self.terrain:getCurrentlyHoveredLine())then
+            self.terrain.calculatePointsFunctions[self.terrain.clickedFigure]()
         end
     end
 end
