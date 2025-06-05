@@ -67,7 +67,7 @@ function Button:createCanvas(gameCanvas)
     local canvas = love.graphics.newCanvas(self.width, self.height)
 
     --General settings
-    canvas:setFilter("nearest", "nearest")
+    canvas:setFilter("linear", "linear")
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(canvas)
 
