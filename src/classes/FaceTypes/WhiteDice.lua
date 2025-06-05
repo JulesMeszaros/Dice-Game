@@ -16,18 +16,18 @@ function WhiteDice:new(faceValue)
     self.description = "When triggered, adds its face value to the hand's score"
 
     --Metadatas about the graphics of the WhiteDice
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/Dices/BaseDiceTileset.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/Dices/BasicDice80.png")
     self.spriteSheet:setFilter("nearest", "nearest")
 
-    self.faceDimmension = 64 --sets the dimmensions for a face of the WhiteDice in px (in the png)
+    self.faceDimmension = 80 --sets the dimmensions for a face of the WhiteDice in px (in the png)
 
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {1, 1}, -- 1
-        {65, 1}, -- 2
-        {65, 65}, -- 3
-        {65, 193}, -- 4
-        {65, 129}, -- 5
-        {129, 0} -- 6
+        {80, 80}, -- 1
+        {0, 80}, -- 2
+        {80, 0}, -- 3
+        {80, 160}, -- 4
+        {160, 80}, -- 5
+        {80, 240} -- 6
     }
     
     --Round status
