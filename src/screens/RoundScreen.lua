@@ -241,6 +241,23 @@ function RoundScreen:drawFigureButtons(x, y)
     end
     love.graphics.setColor(1, 1, 1, 1)
 
+    local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
+    local i = math.floor(mv.y/45)
+    if(i>0 and i<=13)then
+        print(self.calcBasePoints[i]()[1])
+        if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
+            self:highlightDices(self.calcBasePoints[i]()[2])
+            --Draw a shadow on the line
+            if(love.mouse.isDown(1)) then
+                love.graphics.setColor(0.7, 0, 0, 0.3)
+            else
+                love.graphics.setColor(1, 0, 0, 0.3)
+            end
+            love.graphics.rectangle("fill", 0, i*45, self.figureButtonsCanvas:getWidth(), 45)
+            love.graphics.setColor(1, 1, 1, 1)
+        end
+    end
+
     love.graphics.setCanvas(targetCanvas)
     
     love.graphics.draw(self.figureButtonsCanvas, x, y)
