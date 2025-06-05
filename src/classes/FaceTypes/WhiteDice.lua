@@ -17,7 +17,7 @@ function WhiteDice:new(faceValue)
 
     --Metadatas about the graphics of the WhiteDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/Dices/BasicDice80.png")
-    self.spriteSheet:setFilter("nearest", "nearest")
+    self.spriteSheet:setFilter("linear", "linear")
 
     self.faceDimmension = 80 --sets the dimmensions for a face of the WhiteDice in px (in the png)
 
