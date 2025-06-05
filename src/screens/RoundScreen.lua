@@ -50,26 +50,24 @@ function RoundScreen:new(round)
     --FIGURE BUTTONS
     self.figureButtonsCanvas = love.graphics.newCanvas(495,630)
     self.figureButtonsCanvas:setFilter("linear", "linear")
-    
-    --CREATION DES BOUTONS DE FIGURE
-    --Importation des images
-    local image_buttons = {
-        "src/assets/sprites/ui/buttons/figure_1.png",
-        "src/assets/sprites/ui/buttons/figure_2.png",
-        "src/assets/sprites/ui/buttons/figure_3.png",
-        "src/assets/sprites/ui/buttons/figure_4.png",
-        "src/assets/sprites/ui/buttons/figure_5.png",
-        "src/assets/sprites/ui/buttons/figure_6.png",
-        "src/assets/sprites/ui/buttons/figure_chance.png",
-        "src/assets/sprites/ui/buttons/figure_brelan.png",
-        "src/assets/sprites/ui/buttons/figure_full.png",
-        "src/assets/sprites/ui/buttons/figure_ptt_suite.png",
-        "src/assets/sprites/ui/buttons/figure_gd_suite.png",
-        "src/assets/sprites/ui/buttons/figure_carre.png",
-        "src/assets/sprites/ui/buttons/figure_yatzee.png"
+    --Calculate points functions
+    self.calcBasePoints = {
+        function()return CalculatePoints.numberBasePoints(1, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.numberBasePoints(2, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.numberBasePoints(3, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.numberBasePoints(4, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.numberBasePoints(5, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.numberBasePoints(6, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.chanceBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.brelanBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.fullBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.pttSuiteBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.gdSuiteBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.carreBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
+        function()return CalculatePoints.yatzeeBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end
     }
 
-    local calculatePointsFunctions = {
+    --[[ self.calculatePointsFunctions = {
         function()self:playFigure(CalculatePoints.numberBasePoints(1, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
         function()self:playFigure(CalculatePoints.numberBasePoints(2, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
         function()self:playFigure(CalculatePoints.numberBasePoints(3, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
@@ -83,8 +81,8 @@ function RoundScreen:new(round)
         function()self:playFigure(CalculatePoints.gdSuiteBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
         function()self:playFigure(CalculatePoints.carreBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
         function()self:playFigure(CalculatePoints.yatzeeBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects))end,
-    }
-
+    } ]]
+    
     --FACE DETAILS
     self.faceDetailsCanvas = love.graphics.newCanvas(420, 390)
 
@@ -155,7 +153,8 @@ function RoundScreen:update(dt)
     self.currentlyHoveredFigure = nil
 
     --Hover infos
-    self:getCurrentlyHoveredDice()
+    self:getCurrentlyHoveredDice() --Le dé survolé
+    self:getCurrentlyHoveredLine() --La figure survolée
 
 
     --Utilities buttons
@@ -233,8 +232,16 @@ function RoundScreen:drawFigureButtons(x, y)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.figureButtonsCanvas)
     love.graphics.clear()
-
+    --Draw the table
     love.graphics.draw(TableauFiguresSprite, 0, 0)
+
+    --Write the calculatedPoints
+    love.graphics.setColor(0, 0, 0, 1)
+    for i=1, 13 do
+        local calcScore = love.graphics.newText(Fonts.nexaSmall, self.calcBasePoints[i]()[1])
+        love.graphics.draw(calcScore, 150+85, 45*i+25, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
+    end
+    love.graphics.setColor(1, 1, 1, 1)
 
     love.graphics.setCanvas(targetCanvas)
     
@@ -430,6 +437,15 @@ end
 
     
 end ]]
+
+--==FIGURES TABLE==--
+function RoundScreen:getCurrentlyHoveredLine()
+    local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
+    local i = math.floor(mv.y/45)
+    if(i>0 and i<=13)then
+        print(self.calcBasePoints[i]()[1])
+    end
+end
 
 --==UTILS FUNCTIONS==--
 function RoundScreen:getCurrentlyHoveredDice()
