@@ -8,23 +8,23 @@ function LuckyFace:new(faceValue)
 
     --Metadatas about the WhiteDice
     self.name = "Lucky Face"
-    self.tier = "Uncommon"
-    self.id = 2
-    self.description = "When triggered, adds the double of its face value to the hand's score"
+    self.tier = "Common"
+    self.id = 5
+    self.description = "When triggered, ZBZBZHKLRHJKLRJRKLJDKLD"
 
     --Metadatas about the graphics of the WhiteDice
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/RedDice80.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/StaticDiceTileset120.png")
     self.spriteSheet:setFilter("nearest", "nearest")
 
-    self.faceDimmension = 80 --sets the dimmensions for a face of the WhiteDice in px (in the png)
+    self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteDice in px (in the png)
 
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {80, 80}, -- 1
-        {0, 80}, -- 2
-        {80, 0}, -- 3
-        {80, 160}, -- 4
-        {160, 80}, -- 5
-        {80, 240} -- 6
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
     }
     
     --Round status

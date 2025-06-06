@@ -9,9 +9,10 @@ local Shaders = require("src.utils.shaders")
 --Dice Face Types
 local DiceObject = require("src.classes.DiceObject") 
 local WhiteFace = require("src.classes.FaceTypes.WhiteDice")
-local PharmacyFace = require("src.classes.FaceTypes.PharmacyDice")
-local ReverseFace = require("src.classes.FaceTypes.ReverseFace")
-local LuckyFace = require("src.classes.FaceTypes.LuckyFace")
+local StoneFace = require("src.classes.FaceTypes.StoneFace")
+local RedFace = require("src.classes.FaceTypes.RedFace")
+local BlueFace = require("src.classes.FaceTypes.BlueFace")
+local StaticFace = require("src.classes.FaceTypes.StaticFace")
 
 local applyCRT = false
 
@@ -40,15 +41,15 @@ for i=1, 5 do
     table.insert(diceObjects, DiceObject:new(fs))
 end
 
-local pharmaFace = PharmacyFace:new(2)
-local pharmaFace2 = PharmacyFace:new(1)
-local luckyFace = LuckyFace:new(4)
-local reverseFace = ReverseFace:new(3)
+local stoneface = StoneFace:new(2)
+local redface = RedFace:new(4)
+local static = StaticFace:new(3)
+local blueface = BlueFace:new(3)
 
-diceObjects[2]:setFace(pharmaFace, 6)
-diceObjects[1]:setFace(pharmaFace2, 6)
-diceObjects[1]:setFace(luckyFace, 3)
-diceObjects[4]:setFace(reverseFace, 5)
+diceObjects[1]:setFace(redface, 3)
+diceObjects[2]:setFace(stoneface, 6)
+diceObjects[3]:setFace(blueface, 5)
+diceObjects[4]:setFace(static, 5)
 
 function Game:start()
     local self = setmetatable({}, Game)
