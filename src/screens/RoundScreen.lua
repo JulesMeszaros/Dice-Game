@@ -180,7 +180,7 @@ function RoundScreen:updateCanvas(dt)
 
     --Figure Buttons
 
-    self:drawFigureButtons(30, 30)
+    self:drawFigureGrid(30, 30)
     self:getCurrentlyHoveredLine() --La figure survolée
 
 
@@ -237,7 +237,7 @@ function RoundScreen:drawDiceTray(x, y, dices2)
 
 end
 
-function RoundScreen:drawFigureButtons(x, y)
+function RoundScreen:drawFigureGrid(x, y)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.figureButtonsCanvas)
     love.graphics.clear()
@@ -275,7 +275,7 @@ function RoundScreen:drawFigureButtons(x, y)
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             self:highlightDices(self.calcBasePoints[i]()[2])
             --Draw a shadow on the line
-            if(self.round.availableFigures[i]>=1)then
+            if(self.round.availableFigures[i]>=1 and table.getn(self.round.selectedDices)>=1)then
                 if(love.mouse.isDown(1)) then
                     love.graphics.setColor(0.7, 0, 0, 0.3)
                 else
@@ -531,7 +531,7 @@ end
 
 function RoundScreen:playFigure(figure, params)
     local points, usedDices = params[1], params[2]
-    if(self.round.availableFigures[figure]>=1)then
+    if(self.round.availableFigures[figure]>=1 and table.getn(self.round.selectedDices)>=1)then
         self.round:playFigure(points, usedDices)
         self.round.availableFigures[figure] = self.round.availableFigures[figure]-1
     end
