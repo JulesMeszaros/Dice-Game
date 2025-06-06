@@ -206,10 +206,6 @@ function Round:getDicesOrder(usedDices)
         table.insert(self.dicesOrder, diceFace)
     end
 
-    for k,v in ipairs(sortedDiceFaces) do
-        print(v.faceValue)
-    end
-
     return sortedDiceFaces, sortedDices
 end
 
@@ -301,13 +297,10 @@ end
 
 function Round:makeRoll(dices)
     local draw = self:drawDices(dices) --draw the dices
-    print("~~~~~~~~")
     for key,dice in next,self.diceObjects do
-        print(self.drawedFaceObjects[dice].name)
         dice:setCurrentFaceObject(self.drawedFaceObjects[dice])
         self.diceFaces2[dice]:setFaceObject(self.drawedFaceObjects[dice]) --update the ui
     end
-    print("~~~~~~~~")
 
     for key,dice in next,dices do --Creates the roll animation for the rerolled dices
 
@@ -333,10 +326,8 @@ function Round:drawDices(dices)
 
     local faceObjects = self.drawedFaceObjects
 
-    print("----")
     for key,dice in next,dices do
         local n = math.random(1, dice:getNbFaces()) --Prend un index dans les faces du dé
-        --print(tostring(n).." "..tostring(dice:getFace(n).name))
         local faceObject = dice:getFace(n)
         faceObjects[dice] = faceObject
     end

@@ -101,7 +101,7 @@ function AfterRound:mousereleased(x, y, button, istouch, presses)
 end
 
 function AfterRound:mousemoved(x, y, dx, dy, isDragging)
-    --print("moved")
+
 end
 
 return AfterRound

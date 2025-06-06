@@ -97,16 +97,14 @@ function Button:updateCanvas()
 end
 
 function Button:draw()
-    --local shadow = self:renderShadow(gameCanvas)
-    --love.graphics.draw(shadow, self.x+10, self.y+10, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
     love.graphics.draw(self.uiCanvas, self.x, self.y, 0, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
 end
 
 function Button:getCallback()
     if(self.isActivated==true) then
-        return self.callbackFunction
+        return self.callbackFunction --Returns the function
     else
-        return function()end
+        return function()end --Doesnt do anything
     end
 end
 
