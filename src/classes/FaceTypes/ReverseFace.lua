@@ -13,7 +13,7 @@ function ReverseFace:new(faceValue)
     self.description = "When triggered, adds its face value to the hand's score. Triggers twice"
 
     --Metadatas about the graphics of the WhiteDice
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/Dices/ReverseDice80.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/ReverseDice80.png")
     self.spriteSheet:setFilter("nearest", "nearest")
 
     self.faceDimmension = 80 --sets the dimmensions for a face of the WhiteDice in px (in the png)

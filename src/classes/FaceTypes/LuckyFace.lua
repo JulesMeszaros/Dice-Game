@@ -13,7 +13,7 @@ function LuckyFace:new(faceValue)
     self.description = "When triggered, adds the double of its face value to the hand's score"
 
     --Metadatas about the graphics of the WhiteDice
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/Dices/RedDice80.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/RedDice80.png")
     self.spriteSheet:setFilter("nearest", "nearest")
 
     self.faceDimmension = 80 --sets the dimmensions for a face of the WhiteDice in px (in the png)

@@ -16,7 +16,7 @@ function WhiteDice:new(faceValue)
     self.description = "When triggered, adds its face value to the hand's score"
 
     --Metadatas about the graphics of the WhiteDice
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/Dices/BasicDice80.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/BasicDice80.png")
     self.spriteSheet:setFilter("linear", "linear")
 
     self.faceDimmension = 80 --sets the dimmensions for a face of the WhiteDice in px (in the png)
