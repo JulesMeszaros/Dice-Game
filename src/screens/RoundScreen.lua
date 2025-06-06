@@ -267,6 +267,9 @@ function RoundScreen:drawFigureButtons(x, y)
 
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
     local i = math.floor(mv.y/45)
+
+    self:highlightDices({})
+
     --If we are hovering a line
     if(i>0 and i<=13)then
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
@@ -416,7 +419,7 @@ function RoundScreen:drawPlayersInfos()
     love.graphics.setColor(1, 1, 1, 1)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.playerInfos, 552, 12)
+    love.graphics.draw(self.playerInfos, 552, 30)
     love.graphics.draw(self.enemyInfos, 828, 30)
 end
 
