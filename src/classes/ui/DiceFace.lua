@@ -154,7 +154,10 @@ function DiceFace:selectOrDeselect()
     self:setSelected(newState)
 
     if(newState == false)then
-        self.targetX = math.random(0,855)-60 ; self.targetY = math.random(0,450)+120
+        local randomXPos = math.random(100, self.round.terrain.dice_tray:getWidth()-100)
+        local randomYPos = math.random(250, self.round.terrain.dice_tray:getHeight()-250)
+
+        self.targetX = randomXPos ; self.targetY = randomYPos
     end
 end
 

@@ -312,7 +312,7 @@ function Round:makeRoll(dices)
     for key,dice in next,dices do --Creates the roll animation for the rerolled dices
 
         local randomXPos = math.random(100, self.terrain.dice_tray:getWidth()-100)
-        local randomYPos = math.random(100, self.terrain.dice_tray:getHeight()-100)
+        local randomYPos = math.random(250, self.terrain.dice_tray:getHeight()-250)
         local randomR = ((math.random(0,1000)/1000)*2.5)-1.25 --(1001 angles possibles entre -1.25 et 1.25 radians)
 
         --Set initial position (random X axis, under the terrain)
