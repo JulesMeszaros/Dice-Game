@@ -1,6 +1,6 @@
 local CalculatePoints = {}
 
-function CalculatePoints.numberBasePoints(number, faces, dices, drawedDices)
+function CalculatePoints.numberBasePoints(number, dices)
     --Calcul Pour les nombres simples
     
     local score = 0
@@ -17,7 +17,7 @@ function CalculatePoints.numberBasePoints(number, faces, dices, drawedDices)
     return {score, usedDices}
 end
 
-function CalculatePoints.brelanBasePoints(faces, dices, drawedDices)
+function CalculatePoints.brelanBasePoints(dices)
     --Calcul pour le Brelan (3 faces similaires)
     local score = 0
     local usedDices = {}
@@ -47,7 +47,7 @@ function CalculatePoints.brelanBasePoints(faces, dices, drawedDices)
     return {score, usedDices}
 end
 
-function CalculatePoints.fullBasePoints(faces, dices, drawedDices)
+function CalculatePoints.fullBasePoints(dices)
     local score = 0
     local usedDices = {}
 
@@ -66,7 +66,7 @@ function CalculatePoints.fullBasePoints(faces, dices, drawedDices)
     return {score, usedDices}
 end
 
-function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
+function CalculatePoints.carreBasePoints(dices)
     local score = 0
     local usedDices = {}
 
@@ -96,7 +96,7 @@ function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
     return {score, usedDices}
 end
 
-function CalculatePoints.pttSuiteBasePoints(faces, dices, drawedDices)
+function CalculatePoints.pttSuiteBasePoints(dices)
     local score = 0
     local usedDices = {}
     local drawedNumbers = {}
@@ -122,7 +122,7 @@ function CalculatePoints.pttSuiteBasePoints(faces, dices, drawedDices)
     return {score, usedDices}
 end
 
-function CalculatePoints.gdSuiteBasePoints(faces, dices, drawedDices)
+function CalculatePoints.gdSuiteBasePoints(dices)
     local score = 0
     local usedDices = {}
     local drawedNumbers = {}
@@ -144,7 +144,7 @@ function CalculatePoints.gdSuiteBasePoints(faces, dices, drawedDices)
     return {score, usedDices}
 end
 
-function CalculatePoints.chanceBasePoints(faces, dices, drawedDices)
+function CalculatePoints.chanceBasePoints(dices)
     local score = 0
     local usedDices = {}
 
@@ -155,7 +155,7 @@ function CalculatePoints.chanceBasePoints(faces, dices, drawedDices)
     return {score, usedDices}
 end
 
-function CalculatePoints.yatzeeBasePoints(faces, dices, drawedDices)
+function CalculatePoints.yatzeeBasePoints(dices)
     local score = 0
     local usedDices = {}
 
@@ -173,8 +173,8 @@ function CalculatePoints.yatzeeBasePoints(faces, dices, drawedDices)
 
     if(maxDistrib>=5)then --On vérifie que le numero le plus représenté est superieur ou égal à 3
         score = 50
-        for dice,f in next,drawedDices do
-            table.insert(usedDices, dice)
+        for d,f in next,dices do
+            table.insert(usedDices, f)
         end
     else
         score = 0
