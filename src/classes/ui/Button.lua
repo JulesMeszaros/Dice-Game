@@ -103,7 +103,11 @@ function Button:draw()
 end
 
 function Button:getCallback()
-    return self.callbackFunction
+    if(self.isActivated==true) then
+        return self.callbackFunction
+    else
+        return function()end
+    end
 end
 
 function Button:isHovered() --Check if mouse is above the face

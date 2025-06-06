@@ -158,7 +158,7 @@ function RoundScreen:update(dt)
 
     --Utilities buttons
     for key,button in next,self.uiElements.roundButtons do
-        self.uiElements.roundButtons["rerollButton"]:setActivated(self.round.availableRerolls>0 and table.getn(self.round.selectedDices)>0)
+        self.uiElements.roundButtons["rerollButton"]:setActivated(self.round.availableRerolls>0 and table.getn(self.round.selectedDices)<table.getn(self.round.diceObjects))
 
         button:update(dt)
     end
