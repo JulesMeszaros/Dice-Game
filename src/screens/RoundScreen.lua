@@ -2,6 +2,7 @@
 local Inputs = require("src.utils.scripts.inputs")
 local CalculatePoints = require("src.utils.scripts.calculatePoints")
 local Fonts = require("src.utils.fonts")
+local Constants = require("src.utils.constants")
 --UI
 local Button = require("src.classes.ui.Button")
 --Dices
@@ -69,19 +70,19 @@ function RoundScreen:new(round)
     }
 
     self.calculatePointsFunctions = {
-        function()self:playFigure(CalculatePoints.numberBasePoints(1, self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.numberBasePoints(2, self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.numberBasePoints(3, self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.numberBasePoints(4, self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.numberBasePoints(5, self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.numberBasePoints(6, self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.chanceBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.brelanBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.carreBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.fullBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.pttSuiteBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.gdSuiteBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(CalculatePoints.yatzeeBasePoints(self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.ONES, CalculatePoints.numberBasePoints(1, self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.TWOS, CalculatePoints.numberBasePoints(2, self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.THREES, CalculatePoints.numberBasePoints(3, self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.FOURS, CalculatePoints.numberBasePoints(4, self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.FIVES, CalculatePoints.numberBasePoints(5, self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.SIXS, CalculatePoints.numberBasePoints(6, self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.CHANCE, CalculatePoints.chanceBasePoints(self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.THREE_OAK, CalculatePoints.brelanBasePoints(self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.FOUR_OAK,CalculatePoints.carreBasePoints(self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.FULL_HOUSE,CalculatePoints.fullBasePoints(self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.SMALL_SUITE,CalculatePoints.pttSuiteBasePoints(self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.LARGE_SUITE,CalculatePoints.gdSuiteBasePoints(self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.DELUXE,CalculatePoints.yatzeeBasePoints(self.round.selectedDices))end,
     }
     
     --FACE DETAILS
@@ -249,10 +250,24 @@ function RoundScreen:drawFigureButtons(x, y)
         local calcScore = love.graphics.newText(Fonts.nexaSmall, self.calcBasePoints[i]()[1])
         love.graphics.draw(calcScore, 150+85, 45*i+25, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
     end
+
+    --Write the remaining possible hands
+    for i=1, 13 do
+        local handsRemaining = love.graphics.newText(Fonts.nexaSmall, self.round.availableFigures[i])
+        love.graphics.draw(handsRemaining, 320+85, 45*i+25, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
+        --if no hands remaining, grey out the line
+        if(self.round.availableFigures[i]<=0) then
+            love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
+            love.graphics.rectangle("fill", 0, i*45, self.figureButtonsCanvas:getWidth(), 45)
+            love.graphics.setColor(0, 0, 0, 1)
+        end
+    end
+
     love.graphics.setColor(1, 1, 1, 1)
 
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
     local i = math.floor(mv.y/45)
+    --If we are hovering a line
     if(i>0 and i<=13)then
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             self:highlightDices(self.calcBasePoints[i]()[2])
@@ -509,8 +524,9 @@ function RoundScreen:updateDiceNet(dt)
     
 end
 
-function RoundScreen:playFigure(params)
+function RoundScreen:playFigure(figure, params)
     local points, usedDices = params[1], params[2]
+    self.round.availableFigures[figure] = self.round.availableFigures[figure]-1
     
     self.round:playFigure(points, usedDices)
 end

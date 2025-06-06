@@ -59,8 +59,8 @@ function CalculatePoints.fullBasePoints(dices)
     if(hasFull)then
         score = 25
 
-        for dice,f in next,drawedDices do
-            table.insert(usedDices, dice)
+        for dice,f in next,dices do
+            table.insert(usedDices, f)
         end
     end
     return {score, usedDices}
