@@ -286,15 +286,21 @@ end
 
 --==REROLL FUNCTIONS (NEW)==--
 function Round:rerollDices() --Triggers the makeRoll function after clicking the reroll button
+    local dicesToReroll = {}
+    for k,d in next,self.diceObjects do
+        if not self:containsDice(self.selectedDices, d) then
+            table.insert(dicesToReroll, d)
+        end
+    end
+
     if(self.availableRerolls > 0) then
-        self:makeRoll(self.selectedDices)
+        self:makeRoll(dicesToReroll)
         self.availableRerolls = self.availableRerolls-1
     end
 end
 
 function Round:makeRoll(dices)
     local draw = self:drawDices(dices) --draw the dices
-    self:resetselectedDices() --reset the previously selected dices (ui)
     print("~~~~~~~~")
     for key,dice in next,self.diceObjects do
         print(self.drawedFaceObjects[dice].name)

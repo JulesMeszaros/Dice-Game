@@ -539,6 +539,9 @@ function RoundScreen:reorganiseDiceFaces(dices)
         uiFace.baseRotation = 0
         i = i+1
     end
+
+    --On finit par déséléctionner tous les dés
+    self.round:resetselectedDices()
 end
 
 function RoundScreen:getCurrentlyHoveredFigure()
