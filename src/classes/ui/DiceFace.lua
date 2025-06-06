@@ -87,6 +87,13 @@ function DiceFace:update(dt)
     self:updateScale(dt)
     self:updateAngle(dt)
 
+    --Selection state--
+    if(self.isSelected)then
+        self.isDraggable = false
+    else
+        self.isDraggable = true
+    end
+
     --==Update the trigger==--
     if(self.isTriggering)then
         self.triggerTimer = self.triggerTimer + dt
@@ -142,6 +149,15 @@ function DiceFace:clickAction()
     self:selectOrDeselect()
 end
 
+function DiceFace:selectOrDeselect()
+    local newState = not self:getIsSelected()
+    self:setSelected(newState)
+
+    if(newState == false)then
+        self.targetX = math.random(0,855)-60 ; self.targetY = math.random(0,450)+120
+    end
+end
+
 --==VISUAL FUNCTIONS==--
 
 function DiceFace:createCanvas()
@@ -149,7 +165,6 @@ function DiceFace:createCanvas()
     local canvasSize = self.size --sets the base face of the canvas
 
     local ratio = canvasSize/self.dim --ratio between the image size and the canvas size
-
     local faceCanvas = love.graphics.newCanvas(canvasSize, canvasSize) -- create the canvas
 
     --General settings
@@ -157,20 +172,8 @@ function DiceFace:createCanvas()
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(faceCanvas)
 
-    --Draw the face image
-     if(self:getIsSelected()==true)then
-
-        love.graphics.setShader(Shaders.rainbowShader)
-
-        Shaders.rainbowShader:send("time", self.time/10 % 1)
-
-    else
-        love.graphics.setShader()
-    end
-
     love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
     
-    love.graphics.setShader()
     love.graphics.setCanvas(currentCanvas)
 
     return faceCanvas
@@ -186,15 +189,6 @@ function DiceFace:updateCanvas(dt)
     love.graphics.setCanvas(self.diceCanvas)
     love.graphics.clear()
 
-    --Draw the face image
-    if(self:getIsSelected()==true)then
-        love.graphics.setShader(Shaders.rainbowShader)
-        Shaders.rainbowShader:send("time", self.time/10 % 1)
-
-    else
-        love.graphics.setShader()
-    end
-
     love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
     
     love.graphics.setShader()
@@ -202,11 +196,6 @@ function DiceFace:updateCanvas(dt)
 end
 
 function DiceFace:updateSprite()
-    --print("----")
-    for k,v in ipairs(self.diceObject:getAllFaces())do
-        --print(tostring(v.faceValue).." "..tostring(v.name))
-    end
-
     self.spriteSheet = self.representedFace:getSpriteSheet()
     self.quad = self.representedFace:getQuad(self.representedFace.faceValue)
     self.dim = self.representedFace:getFaceDim()
@@ -227,12 +216,6 @@ function DiceFace:calculateScale()
         self.hoverScale = 0
     end
 
-    if(self.isSelected)then
-        self.selectionScale = 0.2
-    else
-        self.selectionScale = 0
-    end
-
 	if(self.isHighlighted==true)then
 		self.highlightScale = AnimationUtils.osccilate(self.time, 5, 0.15)
 	else
@@ -240,7 +223,7 @@ function DiceFace:calculateScale()
 	end
 
     --Update targeted scale, rotation and position
-    self.targetedScale = self.baseTargetedScale + self.selectionScale + self.hoverScale + self.highlightScale
+    self.targetedScale = self.baseTargetedScale + self.hoverScale + self.highlightScale
     
 end
 
@@ -318,12 +301,6 @@ function DiceFace:calculateScale()
         end
     else
         self.hoverScale = 0
-    end
-
-    if(self.isSelected)then
-        self.selectionScale = 0.2
-    else
-        self.selectionScale = 0
     end
 
 	if(self.isHighlighted==true)then

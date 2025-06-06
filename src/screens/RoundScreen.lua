@@ -206,6 +206,15 @@ function RoundScreen:updateCanvas(dt)
     love.graphics.setCanvas(self.gameCanvas)
 end
 
+function RoundScreen:updateSelectedPosDices()
+    local i = 1
+    for k,d in next,self.round.selectedDices do
+        self.round.diceFaces2[d].targetY = 82
+        self.round.diceFaces2[d].targetX = 82 + (i-1)*(180)
+        i=i+1
+    end
+end
+
 --==DRAW FUNCTIONS==--
 
 function RoundScreen:drawDiceTray(x, y, dices2)

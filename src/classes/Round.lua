@@ -10,7 +10,6 @@ function Round:new(n, gameCanvas, run, baseReward, target, diceObjects)
     local self = setmetatable({}, Round)
 
     self.selectedDices = {}
-    self.selectedFaces = {}
     self.drawedFaceObjects = {}
 
     self.dragOriginX = nil
@@ -269,19 +268,20 @@ function Round:updateselectedDices(uiFace)
     if(uiFace:getIsSelected())then -- Dé sélectionné
         if(not self:containsDice(self.selectedDices, uiFace:getDiceObject()))then
             table.insert(self.selectedDices, uiFace:getDiceObject()) -- Ajoute le dé à la fin-
-            table.insert(self.selectedFaces, uiFace:getDiceObject()) -- Ajoute le numéro de face
         end
     else
         if(self:containsDice(self.selectedDices, uiFace:getDiceObject())) then -- Dé non sélectionné
             for i, dice in ipairs(self.selectedDices) do
                 if dice == uiFace:getDiceObject() then
                     table.remove(self.selectedDices, i) --Trouve le dé dans la liste et le supprime
-                    table.remove(self.selectedFaces, i)
                     break
                 end
             end
         end
     end
+
+    --Update the selected dices position
+    self.terrain:updateSelectedPosDices()
 end
 
 --==REROLL FUNCTIONS (NEW)==--
@@ -352,7 +352,6 @@ end
 
 function Round:resetselectedDices()
     self.selectedDices = {} --remove the dices
-    self.selectedFaces = {} --remove the face numbers
     for key,uiFace in next,self.diceFaces2 do --unselect the UI Faces
         uiFace:setSelected(false)
     end
