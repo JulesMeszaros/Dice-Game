@@ -6,12 +6,12 @@ function CalculatePoints.numberBasePoints(number, faces, dices, drawedDices)
     local score = 0
     local usedDices = {}
 
-    for dice,f in next,drawedDices do
-        if(f.faceValue==number)then
+    for k,d in next,dices do
+        if(d:getCurrentFaceObject().faceValue==number)then
              -- incrementing the score
             score = score + number
             -- adding the dice to the table of dices used for this face
-            table.insert(usedDices, dice) 
+            table.insert(usedDices, d) 
         end
     end
     return {score, usedDices}
@@ -22,7 +22,7 @@ function CalculatePoints.brelanBasePoints(faces, dices, drawedDices)
     local score = 0
     local usedDices = {}
 
-    local distrib = getValueDistribution(drawedDices)
+    local distrib = getValueDistribution(dices)
 
     local maxDistrib = 0
     local maxDistribN = 0
@@ -35,9 +35,11 @@ function CalculatePoints.brelanBasePoints(faces, dices, drawedDices)
     end
 
     if(maxDistrib>=3)then --On vérifie que le numero le plus représenté est superieur ou égal à 3
-        for dice,f in next,drawedDices do
-            score = score + f.faceValue
-            table.insert(usedDices, dice)
+        for k,d in next,dices do
+            if(d:getCurrentFaceObject().faceValue==maxDistribN)then
+                score = score + d:getCurrentFaceObject().faceValue
+                table.insert(usedDices, d)
+            end
         end
     else
         score = 0
@@ -49,7 +51,7 @@ function CalculatePoints.fullBasePoints(faces, dices, drawedDices)
     local score = 0
     local usedDices = {}
 
-    local distrib = getValueDistribution(drawedDices)
+    local distrib = getValueDistribution(dices)
 
     --On vérifie qu'on a a la fois une face présente 3 fois et une autre présente 2 fois
     hasFull = hasAllValues(distrib, {3, 2})
@@ -71,7 +73,7 @@ function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
     local maxDistrib = 0
     local maxDistribN = 0
 
-    local distrib = getValueDistribution(drawedDices)
+    local distrib = getValueDistribution(dices)
 
     for n,v in next,distrib do --get max distributed number
         if v > maxDistrib then
@@ -81,10 +83,10 @@ function CalculatePoints.carreBasePoints(faces, dices, drawedDices)
     end
 
     if(maxDistrib>=4)then --On vérifie que le numero le plus représenté est superieur ou égal à 3
-        for dice,f in next,drawedDices do
-            score = score + f.faceValue
-            if(f.faceValue==maxDistribN)then
-                table.insert(usedDices, dice)
+        for dice,d in next,dices do
+            if(d:getCurrentFaceObject().faceValue==maxDistribN)then
+                score = score + d:getCurrentFaceObject().faceValue
+                table.insert(usedDices, d)
             end
         end
     else
@@ -97,20 +99,20 @@ end
 function CalculatePoints.pttSuiteBasePoints(faces, dices, drawedDices)
     local score = 0
     local usedDices = {}
-
     local drawedNumbers = {}
-    for f,n in next,drawedDices do
-        table.insert(drawedNumbers, n.faceValue)
+
+    for f,n in next,dices do
+        table.insert(drawedNumbers, n:getCurrentFaceObject().faceValue)
     end
 
     local suite = getStraight(drawedNumbers, 4)
-
+    --Ajouter une condition pour ne pas compter deux fois un meme nombre
     if(suite)then
         score = 30
         for i,j in next,suite do
-            for dice,f in next,drawedDices do
-                if(f.faceValue==j)then
-                    table.insert(usedDices, dice)
+            for dice,f in next,dices do
+                if(f:getCurrentFaceObject().faceValue==j)then
+                    table.insert(usedDices, f)
                 end
             end
         end
@@ -123,18 +125,18 @@ end
 function CalculatePoints.gdSuiteBasePoints(faces, dices, drawedDices)
     local score = 0
     local usedDices = {}
-
     local drawedNumbers = {}
-    for f,n in next,drawedDices do
-        table.insert(drawedNumbers, n.faceValue)
+
+    for f,n in next,dices do
+        table.insert(drawedNumbers, n:getCurrentFaceObject().faceValue)
     end
 
     local suite = getStraight(drawedNumbers, 5)
 
     if(suite)then
         score = 40
-        for dice,j in next,drawedDices do
-            table.insert(usedDices, dice)
+        for dice,j in next,dices do
+            table.insert(usedDices, j)
         end
     else 
         score = 0
@@ -146,9 +148,9 @@ function CalculatePoints.chanceBasePoints(faces, dices, drawedDices)
     local score = 0
     local usedDices = {}
 
-    for dice,f in next,drawedDices do
-        score = score + f.faceValue
-        table.insert(usedDices, dice)
+    for k,d in next,dices do
+        score = score + d:getCurrentFaceObject().faceValue
+        table.insert(usedDices, d)
     end
     return {score, usedDices}
 end
@@ -160,7 +162,7 @@ function CalculatePoints.yatzeeBasePoints(faces, dices, drawedDices)
     local maxDistrib = 0
     local maxDistribN = 0
 
-    distrib = getValueDistribution(drawedDices)
+    distrib = getValueDistribution(dices)
 
     for n,v in next,distrib do --get max distributed number
         if v > maxDistrib then
@@ -186,10 +188,8 @@ end
 function getValueDistribution(tbl)
     local distribution = {}
 
-    for _, value in pairs(tbl) do
-        if type(value.faceValue) == "number" then
-            distribution[value.faceValue] = (distribution[value.faceValue] or 0) + 1
-        end
+    for _, dice in pairs(tbl) do
+        distribution[dice:getCurrentFaceObject().faceValue] = (distribution[dice:getCurrentFaceObject().faceValue] or 0) + 1
     end
 
     return distribution

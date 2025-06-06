@@ -50,12 +50,6 @@ diceObjects[1]:setFace(pharmaFace2, 6)
 diceObjects[1]:setFace(luckyFace, 3)
 diceObjects[4]:setFace(reverseFace, 5)
 
-print("----")
-for k,v in ipairs (diceObjects[1]:getAllFaces()) do
-    print("-----")
-    print(v.name.." "..tostring(v.faceValue))
-end
-
 function Game:start()
     local self = setmetatable({}, Game)
 

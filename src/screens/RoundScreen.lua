@@ -544,49 +544,6 @@ function RoundScreen:reorganiseDiceFaces(dices)
     self.round:resetselectedDices()
 end
 
-function RoundScreen:getCurrentlyHoveredFigure()
-    local figureNames = {
-        "Uns",
-        "Deux",
-        "Trois",
-        "Quatres",
-        "Cinqs",
-        "Six",
-        "Chance",
-        "Brelan",
-        "Full",
-        "Petite Suite",
-        "Grande Suite",
-        "Carré",
-        "Yhatze!",
-    }
-
-    local calcPoints = {
-        function()return CalculatePoints.numberBasePoints(1, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.numberBasePoints(2, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.numberBasePoints(3, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.numberBasePoints(4, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.numberBasePoints(5, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.numberBasePoints(6, self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.chanceBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.brelanBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.fullBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.pttSuiteBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.gdSuiteBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.carreBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end,
-        function()return CalculatePoints.yatzeeBasePoints(self.round.selectedFaces, self.round.selectedDices, self.round.drawedFaceObjects)end
-    }
-
-    if(self.currentlyHoveredFigure) then
-        local calculatedPoints = calcPoints[self.currentlyHoveredFigure]()[1]
-        local usedDices = calcPoints[self.currentlyHoveredFigure]()[2]
-        local textToShow = figureNames[self.currentlyHoveredFigure] .. " : "..calculatedPoints ..' pts'
-        return({textToShow, usedDices})
-    else
-        return nil
-    end
-end
-
 function RoundScreen:highlightDices(usedDices)
     for key,diceface in next,self.round.diceFaces2 do
         diceface:setHighlighted(false)
