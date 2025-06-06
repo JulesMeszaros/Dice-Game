@@ -275,12 +275,14 @@ function RoundScreen:drawFigureButtons(x, y)
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             self:highlightDices(self.calcBasePoints[i]()[2])
             --Draw a shadow on the line
-            if(love.mouse.isDown(1)) then
-                love.graphics.setColor(0.7, 0, 0, 0.3)
-            else
-                love.graphics.setColor(1, 0, 0, 0.3)
+            if(self.round.availableFigures[i]>=1)then
+                if(love.mouse.isDown(1)) then
+                    love.graphics.setColor(0.7, 0, 0, 0.3)
+                else
+                    love.graphics.setColor(1, 0, 0, 0.3)
+                end
+                love.graphics.rectangle("fill", 0, i*45, self.figureButtonsCanvas:getWidth(), 45)
             end
-            love.graphics.rectangle("fill", 0, i*45, self.figureButtonsCanvas:getWidth(), 45)
             love.graphics.setColor(1, 1, 1, 1)
         end
     end
@@ -529,9 +531,10 @@ end
 
 function RoundScreen:playFigure(figure, params)
     local points, usedDices = params[1], params[2]
-    self.round.availableFigures[figure] = self.round.availableFigures[figure]-1
-    
-    self.round:playFigure(points, usedDices)
+    if(self.round.availableFigures[figure]>=1)then
+        self.round:playFigure(points, usedDices)
+        self.round.availableFigures[figure] = self.round.availableFigures[figure]-1
+    end
 end
 
 function RoundScreen:reorganiseDiceFaces(dices)
