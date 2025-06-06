@@ -1,3 +1,4 @@
+local Constants = require("src.utils.constants")
 local DiceFace = require("src.classes.ui.DiceFace")
 local RoundScreen = require("src.screens.RoundScreen")
 
@@ -33,6 +34,11 @@ function Round:new(n, gameCanvas, run, baseReward, target, diceObjects)
     --Current Round Parameters
     self.nround = n
     self.availableRerolls = 3
+    --Sets the number of time we can play a figure
+    self.availableFigures = {}
+    for k,f in next, Constants.FIGURES do
+        self.availableFigures[f] = 1
+    end
 
     --Dices
     self.diceObjects = diceObjects
