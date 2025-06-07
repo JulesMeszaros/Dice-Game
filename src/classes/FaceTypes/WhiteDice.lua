@@ -36,8 +36,8 @@ function WhiteDice:new(faceValue)
     return self
 end
 
-function WhiteDice:triggerEffect()
-    print("Dice triggered "..tostring(self.faceValue))
+function WhiteDice:triggerEffect(round)
+    round.roundScore = round.roundScore + self.faceValue
 end
 
 function WhiteDice:getSpriteSheet()
@@ -55,6 +55,10 @@ end
 
 function WhiteDice:getFaceDim()
     return self.faceDimmension
+end
+
+function WhiteDice:setDiceObject(diceObject)
+    self.diceObject = diceObject
 end
 
 return WhiteDice

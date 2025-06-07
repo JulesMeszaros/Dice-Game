@@ -266,6 +266,7 @@ end
 
 function DiceFace:setFaceObject(faceObject)
     self.representedFace = faceObject
+    faceObject:setDiceObject(self)
     self:updateSprite()
 end
 

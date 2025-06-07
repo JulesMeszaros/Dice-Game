@@ -169,7 +169,6 @@ function Round:getDicesOrder(usedDices)
     local dices = {}
 
     for i, dice in next,usedDices do
-        print(dice)
         table.insert(diceFaces, self.diceFaces2[dice])
         table.insert(dices, dice)
     end
@@ -242,6 +241,7 @@ function Round:triggerNextDice()
         table.remove(self.dicesTriggerQueue, 1)
     else --ends the trigger phase
         self:endTriggeringPhase()
+        print("----")
     end
 end
 

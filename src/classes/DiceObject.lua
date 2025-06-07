@@ -10,9 +10,9 @@ function DiceObject:new(faces)
     return self
 end
 
-function DiceObject:trigger()
+function DiceObject:trigger(round)
     --Triggers the current active face function
-    self.currentFaceObject:triggerEffect()
+    self.currentFaceObject:triggerEffect(round)
 end
 
 --==GET/SET FUNCTIONS==--
