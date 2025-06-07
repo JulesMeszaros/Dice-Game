@@ -251,6 +251,7 @@ function Round:endTriggeringPhase()
 
     if(self.remainingHands>=1)then
         self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
+        self:resetselectedDices()
         self:makeRoll(self.diceObjects) -- On effectue un reroll
         self.availableRerolls = 3
     end
