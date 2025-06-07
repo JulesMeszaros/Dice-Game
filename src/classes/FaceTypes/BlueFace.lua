@@ -33,9 +33,4 @@ function BlueFace:new(faceValue)
     return self
 end
 
-
-function BlueFace:triggerEffect()
-    print("PharmaDice triggered")
-end
-
 return BlueFace

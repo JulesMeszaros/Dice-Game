@@ -15,7 +15,7 @@ function Round:new(n, gameCanvas, run, baseReward, target, diceObjects)
 
     self.dragOriginX = nil
     self.dragOriginY = nil
-    self.remainingHands = 5
+    self.remainingHands = 4
     self.roundScore = 0
 
     --==Triggering Phase==--
@@ -33,7 +33,7 @@ function Round:new(n, gameCanvas, run, baseReward, target, diceObjects)
 
     --Current Round Parameters
     self.nround = n
-    self.availableRerolls = 3
+    self.availableRerolls = 2
     --Sets the number of time we can play a figure
     self.availableFigures = {}
     for k,f in next, Constants.FIGURES do

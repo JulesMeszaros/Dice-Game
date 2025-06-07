@@ -33,9 +33,4 @@ function RedFace:new(faceValue)
     return self
 end
 
-
-function RedFace:triggerEffect()
-    print("PharmaDice triggered")
-end
-
 return RedFace

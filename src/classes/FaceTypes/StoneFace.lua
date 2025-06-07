@@ -33,9 +33,4 @@ function StoneFace:new(faceValue)
     return self
 end
 
-
-function StoneFace:triggerEffect()
-    print("PharmaDice triggered")
-end
-
 return StoneFace

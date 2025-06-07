@@ -33,9 +33,4 @@ function LuckyFace:new(faceValue)
     return self
 end
 
-
-function LuckyFace:triggerEffect()
-    print("PharmaDice triggered")
-end
-
 return LuckyFace
