@@ -2,8 +2,6 @@
 
 ## A Implémenter
 
-- TODO: Compteur de nombre de fois qu'on peut rejouer une figure, qui se reset à la fin d'un round
-
 ### Général
 
 #### Phase de trigger
