@@ -25,6 +25,14 @@ function RoundChoice:new(previousRound, run)
     self.previousRound = previousRound
     self.run = run
 
+    self.newDesk = self.previousRound.deskNumber +1
+    self.newFloor = self.previousRound.floorNumber
+
+     if(self.newDesk > 3)then
+        self.newFloor = self.newFloor+1
+        self.newDesk = 1
+    end
+
     --Création des différents rounds à jouer
     for i = 1, choiceNumber do
         table.insert(self.possibleRounds, self:generateNewRound())
@@ -101,15 +109,7 @@ function RoundChoice:generateNewRound()
     local baseReward = 3 + math.random(0, 3)
     local targetScore = 0 + 20*(self.previousRound.nround) + (math.random(0, 5) * 10)
 
-    local floor = self.previousRound.floorNumber
-    local desk = self.previousRound.deskNumber +1
-
-    if(self.previousRound.deskNumber ==3)then
-        floor = floor+1
-        desk = 1
-    end
-
-    local r = Round:new(self.previousRound.nround + 1, floor, desk,self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects)
+    local r = Round:new(self.previousRound.nround + 1, self.newFloor, self.newDesk,self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects)
     return r
 end
 
