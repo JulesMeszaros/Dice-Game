@@ -253,10 +253,10 @@ function RoundScreen:drawFigureGrid(x, y)
 
     --Write the remaining possible hands
     for i=1, 13 do
-        local handsRemaining = love.graphics.newText(Fonts.nexaSmall, self.round.availableFigures[i])
+        local handsRemaining = love.graphics.newText(Fonts.nexaSmall, self.round.run.availableFigures[i])
         love.graphics.draw(handsRemaining, 320+85, 45*i+25, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
         --if no hands remaining, grey out the line
-        if(self.round.availableFigures[i]<=0) then
+        if(self.round.run.availableFigures[i]<=0) then
             love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
             love.graphics.rectangle("fill", 0, i*45, self.figureButtonsCanvas:getWidth(), 45)
             love.graphics.setColor(0, 0, 0, 1)
@@ -275,7 +275,7 @@ function RoundScreen:drawFigureGrid(x, y)
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             self:highlightDices(self.calcBasePoints[i]()[2])
             --Draw a shadow on the line
-            if(self.round.availableFigures[i]>=1 and table.getn(self.round.selectedDices)>=1)then
+            if(self.round.run.availableFigures[i]>=1 and table.getn(self.round.selectedDices)>=1)then
                 if(love.mouse.isDown(1)) then
                     love.graphics.setColor(0.7, 0, 0, 0.3)
                 else
@@ -358,7 +358,7 @@ function RoundScreen:drawRoundDetails()
     --Create the texts
     local rerollText = love.graphics.newText(Fonts.nexaBig, tostring(self.round.availableRerolls))
     local currentHands = love.graphics.newText(Fonts.nexaBig, tostring(self.round.remainingHands))
-    local currentRoundText = love.graphics.newText(font, 'Round : '..tostring(self.round.nround))
+    local currentRoundText = love.graphics.newText(font, 'Floor '..tostring(self.round.floorNumber)..' - Desk : '..tostring(self.round.deskNumber))
     local moneyText = love.graphics.newText(font, tostring(self.round.run.money).."€")
 
     --ROUND
@@ -531,9 +531,9 @@ end
 
 function RoundScreen:playFigure(figure, params)
     local points, usedDices = params[1], params[2]
-    if(self.round.availableFigures[figure]>=1 and table.getn(self.round.selectedDices)>=1)then
+    if(self.round.run.availableFigures[figure]>=1 and table.getn(self.round.selectedDices)>=1)then
         self.round:playFigure(points, usedDices)
-        self.round.availableFigures[figure] = self.round.availableFigures[figure]-1
+        self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure]-1
     end
 end
 

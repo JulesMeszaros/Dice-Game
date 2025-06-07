@@ -23,12 +23,12 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     --Gameplay variables
     self.usedRerolls = 0 --total rerolls used for this game
     --Run variables
-    self.roundNumber = 1
-    self.totalScore = 0
+    self.floorNumber = 1 --Représente l'étage (augmente de 1 après un boss)
+    self.floorDeskNumber = 1 --Représente le numéro de bureau dans l'étage actuel (retourne à 1 après un boss)
+    self.roundNumber = 1 --Représente le numéro de round total
     --Run state
     self.currentState = Constants.RUN_STATES.ROUND
-    self.isInRound = true
-    self.isInShop = false
+
     --Money
     self.money = 5
 
@@ -37,11 +37,16 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.game = game
 
     --On attribue le set de dés
-    self.dices = nil
     self.diceObjects = diceObjects
-    --Create the first Round of the run
-    local round = Round:new(1, self.gameCanvas, self, 0, 0, self.diceObjects)
 
+    --Sets the number of time we can play a figure
+    self.availableFigures = {}
+    for k,f in next, Constants.FIGURES do
+        self.availableFigures[f] = 2
+    end
+
+    --Create the first Round of the run
+    local round = Round:new(1, self.floorNumber, self.floorDeskNumber, self.gameCanvas, self, 0, 0, self.diceObjects)
     self:startNewRound(round)
     
     return self
@@ -79,12 +84,16 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
 end
 
 --==ROUND FUNCTIONS==--
-function Run:startNewRound(round)
+function Run:startNewRound(round, roundtype)
+    --Sets the round number
     self.roundNumber = round.nround
+    --Makes the first roll
     round:makeRoll(self.diceObjects)
-
+    --Sets the run's current round
     self.currentRound = round
-
+    --Resets the available hands
+    self:resetAvailableFigures()
+    --Changes the screen to the round screen
     self.currentState = Constants.RUN_STATES.ROUND
 end
 
@@ -171,6 +180,13 @@ function Run:mousemoved(x, y, dx, dy)
         or math.abs(love.mouse.getY() - self.dragOriginY) > self.draggingTreshold) then
             self.isDragging = true
         end
+    end
+end
+
+function Run:resetAvailableFigures()
+    self.availableFigures = {}
+    for k,f in next, Constants.FIGURES do
+        self.availableFigures[f] = 2
     end
 end
 

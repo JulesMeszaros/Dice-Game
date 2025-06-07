@@ -38,6 +38,11 @@ Constants.RUN_STATES = {
     RUN_INFOS = 6
 }
 
+Constants.ROUND_TYPES = {
+    BASE = 1,
+    BOSS = 2
+}
+
 
 
 return Constants

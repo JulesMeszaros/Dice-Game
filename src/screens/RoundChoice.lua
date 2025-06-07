@@ -101,7 +101,15 @@ function RoundChoice:generateNewRound()
     local baseReward = 3 + math.random(0, 3)
     local targetScore = 0 + 20*(self.previousRound.nround) + (math.random(0, 5) * 10)
 
-    local r = Round:new(self.previousRound.nround + 1, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects)
+    local floor = self.previousRound.floorNumber
+    local desk = self.previousRound.deskNumber +1
+
+    if(self.previousRound.deskNumber ==3)then
+        floor = floor+1
+        desk = 1
+    end
+
+    local r = Round:new(self.previousRound.nround + 1, floor, desk,self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects)
     return r
 end
 
