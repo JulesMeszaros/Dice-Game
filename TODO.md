@@ -18,6 +18,9 @@
 
 ### Gameplay
 
+- TODO: coder la progression avec bosses tous les 3 bureaux
+- TODO: coder un début de shop
+
 ### Code
 
 - TODO: Raffiner le drag and drop pour éviter un conflict entre les dés superposés

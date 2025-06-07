@@ -19,10 +19,6 @@ local applyCRT = false
 local Game = {}
 Game.__index = Game
 
-local PAGES = {
-    MAIN_MENU = 0,
-    GAME = 1
-}
 --Game dimmensions
 local virtualWidth, virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT
 
@@ -63,7 +59,7 @@ function Game:start()
 
     self.gameCanvas = gameCanvas
 
-    self.currentScreen = PAGES.MAIN_MENU
+    self.currentScreen = Constants.PAGES.MAIN_MENU
 
     --Create a main menu
     self.mainMenu = MainMenu:new(self.gameCanvas, self)
@@ -73,9 +69,9 @@ function Game:start()
 end
 
 function Game:update(dt)
-    if self.currentScreen == PAGES.MAIN_MENU then
+    if self.currentScreen == Constants.PAGES.MAIN_MENU then
         self.mainMenu:update(dt)
-    elseif self.currentScreen == PAGES.GAME then
+    elseif self.currentScreen == Constants.PAGES.GAME then
         self.run:update(dt)     
     end
 end
@@ -84,9 +80,9 @@ function Game:draw()
     love.graphics.setCanvas(self.gameCanvas)
     love.graphics.clear(26/255, 79/255, 37/255)
     --Rendu du jeu dans le game canvas--
-    if(self.currentScreen == PAGES.MAIN_MENU)then
+    if(self.currentScreen == Constants.PAGES.MAIN_MENU)then
         self.mainMenu:draw()
-    elseif(self.currentScreen == PAGES.GAME)then
+    elseif(self.currentScreen == Constants.PAGES.GAME)then
         self.run:draw(self.gameCanvas)
     end
 
@@ -115,31 +111,29 @@ end
 --==GAME FUNCTION==--
 
 function Game:startNewRun()
-    self.currentScreen = PAGES.GAME
+    self.currentScreen = Constants.PAGES.GAME
     self.run = Run:new(dices, self.gameCanvas, self, self.diceObjects)
-
 end
 
 --==INPUTS FUNCTIONS==--
 
 function Game:keypressed(key)
-
     if(key=="c")then
         applyCRT = not applyCRT
     end
 
     if(key=="b")then
-        self.currentScreen = PAGES.GAME
+        self.currentScreen = Constants.PAGES.GAME
         self.run = Run:new(dices, self.gameCanvas, self)
     end
 
     if(key=="o")then
-        self.currentScreen = PAGES.MAIN_MENU
+        self.currentScreen = Constants.PAGES.MAIN_MENU
     end
 
-    if(self.currentScreen == PAGES.MAIN_MENU)then
+    if(self.currentScreen == Constants.PAGES.MAIN_MENU)then
 
-    elseif(self.currentScreen == PAGES.GAME)then
+    elseif(self.currentScreen == Constants.PAGES.GAME)then
         self.run:keypressed(key)
     end
 end
@@ -147,9 +141,9 @@ end
 function Game:mousepressed(x, y, button, istouch, presses)
     local vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 
-    if(self.currentScreen == PAGES.MAIN_MENU)then
+    if(self.currentScreen == Constants.PAGES.MAIN_MENU)then
         self.mainMenu:mousepressed(vx, vy, button, istouch, presses)
-    elseif(self.currentScreen == PAGES.GAME)then
+    elseif(self.currentScreen == Constants.PAGES.GAME)then
         self.run:mousepressed(vx, vy, button, istouch, presses)
     end
 end
@@ -157,9 +151,9 @@ end
 function Game:mousereleased(vx, vy, button, istouch, presses)
     local vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
     
-    if(self.currentScreen == PAGES.MAIN_MENU)then
+    if(self.currentScreen == Constants.PAGES.MAIN_MENU)then
         self.mainMenu:mousereleased(vx, vy, button, istouch, presses)
-    elseif(self.currentScreen == PAGES.GAME)then
+    elseif(self.currentScreen == Constants.PAGES.GAME)then
         self.run:mousereleased(vx, vy, button, istouch, presses)
     end
 end
@@ -171,9 +165,9 @@ function Game:mousemoved(x, y, dx, dy)
     
     local vdx, vdy = dx / scale, dy / scale
     
-    if(self.currentScreen == PAGES.MAIN_MENU)then
+    if(self.currentScreen == Constants.PAGES.MAIN_MENU)then
         self.mainMenu:mousemoved(vx, vy, vdx, vdy)
-    elseif(self.currentScreen == PAGES.GAME)then
+    elseif(self.currentScreen == Constants.PAGES.GAME)then
         self.run:mousemoved(vx, vy, vdx, vdy)
     end
 end

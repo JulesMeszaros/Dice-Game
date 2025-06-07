@@ -5,6 +5,7 @@ local Constants = {
     GAME_VERSION = "0.0.6-dev"
 }
 
+--Enums
 Constants.FIGURES = {
     ONES = 1,
     TWOS = 2,
@@ -20,5 +21,18 @@ Constants.FIGURES = {
     LARGE_SUITE = 12,
     DELUXE = 13
 }
+
+Constants.PAGES = {
+    MAIN_MENU = 0,
+    GAME = 1
+}
+
+Constants.RUN_STATES = {
+    ROUND = 1,
+    SHOP = 2,
+    GAME_OVER = 3
+}
+
+
 
 return Constants
