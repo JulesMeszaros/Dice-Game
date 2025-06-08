@@ -34,7 +34,7 @@ function Floor:generateDesks(deskRank)
     local targetScore = deskRank*5 + 20*self.floorNumber + (math.random(0, 3) * 10)
     local deskNumber = self.floorNumber*100+math.random(0, 98)
 
-    local r = Round:new(1, self.floorNumber, deskNumber, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects)
+    local r = Round:new(1, self.floorNumber, deskNumber, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects, Constants.ROUND_TYPES.BASE)
     r.roundType = Constants.ROUND_TYPES.BASE
     return r
 end
@@ -45,7 +45,7 @@ function Floor:generateBoss()
 
     local deskNumber = self.floorNumber*100+99
 
-    local r = Round:new(1, self.floorNumber, deskNumber, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects)
+    local r = Round:new(1, self.floorNumber, deskNumber, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects, Constants.ROUND_TYPES.BOSS)
     r.roundType = Constants.ROUND_TYPES.BOSS
     
     return r

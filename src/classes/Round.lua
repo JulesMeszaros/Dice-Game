@@ -7,7 +7,7 @@ local Inputs = require("src.utils.scripts.inputs")
 local Round = {}
 Round.__index = Round
 
-function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObjects)
+function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObjects, roundType)
     local self = setmetatable({}, Round)
 
     self.selectedDices = {}
@@ -35,7 +35,14 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.nround = n
     self.floorNumber = floor
     self.deskNumber = desk
-    self.roundType = Constants.ROUND_TYPES.BASE
+    self.roundType = roundType
+
+    --Ennemy metadata
+    if(self.roundType == Constants.ROUND_TYPES.BASE) then
+        self.enemyJob = Constants.EMPLOIS[math.random(#Constants.EMPLOIS)]
+    else
+        self.enemyJob = "Manager"
+    end
 
     self.availableRerolls = 2
     --Sets the number of time we can play a figure
@@ -72,7 +79,6 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 end
 
 function Round:update(dt)
-    
     self.terrain:update(dt)
 end
 

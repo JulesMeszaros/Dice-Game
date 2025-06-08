@@ -45,10 +45,6 @@ function Run:new(dices, gameCanvas, game, diceObjects)
         self.availableFigures[f] = 2
     end
 
-    --Create the first Round of the run
-    local round = Round:new(1, self.floorNumber, self.floorDeskNumber, self.gameCanvas, self, 0, 0, self.diceObjects)
-    --self:startNewRound(round)
-
     --Floor variables
     --Create the first floor of the game
     self.currentFloor = Floor:new(1, self)

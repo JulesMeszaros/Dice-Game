@@ -97,10 +97,12 @@ function DeskChoice:updateChoiceCanvas(c, dt, i)
     local rewardText = love.graphics.newText(Fonts.nexaSmall, "Reward : "..tostring(self.possibleRounds[i].baseReward).."€")
     local targetText = love.graphics.newText(Fonts.nexaMedium, "Target : "..tostring(self.possibleRounds[i].targetScore).." pts")
     local deskNumberText = love.graphics.newText(Fonts.nexaMedium, "Desk : "..tostring(self.possibleRounds[i].deskNumber))
+    local jobText = love.graphics.newText(Fonts.nexaMedium, self.possibleRounds[i].enemyJob)
 
     love.graphics.draw(rewardText, c:getWidth()/2, c:getHeight()-150, 0, 1, 1, rewardText:getWidth()/2, rewardText:getHeight()/2)
     love.graphics.draw(deskNumberText, c:getWidth()/2, 50, 0, 1, 1, deskNumberText:getWidth()/2, deskNumberText:getHeight()/2)
-    love.graphics.draw(targetText, c:getWidth()/2, 120, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
+    love.graphics.draw(jobText, c:getWidth()/2, 120, 0, 1, 1, jobText:getWidth()/2, jobText:getHeight()/2)
+    love.graphics.draw(targetText, c:getWidth()/2, 180, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
 
     self.uiElements.DeskChoiceButtons[i]:update(dt)
     self.uiElements.DeskChoiceButtons[i]:draw()

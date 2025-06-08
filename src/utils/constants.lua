@@ -43,6 +43,27 @@ Constants.ROUND_TYPES = {
     BOSS = 2
 }
 
+Constants.EMPLOIS = {
+    "Stagiaire",
+    "Comptable",
+    "RH",
+    "Assistant.e",
+    "Développeur",
+    "Chef.fe de projet",
+    "Responsable marketing",
+    "Designer graphique",
+    "Chargé de communication",
+    "Ressources humaines",
+    "Technicien informatique",
+    "Support client",
+    "Vendeur / Commercial",
+    "Responsable produit",
+    "Data analyst",
+    "Juriste d’entreprise",
+    "Assistant administratif",
+    "Responsable logistique"
+}
+
 
 
 return Constants
