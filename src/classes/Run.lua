@@ -1,6 +1,5 @@
 local Round = require("src.classes.Round")
 local GameOverScreen = require("src.screens.GameOverScreen")
-local RoundChoice = require("src.screens.RoundChoice")
 local Constants = require("src.utils.constants")
 local Floor = require("src.classes.Floor")
 local DeskChoice = require("src.screens.DeskChoice")

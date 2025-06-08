@@ -358,7 +358,7 @@ function RoundScreen:drawRoundDetails()
     --Create the texts
     local rerollText = love.graphics.newText(Fonts.nexaBig, tostring(self.round.availableRerolls))
     local currentHands = love.graphics.newText(Fonts.nexaBig, tostring(self.round.remainingHands))
-    local currentRoundText = love.graphics.newText(font, 'Floor '..tostring(self.round.floorNumber)..' - Desk : '..tostring(self.round.deskNumber))
+    local currentRoundText = love.graphics.newText(font, 'Floor '..tostring(self.round.floorNumber)..'\nDesk : '..tostring(self.round.deskNumber))
     local moneyText = love.graphics.newText(font, tostring(self.round.run.money).."€")
 
     --ROUND
