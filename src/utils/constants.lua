@@ -31,12 +31,12 @@ Constants.PAGES = {
 }
 
 Constants.RUN_STATES = {
-    ROUND = 1,
-    SHOP = 2,
-    ROUND_CHOICE = 3,
-    GAME_OVER = 4,
-    MAP = 5,
-    RUN_INFOS = 6
+    ROUND = 1, --Phase de jeu
+    SHOP = 2, --TBD
+    ROUND_CHOICE = 3, --Choix du prochain round à jouer
+    GAME_OVER = 4, --Ecran de game over
+    MAP = 5, --Map du batiment, et infos de run
+    DICE_CUSTOMISATION = 6
 }
 
 Constants.ROUND_TYPES = {

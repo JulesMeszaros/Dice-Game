@@ -1,22 +1,22 @@
-local WhiteDice = require("src.classes.FaceTypes.WhiteDice")
+local WhiteFace = require("src.classes.FaceTypes.WhiteFace")
 
-local RedFace = setmetatable({}, { __index = WhiteDice })
+local RedFace = setmetatable({}, { __index = WhiteFace })
 RedFace.__index = RedFace
 
-function RedFace:new(faceValue)
-    local self = setmetatable(WhiteDice:new(), RedFace)
+function RedFace:new(faceValue, pointsValue)
+    local self = setmetatable(WhiteFace:new(), RedFace)
 
-    --Metadatas about the WhiteDice
+    --Metadatas about the WhiteFace
     self.name = "Red Face"
     self.tier = "Uncommon"
     self.id = 2
     self.description = "When triggered, adds the double of its face value to the hand's score"
 
-    --Metadatas about the graphics of the WhiteDice
+    --Metadatas about the graphics of the WhiteFace
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/RedDiceTileset120.png")
     self.spriteSheet:setFilter("nearest", "nearest")
 
-    self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteDice in px (in the png)
+    self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
 
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -29,6 +29,8 @@ function RedFace:new(faceValue)
     
     --Round status
     self.faceValue = faceValue --Le numéro de face que le dé représente
+    self.pointsValue = pointsValue --This is the points scored by the dice
+    self.totalTriggered = 0
 
     return self
 end

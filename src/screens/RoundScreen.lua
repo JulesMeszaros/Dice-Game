@@ -7,7 +7,7 @@ local Constants = require("src.utils.constants")
 local Button = require("src.classes.ui.Button")
 --Dices
 local DiceObject = require("src.classes.DiceObject")
-local FaceObject = require("src.classes.FaceTypes.WhiteDice")
+local FaceObject = require("src.classes.FaceTypes.WhiteFace")
 local DiceFace = require("src.classes.ui.DiceFace")
 --Sprites
 local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Description-proto.png")

@@ -8,7 +8,7 @@ local Shaders = require("src.utils.shaders")
 
 --Dice Face Types
 local DiceObject = require("src.classes.DiceObject") 
-local WhiteFace = require("src.classes.FaceTypes.WhiteDice")
+local WhiteFace = require("src.classes.FaceTypes.WhiteFace")
 local StoneFace = require("src.classes.FaceTypes.StoneFace")
 local RedFace = require("src.classes.FaceTypes.RedFace")
 local BlueFace = require("src.classes.FaceTypes.BlueFace")
@@ -31,16 +31,16 @@ local diceObjects = {} --liste des 6 dés blancs
 for i=1, 5 do 
     local fs = {}
     for i=1,6 do
-        local f = WhiteFace:new(i)
+        local f = WhiteFace:new(i, i)
         table.insert(fs,f)
     end
     table.insert(diceObjects, DiceObject:new(fs))
 end
 
-local stoneface = StoneFace:new(2)
-local redface = RedFace:new(4)
-local static = StaticFace:new(3)
-local blueface = BlueFace:new(3)
+local stoneface = StoneFace:new(2, 2)
+local redface = RedFace:new(4, 4)
+local static = StaticFace:new(3, 3)
+local blueface = BlueFace:new(3, 3)
 
 diceObjects[1]:setFace(redface, 3)
 diceObjects[2]:setFace(stoneface, 6)
