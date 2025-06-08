@@ -100,7 +100,6 @@ end
 function Run:createNewFloor()
     local floorNumber = self.currentFloor.floorNumber + 1
     local newFloor = Floor:new(floorNumber, self)
-
     return newFloor
 end
 
@@ -120,17 +119,21 @@ end
 function Run:endRound()
     --checks if the goal was reached during round
     if(self.currentRound.roundScore >= self.currentRound.targetScore)then
-        --Triggers the next round
         --Calculate the money earned, based on the number of hands remaining
         local moneyEarned = self.currentRound.remainingHands + self.currentRound.baseReward
         self.money = self.money + moneyEarned
+        --Increments the desk, and goes to the next floor if the desk rank is >3
+        self.floorDeskNumber = self.floorDeskNumber + 1
+        print(self.floorDeskNumber)
+        if(self.floorDeskNumber>3)then
+            self.currentFloor = self:createNewFloor()
+            self.floorDeskNumber = 1
+            print('New floor created')
+        end
 
-        --Make a local copy of the round to pass in the after round sequence
-        local playedRound = self.currentRound
-        local afterRound = RoundChoice:new(playedRound, self)
-        self.shop = afterRound
+        self.deskChoice = DeskChoice:new(self.currentFloor, self)
 
-        self.currentState = Constants.RUN_STATES.SHOP --Change d'état de Run
+        self.currentState = Constants.RUN_STATES.ROUND_CHOICE --Change d'état de Run
     else --gameover case
         local gameOver = GameOverScreen:new(self.gameCanvas, self)
         self.gameOver = gameOver

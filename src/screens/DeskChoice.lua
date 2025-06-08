@@ -55,13 +55,20 @@ function DeskChoice:update(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
+
+
     for i=1, table.getn(self.choiceCanvas) do
         self:updateChoiceCanvas(self.choiceCanvas[i], dt, i)
         love.graphics.draw(self.choiceCanvas[i], 50+(i-1)*(20+self.choiceCanvasWidth), 200)
     end
 
     local topText = love.graphics.newText(Fonts.nexaMedium, "Choisissez votre bureau...")
+    local deskText = love.graphics.newText(Fonts.nexaMedium, "Bureau "..tostring(self.run.floorDeskNumber).."/3")
+    local floorText = love.graphics.newText(Fonts.nexaMedium, "Etage "..tostring(self.floor.floorNumber))
+
     love.graphics.draw(topText, self.canvas:getWidth()/2, 50, 0, 1, 1, topText:getWidth()/2, 0)
+    love.graphics.draw(deskText, self.canvas:getWidth()/2, 100, 0, 1, 1, deskText:getWidth()/2, 0)
+    love.graphics.draw(floorText, self.canvas:getWidth()/2, 150, 0, 1, 1, floorText:getWidth()/2, 0)
 
 
     love.graphics.setCanvas(currentCanvas)
