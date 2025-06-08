@@ -22,31 +22,15 @@ function DeskChoice:new(floor, run)
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
     self.floor = floor
     self.run = run
-    self.possibleRounds = self.floor.desks[self.run.floorDeskNumber]
+    if(self.run.floorDeskNumber < 4) then
+        self.possibleRounds = self.floor.desks[self.run.floorDeskNumber]
+    else
+        self.possibleRounds = {self.floor.boss}
+    end
 
 
     --Création des différents canvas de choix de round
-    self.choiceCanvas = {}
-    --On calcule la largeur de chaque canvas sachant que : On vaut 50px de marge sur les cotés, et 20px entre chaque canvas
-    self.choiceCanvasWidth = ((self.canvas:getWidth()-100)/(choiceNumber))-((20*(choiceNumber-1))/choiceNumber)
-    self.choiceCanvasHeight = self.canvas:getHeight()-300
-    for i = 1, table.getn(self.floor.desks[self.run.floorDeskNumber]) do
-        local c = love.graphics.newCanvas(self.choiceCanvasWidth, self.choiceCanvasHeight)
-        table.insert(self.choiceCanvas, c)
-
-        --Create the next round button
-        local chooseButton = Button:new(
-            function()self.run:startNewRound(self.possibleRounds[i])end,
-            "src/assets/sprites/ui/buttons/next_round.png",
-            self.choiceCanvasWidth/2,
-            self.choiceCanvasHeight-50,
-            300/2,
-            125/2,
-            self.canvas,
-            function()return Inputs.getMouseInCanvas(50+(i-1)*(20+self.choiceCanvasWidth), 200)end
-        )
-        table.insert(self.uiElements.DeskChoiceButtons, chooseButton)
-    end
+    self:generateChoiceCanvas()
 
     return self
 end
@@ -79,6 +63,30 @@ function DeskChoice:draw()
 end
 
 --==CHOICES==--
+function DeskChoice:generateChoiceCanvas()
+    self.choiceCanvas = {}
+    --On calcule la largeur de chaque canvas sachant que : On vaut 50px de marge sur les cotés, et 20px entre chaque canvas
+    self.choiceCanvasWidth = ((self.canvas:getWidth()-100)/(choiceNumber))-((20*(choiceNumber-1))/choiceNumber)
+    self.choiceCanvasHeight = self.canvas:getHeight()-300
+    for i = 1, table.getn(self.possibleRounds) do
+        local c = love.graphics.newCanvas(self.choiceCanvasWidth, self.choiceCanvasHeight)
+        table.insert(self.choiceCanvas, c)
+
+        --Create the next round button
+        local chooseButton = Button:new(
+            function()self.run:startNewRound(self.possibleRounds[i])end,
+            "src/assets/sprites/ui/buttons/next_round.png",
+            self.choiceCanvasWidth/2,
+            self.choiceCanvasHeight-50,
+            300/2,
+            125/2,
+            self.canvas,
+            function()return Inputs.getMouseInCanvas(50+(i-1)*(20+self.choiceCanvasWidth), 200)end
+        )
+        table.insert(self.uiElements.DeskChoiceButtons, chooseButton)
+    end
+end
+
 function DeskChoice:updateChoiceCanvas(c, dt, i)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(c)

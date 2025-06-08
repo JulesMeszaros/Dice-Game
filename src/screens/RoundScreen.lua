@@ -170,7 +170,11 @@ end
 
 function RoundScreen:updateCanvas(dt)
     love.graphics.setCanvas(self.terrainCanvas)
-    love.graphics.clear()
+    if(self.round.roundType == Constants.ROUND_TYPES.BASE)then
+        love.graphics.clear()
+    else
+        love.graphics.clear(0, 1, 1)
+    end
 
     --PlayersInfos
     self:drawPlayersInfos()

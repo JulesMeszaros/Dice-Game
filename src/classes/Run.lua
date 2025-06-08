@@ -123,8 +123,7 @@ function Run:endRound()
         self.money = self.money + moneyEarned
         --Increments the desk, and goes to the next floor if the desk rank is >3
         self.floorDeskNumber = self.floorDeskNumber + 1
-        print(self.floorDeskNumber)
-        if(self.floorDeskNumber>3)then
+        if(self.floorDeskNumber>4)then--Si le rank de desktop est superieur à 4 (donc que le bosse vient d'etre battu) on créée un nouvel étage
             self.currentFloor = self:createNewFloor()
             self.floorDeskNumber = 1
             print('New floor created')
