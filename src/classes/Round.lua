@@ -35,7 +35,8 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.nround = n
     self.floorNumber = floor
     self.deskNumber = desk
-    
+    self.roundType = Constants.ROUND_TYPES.BASE
+
     self.availableRerolls = 2
     --Sets the number of time we can play a figure
     self.availableFigures = {}

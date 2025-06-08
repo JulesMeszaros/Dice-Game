@@ -2,6 +2,8 @@ local Round = require("src.classes.Round")
 local GameOverScreen = require("src.screens.GameOverScreen")
 local RoundChoice = require("src.screens.RoundChoice")
 local Constants = require("src.utils.constants")
+local Floor = require("src.classes.Floor")
+local DeskChoice = require("src.screens.DeskChoice")
 
 local Run = {}
 
@@ -23,8 +25,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     --Gameplay variables
     self.usedRerolls = 0 --total rerolls used for this game
     --Run variables
-    self.floorNumber = 1 --Représente l'étage (augmente de 1 après un boss)
-    self.floorDeskNumber = 1 --Représente le numéro de bureau dans l'étage actuel (retourne à 1 après un boss)
+
     self.roundNumber = 1 --Représente le numéro de round total
     --Run state
     self.currentState = Constants.RUN_STATES.ROUND
@@ -47,8 +48,15 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 
     --Create the first Round of the run
     local round = Round:new(1, self.floorNumber, self.floorDeskNumber, self.gameCanvas, self, 0, 0, self.diceObjects)
-    self:startNewRound(round)
-    
+    --self:startNewRound(round)
+
+    --Floor variables
+    --Create the first floor of the game
+    self.currentFloor = Floor:new(1, self)
+    self.floorNumber = 1 --Représente l'étage (augmente de 1 après un boss)
+    self.floorDeskNumber = 1 --Représente le numéro de bureau dans l'étage actuel (retourne à 1 après un boss)
+    self.deskChoice = DeskChoice:new(self.currentFloor, self)
+    self.currentState = Constants.RUN_STATES.ROUND_CHOICE
     return self
 end
 
@@ -65,6 +73,9 @@ function Run:update(dt)
     elseif(self.currentState==Constants.RUN_STATES.SHOP)then
         --update shop
         self.shop:update(dt)
+    elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
+        --update shop
+        self.deskChoice:update(dt)
     elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:update(dt)
     end
@@ -76,6 +87,8 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
         self:drawRound() --Draw the round
     elseif(self.currentState == Constants.RUN_STATES.SHOP)then --check if we are in shop
         self.shop:draw() --Draw the shop
+    elseif(self.currentState == Constants.RUN_STATES.ROUND_CHOICE)then --check if we are in shop
+        self.deskChoice:draw() --Draw the shop
     elseif(self.currentState == Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:draw()
     end
@@ -84,6 +97,13 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
 end
 
 --==ROUND FUNCTIONS==--
+function Run:createNewFloor()
+    local floorNumber = self.currentFloor.floorNumber + 1
+    local newFloor = Floor:new(floorNumber, self)
+
+    return newFloor
+end
+
 function Run:startNewRound(round, roundtype)
     --Sets the round number
     self.roundNumber = round.nround
@@ -132,6 +152,8 @@ function Run:keypressed(key)
         self.currentRound:keypressed(key)
     elseif(self.currentState==Constants.RUN_STATES.SHOP)then
         self.shop:keypressed(key)
+    elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
+        self.deskChoice:keypressed(key)
     elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:keypressed(key)
     end
@@ -145,6 +167,8 @@ function Run:mousepressed(x, y, button, istouch, presses)
         self.currentRound:mousepressed(x, y, button, istouch, presses)
     elseif(self.currentState==Constants.RUN_STATES.SHOP)then
         self.shop:mousepressed(x, y, button, istouch, presses)
+    elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
+        self.deskChoice:mousepressed(x, y, button, istouch, presses)
     elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:mousepressed(x, y, button, istouch, presses)
     end
@@ -155,6 +179,8 @@ function Run:mousereleased(x, y, button, istouch, presses)
         self.currentRound:mousereleased(x, y, button, istouch, presses)
     elseif(self.currentState==Constants.RUN_STATES.SHOP)then
         self.shop:mousereleased(x, y, button, istouch, presses)
+    elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
+        self.deskChoice:mousereleased(x, y, button, istouch, presses)
     elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:mousereleased(x, y, button, istouch, presses)
     end
@@ -168,6 +194,8 @@ function Run:mousemoved(x, y, dx, dy)
         self.currentRound:mousemoved(x, y, dx, dy, self.isDragging)
     elseif(self.currentState==Constants.RUN_STATES.SHOP)then
         self.shop:mousemoved(x, y, dx, dy, self.isDragging)
+    elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
+        self.deskChoice:mousemoved(x, y, dx, dy, self.isDragging)
     elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:mousemoved(x, y, dx, dy, self.isDragging)
     end
