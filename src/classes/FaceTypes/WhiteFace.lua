@@ -62,4 +62,8 @@ function WhiteFace:setDiceObject(diceObject)
     self.diceObject = diceObject
 end
 
+function WhiteFace:setFacePoints(n)
+    self.pointsValue = n
+end
+
 return WhiteFace
