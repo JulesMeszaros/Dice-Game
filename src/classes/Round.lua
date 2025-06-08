@@ -36,19 +36,13 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.floorNumber = floor
     self.deskNumber = desk
     self.roundType = roundType
+    self.availableRerolls = Constants.BASE_REROLLS
 
     --Ennemy metadata
     if(self.roundType == Constants.ROUND_TYPES.BASE) then
         self.enemyJob = Constants.EMPLOIS[math.random(#Constants.EMPLOIS)]
     else
         self.enemyJob = "Manager"
-    end
-
-    self.availableRerolls = 2
-    --Sets the number of time we can play a figure
-    self.availableFigures = {}
-    for k,f in next, Constants.FIGURES do
-        self.availableFigures[f] = 2
     end
 
     --Dices
@@ -263,7 +257,7 @@ function Round:endTriggeringPhase()
         self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
         self:resetselectedDices()
         self:makeRoll(self.diceObjects) -- On effectue un reroll
-        self.availableRerolls = 3
+        self.availableRerolls = Constants.BASE_REROLLS
     end
 
     if(self.roundScore >= self.targetScore or self.remainingHands == 0) then
