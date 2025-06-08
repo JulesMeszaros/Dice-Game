@@ -25,7 +25,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.usedRerolls = 0 --total rerolls used for this game
     --Run variables
 
-    self.roundNumber = 1 --Représente le numéro de round total
+    self.roundNumber = 0 --Représente le numéro de round total
     --Run state
     self.currentState = Constants.RUN_STATES.ROUND
 
@@ -104,7 +104,7 @@ end
 
 function Run:startNewRound(round, roundtype)
     --Sets the round number
-    self.roundNumber = round.nround
+    self.roundNumber = self.roundNumber + 1
     --Makes the first roll
     round:makeRoll(self.diceObjects)
     --Sets the run's current round
