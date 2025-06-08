@@ -40,10 +40,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.diceObjects = diceObjects
 
     --Sets the number of time we can play a figure
-    self.availableFigures = {}
-    for k,f in next, Constants.FIGURES do
-        self.availableFigures[f] = 2
-    end
+    self:resetAvailableFigures()
 
     --Floor variables
     --Create the first floor of the game
@@ -105,8 +102,7 @@ function Run:startNewRound(round, roundtype)
     round:makeRoll(self.diceObjects)
     --Sets the run's current round
     self.currentRound = round
-    --Resets the available hands
-    self:resetAvailableFigures()
+
     --Changes the screen to the round screen
     self.currentState = Constants.RUN_STATES.ROUND
 end
@@ -122,7 +118,9 @@ function Run:endRound()
         if(self.floorDeskNumber>4)then--Si le rank de desktop est superieur à 4 (donc que le bosse vient d'etre battu) on créée un nouvel étage
             self.currentFloor = self:createNewFloor()
             self.floorDeskNumber = 1
-            print('New floor created')
+            
+            --Resets the available hands
+            self:resetAvailableFigures()        
         end
 
         self.deskChoice = DeskChoice:new(self.currentFloor, self)
