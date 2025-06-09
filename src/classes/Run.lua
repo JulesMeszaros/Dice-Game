@@ -115,7 +115,13 @@ function Run:endRound()
         self.money = self.money + moneyEarned
         --Increments the desk, and goes to the next floor if the desk rank is >3
         self.floorDeskNumber = self.floorDeskNumber + 1
-        if(self.floorDeskNumber>4)then--Si le rank de desktop est superieur à 4 (donc que le bosse vient d'etre battu) on créée un nouvel étage
+        if(self.currentRound.roundType==Constants.ROUND_TYPES.BOSS)then--Si le rank de desktop est superieur à 4 (donc que le bosse vient d'etre battu) on créée un nouvel étage
+            --On vérifie que la run soit terminée (étage 5 atteint)
+            if(self.currentFloor.floorNumber == 5)then
+                self.game.currentScreen = Constants.PAGES.MAIN_MENU
+                return
+            end
+            
             self.currentFloor = self:createNewFloor()
             self.floorDeskNumber = 1
             

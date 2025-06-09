@@ -53,7 +53,7 @@ function Game:start()
     --New dice objects
     self.diceObjects = diceObjects
 
-    self.currentScreen = 1
+    self.currentScreen = Constants.PAGES.GAME
     self.gamePaused = false
     self.run = nil
 
