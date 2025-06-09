@@ -13,7 +13,7 @@ function WhiteFace:new(faceValue, pointsValue)
     self.name = "White Face"
     self.id = 1
     self.tier = "Common"
-    self.description = "When triggered, adds its face value to the hand's score"
+    self.description = "When triggered, adds its points value to the hand's score"
 
     --Metadatas about the graphics of the WhiteFace
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/BaseDiceTileset120.png")
@@ -35,10 +35,16 @@ function WhiteFace:new(faceValue, pointsValue)
     return self
 end
 
-function WhiteFace:triggerEffect(round)
+function WhiteFace:trigger(round)
     round.roundScore = round.roundScore + self.pointsValue
     self.totalTriggered = self.totalTriggered + 1
+    self:triggerEffect(round)
     print(self.totalTriggered)
+end
+
+function WhiteFace:triggerEffect(round)
+    --Complementary effect triggered by the face
+    return
 end
 
 function WhiteFace:getSpriteSheet()

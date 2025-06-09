@@ -1,16 +1,16 @@
 local WhiteFace = require("src.classes.FaceTypes.WhiteFace")
 
-local LuckyFace = setmetatable({}, { __index = WhiteFace })
-LuckyFace.__index = LuckyFace
+local StaticFace = setmetatable({}, { __index = WhiteFace })
+StaticFace.__index = StaticFace
 
-function LuckyFace:new(faceValue, pointsValue)
-    local self = setmetatable(WhiteFace:new(), LuckyFace)
+function StaticFace:new(faceValue, pointsValue)
+    local self = setmetatable(WhiteFace:new(), StaticFace)
 
     --Metadatas about the WhiteFace
     self.name = "Lucky Face"
     self.tier = "Common"
     self.id = 5
-    self.description = "When triggered, ZBZBZHKLRHJKLRJRKLJDKLD"
+    self.description = "When triggered, adds its total number of triggers to the score"
 
     --Metadatas about the graphics of the WhiteFace
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/StaticDiceTileset120.png")
@@ -35,4 +35,8 @@ function LuckyFace:new(faceValue, pointsValue)
     return self
 end
 
-return LuckyFace
+function StaticFace:triggerEffect(round)
+    round.roundScore = round.roundScore + self.totalTriggered
+end
+
+return StaticFace

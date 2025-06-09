@@ -12,7 +12,7 @@ end
 
 function DiceObject:trigger(round)
     --Triggers the current active face function
-    self.currentFaceObject:triggerEffect(round)
+    self.currentFaceObject:trigger(round)
 end
 
 --==GET/SET FUNCTIONS==--

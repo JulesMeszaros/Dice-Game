@@ -10,7 +10,7 @@ function BlueFace:new(faceValue, pointsValue)
     self.name = "Red Face"
     self.tier = "Uncommon"
     self.id = 2
-    self.description = "When triggered, adds the double of its face value to the hand's score"
+    self.description = "When triggered, adds the triple of its points value to the hand's score"
 
     --Metadatas about the graphics of the WhiteFace
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/BlueDiceTileset120.png")
@@ -33,6 +33,10 @@ function BlueFace:new(faceValue, pointsValue)
     self.totalTriggered = 0
 
     return self
+end
+
+function BlueFace:triggerEffect(round)
+    round.roundScore = round.roundScore + 3*self.pointsValue
 end
 
 return BlueFace

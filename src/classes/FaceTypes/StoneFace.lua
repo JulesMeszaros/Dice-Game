@@ -10,7 +10,7 @@ function StoneFace:new(faceValue, pointsValue)
     self.name = "Stone Face"
     self.tier = "Uncommon"
     self.id = 2
-    self.description = "When triggered, doubles the hand's points"
+    self.description = "When triggered, adds 1€ to the balance"
 
     --Metadatas about the graphics of the WhiteFace
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/StoneDiceTileset120.png")
@@ -33,6 +33,11 @@ function StoneFace:new(faceValue, pointsValue)
     self.totalTriggered = 0
 
     return self
+end
+
+function StoneFace:triggerEffect(round)
+    --Ajoute 1€ au solde banquaire
+    round.run.money = round.run.money + 1
 end
 
 return StoneFace
