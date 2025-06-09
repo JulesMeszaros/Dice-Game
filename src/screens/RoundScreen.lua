@@ -475,17 +475,6 @@ function RoundScreen:createRoundInfos()
     self.moneyCanvas = love.graphics.newCanvas(240, 90)
 end
 
---[[ function RoundScreen:createPlayersInfos()
-    local currentCanvas = love.graphics.getCanvas()
-    --Player
-    love.graphics.setCanvas(self.playerInfo)
-
-    --Ennemy
-    love.graphics.setCanvas(self.enemyInfos)
-
-    
-end ]]
-
 --==FIGURES TABLE==--
 function RoundScreen:getCurrentlyHoveredLine()
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position

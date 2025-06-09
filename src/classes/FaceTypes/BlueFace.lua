@@ -10,7 +10,7 @@ function BlueFace:new(faceValue, pointsValue)
     self.name = "Red Face"
     self.tier = "Uncommon"
     self.id = 2
-    self.description = "When triggered, adds the triple of its points value to the hand's score"
+    self.description = "Triggers the previously triggered dice again"
 
     --Metadatas about the graphics of the WhiteFace
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/BlueDiceTileset120.png")
@@ -36,7 +36,9 @@ function BlueFace:new(faceValue, pointsValue)
 end
 
 function BlueFace:triggerEffect(round)
-    round.roundScore = round.roundScore + 3*self.pointsValue
+    --On rettriger le dé précédent
+    table.insert(round.dicesTriggerQueue, round.triggerDiceHistory[table.getn(round.triggerDiceHistory)])
+    table.insert(round.diceFacesTriggerQueue, round.triggerFaceHistory[table.getn(round.triggerFaceHistory)])
 end
 
 return BlueFace

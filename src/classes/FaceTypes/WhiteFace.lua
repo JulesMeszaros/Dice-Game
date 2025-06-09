@@ -39,7 +39,6 @@ function WhiteFace:trigger(round)
     round.roundScore = round.roundScore + self.pointsValue
     self.totalTriggered = self.totalTriggered + 1
     self:triggerEffect(round)
-    print(self.totalTriggered)
 end
 
 function WhiteFace:triggerEffect(round)

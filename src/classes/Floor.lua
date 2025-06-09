@@ -23,9 +23,6 @@ function Floor:new(floornumber, run)
         table.insert(self.desks, choices)
     end
 
-    for k,d in next,self.desks[1] do
-        print(d.baseReward, d.floorNumber)
-    end
     return self
 end
 

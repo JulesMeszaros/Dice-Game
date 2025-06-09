@@ -19,7 +19,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.roundScore = 0
 
     --==Triggering Phase==--
-    self.triggeringPhase = false
+    self.phase = Constants.ROUND_STATES.PLAYING
     self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
     self.dicesOrder = {} --Same but for the dice objects
     self.diceFacesTriggerQueue = {} --Dice queue for the triggers. get modified during the trigger phase
@@ -27,6 +27,8 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.currentlyTriggeredDice = nil
     self.diceFaces2 = {}
     self.baseReward = baseReward
+    self.triggerDiceHistory = {}
+    self.triggerFaceHistory = {}
 
     self.run = run
     self.gameCanvas = gameCanvas
@@ -219,7 +221,9 @@ function Round:getDicesOrder(usedDices)
 end
 
 function Round:startTriggeringPhase(usedDices)
-    self.triggeringPhase = true --Start triggering phase
+    self.phase = Constants.ROUND_STATES.TRIGGERING
+    self.triggerDiceHistory = {}
+    self.triggerFaceHistory = {}
     --Creates the list of dices to trigger, sorted according to their position on the terrain
     local sortedDiceFaces, sortedDices = self:getDicesOrder(usedDices)
 
@@ -241,6 +245,10 @@ function Round:triggerNextDice()
     if(table.getn(self.dicesTriggerQueue)>=1) then
         self.diceFacesTriggerQueue[1]:trigger()
         self.dicesTriggerQueue[1]:trigger(self)
+        --On ajoute à la queue
+        table.insert(self.triggerDiceHistory, self.dicesTriggerQueue[1])
+        table.insert(self.triggerFaceHistory, self.diceFacesTriggerQueue[1])
+        --On retire de la file
         table.remove(self.diceFacesTriggerQueue, 1)
         table.remove(self.dicesTriggerQueue, 1)
     else --ends the trigger phase
@@ -250,7 +258,7 @@ function Round:triggerNextDice()
 end
 
 function Round:endTriggeringPhase()
-    self.triggeringPhase = false
+    self.phase = Constants.ROUND_STATES.PLAYING
     print("done triggering!!!")
 
     if(self.remainingHands>=1)then

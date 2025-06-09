@@ -39,6 +39,13 @@ Constants.RUN_STATES = {
     DICE_CUSTOMISATION = 6
 }
 
+Constants.ROUND_STATES = {
+    REROLLING = 1,
+    PLAYING = 2,
+    TRIGGERING_DICE = 3,
+    RECALLING = 4
+}
+
 Constants.ROUND_TYPES = {
     BASE = 1,
     BOSS = 2
