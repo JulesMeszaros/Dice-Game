@@ -39,6 +39,15 @@ function WhiteFace:trigger(round)
     round.roundScore = round.roundScore + self.pointsValue
     self.totalTriggered = self.totalTriggered + 1
     self:triggerEffect(round)
+    
+    --On ajoute à l'historique (en dernière position)
+    table.insert(round.triggerDiceHistory, round.dicesTriggerQueue[1])
+    table.insert(round.triggerFaceHistory, round.diceFacesTriggerQueue[1])
+
+    --On retire de la file
+    table.remove(round.diceFacesTriggerQueue, 1)
+    table.remove(round.dicesTriggerQueue, 1) 
+    
 end
 
 function WhiteFace:triggerEffect(round)

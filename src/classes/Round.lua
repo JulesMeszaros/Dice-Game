@@ -243,14 +243,10 @@ end
 
 function Round:triggerNextDice()
     if(table.getn(self.dicesTriggerQueue)>=1) then
+        --On déclenche le dé
         self.diceFacesTriggerQueue[1]:trigger()
         self.dicesTriggerQueue[1]:trigger(self)
-        --On ajoute à la queue
-        table.insert(self.triggerDiceHistory, self.dicesTriggerQueue[1])
-        table.insert(self.triggerFaceHistory, self.diceFacesTriggerQueue[1])
-        --On retire de la file
-        table.remove(self.diceFacesTriggerQueue, 1)
-        table.remove(self.dicesTriggerQueue, 1)
+
     else --ends the trigger phase
         self:endTriggeringPhase()
         print("----")

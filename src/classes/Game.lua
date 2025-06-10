@@ -41,11 +41,13 @@ local stoneface = StoneFace:new(2, 2)
 local redface = RedFace:new(4, 4)
 local static = StaticFace:new(3, 3)
 local blueface = BlueFace:new(3, 3)
+local blueface2 = BlueFace:new(3, 3)
 
 diceObjects[1]:setFace(redface, 3)
 diceObjects[2]:setFace(stoneface, 6)
 diceObjects[3]:setFace(blueface, 5)
 diceObjects[4]:setFace(static, 5)
+diceObjects[4]:setFace(blueface2, 2)
 
 function Game:start()
     local self = setmetatable({}, Game)

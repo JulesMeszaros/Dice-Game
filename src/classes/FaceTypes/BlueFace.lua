@@ -36,9 +36,9 @@ function BlueFace:new(faceValue, pointsValue)
 end
 
 function BlueFace:triggerEffect(round)
-    --On rettriger le dé précédent
-    table.insert(round.dicesTriggerQueue, round.triggerDiceHistory[table.getn(round.triggerDiceHistory)])
-    table.insert(round.diceFacesTriggerQueue, round.triggerFaceHistory[table.getn(round.triggerFaceHistory)])
+    --On rettriger le dé précédement trigger
+    table.insert(round.dicesTriggerQueue, 2, round.triggerDiceHistory[table.getn(round.triggerDiceHistory)])
+    table.insert(round.diceFacesTriggerQueue, 2, round.triggerFaceHistory[table.getn(round.triggerDiceHistory)])
 end
 
 return BlueFace
