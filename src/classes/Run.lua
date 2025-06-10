@@ -222,7 +222,7 @@ function Run:mousemoved(x, y, dx, dy)
     elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:mousemoved(x, y, dx, dy, self.isDragging)
     elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
-        self.customizationScreen:mousepressed(x, y, dx, dy, self.isDragging)
+        self.customizationScreen:mousemoved(x, y, dx, dy, self.isDragging)
     end
     --x et y sont la position, dx et dy sont la vitesse.
 

@@ -137,6 +137,7 @@ end
 function DiceFace:clickEvent()
     local wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
     if(self:isHovered()) then
+        print("Bello")
         self.isBeingClicked = true
         wasClicked = true
         self:resetBaseAngle()
@@ -153,7 +154,7 @@ function DiceFace:selectOrDeselect()
     local newState = not self:getIsSelected()
     self:setSelected(newState)
 
-    if(newState == false)then
+    if(self.round and newState == false)then
         local randomXPos = math.random(100, self.round.terrain.dice_tray:getWidth()-100)
         local randomYPos = math.random(250, self.round.terrain.dice_tray:getHeight()-250)
 

@@ -12,9 +12,14 @@ function DiceCustomization:new(previousRound, newFacesObjects)
         buttons = {}
     }
 
-    --Objects
+    --Link with the game
     self.diceObjects = previousRound.diceObjects
     self.previousRound = previousRound
+
+    --The selected face object to modify
+    self.selectedDiceFace = nil
+
+    --Table where we store the ui faces of the face objects earned
 
     --Table where we store the ui dice faces, grouped by dice
     self.uiDices = {}
@@ -37,7 +42,12 @@ function DiceCustomization:update(dt)
     --Draw the uiFaces on the canvas
     for i,uiDice in next,self.uiDices do
         for j,uiFace in next,uiDice do
-            print(uiFace:update(dt))
+            uiFace:update(dt)
+            if(uiFace:getIsSelected())then
+                uiFace.selectionScale = -0.2
+            else
+                uiFace.selectionScale = 0
+            end
         end
     end
 end
@@ -45,12 +55,12 @@ end
 function DiceCustomization:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.screenCanvas)
-    love.graphics.clear(1, 0.2, 0)
+    love.graphics.clear(89/255, 153/255, 255/255)
 
     --Draw the uiFaces on the canvas
     for i,uiDice in next,self.uiDices do
         for j,uiFace in next,uiDice do
-            print(uiFace:draw())
+            uiFace:draw()
         end
     end
 
@@ -71,6 +81,13 @@ function DiceCustomization:mousepressed(x, y, button, istouch, presses)
    for key,button in next,self.uiElements.buttons do
         button:clickEvent()
     end
+
+    --Dice faces
+    for key,dice in next,self.uiDices do
+        for j, uiFace in next,dice do
+            uiFace:clickEvent()
+        end
+    end
 end
 
 function DiceCustomization:mousereleased(x, y, button, istouch, presses)
@@ -81,6 +98,17 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
             button:getCallback()()
         end
     end
+
+    for i,dice in next,self.diceObjects do
+        for key,face in next,self.uiDices[i] do
+            local wasReleased = face:releaseEvent()
+            if(wasReleased)then
+                self:resetSelectedDices()
+                face:setSelected(true)
+            end
+            face.isBeingDragged = false
+        end
+    end
 end
 
 function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
@@ -88,6 +116,15 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
 end
 
 --==UTILS=--
+function DiceCustomization:resetSelectedDices()
+    --Dice faces
+    for key,dice in next,self.uiDices do
+        for j, uiFace in next,dice do
+            uiFace:setSelected(false)
+        end
+    end 
+end
+
 function DiceCustomization:createDiceUI(diceObject, i)
     --This function creates every faces of a ui Dice and stores them in a table located in self.uiDices
     local diceUI = {}
@@ -110,7 +147,7 @@ function DiceCustomization:createDiceUI(diceObject, i)
                                     xOffset + relativeXPositions[k],
                                     yOffset + relativeYPosition[k],
                                     120,
-                                    false,
+                                    true,
                                     true,
                                     function()return Inputs.getMouseInCanvas(0, 0)end,
                                     nil)
