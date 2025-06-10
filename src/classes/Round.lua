@@ -246,6 +246,14 @@ function Round:triggerNextDice()
         --On déclenche le dé
         self.diceFacesTriggerQueue[1]:trigger()
         self.dicesTriggerQueue[1]:trigger(self)
+            
+        --On ajoute à l'historique (en dernière position)
+        table.insert(self.triggerDiceHistory, self.dicesTriggerQueue[1])
+        table.insert(self.triggerFaceHistory, self.diceFacesTriggerQueue[1])
+
+        --On retire de la file
+        table.remove(self.diceFacesTriggerQueue, 1)
+        table.remove(self.dicesTriggerQueue, 1) 
 
     else --ends the trigger phase
         self:endTriggeringPhase()
