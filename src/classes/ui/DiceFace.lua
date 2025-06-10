@@ -371,4 +371,15 @@ function springUpdate(current, target, velocity, dt, frequency, damping)
     return current, velocity
 end
 
+--==Animations==--
+function DiceFace:shake(intensity, duration, steps)
+    local stepDuration = duration/steps
+    for i=1,steps do
+        self.animator:add("x", self.x+math.random(-intensity, intensity), stepDuration)
+        self.animator:add("y", self.y+math.random(-intensity, intensity), stepDuration)
+    end
+    self.animator:add("x", self.x, stepDuration)
+    self.animator:add("y", self.y, stepDuration)
+end
+
 return DiceFace
