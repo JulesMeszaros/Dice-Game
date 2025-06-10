@@ -2,7 +2,7 @@ local Constants = {
     VIRTUAL_GAME_WIDTH = 1920,
     VIRTUAL_GAME_HEIGHT = 1080,
     BASE_REROLLS = 2,
-    BASE_TRIGGER_ANIMATION_TIME = 0.9,--secondes
+    BASE_TRIGGER_ANIMATION_TIME = 0.15,--secondes
     GAME_VERSION = "0.0.7-dev"
 }
 
@@ -36,7 +36,7 @@ Constants.RUN_STATES = {
     ROUND_CHOICE = 3, --Choix du prochain round à jouer
     GAME_OVER = 4, --Ecran de game over
     MAP = 5, --Map du batiment, et infos de run
-    DICE_CUSTOMISATION = 6
+    DICE_CUSTOMIZATION = 6
 }
 
 Constants.ROUND_STATES = {
@@ -71,7 +71,5 @@ Constants.EMPLOIS = {
     "Assistant administratif",
     "Responsable logistique"
 }
-
-
 
 return Constants

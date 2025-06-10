@@ -3,6 +3,9 @@ local GameOverScreen = require("src.screens.GameOverScreen")
 local Constants = require("src.utils.constants")
 local Floor = require("src.classes.Floor")
 local DeskChoice = require("src.screens.DeskChoice")
+local DiceCustomization = require("src.screens.DiceCustomization")
+
+local StoneFace = require("src.classes.FaceTypes.StoneFace")
 
 local Run = {}
 
@@ -70,6 +73,8 @@ function Run:update(dt)
         self.deskChoice:update(dt)
     elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:update(dt)
+    elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
+        self.customizationScreen:update(dt)
     end
 end
 
@@ -83,6 +88,8 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
         self.deskChoice:draw() --Draw the shop
     elseif(self.currentState == Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:draw()
+    elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
+        self.customizationScreen:draw()
     end
 
     --==DRAW THE AFTER ROUND==-- (plus tard le shop)
@@ -129,9 +136,18 @@ function Run:endRound()
             self:resetAvailableFigures()        
         end
 
-        self.deskChoice = DeskChoice:new(self.currentFloor, self)
+        --self.deskChoice = DeskChoice:new(self.currentFloor, self)
+        --self.currentState = Constants.RUN_STATES.ROUND_CHOICE --Change d'état de Run
 
-        self.currentState = Constants.RUN_STATES.ROUND_CHOICE --Change d'état de Run
+        --create three random face (to be deleted)
+        local randomFaces = {}
+        for i=1, 3 do
+            local randomFace = StoneFace:new(math.random(1, 6), 10)
+            table.insert(randomFaces, randomFace)
+        end
+
+        self.customizationScreen = DiceCustomization:new(self.currentRound, randomFaces)
+        self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION
     else --gameover case
         local gameOver = GameOverScreen:new(self.gameCanvas, self)
         self.gameOver = gameOver
@@ -157,6 +173,8 @@ function Run:keypressed(key)
         self.deskChoice:keypressed(key)
     elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:keypressed(key)
+    elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
+        self.customizationScreen:keypressed(key)
     end
 end
 
@@ -172,6 +190,8 @@ function Run:mousepressed(x, y, button, istouch, presses)
         self.deskChoice:mousepressed(x, y, button, istouch, presses)
     elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:mousepressed(x, y, button, istouch, presses)
+    elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
+        self.customizationScreen:mousepressed(x, y, button, istouch, presses)
     end
 end
 
@@ -184,6 +204,8 @@ function Run:mousereleased(x, y, button, istouch, presses)
         self.deskChoice:mousereleased(x, y, button, istouch, presses)
     elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:mousereleased(x, y, button, istouch, presses)
+    elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
+        self.customizationScreen:mousereleased(x, y, button, istouch, presses)
     end
 
     --Deactivate dragging
@@ -199,6 +221,8 @@ function Run:mousemoved(x, y, dx, dy)
         self.deskChoice:mousemoved(x, y, dx, dy, self.isDragging)
     elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
         self.gameOver:mousemoved(x, y, dx, dy, self.isDragging)
+    elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
+        self.customizationScreen:mousepressed(x, y, dx, dy, self.isDragging)
     end
     --x et y sont la position, dx et dy sont la vitesse.
 
