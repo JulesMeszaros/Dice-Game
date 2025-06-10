@@ -3,6 +3,7 @@
     It is used as the default class for every dice faces, who inherits
     from this one.
 ]]
+
 local WhiteFace = {}
 WhiteFace.__index = WhiteFace
 

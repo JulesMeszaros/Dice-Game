@@ -5,6 +5,7 @@ local AnimationUtils = require("src.utils.scripts.animationUtils")
 local InputsUtils = require("src.utils.scripts.inputs")
 local Constants = require("src.utils.constants")
 local Shaders = require("src.utils.shaders")
+local Animator = require("src.utils.Animator")
 
 local DiceFace = setmetatable({}, { __index = UIElement })
 
@@ -12,6 +13,7 @@ DiceFace.__index = DiceFace
 
 function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isHoverable, mousePosition, round)    
     local self = setmetatable(UIElement.new(), DiceFace)
+    self.animator = Animator:new(self)
 
     --Parametres d'interractions
     self.mousePosition = mousePosition --The function returning the mousePosition for this dice.
@@ -70,14 +72,12 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
     self.isTriggering = false
     self.triggerTimer = 0 --Minuteur de trigger 
     self.triggerTime = Constants.BASE_TRIGGER_ANIMATION_TIME --Temps que prend un dé à se trigger
-
-    
     return self
 end
 
 function DiceFace:update(dt)
     self.time=self.time+dt
-
+    
     --Calculate targeted Scale and Rotation
     self:calculateAngleDrag()
     self.targetedRotation = self.baseRotation + self.dragRotation
@@ -86,6 +86,7 @@ function DiceFace:update(dt)
     self:updatePosition(dt)
     self:updateScale(dt)
     self:updateAngle(dt)
+    self.animator:update(dt)
 
     --Selection state--
     if(self.isSelected)then
@@ -293,8 +294,19 @@ function DiceFace:calculateAngleDrag()
 end
 
 function DiceFace:updatePosition(dt)
-    self.x, self.velx = springUpdate(self.x, self.targetX, self.velx, dt, 4, 0.8)
-    self.y, self.vely = springUpdate(self.y, self.targetY, self.vely, dt, 4, 0.8)
+    --On check qu'il n'y ait pas d'animation en cours
+    if(self.animator.current == nil and table.getn(self.animator.queue) == 0 )then
+        if math.abs(self.x - self.targetX) < 3 then
+            self.x = self.targetX
+            self.y = self.targetY
+        else
+            self.x, self.velx = springUpdate(self.x, self.targetX, self.velx, dt, 4, 0.8)
+            self.y, self.vely = springUpdate(self.y, self.targetY, self.vely, dt, 4, 0.8)
+        end
+    else
+        self.targetX = self.x
+        self.targetY = self.y
+    end
 end
 
 function DiceFace:calculateScale()
@@ -327,11 +339,25 @@ function DiceFace:calculateTriggerScale()
 end
 
 function DiceFace:updateAngle(dt)
-    self.rotation, self.velrotation = springUpdate(self.rotation, self.targetedRotation, self.velrotation, dt, 5, 0.4)
+    if(self.animator.current == nil and table.getn(self.animator.queue) == 0)then
+        if math.abs(self.rotation - self.targetedRotation) < 0.001 then
+            self.rotation = self.targetedRotation
+        else
+            self.rotation, self.velrotation = springUpdate(self.rotation, self.targetedRotation, self.velrotation, dt, 5, 0.4)
+        end
+    else
+        self.baseRotation = self.rotation
+    end
 end
 
 function DiceFace:updateScale(dt)
-    self.scale, self.velscale = springUpdate(self.scale, self.targetedScale, self.velscale, dt, 4, 0.6)
+    if(self.animator.current == nil and table.getn(self.animator.queue) == 0)then
+        if math.abs(self.scale - self.targetedScale) < 0.001 then
+            self.scale = self.targetedScale
+        else
+            self.scale, self.velscale = springUpdate(self.scale, self.targetedScale, self.velscale, dt, 4, 0.6)
+        end
+    end
 end
 
 --==Utilities==--

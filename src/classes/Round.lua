@@ -93,6 +93,12 @@ function Round:keypressed(key) --(Mainly for debug)
     if(key=="r") then
         self.availableRerolls = 10
     end
+
+    if(key=='a')then
+        for i,diceface in next, self.diceFaces2 do
+            diceface.animator:add("rotation", diceface.rotation + 3, 0.3)
+        end
+    end
 end
 
 function Round:mousepressed(x, y, button, istouch, presses)
