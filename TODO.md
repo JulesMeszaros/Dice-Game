@@ -18,8 +18,7 @@
 
 ### Gameplay
 
-- TODO: coder la progression avec bosses tous les 3 bureaux
-- TODO: coder un début de shop
+- TODO: coder un début de shop/personalisation des dés
 
 ### Code
 
