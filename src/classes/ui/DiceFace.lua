@@ -379,7 +379,7 @@ function DiceFace:shake(intensity, duration, steps)
         self.animator:add("y", self.y+math.random(-intensity, intensity), stepDuration)
     end
     self.animator:add("x", self.x, stepDuration)
-    self.animator:add("y", self.y, stepDuration)
+    self.animator:add("y", self.y, stepDuration, nil, function()print("shaking over")end)
 end
 
 return DiceFace

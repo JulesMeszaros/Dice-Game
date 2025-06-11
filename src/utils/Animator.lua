@@ -10,14 +10,15 @@ function Animator:new(target)
     return anim
 end
 
-function Animator:add(property, targetValue, duration, easing)
+function Animator:add(property, targetValue, duration, easing, onComplete)
     table.insert(self.queue, {
         property = property,
         from = self.target[property],
         to = targetValue,
         duration = duration,
         time = 0,
-        easing = easing or function(t) return t end
+        easing = easing or function(t) return t end,
+        onComplete = onComplete -- callback optionnel
     })
 end
 
@@ -36,8 +37,11 @@ function Animator:update(dt)
         self.target[a.property] = a.from + (a.to - a.from) * eased
 
         if t >= 1 then
-            self.target[a.property] = a.to -- s’assurer d’atteindre exactement la valeur finale
-            self.current = nil -- passer à la suivante
+            self.target[a.property] = a.to
+            if a.onComplete then
+                a.onComplete() -- exécute le callback
+            end
+            self.current = nil
         end
     end
 end

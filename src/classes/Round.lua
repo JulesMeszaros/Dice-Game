@@ -96,7 +96,7 @@ function Round:keypressed(key) --(Mainly for debug)
 
     if(key=='a')then
         for i,diceface in next, self.diceFaces2 do
-            diceface:shake(5, 0.5, 10)
+            diceface:shake(5, 0.3, 10)
         end
     end
 end
