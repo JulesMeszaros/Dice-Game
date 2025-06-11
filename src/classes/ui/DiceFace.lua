@@ -237,9 +237,9 @@ end
 function DiceFace:trigger() --Lance le trigger du dé
     self.animator:addDelay(0.3)
     self.animator:add("scaleX", 1, 1.9, 0.1)
-    self.animator:add("scaleX", 1.9, 0.5, 0.2, nil)
+    self.animator:add("scaleX", 1.9, 0.5, 0.05, nil)
     self.animator:add("scaleX", 0.5, 1, 0.1, nil)
-    self.animator:addDelay(0.3, function()self.targetedScale = 1 ; self.round:triggerNextDice()end)
+    self.animator:addDelay(0.0, function()self.targetedScale = 1 ; self.round:triggerNextDice()end)
 end
 
 --==GET/SET FUNCTIONS==--
@@ -265,7 +265,6 @@ end
 
 function DiceFace:setFaceObject(faceObject)
     self.representedFace = faceObject
-    faceObject:setDiceObject(self)
     self:updateSprite()
 end
 

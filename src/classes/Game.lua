@@ -45,9 +45,9 @@ local blueface2 = BlueFace:new(3, 3)
 
 diceObjects[1]:setFace(redface, 3)
 diceObjects[2]:setFace(stoneface, 6)
-diceObjects[3]:setFace(blueface, 5)
+--diceObjects[3]:setFace(blueface, 5)
 diceObjects[4]:setFace(static, 5)
-diceObjects[4]:setFace(blueface2, 2)
+--diceObjects[4]:setFace(blueface2, 2)
 
 function Game:start()
     local self = setmetatable({}, Game)

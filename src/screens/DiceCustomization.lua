@@ -1,11 +1,12 @@
 local DiceFace = require("src.classes.ui.DiceFace")
 local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
+local Button = require("src.classes.ui.Button")
 
 local DiceCustomization = {}
 DiceCustomization.__index = DiceCustomization
 
-function DiceCustomization:new(previousRound, newFacesObjects)
+function DiceCustomization:new(previousRound, newFaceObjects)
     local self = setmetatable({}, DiceCustomization)
 
     self.uiElements = {
@@ -18,11 +19,14 @@ function DiceCustomization:new(previousRound, newFacesObjects)
 
     --The selected face object to modify
     self.selectedDiceFace = nil
+    self.selectedNewDiceFace = nil
 
     --Table where we store the ui faces of the face objects earned
-
+    self.newFaceObjects = newFaceObjects
     --Table where we store the ui dice faces, grouped by dice
     self.uiDices = {}
+
+    self.newUIFaces = {}
     --On peuple notre table
     for i,dice in next, self.diceObjects do
         table.insert(self.uiDices, self:createDiceUI(dice, i))
@@ -30,6 +34,21 @@ function DiceCustomization:new(previousRound, newFacesObjects)
 
     --Create the canvas
     self.screenCanvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+
+    --Create the switch button
+    self.uiElements.buttons.switchButton = Button:new(
+        function()self:flipFaces()end, 
+        "src/assets/sprites/ui/terrain/Reroll-proto.png", 
+        self.screenCanvas:getWidth()/2, 
+        self.screenCanvas:getHeight()-75, 
+        420, 
+        60,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
+    self:createNewFacesUI()
+
 
     return self
 end
@@ -50,6 +69,24 @@ function DiceCustomization:update(dt)
             end
         end
     end
+
+    --New faces
+    for i,uiFace in next,self.newUIFaces do
+        uiFace:update(dt)
+        if(uiFace:getIsSelected())then
+            uiFace.selectionScale = -0.2
+        else
+            uiFace.selectionScale = 0
+        end
+    end
+
+    --Buttons
+    for key,button in next,self.uiElements.buttons do
+        button:update(dt)
+    end
+    --Disable switch button
+    self.uiElements.buttons.switchButton:setActivated(self.selectedDiceFace ~= nil and self.selectedNewDiceFace ~= nil)
+    
 end
 
 function DiceCustomization:updateCanvas(dt)
@@ -62,6 +99,16 @@ function DiceCustomization:updateCanvas(dt)
         for j,uiFace in next,uiDice do
             uiFace:draw()
         end
+    end
+
+    --New faces
+    for i,uiFace in next,self.newUIFaces do
+        uiFace:draw()
+    end
+
+    --Buttons
+    for key,button in next,self.uiElements.buttons do
+        button:draw()
     end
 
     love.graphics.setCanvas(currentCanvas)
@@ -78,7 +125,7 @@ end
 
 function DiceCustomization:mousepressed(x, y, button, istouch, presses)
    --Buttons
-   for key,button in next,self.uiElements.buttons do
+    for key,button in next,self.uiElements.buttons do
         button:clickEvent()
     end
 
@@ -88,6 +135,12 @@ function DiceCustomization:mousepressed(x, y, button, istouch, presses)
             uiFace:clickEvent()
         end
     end
+
+    --New Dice Faces
+    for i,uiFace in next,self.newUIFaces do
+        uiFace:clickEvent()
+    end
+
 end
 
 function DiceCustomization:mousereleased(x, y, button, istouch, presses)
@@ -102,16 +155,76 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
     for i,dice in next,self.diceObjects do
         for key,face in next,self.uiDices[i] do
             local wasReleased = face:releaseEvent()
-            if(wasReleased)then
+            if(wasReleased)then --On sélectionne la face a switcher
                 self:resetSelectedDices()
                 face:setSelected(true)
+                self.selectedDiceFace = face.representedFace
             end
-            face.isBeingDragged = false
+        end
+    end
+
+    for i,face in next,self.newUIFaces do
+        local wasReleased = face:releaseEvent()
+        if(wasReleased)then --On sélectionne la face a switcher
+            self:resetSelectedNewFace()
+            face:setSelected(true)
+            self.selectedNewDiceFace = face.representedFace
         end
     end
 end
 
 function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
+    
+end
+
+function DiceCustomization:flipFaces()
+    print("flip faces")
+    --First, get the dice concerned by the change
+    local dice = self.selectedDiceFace.diceObject
+    local oldFace = self.selectedDiceFace
+    local newFace = self.selectedNewDiceFace
+
+    --Then, find the index of the face in the dice
+    local index = nil
+    for i,f in next,dice:getAllFaces() do
+        if(f == self.selectedDiceFace) then
+            index = i
+        end
+    end
+
+    --Find the index of the new face selected
+    local indexnew = nil
+    for i,f in next,self.newFaceObjects do
+        print(tostring(f).." "..tostring(self.selectedNewDiceFace))
+        if(f == self.selectedNewDiceFace) then
+            indexnew = i
+        end
+    end
+
+    --Also, get the index of the dice that will get the change
+    local diceindex = nil
+    for i,f in next,self.diceObjects do
+        if(f==dice)then
+            diceindex = i
+        end
+    end
+
+    --Set the new face on the dice
+    dice:setFace(newFace, index) --We set the new face
+    oldFace:setDiceObject(nil) --We reset the dice attached to the old dice face object
+
+    --Then, Change the new face as the previous face on the dice
+    self.newFaceObjects[indexnew] = oldFace 
+
+    --Flip the UI on the dice
+    self.uiDices[diceindex][index]:flipChange(newFace)
+
+    --Flip the UI on the top
+    self.newUIFaces[indexnew]:flipChange(oldFace)
+
+    self:resetSelectedDices()
+    self:resetSelectedNewFace()
+    self.selectedDiceFace, self.selectedNewDiceFace = nil, nil
 
 end
 
@@ -123,6 +236,30 @@ function DiceCustomization:resetSelectedDices()
             uiFace:setSelected(false)
         end
     end 
+end
+
+function DiceCustomization:resetSelectedNewFace()
+    --Dice faces
+    for key,face in next,self.newUIFaces do
+        face:setSelected(false)
+    end 
+end
+
+function DiceCustomization:createNewFacesUI()
+    for i,face in next,self.newFaceObjects do
+        local diceFace = DiceFace:new(nil,
+                                    face,
+                                    120 + (i*140),
+                                    120,
+                                    120,
+                                    true,
+                                    true,
+                                    function()return Inputs.getMouseInCanvas(0, 0)end,
+                                    nil)
+
+        table.insert(self.newUIFaces, diceFace)
+                                    
+    end
 end
 
 function DiceCustomization:createDiceUI(diceObject, i)
