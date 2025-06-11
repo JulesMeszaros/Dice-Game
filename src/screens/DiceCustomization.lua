@@ -2,6 +2,7 @@ local DiceFace = require("src.classes.ui.DiceFace")
 local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
 local Button = require("src.classes.ui.Button")
+local DeskChoice = require("src.screens.DeskChoice")
 
 local DiceCustomization = {}
 DiceCustomization.__index = DiceCustomization
@@ -41,6 +42,17 @@ function DiceCustomization:new(previousRound, newFaceObjects)
         "src/assets/sprites/ui/terrain/Reroll-proto.png", 
         self.screenCanvas:getWidth()/2, 
         self.screenCanvas:getHeight()-75, 
+        420, 
+        60,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
+    self.uiElements.buttons.nextRoundButton = Button:new(
+        function()self:goToRoundSelection()end, 
+        "src/assets/sprites/ui/buttons/next_round.png", 
+        self.screenCanvas:getWidth()/2, 
+        self.screenCanvas:getHeight()-150, 
         420, 
         60,
         self.gameCanvas,
@@ -185,19 +197,19 @@ function DiceCustomization:flipFaces()
     local newFace = self.selectedNewDiceFace
 
     --Then, find the index of the face in the dice
-    local index = nil
+    local oldfaceindex = nil
     for i,f in next,dice:getAllFaces() do
         if(f == self.selectedDiceFace) then
-            index = i
+            oldfaceindex = i
         end
     end
 
     --Find the index of the new face selected
-    local indexnew = nil
+    local newfaceindex = nil
     for i,f in next,self.newFaceObjects do
         print(tostring(f).." "..tostring(self.selectedNewDiceFace))
         if(f == self.selectedNewDiceFace) then
-            indexnew = i
+            newfaceindex = i
         end
     end
 
@@ -210,22 +222,22 @@ function DiceCustomization:flipFaces()
     end
 
     --Set the new face on the dice
-    dice:setFace(newFace, index) --We set the new face
+    dice:setFace(newFace, oldfaceindex) --We set the new face
     oldFace:setDiceObject(nil) --We reset the dice attached to the old dice face object
 
     --Then, Change the new face as the previous face on the dice
-    self.newFaceObjects[indexnew] = oldFace 
+    self.newFaceObjects[newfaceindex] = oldFace 
 
     --Flip the UI on the dice
-    self.uiDices[diceindex][index]:flipChange(newFace)
+    self.uiDices[diceindex][oldfaceindex]:flipChange(newFace)
 
     --Flip the UI on the top
-    self.newUIFaces[indexnew]:flipChange(oldFace)
+    self.newUIFaces[newfaceindex]:flipChange(oldFace)
 
+    --Reset the selection
     self:resetSelectedDices()
     self:resetSelectedNewFace()
     self.selectedDiceFace, self.selectedNewDiceFace = nil, nil
-
 end
 
 --==UTILS=--
@@ -292,6 +304,11 @@ function DiceCustomization:createDiceUI(diceObject, i)
     end
 
     return diceUI
+end
+
+function DiceCustomization:goToRoundSelection()
+    self.previousRound.run.deskChoice = DeskChoice:new(self.previousRound.run.currentFloor, self.previousRound.run)
+    self.previousRound.run.currentState = Constants.RUN_STATES.ROUND_CHOICE --Change d'état de Run
 end
 
 return DiceCustomization

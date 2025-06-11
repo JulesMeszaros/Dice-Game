@@ -16,6 +16,8 @@
 
 #### HUD
 
+- FIXME: régler les incohérence d'affichage des patrons de dés entre l'écran de customization et l'écran de jeu
+
 ### Gameplay
 
 - TODO: coder un début de shop/personalisation des dés
