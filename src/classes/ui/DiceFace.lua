@@ -95,15 +95,6 @@ function DiceFace:update(dt)
         self.isDraggable = true
     end
 
-    --==Update the trigger==--
-    if(self.isTriggering)then
-        self.triggerTimer = self.triggerTimer + dt
-        if(self.triggerTimer >= self.triggerTime)then
-            self.isTriggering = false
-            self.round:triggerNextDice() --Triggers the next dice in queue in the round
-        end
-    end
-
     if(self.isTriggering)then
         self.isHoverable = false
         self.isSelectable = false
@@ -241,8 +232,11 @@ end
 
 --==TRIGGER FUNCTIONS==--
 function DiceFace:trigger() --Lance le trigger du dé
-    self.triggerTimer = 0
-    self.isTriggering = true
+    self.animator:addDelay(0.3)
+    self.animator:add("scale", 1, 1.8, 0.1)
+    self.animator:add("scale", 1.8, 0.5, 0.2, nil)
+    self.animator:add("scale", 0.5, 1, 0.1, nil)
+    self.animator:addDelay(0.3, function()self.targetedScale = 1 ; self.round:triggerNextDice()end)
 end
 
 --==GET/SET FUNCTIONS==--
@@ -329,13 +323,6 @@ function DiceFace:calculateScale()
     --Update targeted scale, rotation and position
     self.targetedScale = self.baseTargetedScale + self.selectionScale + self.hoverScale + self.highlightScale
     
-end
-
-function DiceFace:calculateTriggerScale()
-     local t = self.triggerTimer / self.triggerTime
-
-    local s = math.sin(2*t * math.pi) -- varie de 0 à 1 à 0
-    self.targetedScale = 1 + (1.5 - 1) * s
 end
 
 function DiceFace:updateAngle(dt)

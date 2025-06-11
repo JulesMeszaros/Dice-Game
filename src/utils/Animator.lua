@@ -10,16 +10,21 @@ function Animator:new(target)
     return anim
 end
 
-function Animator:add(property, targetValue, duration, easing, onComplete)
+function Animator:add(property,from, targetValue, duration, easing, onComplete)
     table.insert(self.queue, {
         property = property,
-        from = self.target[property],
+        from = from,
         to = targetValue,
         duration = duration,
         time = 0,
         easing = easing or function(t) return t end,
         onComplete = onComplete -- callback optionnel
     })
+end
+
+-- Ajoute un délai dans la file d’attente (ne fait rien, sert juste à attendre)
+function Animator:addDelay(duration, callback)
+    self:add("_dummy", 0, 0, duration, nil, callback)
 end
 
 function Animator:update(dt)
