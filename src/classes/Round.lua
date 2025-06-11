@@ -344,8 +344,9 @@ function Round:makeRoll(dices)
 
         --Change their target position to make them slide
         self.diceFaces2[dice].targetX = randomXPos
-        self.diceFaces2[dice].targetY = randomYPos
         self.diceFaces2[dice].baseRotation = randomR
+        self.diceFaces2[dice].animator:add("rotation", 0, randomR, 0.1, function(t)return t < 0.5 and 2 * t * t or -1 + (4 - 2 * t) * t end)
+        self.diceFaces2[dice].animator:add("y", 1000, randomYPos, 0.2, function(t)return t < 0.5 and 2 * t * t or -1 + (4 - 2 * t) * t end)
     end
 
 end 
