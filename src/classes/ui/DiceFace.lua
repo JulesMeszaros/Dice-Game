@@ -46,6 +46,8 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
     self.rotation = 0 --Angle the dice is actually showed at
 
     --Scale
+    self.scaleX = 1
+    self.scaleY = 1
     self.targetedScale = 1
 	self.highlightScale = 0
     self.baseTargetedScale = 1
@@ -110,7 +112,7 @@ function DiceFace:update(dt)
 end
 
 function DiceFace:draw()
-    love.graphics.draw(self.diceCanvas, self.x, self.y, self.rotation, self.scale, self.scale, self.diceCanvas:getWidth()/2, self.diceCanvas:getHeight()/2)
+    love.graphics.draw(self.diceCanvas, self.x, self.y, self.rotation, self.scaleX, self.scaleY, self.diceCanvas:getWidth()/2, self.diceCanvas:getHeight()/2)
 end
 
 --==INTERACTION==--
@@ -199,6 +201,7 @@ end
 
 function DiceFace:setRepresentedFace(face)
     self.representedFace = face
+    self:updateSprite()
 end
 
 function DiceFace:calculateScale()
@@ -233,9 +236,9 @@ end
 --==TRIGGER FUNCTIONS==--
 function DiceFace:trigger() --Lance le trigger du dé
     self.animator:addDelay(0.3)
-    self.animator:add("scale", 1, 1.8, 0.1)
-    self.animator:add("scale", 1.8, 0.5, 0.2, nil)
-    self.animator:add("scale", 0.5, 1, 0.1, nil)
+    self.animator:add("scaleX", 1, 1.9, 0.1)
+    self.animator:add("scaleX", 1.9, 0.5, 0.2, nil)
+    self.animator:add("scaleX", 0.5, 1, 0.1, nil)
     self.animator:addDelay(0.3, function()self.targetedScale = 1 ; self.round:triggerNextDice()end)
 end
 
@@ -339,15 +342,21 @@ end
 
 function DiceFace:updateScale(dt)
     if(self.animator.current == nil and table.getn(self.animator.queue) == 0)then
-        if math.abs(self.scale - self.targetedScale) < 0.001 then
-            self.scale = self.targetedScale
+        if math.abs(self.scaleX - self.targetedScale) < 0.001 then --Update scaleX
+            self.scaleX = self.targetedScale
         else
-            self.scale, self.velscale = springUpdate(self.scale, self.targetedScale, self.velscale, dt, 4, 0.6)
+            self.scaleX, self.velscale = springUpdate(self.scaleX, self.targetedScale, self.velscale, dt, 4, 0.6)
+        end
+
+        if math.abs(self.scaleY - self.targetedScale) < 0.001 then --update scaleY
+            self.scaleY = self.targetedScale
+        else
+            self.scaleY, self.velscale = springUpdate(self.scaleY, self.targetedScale, self.velscale, dt, 4, 0.6)
         end
     end
 end
 
---==Utilities==--
+--==Animations==--
 function springUpdate(current, target, velocity, dt, frequency, damping)
     local f = frequency * 2 * math.pi
     local g = damping
@@ -358,15 +367,9 @@ function springUpdate(current, target, velocity, dt, frequency, damping)
     return current, velocity
 end
 
---==Animations==--
-function DiceFace:shake(intensity, duration, steps)
-    local stepDuration = duration/steps
-    for i=1,steps do
-        self.animator:add("x", self.x+math.random(-intensity, intensity), stepDuration)
-        self.animator:add("y", self.y+math.random(-intensity, intensity), stepDuration)
-    end
-    self.animator:add("x", self.x, stepDuration)
-    self.animator:add("y", self.y, stepDuration, nil, function()print("shaking over")end)
+function DiceFace:flipChange(newFace)
+    self.animator:add("scaleX", self.scaleX, 0, 0.1, nil, function()self:setRepresentedFace(newFace)end)
+    self.animator:add("scaleX", 0, 1, 0.1)
 end
 
 return DiceFace

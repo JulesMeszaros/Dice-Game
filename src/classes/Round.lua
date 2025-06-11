@@ -1,6 +1,7 @@
 local Constants = require("src.utils.constants")
 local DiceFace = require("src.classes.ui.DiceFace")
 local RoundScreen = require("src.screens.RoundScreen")
+local StaticFace = require("src.classes.FaceTypes.StaticFace")
 
 local Inputs = require("src.utils.scripts.inputs")
 
@@ -96,7 +97,10 @@ function Round:keypressed(key) --(Mainly for debug)
 
     if(key=='a')then
         for i,diceface in next, self.diceFaces2 do
-            diceface:shake(50, 0.3, 10)
+            local r = math.random(1, 6)
+            local static = StaticFace:new(r, 3)
+
+            diceface:flipChange(static)
         end
     end
 end
