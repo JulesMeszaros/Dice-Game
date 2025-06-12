@@ -7,7 +7,7 @@ local Constants = require("src.utils.constants")
 local Button = require("src.classes.ui.Button")
 --Dices
 local DiceObject = require("src.classes.DiceObject")
-local FaceObject = require("src.classes.FaceTypes.WhiteFace")
+local FaceObject = require("src.classes.FaceTypes.FaceObject")
 local DiceFace = require("src.classes.ui.DiceFace")
 --Sprites
 local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Description-proto.png")
@@ -100,7 +100,7 @@ function RoundScreen:new(round)
 
     --LEFT PANNEL BUTTONS
     self.uiElements.roundButtons["reorganiserButton"] = Button:new(
-        function()self:reorganiseDiceFaces(self.round.diceFaces2)end, 
+        function()self:reorganiseDiceFaces(self.round.diceFaces)end, 
         "src/assets/sprites/ui/terrain/Order_btn-proto.png", 
         self.terrainCanvas:getWidth()-self.faceDetailsCanvas:getWidth()-60-self.dice_tray:getWidth()/2-215, 
         self.terrainCanvas:getHeight()-75, 
@@ -180,7 +180,7 @@ function RoundScreen:updateCanvas(dt)
     self:drawPlayersInfos()
 
     --Dice Tray
-    self:drawDiceTray(self.terrainCanvas:getWidth()-60-self.faceDetailsCanvas:getWidth(), self.terrainCanvas:getHeight()-30, self.round.diceFaces2)
+    self:drawDiceTray(self.terrainCanvas:getWidth()-60-self.faceDetailsCanvas:getWidth(), self.terrainCanvas:getHeight()-30, self.round.diceFaces)
 
     --Figure Buttons
 
@@ -214,8 +214,8 @@ end
 function RoundScreen:updateSelectedPosDices()
     local i = 1
     for k,d in next,self.round.selectedDices do
-        self.round.diceFaces2[d].targetY = 82
-        self.round.diceFaces2[d].targetX = 82 + (i-1)*(180)
+        self.round.diceFaces[d].targetY = 82
+        self.round.diceFaces[d].targetX = 82 + (i-1)*(180)
         i=i+1
     end
 end
@@ -496,7 +496,7 @@ end
 function RoundScreen:getCurrentlyHoveredDice()
     self.currentlyHoveredDice = nil
 
-    for key,diceface in next,self.round.diceFaces2 do
+    for key,diceface in next,self.round.diceFaces do
         if diceface:isHovered() then
             self.currentlyHoveredDice = diceface.diceObject
             break
@@ -560,10 +560,10 @@ function RoundScreen:reorganiseDiceFaces(dices)
 end
 
 function RoundScreen:highlightDices(usedDices)
-    for key,diceface in next,self.round.diceFaces2 do
+    for key,diceface in next,self.round.diceFaces do
         diceface:setHighlighted(false)
         for _, dice in next,usedDices do
-            if self.round.diceFaces2[dice] == diceface then
+            if self.round.diceFaces[dice] == diceface then
                     diceface:setHighlighted(true)
                     break
             end

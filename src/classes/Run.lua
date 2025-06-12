@@ -5,7 +5,7 @@ local Floor = require("src.classes.Floor")
 local DeskChoice = require("src.screens.DeskChoice")
 local DiceCustomization = require("src.screens.DiceCustomization")
 
-local StoneFace = require("src.classes.FaceTypes.StoneFace")
+local FaceTypes = require("src.classes.FaceTypes.FaceTypes")
 
 local Run = {}
 
@@ -60,9 +60,9 @@ function Run:update(dt)
         --update Round
         self.currentRound:update(dt)
 
-        --Update dices UI
-        for key,dice2 in next,self.currentRound.diceFaces2 do
-            dice2:update(dt)
+        --Update dices UI (a bouger)
+        for key,dice in next,self.currentRound.diceFaces do
+            dice:update(dt)
         end
 
     elseif(self.currentState==Constants.RUN_STATES.SHOP)then
@@ -79,7 +79,6 @@ function Run:update(dt)
 end
 
 function Run:draw(gameCanvas) --Render the game into the Game Canvas.
-    --==DRAW THE ROUND==--
     if(self.currentState==Constants.RUN_STATES.ROUND)then --check if we are in round
         self:drawRound() --Draw the round
     elseif(self.currentState == Constants.RUN_STATES.SHOP)then --check if we are in shop
@@ -91,8 +90,6 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
     elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
         self.customizationScreen:draw()
     end
-
-    --==DRAW THE AFTER ROUND==-- (plus tard le shop)
 end
 
 --==ROUND FUNCTIONS==--
@@ -136,13 +133,10 @@ function Run:endRound()
             self:resetAvailableFigures()        
         end
 
-        --self.deskChoice = DeskChoice:new(self.currentFloor, self)
-        --self.currentState = Constants.RUN_STATES.ROUND_CHOICE --Change d'état de Run
-
         --create three random face (to be deleted)
         local randomFaces = {}
         for i=1, 3 do
-            local randomFace = StoneFace:new(math.random(1, 6), 10)
+            local randomFace = FaceTypes.StoneFace:new(math.random(1, 6), 10)
             table.insert(randomFaces, randomFace)
         end
 

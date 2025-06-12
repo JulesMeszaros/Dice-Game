@@ -1,14 +1,13 @@
 local Constants = require("src.utils.constants")
 local DiceFace = require("src.classes.ui.DiceFace")
 local RoundScreen = require("src.screens.RoundScreen")
-local StaticFace = require("src.classes.FaceTypes.StaticFace")
 
 local Inputs = require("src.utils.scripts.inputs")
 
 local Round = {}
 Round.__index = Round
 
-function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObjects, roundType)
+function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObjects, roundType, faceReward)
     local self = setmetatable({}, Round)
 
     self.selectedDices = {}
@@ -26,7 +25,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.diceFacesTriggerQueue = {} --Dice queue for the triggers. get modified during the trigger phase
     self.dicesTriggerQueue = {}  --Same but for the dices
     self.currentlyTriggeredDice = nil
-    self.diceFaces2 = {}
+    self.diceFaces = {}
     self.baseReward = baseReward
     self.triggerDiceHistory = {}
     self.triggerFaceHistory = {}
@@ -69,7 +68,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
             self
         )
 
-        self.diceFaces2[diceobject] = diceFaceUI
+        self.diceFaces[diceobject] = diceFaceUI
     end
 
     return self
@@ -96,18 +95,13 @@ function Round:keypressed(key) --(Mainly for debug)
     end
 
     if(key=='a')then
-        for i,diceface in next, self.diceFaces2 do
-            local r = math.random(1, 6)
-            local static = StaticFace:new(r, 3)
-
-            diceface:flipChange(static)
-        end
+        
     end
 end
 
 function Round:mousepressed(x, y, button, istouch, presses)
     --DiceFaces
-    for key,uiFace in next,self.diceFaces2 do
+    for key,uiFace in next,self.diceFaces do
         uiFace:clickEvent()
     end
 
@@ -123,7 +117,7 @@ end
 function Round:mousereleased(x, y, button, istouch, presses)
     --release event for dice faces
 
-    for key,diceface in next,self.diceFaces2 do
+    for key,diceface in next,self.diceFaces do
         local wasReleased = diceface:releaseEvent()
         if(wasReleased)then
             self:updateselectedDices(diceface)
@@ -150,7 +144,7 @@ end
 function Round:mousemoved(x, y, dx, dy, isDragging)
     --Drag and drop dice
     if(isDragging == true)then 
-        for key,diceui in next, self.diceFaces2 do
+        for key,diceui in next, self.diceFaces do
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
                 diceui.dragXspeed = dx
@@ -185,7 +179,7 @@ function Round:getDicesOrder(usedDices)
     local dices = {}
 
     for i, dice in next,usedDices do
-        table.insert(diceFaces, self.diceFaces2[dice])
+        table.insert(diceFaces, self.diceFaces[dice])
         table.insert(dices, dice)
     end
     
@@ -215,7 +209,7 @@ function Round:getDicesOrder(usedDices)
     -- Trie les DiceFaces à partir des dés triés
     local sortedDiceFaces = {}
     for k,d in next,sortedDices do
-        table.insert(sortedDiceFaces, self.diceFaces2[d])
+        table.insert(sortedDiceFaces, self.diceFaces[d])
     end
 
     --Ajout aux attributs de classe
@@ -332,7 +326,7 @@ function Round:makeRoll(dices)
     local draw = self:drawDices(dices) --draw the dices
     for key,dice in next,self.diceObjects do
         dice:setCurrentFaceObject(self.drawedFaceObjects[dice])
-        self.diceFaces2[dice]:setFaceObject(self.drawedFaceObjects[dice]) --update the ui
+        self.diceFaces[dice]:setFaceObject(self.drawedFaceObjects[dice]) --update the ui
     end
 
     for key,dice in next,dices do --Creates the roll animation for the rerolled dices
@@ -342,15 +336,15 @@ function Round:makeRoll(dices)
         local randomR = ((math.random(0,1000)/1000)*2.5)-1.25 --(1001 angles possibles entre -1.25 et 1.25 radians)
 
         --Set initial position (random X axis, under the terrain)
-        self.diceFaces2[dice]:setX(randomXPos)
-        self.diceFaces2[dice]:setY(1000)
-        self.diceFaces2[dice].rotation = 0
+        self.diceFaces[dice]:setX(randomXPos)
+        self.diceFaces[dice]:setY(1000)
+        self.diceFaces[dice].rotation = 0
 
         --Change their target position to make them slide
-        self.diceFaces2[dice].targetX = randomXPos
-        self.diceFaces2[dice].baseRotation = randomR
-        self.diceFaces2[dice].animator:add("rotation", 0, randomR, 0.1, function(t)return t < 0.5 and 2 * t * t or -1 + (4 - 2 * t) * t end)
-        self.diceFaces2[dice].animator:add("y", 1000, randomYPos, 0.2, function(t)return t < 0.5 and 2 * t * t or -1 + (4 - 2 * t) * t end)
+        self.diceFaces[dice].targetX = randomXPos
+        self.diceFaces[dice].baseRotation = randomR
+        self.diceFaces[dice].animator:add("rotation", 0, randomR, 0.1, function(t)return t < 0.5 and 2 * t * t or -1 + (4 - 2 * t) * t end)
+        self.diceFaces[dice].animator:add("y", 1000, randomYPos, 0.2, function(t)return t < 0.5 and 2 * t * t or -1 + (4 - 2 * t) * t end)
     end
 
 end 
@@ -383,7 +377,7 @@ end
 
 function Round:resetselectedDices()
     self.selectedDices = {} --remove the dices
-    for key,uiFace in next,self.diceFaces2 do --unselect the UI Faces
+    for key,uiFace in next,self.diceFaces do --unselect the UI Faces
         uiFace:setSelected(false)
     end
 end

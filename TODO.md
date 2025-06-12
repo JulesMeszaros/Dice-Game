@@ -28,5 +28,6 @@
 - TODO: Simplifier l'import des dés en masse
 - FIXME: Déplacer quelques morceaux de codes dans des fichiers **utils** pour aérer les classes
 - TODO: Créer un fichier unique de type YAML ou JSON pour centraliser les métadonnées spécifique à chaque dé
-- TODO: Creer une classe etage
+
+
 ## Bugs
