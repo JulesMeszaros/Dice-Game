@@ -238,14 +238,14 @@ function DiceFace:trigger() --Lance le trigger du dé
     self.animator:addDelay(0.3)
 
     self.animator:addGroup({
-        {property="scaleX", from=1, targetValue=1.9, duration=0.1},
+        {property="scaleX", from=1, targetValue=1.6, duration=0.1},
         {property="scaleY", from=1, targetValue=0.8, duration=0.1}
     })
 
     self.animator:addDelay(0.1)
 
     self.animator:addGroup({
-        {property="scaleX", from=1.9, targetValue=0.5, duration=0.05},
+        {property="scaleX", from=1.6, targetValue=0.5, duration=0.05},
         {property="scaleY", from=0.8, targetValue=1.7, duration=0.05}
     })
 
@@ -254,9 +254,6 @@ function DiceFace:trigger() --Lance le trigger du dé
         {property="scaleY", from=1.3, targetValue=1, duration=0.1}
     })
 
-    --self.animator:add("scaleX", 1, 1.9, 0.1)
-    --[[ self.animator:add("scaleX", 1.9, 0.5, 0.05, nil)
-    self.animator:add("scaleX", 0.5, 1, 0.1, nil) ]]
     self.animator:addDelay(0.0, function()self.targetedScale = 1 ; self.round:triggerNextDice()end)
 end
 
@@ -385,8 +382,18 @@ function springUpdate(current, target, velocity, dt, frequency, damping)
 end
 
 function DiceFace:flipChange(newFace)
-    self.animator:add("scaleX", self.scaleX, 0, 0.1, nil, function()self:setRepresentedFace(newFace)end)
-    self.animator:add("scaleX", 0, 1, 0.1)
+    self.animator:addGroup({
+        {property = "scaleX", from=self.scaleX, targetValue=1.2, duration=0.2},
+        {property = "scaleY", from=self.scaleY, targetValue=1.2, duration=0.2}
+    })
+    self.animator:addDelay(0.1)
+    self.animator:add("scaleX", 1.2, 0, 0.1, nil, function()self:setRepresentedFace(newFace)end)
+    self.animator:add("scaleX", 0, 1.2, 0.1)
+    self.animator:addDelay(0.1)
+    self.animator:addGroup({
+        {property = "scaleX", from=1.2, targetValue=self.scaleX, duration=0.2},
+        {property = "scaleY", from=1.2, targetValue=self.scaleY, duration=0.2}
+    })
 end
 
 return DiceFace
