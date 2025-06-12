@@ -6,7 +6,6 @@
 
 #### Phase de trigger
 
-- FIXME: Repenser l'animation des dés au trigger
 - TODO: Accentuer l'animation de trigger au fil de la phase (plus rapide, plus grande, plus exagérée)
 
 ### Graphismes/Animations

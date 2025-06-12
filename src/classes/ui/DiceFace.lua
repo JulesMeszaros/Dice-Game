@@ -236,9 +236,27 @@ end
 --==TRIGGER FUNCTIONS==--
 function DiceFace:trigger() --Lance le trigger du dé
     self.animator:addDelay(0.3)
-    self.animator:add("scaleX", 1, 1.9, 0.1)
-    self.animator:add("scaleX", 1.9, 0.5, 0.05, nil)
-    self.animator:add("scaleX", 0.5, 1, 0.1, nil)
+
+    self.animator:addGroup({
+        {property="scaleX", from=1, targetValue=1.9, duration=0.1},
+        {property="scaleY", from=1, targetValue=0.8, duration=0.1}
+    })
+
+    self.animator:addDelay(0.1)
+
+    self.animator:addGroup({
+        {property="scaleX", from=1.9, targetValue=0.5, duration=0.05},
+        {property="scaleY", from=0.8, targetValue=1.7, duration=0.05}
+    })
+
+    self.animator:addGroup({
+        {property="scaleX", from=0.5, targetValue=1, duration=0.1},
+        {property="scaleY", from=1.3, targetValue=1, duration=0.1}
+    })
+
+    --self.animator:add("scaleX", 1, 1.9, 0.1)
+    --[[ self.animator:add("scaleX", 1.9, 0.5, 0.05, nil)
+    self.animator:add("scaleX", 0.5, 1, 0.1, nil) ]]
     self.animator:addDelay(0.0, function()self.targetedScale = 1 ; self.round:triggerNextDice()end)
 end
 
