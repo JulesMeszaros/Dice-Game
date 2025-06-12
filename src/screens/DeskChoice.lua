@@ -2,6 +2,8 @@ local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
 local Fonts = require("src.utils.fonts")
 
+local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
+
 local Button = require("src.classes.ui.Button")
 local Round = require("src.classes.Round")
 local DiceFace = require("src.classes.ui.DiceFace")
@@ -21,6 +23,9 @@ function DeskChoice:new(floor, run)
         faceRewards = {}
     }
    
+    self.currentlyHoveredFace = nil
+    self.previouslyHoveredFace = nil
+
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
     self.floor = floor
     self.run = run
@@ -42,6 +47,8 @@ function DeskChoice:update(dt)
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
 
+    --Face survolée
+    self:getCurrentlyHoveredFace()
 
     for i=1, table.getn(self.choiceCanvas) do
         self:updateChoiceCanvas(self.choiceCanvas[i], dt, i)
@@ -136,7 +143,15 @@ function DeskChoice:updateChoiceCanvas(c, dt, i)
     for i,roundReward in next,self.uiElements.faceRewards[i] do
         roundReward:update(dt)
         roundReward:draw()
+
+        --Draw the face info
+        if(self.currentlyHoveredFace == roundReward)then
+            self.hoverInfosCanvas:update(dt)
+            self.hoverInfosCanvas:draw()
+        end
     end
+
+    
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -182,6 +197,29 @@ function DeskChoice:mousemoved(x, y, dx, dy, isDragging)
 end
 
 --==Utils==--
+
+function DeskChoice:createFaceInfosCanvas(face)
+    return FaceHoverInfo:new(face)
+end
+
+function DeskChoice:getCurrentlyHoveredFace()
+    self.previouslyHoveredFace = self.currentlyHoveredFace --We save the state of the frame before
+    self.currentlyHoveredFace = nil
+
+    for i,round in next,self.uiElements.faceRewards do
+        for j,face in next,round do
+            if face:isHovered() then self.currentlyHoveredFace = face ; break end
+        end
+    end
+
+    --Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
+    if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
+        if (self.currentlyHoveredFace) then
+            self.hoverInfosCanvas = self:createFaceInfosCanvas(self.currentlyHoveredFace)
+        end
+    end
+
+end
 
 function DeskChoice:getCenteredPositions(count, objectWidth, spacing, centerX)
     local totalWidth = count * objectWidth + (count - 1) * spacing
