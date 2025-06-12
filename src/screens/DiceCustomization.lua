@@ -4,6 +4,8 @@ local Inputs = require("src.utils.scripts.inputs")
 local Button = require("src.classes.ui.Button")
 local DeskChoice = require("src.screens.DeskChoice")
 
+local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
+
 local DiceCustomization = {}
 DiceCustomization.__index = DiceCustomization
 
@@ -66,6 +68,9 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 end
 
 function DiceCustomization:update(dt)
+    --Get hovered face
+    self:getCurrentlyHoveredFace()
+   
     --update the canvas
     self:updateCanvas(dt)
 
@@ -121,6 +126,12 @@ function DiceCustomization:updateCanvas(dt)
     --Buttons
     for key,button in next,self.uiElements.buttons do
         button:draw()
+    end
+
+     --Update the hover info
+    if(self.currentlyHoveredFace)then
+        self.hoverInfosCanvas:update(dt)
+        self.hoverInfosCanvas:draw()
     end
 
     love.graphics.setCanvas(currentCanvas)
@@ -324,6 +335,29 @@ function DiceCustomization:getCenteredPositions(count, objectWidth, spacing, cen
     end
 
     return positions
+end
+
+function DiceCustomization:createFaceInfosCanvas(face)
+    return FaceHoverInfo:new(face)
+end
+
+function DiceCustomization:getCurrentlyHoveredFace()
+    self.previouslyHoveredFace = self.currentlyHoveredFace --We save the state of the frame before
+    self.currentlyHoveredFace = nil
+
+    for i,dice in next,self.uiDices do
+        for j,face in next,dice do
+            if face:isHovered() then self.currentlyHoveredFace = face ; break end
+        end
+    end
+
+    --Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
+    if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
+        if (self.currentlyHoveredFace) then
+            self.hoverInfosCanvas = self:createFaceInfosCanvas(self.currentlyHoveredFace)
+        end
+    end
+
 end
 
 return DiceCustomization

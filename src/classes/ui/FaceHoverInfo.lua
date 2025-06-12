@@ -1,13 +1,14 @@
 local Fonts = require("src.utils.fonts")
+local Animator = require("src.utils.Animator")
 
 local FaceHoverInfo = {}
 FaceHoverInfo.__index = FaceHoverInfo
 
 function FaceHoverInfo:new(face)
     local self = setmetatable({}, FaceHoverInfo)
-
+    self.animator = Animator:new(self)
     self.face= face
-
+    self.opacity = 0
     self.x = face.x
     self.y = face.y + 70
     local canvasWidth = 350
@@ -20,15 +21,20 @@ function FaceHoverInfo:new(face)
 
     self.canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
 
+    self.animator:add("opacity", 0, 1, 0.1)
+
     return self
 end
 
 function FaceHoverInfo:update(dt)
+    self.animator:update(dt)
     self:updateCanvas(dt)
 end
 
 function FaceHoverInfo:draw()
+    love.graphics.setColor(1, 1, 1, self.opacity)
     love.graphics.draw(self.canvas, self.x, self.y, 0, 1, 1, self.canvas:getWidth()/2)
+    love.graphics.setColor(1, 1, 1, 1)
 end
 
 function FaceHoverInfo:updateCanvas(dt)
