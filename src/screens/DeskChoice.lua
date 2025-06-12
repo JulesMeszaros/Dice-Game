@@ -4,6 +4,7 @@ local Fonts = require("src.utils.fonts")
 
 local Button = require("src.classes.ui.Button")
 local Round = require("src.classes.Round")
+local DiceFace = require("src.classes.ui.DiceFace")
 
 local DeskChoice = {}
 
@@ -16,7 +17,8 @@ function DeskChoice:new(floor, run)
   
     self.uiElements = {
         buttons = {},
-        DeskChoiceButtons = {}
+        DeskChoiceButtons = {},
+        faceRewards = {}
     }
    
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
@@ -84,6 +86,28 @@ function DeskChoice:generateChoiceCanvas()
             function()return Inputs.getMouseInCanvas(50+(i-1)*(20+self.choiceCanvasWidth), 200)end
         )
         table.insert(self.uiElements.DeskChoiceButtons, chooseButton)
+
+        --Create the rewards to be displayed
+        local roundFaceRewards = {}
+
+        --Calcul de la position des faces de dés dans le canvas
+        local xPositions = self:getCenteredPositions(table.getn(self.possibleRounds[i].faceRewards), 120, 20, (c:getWidth()/2)+60)
+
+        for j = 1, table.getn(self.possibleRounds[i].faceRewards) do
+            local faceUI = DiceFace:new(
+                nil,
+                self.possibleRounds[i].faceRewards[j],
+                xPositions[j],
+                450,
+                120,
+                false,
+                true,
+                function()return Inputs.getMouseInCanvas(50+(i-1)*(20+self.choiceCanvasWidth), 200)end,
+                self.possibleRounds[i]
+            )
+            table.insert(roundFaceRewards, faceUI)
+        end
+        table.insert(self.uiElements.faceRewards, roundFaceRewards)
     end
 end
 
@@ -91,21 +115,28 @@ function DeskChoice:updateChoiceCanvas(c, dt, i)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(c)
     love.graphics.clear(49/256, 74/256, 50/256)
-
+    --Draw the outline
     love.graphics.rectangle("line", 0, 0, c:getWidth(), c:getHeight())
-
-    local rewardText = love.graphics.newText(Fonts.nexaSmall, "Reward : "..tostring(self.possibleRounds[i].baseReward).."€")
+    --Create the texts
+    local rewardText = love.graphics.newText(Fonts.nexaMedium, "Reward : "..tostring(self.possibleRounds[i].baseReward).."€")
     local targetText = love.graphics.newText(Fonts.nexaMedium, "Target : "..tostring(self.possibleRounds[i].targetScore).." pts")
     local deskNumberText = love.graphics.newText(Fonts.nexaMedium, "Desk : "..tostring(self.possibleRounds[i].deskNumber))
     local jobText = love.graphics.newText(Fonts.nexaMedium, self.possibleRounds[i].enemyJob)
-
-    love.graphics.draw(rewardText, c:getWidth()/2, c:getHeight()-150, 0, 1, 1, rewardText:getWidth()/2, rewardText:getHeight()/2)
+    --Draw the texts
+    love.graphics.draw(rewardText, c:getWidth()/2, 350, 0, 1, 1, rewardText:getWidth()/2, rewardText:getHeight()/2)
     love.graphics.draw(deskNumberText, c:getWidth()/2, 50, 0, 1, 1, deskNumberText:getWidth()/2, deskNumberText:getHeight()/2)
     love.graphics.draw(jobText, c:getWidth()/2, 120, 0, 1, 1, jobText:getWidth()/2, jobText:getHeight()/2)
     love.graphics.draw(targetText, c:getWidth()/2, 180, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
 
+    --Update and draw the buttons
     self.uiElements.DeskChoiceButtons[i]:update(dt)
     self.uiElements.DeskChoiceButtons[i]:draw()
+
+    --Update and draw the UIFace
+    for i,roundReward in next,self.uiElements.faceRewards[i] do
+        roundReward:update(dt)
+        roundReward:draw()
+    end
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -148,6 +179,21 @@ end
 
 function DeskChoice:mousemoved(x, y, dx, dy, isDragging)
 
+end
+
+--==Utils==--
+
+function DeskChoice:getCenteredPositions(count, objectWidth, spacing, centerX)
+    local totalWidth = count * objectWidth + (count - 1) * spacing
+    local startX = centerX - totalWidth / 2
+
+    local positions = {}
+    for i = 0, count - 1 do
+        local x = startX + i * (objectWidth + spacing)
+        table.insert(positions, x)
+    end
+
+    return positions
 end
 
 return DeskChoice
