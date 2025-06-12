@@ -258,10 +258,12 @@ function DiceCustomization:resetSelectedNewFace()
 end
 
 function DiceCustomization:createNewFacesUI()
+    local xPositions = self:getCenteredPositions(table.getn(self.newFaceObjects), 120, 20, self.screenCanvas:getWidth()/2+60)
+
     for i,face in next,self.newFaceObjects do
         local diceFace = DiceFace:new(nil,
                                     face,
-                                    120 + (i*140),
+                                    xPositions[i],
                                     120,
                                     120,
                                     true,
@@ -309,6 +311,19 @@ end
 function DiceCustomization:goToRoundSelection()
     self.previousRound.run.deskChoice = DeskChoice:new(self.previousRound.run.currentFloor, self.previousRound.run)
     self.previousRound.run.currentState = Constants.RUN_STATES.ROUND_CHOICE --Change d'état de Run
+end
+
+function DiceCustomization:getCenteredPositions(count, objectWidth, spacing, centerX)
+    local totalWidth = count * objectWidth + (count - 1) * spacing
+    local startX = centerX - totalWidth / 2
+
+    local positions = {}
+    for i = 0, count - 1 do
+        local x = startX + i * (objectWidth + spacing)
+        table.insert(positions, x)
+    end
+
+    return positions
 end
 
 return DiceCustomization

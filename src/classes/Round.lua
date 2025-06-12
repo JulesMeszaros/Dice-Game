@@ -261,8 +261,21 @@ function Round:triggerNextDice()
         table.remove(self.dicesTriggerQueue, 1) 
 
     else --ends the trigger phase
-        self:endTriggeringPhase()
-        print("----")
+        --Recall the dices
+        local j = 0
+        for i,diceface in next,self.diceFaces do
+            j = j+1
+            print(j)
+            if(j==5)then
+                diceface.animator:add("y", diceface.y, diceface.y-20, 0.1)
+                diceface.animator:add("y", diceface.y-20, 1000, 0.2)
+                diceface.animator:addDelay(0.2, function()self:endTriggeringPhase()end)
+            else
+                diceface.animator:add("y", diceface.y, diceface.y-20, 0.1)
+                diceface.animator:add("y", diceface.y-20, 1000, 0.2)
+                diceface.animator:addDelay(0.2)
+            end
+        end        
     end
 end
 
@@ -337,15 +350,14 @@ function Round:makeRoll(dices)
         local randomR = ((math.random(0,1000)/1000)*2.5)-1.25 --(1001 angles possibles entre -1.25 et 1.25 radians)
 
         --Set initial position (random X axis, under the terrain)
-        self.diceFaces[dice]:setX(randomXPos)
+        self.diceFaces[dice]:setX(math.random(-1000, 1000))
         self.diceFaces[dice]:setY(1000)
         self.diceFaces[dice].rotation = 0
 
         --Change their target position to make them slide
         self.diceFaces[dice].targetX = randomXPos
+        self.diceFaces[dice].targetY = randomYPos
         self.diceFaces[dice].baseRotation = randomR
-        self.diceFaces[dice].animator:add("rotation", 0, randomR, 0.1, function(t)return t < 0.5 and 2 * t * t or -1 + (4 - 2 * t) * t end)
-        self.diceFaces[dice].animator:add("y", 1000, randomYPos, 0.2, function(t)return t < 0.5 and 2 * t * t or -1 + (4 - 2 * t) * t end)
     end
 
 end 

@@ -35,6 +35,8 @@ function WhiteFace:new(faceValue, pointsValue)
     return self
 end
 
+FaceTypes.WhiteFace = WhiteFace
+
 function WhiteFace:trigger(round)
     round.roundScore = round.roundScore + self.pointsValue
     self.totalTriggered = self.totalTriggered + 1
