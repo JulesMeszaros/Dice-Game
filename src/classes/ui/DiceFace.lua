@@ -72,8 +72,6 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
 
     --Triggering variables
     self.isTriggering = false
-    self.triggerTimer = 0 --Minuteur de trigger 
-    self.triggerTime = Constants.BASE_TRIGGER_ANIMATION_TIME --Temps que prend un dé à se trigger
     return self
 end
 
@@ -224,13 +222,6 @@ function DiceFace:calculateScale()
     --Update targeted scale, rotation and position
     self.targetedScale = self.baseTargetedScale + self.hoverScale + self.highlightScale
     
-end
-
-function DiceFace:calculateTriggerScale()
-     local t = self.triggerTimer / self.triggerTime
-
-    local s = math.sin(2*t * math.pi) -- varie de 0 à 1 à 0
-    self.targetedScale = 1 + (1.5 - 1) * s
 end
 
 --==TRIGGER FUNCTIONS==--
