@@ -1,5 +1,5 @@
 local Constants = require("src.utils.constants")
-
+local FaceTypes = require("src.classes.FaceTypes.FaceTypes")
 local Round = require("src.classes.Round")
 
 local Floor = {}
@@ -27,11 +27,14 @@ function Floor:new(floornumber, run)
 end
 
 function Floor:generateDesks(deskRank)
+    --Generate money reward
     local baseReward = 3 + math.random(0, 3)
+    --Generate target score
     local targetScore = deskRank*5 + 20*self.floorNumber + (math.random(0, 3) * 10)
-    local deskNumber = self.floorNumber*100+math.random(0, 98)
+    --Generate desk number
+    local deskNumber = self.floorNumber*100+deskRank*10+math.random(0,9)
 
-    local r = Round:new(1, self.floorNumber, deskNumber, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects, Constants.ROUND_TYPES.BASE)
+    local r = Round:new(1, self.floorNumber, deskNumber, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects, Constants.ROUND_TYPES.BASE, self:generateReward(2))
     r.roundType = Constants.ROUND_TYPES.BASE
     return r
 end
@@ -42,10 +45,31 @@ function Floor:generateBoss()
 
     local deskNumber = self.floorNumber*100+99
 
-    local r = Round:new(1, self.floorNumber, deskNumber, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects, Constants.ROUND_TYPES.BOSS)
+    local r = Round:new(1, self.floorNumber, deskNumber, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects, Constants.ROUND_TYPES.BOSS, self:generateReward(2))
     r.roundType = Constants.ROUND_TYPES.BOSS
     
     return r
+end
+
+function Floor:generateReward(maxFaces)
+    --Generate faceType reward
+    local keys = {}
+    for key, _ in pairs(FaceTypes) do
+        table.insert(keys, key)
+    end
+    local faceRewards = {}
+    local nbrFace = math.random(1, maxFaces)
+    for i=1, nbrFace do
+        local randomFaceKey = keys[math.random(#keys)]
+        local randomFaceType = FaceTypes[randomFaceKey] --On récupère une face type au hasard
+        local randomFaceValue = math.random(1,6) --La face numérique
+        local randomAdditionnalScore = math.random(1,6) --Le score en + de la face
+
+        local randomFaceObject = randomFaceType:new(randomFaceValue, randomAdditionnalScore+randomFaceValue)
+
+        table.insert(faceRewards, randomFaceObject)
+    end
+    return faceRewards
 end
 
 return Floor

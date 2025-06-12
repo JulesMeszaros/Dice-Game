@@ -7,7 +7,7 @@ local Inputs = require("src.utils.scripts.inputs")
 local Round = {}
 Round.__index = Round
 
-function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObjects, roundType, faceReward)
+function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObjects, roundType, faceRewards)
     local self = setmetatable({}, Round)
 
     self.selectedDices = {}
@@ -17,6 +17,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.dragOriginY = nil
     self.remainingHands = 4
     self.roundScore = 0
+    self.faceRewards = faceRewards
 
     --==Triggering Phase==--
     self.phase = Constants.ROUND_STATES.PLAYING

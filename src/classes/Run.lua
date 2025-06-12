@@ -139,8 +139,8 @@ function Run:endRound()
             local randomFace = FaceTypes.StoneFace:new(math.random(1, 6), 10)
             table.insert(randomFaces, randomFace)
         end
-
-        self.customizationScreen = DiceCustomization:new(self.currentRound, randomFaces)
+        
+        self.customizationScreen = DiceCustomization:new(self.currentRound, self.currentRound.faceRewards)
         self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION
     else --gameover case
         local gameOver = GameOverScreen:new(self.gameCanvas, self)
