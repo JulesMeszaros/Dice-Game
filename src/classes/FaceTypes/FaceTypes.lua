@@ -144,7 +144,7 @@ local StoneFace = setmetatable({}, { __index = FaceObject })
 StoneFace.__index = FaceObject
 
 function StoneFace:new(faceValue, pointsValue)
-    local self = setmetatable(WhiteFace:new(), StoneFace)
+    local self = setmetatable(FaceObject:new(), StoneFace)
 
     --Metadatas about the WhiteFace
     self.name = "Stone Face"
@@ -177,7 +177,8 @@ end
 
 function StoneFace:triggerEffect(round)
     --Ajoute 1€ au solde banquaire
-    round.run.money = round.run.money + 1
+    round.run.money = round.run.money + 1000
+    print("test stone")
 end
 
 FaceTypes.StoneFace = StoneFace
