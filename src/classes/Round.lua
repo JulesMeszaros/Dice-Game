@@ -1,6 +1,7 @@
 local Constants = require("src.utils.constants")
 local DiceFace = require("src.classes.ui.DiceFace")
 local RoundScreen = require("src.screens.RoundScreen")
+local AnimationUtils = require("src.utils.scripts.animationUtils")
 
 local Inputs = require("src.utils.scripts.inputs")
 
@@ -60,8 +61,8 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
         local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
             diceobject, --Dice Object 
             diceobject:getFace(1), --La face représentée
-            (key*80) - 30, --X Position (centerd)
-            self.terrain.dice_tray:getHeight()-60, --Yposition (centerd)
+            0, --X Position (centerd)
+            0, --Yposition (centerd)
             120, --Width/Height
             true, --is Selectable
             true, --isHoverable,
@@ -343,21 +344,43 @@ function Round:makeRoll(dices)
         self.diceFaces[dice]:setFaceObject(self.drawedFaceObjects[dice]) --update the ui
     end
 
+    local rerolledDiceFaces = {}
+    for k,d in next,dices do
+        rerolledDiceFaces[d] = self.diceFaces[d]
+    end
+
     for key,dice in next,dices do --Creates the roll animation for the rerolled dices
 
         local randomXPos = math.random(100, self.terrain.dice_tray:getWidth()-100)
         local randomYPos = math.random(250, self.terrain.dice_tray:getHeight()-250)
-        local randomR = ((math.random(0,1000)/1000)*2.5)-1.25 --(1001 angles possibles entre -1.25 et 1.25 radians)
+        local randomR = ((math.random(0,1000)/1000)*5)-2.5 --(1001 angles possibles entre -2.5 et 5 radians)
+
+        --Todo: remplacer le code suivant par une animation Animator
 
         --Set initial position (random X axis, under the terrain)
-        self.diceFaces[dice]:setX(math.random(-1000, 1000))
-        self.diceFaces[dice]:setY(1000)
+        self.diceFaces[dice]:setX(-200)
+        --self.diceFaces[dice].targetX = 2000
+        self.diceFaces[dice]:setY(-200)
+        --self.diceFaces[dice].targetY = 2000
         self.diceFaces[dice].rotation = 0
 
+        --Add an animation to make them roll
+        self.diceFaces[dice].animator:addGroup({
+            {property = "x", from=-200, targetValue = randomXPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "targetX", from=-200, targetValue = randomXPos, duration = 0.5, onComplete=function()end},
+            {property = "y", from=-200, targetValue = randomYPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "targetY", from=-200, targetValue = randomYPos, duration = 0.5, onComplete=function()end},
+            {property = "rotation", from=-0, targetValue = randomR, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "baseRotation", from=-0, targetValue = randomR, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+
+        })
+
+        self.diceFaces[dice].animator:addDelay(0.4, function()self.terrain:reorganiseDiceFaces(rerolledDiceFaces)end)
+
         --Change their target position to make them slide
-        self.diceFaces[dice].targetX = randomXPos
+        --[[ self.diceFaces[dice].targetX = randomXPos
         self.diceFaces[dice].targetY = randomYPos
-        self.diceFaces[dice].baseRotation = randomR
+        self.diceFaces[dice].baseRotation = randomR ]]
     end
 
 end 
@@ -384,6 +407,21 @@ function Round:playFigure(points, usedDices) --Function that triggers the hand
 end
 
 --==UTILS==--
+function Round:getUnSelectedDices()
+    local unSelectedDices = {}
+    for i,dice in next,self.diceObjects do
+        local selected = false
+        for d,diceFace in next,self.selectedDices do
+            print(diceFace.x)
+            if(d==dice)then selected = true end
+        end
+        if(selected==false)then
+            unSelectedDices[dice] = self.diceFaces[dice]
+        end
+    end 
+    return unSelectedDices
+end
+
 function Round:addToScore(n)
     self.roundScore = self.roundScore + n
 end

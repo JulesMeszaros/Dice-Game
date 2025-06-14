@@ -519,7 +519,6 @@ function RoundScreen:getCurrentlyHoveredDice()
 
     if(self.previouslyHoveredFace ~= self.currentlyHoveredFace and self.currentlyHoveredFace~= nil)then
         self.pointsDetailsCanvas = FaceHoverInfos:new(self.currentlyHoveredFace, "points")
-        print(self.currentlyHoveredFace.representedFace.name)
     end
 end
 
@@ -572,10 +571,7 @@ function RoundScreen:reorganiseDiceFaces(dices)
         uiFace.targetY = (self.dice_tray:getHeight()/2)
         uiFace.baseRotation = 0
         i = i+1
-    end
-
-    --On finit par déséléctionner tous les dés
-    self.round:resetselectedDices()
+    end    
 end
 
 function RoundScreen:highlightDices(usedDices)

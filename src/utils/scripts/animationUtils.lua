@@ -4,4 +4,64 @@ function AnimationUtils.osccilate(time, periode, amp) --Periode en secondes
     return (amp/2) + (amp/2) * math.sin(2 * math.pi * time / periode)
 end
 
+local Easing = {}
+
+function Easing.linear(t)
+    return t
+end
+
+function Easing.inQuad(t)
+    return t * t
+end
+
+function Easing.outQuad(t)
+    return t * (2 - t)
+end
+
+function Easing.inOutQuad(t)
+    if t < 0.5 then
+        return 2 * t * t
+    else
+        return -1 + (4 - 2 * t) * t
+    end
+end
+
+function Easing.inCubic(t)
+    return t * t * t
+end
+
+function Easing.outCubic(t)
+    t = t - 1
+    return t * t * t + 1
+end
+
+function Easing.inOutCubic(t)
+    if t < 0.5 then
+        return 4 * t * t * t
+    else
+        t = t - 1
+        return 1 + 4 * t * t * t
+    end
+end
+
+function Easing.outBounce(t)
+    local n1 = 7.5625
+    local d1 = 2.75
+
+    if t < 1 / d1 then
+        return n1 * t * t
+    elseif t < 2 / d1 then
+        t = t - 1.5 / d1
+        return n1 * t * t + 0.75
+    elseif t < 2.5 / d1 then
+        t = t - 2.25 / d1
+        return n1 * t * t + 0.9375
+    else
+        t = t - 2.625 / d1
+        return n1 * t * t + 0.984375
+    end
+end
+
+AnimationUtils.Easing = Easing
+
 return AnimationUtils 
