@@ -12,6 +12,7 @@
 
 - TODO: Suivre quelque tutos de shaders
 - TODO: Ajouter un compteur en direct des points gagnés pendant la main jouée
+- TODO: reconstruire les écrans selon les maquettes fournies par ming
 
 #### HUD
 
@@ -19,14 +20,15 @@
 
 ### Gameplay
 
-- TODO: coder un début de shop/personalisation des dés
+- TODO: coder un début de shop
 
 ### Code
 
 - TODO: Raffiner le drag and drop pour éviter un conflict entre les dés superposés
-- TODO: Simplifier l'import des dés en masse
 - FIXME: Déplacer quelques morceaux de codes dans des fichiers **utils** pour aérer les classes
 - TODO: Créer un fichier unique de type YAML ou JSON pour centraliser les métadonnées spécifique à chaque dé
 
 
 ## Bugs
+
+- FIXME: Régler le bouton reorganiser pour uniquement réorganiser les dés non sélectionnés
