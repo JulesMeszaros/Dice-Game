@@ -3,6 +3,7 @@ local Inputs = require("src.utils.scripts.inputs")
 local CalculatePoints = require("src.utils.scripts.calculatePoints")
 local Fonts = require("src.utils.fonts")
 local Constants = require("src.utils.constants")
+local FaceHoverInfos = require("src.classes.ui.FaceHoverInfo")
 --UI
 local Button = require("src.classes.ui.Button")
 --Dices
@@ -47,6 +48,8 @@ function RoundScreen:new(round)
     --Hovered infos
     self.currentlyHoveredFigure = nil 
     self.currentlyHoveredDice = nil
+    self.currentlyHoveredFace = nil
+    self.previouslyHoveredFace = nil
 
     --FIGURE BUTTONS
     self.figureButtonsCanvas = love.graphics.newCanvas(495,630)
@@ -87,6 +90,7 @@ function RoundScreen:new(round)
     
     --FACE DETAILS
     self.faceDetailsCanvas = love.graphics.newCanvas(420, 390)
+    self.pointsDetailsCanvas = nil
 
     --DICE DETAILS
     self.diceDetailsCanvas = love.graphics.newCanvas(420, 600)
@@ -178,8 +182,10 @@ function RoundScreen:updateCanvas(dt)
 
     --PlayersInfos
     self:drawPlayersInfos()
-
     --Dice Tray
+    if(self.pointsDetailsCanvas) then
+        self.pointsDetailsCanvas:update(dt)
+    end
     self:drawDiceTray(self.terrainCanvas:getWidth()-60-self.faceDetailsCanvas:getWidth(), self.terrainCanvas:getHeight()-30, self.round.diceFaces)
 
     --Figure Buttons
@@ -232,6 +238,11 @@ function RoundScreen:drawDiceTray(x, y, dices2)
     --On déssine les autres dés
     for key,uiFace in next,dices2 do
         uiFace:draw()
+    end
+
+    --On dessine la bulle des points
+    if(self.currentlyHoveredFace)then
+        self.pointsDetailsCanvas:draw()
     end
 
     --On retourne au canvas précédent
@@ -494,13 +505,21 @@ end
 
 --==UTILS FUNCTIONS==--
 function RoundScreen:getCurrentlyHoveredDice()
+    self.previouslyHoveredFace = self.currentlyHoveredFace
+    self.currentlyHoveredFace = nil
     self.currentlyHoveredDice = nil
 
     for key,diceface in next,self.round.diceFaces do
         if diceface:isHovered() then
             self.currentlyHoveredDice = diceface.diceObject
+            self.currentlyHoveredFace = diceface
             break
         end
+    end
+
+    if(self.previouslyHoveredFace ~= self.currentlyHoveredFace and self.currentlyHoveredFace~= nil)then
+        self.pointsDetailsCanvas = FaceHoverInfos:new(self.currentlyHoveredFace, "points")
+        print(self.currentlyHoveredFace.representedFace.name)
     end
 end
 

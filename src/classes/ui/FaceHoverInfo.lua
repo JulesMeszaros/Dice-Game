@@ -42,7 +42,7 @@ function FaceHoverInfo:new(face, wich)
 end
 
 function FaceHoverInfo:update(dt)
-    self.animator:update(dt)
+    self.animator:update(dt)    
     self:updateCanvas(dt)
     self:updateSmallCanvas(dt)
 end
@@ -63,6 +63,7 @@ function FaceHoverInfo:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
+    self.x = self.face.x
     --Background
     love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight(), 20, 20)
 
@@ -88,6 +89,7 @@ function FaceHoverInfo:updateSmallCanvas(dt)
     love.graphics.setColor(0, 0, 0, 1)
     
     --Update the y position depending on wich canvas are shown
+    self.sx = self.face.x
     if(self.shownCanvas == "points") then
         self.sy = self.face.y + 70
     else
