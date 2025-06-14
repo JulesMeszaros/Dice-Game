@@ -199,7 +199,7 @@ end
 --==Utils==--
 
 function DeskChoice:createFaceInfosCanvas(face)
-    return FaceHoverInfo:new(face)
+    return FaceHoverInfo:new(face, "both")
 end
 
 function DeskChoice:getCurrentlyHoveredFace()

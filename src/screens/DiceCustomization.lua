@@ -338,7 +338,7 @@ function DiceCustomization:getCenteredPositions(count, objectWidth, spacing, cen
 end
 
 function DiceCustomization:createFaceInfosCanvas(face)
-    return FaceHoverInfo:new(face)
+    return FaceHoverInfo:new(face, "both")
 end
 
 function DiceCustomization:getCurrentlyHoveredFace()
