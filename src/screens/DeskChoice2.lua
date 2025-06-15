@@ -15,9 +15,10 @@ local DeskChoice = {}
 
 DeskChoice.__index = DeskChoice
 
-local choiceNumber = 3
+local choiceNumber = 4
 
 --Images
+local badgeSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/badge-proto.png")
 local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Description-proto.png")
 local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Dice Info-proto.png")
 local EnemyInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Enemy-proto.png")
@@ -89,6 +90,7 @@ function DeskChoice:update(dt)
     self:drawFigureGrid()
     self:drawRoundDetails()
     self:drawDiceDetails(dt)
+    self:updateChoiceCanvas()
 
     --hovered face
     self:getCurrentlyHoveredFace()
@@ -317,7 +319,14 @@ function DeskChoice:createDiceNet()
 end
 
 function DeskChoice:updateDiceNet(dt)
-   
+   local i = 1
+    for k,df in next,self.infoFaces do
+        df:setRepresentedFace(self.currentlySelectedDice.diceObject:getFace(i))
+        df:updateSprite()
+        df:update(dt)
+        df:draw()
+        i =i+1
+    end
 end
 
 function DeskChoice:drawDiceDetails(dt)
@@ -330,14 +339,7 @@ function DeskChoice:drawDiceDetails(dt)
     
     --Draw the dice net
     if(self.currentlySelectedDice)then
-        local i = 1
-        for k,df in next,self.infoFaces do
-            df:setRepresentedFace(self.currentlySelectedDice.diceObject:getFace(i))
-            df:updateSprite()
-            df:update(dt)
-            df:draw()
-            i =i+1
-        end
+        self:updateDiceNet(dt)
     end
 
     love.graphics.setCanvas(currentCanvas)
@@ -347,15 +349,34 @@ end
 
 --==CHOICES==--
 function DeskChoice:generateChoiceCanvas()
-    
+    self.choiceCanvas = {}
+
+    for i=1, choiceNumber do
+        local c = love.graphics.newCanvas(220*1.5, 330*1.5)
+        table.insert(self.choiceCanvas, c)
+    end
 end
 
-function DeskChoice:updateChoiceCanvas(c, dt, i)
+function DeskChoice:updateChoiceCanvas()
     local currentCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(c)
-    love.graphics.clear(49/256, 74/256, 50/256)
+
+    local coords = {
+        {550, 30},
+        {908, 30},
+        {550, 555},
+        {908, 555},
+    }
+
+    for i,canvas in next,self.choiceCanvas do
+        love.graphics.setCanvas(canvas)
+        love.graphics.clear()
+
+        love.graphics.draw(badgeSprite, 0, 0)
+
+        love.graphics.setCanvas(currentCanvas)
+        love.graphics.draw(canvas, coords[i][1], coords[i][2])
+    end
     
-    love.graphics.setCanvas(currentCanvas)
 end
 
 --==INPUT FUNCTIONS==--
