@@ -2,6 +2,9 @@ local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
 local Fonts = require("src.utils.fonts")
 
+local FaceObject = require("src.classes.FaceTypes.FaceObject")
+local DiceObject = require("src.classes.DiceObject")
+
 local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 
 local Button = require("src.classes.ui.Button")
@@ -52,6 +55,9 @@ function DeskChoice:new(floor, run)
     --Créer le deck
     self:createDeck()
 
+    --Créer le dice net
+    self:createDiceNet()
+
     self.currentlyHoveredFace = nil
     self.previouslyHoveredFace = nil
     self.currentlySelectedDice = nil
@@ -82,7 +88,7 @@ function DeskChoice:update(dt)
     self:drawDescriptionCanvas()
     self:drawFigureGrid()
     self:drawRoundDetails()
-    self:drawDiceDetails()
+    self:drawDiceDetails(dt)
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -164,8 +170,6 @@ function DeskChoice:drawFigureGrid()
 
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
     local i = math.floor(mv.y/45)
-
-    --self:highlightDices({})
 
     --If we are hovering a line
     if(i>0 and i<=13)then
@@ -270,7 +274,54 @@ function DeskChoice:drawDescriptionCanvas()
 end
 --DiceNet
 
-function DeskChoice:drawDiceDetails()
+function DeskChoice:createDiceNet()
+    --Create a temp dice with a temp face repeated 6 times
+    local tempFace = FaceObject:new(6)
+    self.tempDice = DiceObject:new({tempFace, tempFace, tempFace, tempFace, tempFace, tempFace})
+
+    --Create the coordinates of each dice face
+    local diceFacesCoords = {
+        {self.diceDetailsCanvas:getWidth()/2-120, self.diceDetailsCanvas:getHeight()/2-10}, --1
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-120-10}, --2
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-10}, --3
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+240-10}, --4
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+120-10}, --5
+        {self.diceDetailsCanvas:getWidth()/2+120, self.diceDetailsCanvas:getHeight()/2-10}, --6
+    }
+    
+    -- Create the uiFaces objects
+    local infoFaces = {}
+
+    for k,d in next,self.tempDice:getAllFaces() do
+        local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
+            self.tempDice, --Dice Object 
+            d, --La face représentée
+            diceFacesCoords[k][1], --X Position (centerd)
+            diceFacesCoords[k][2], --Yposition (centerd)
+            120, --Width/Height
+            false, --is Selectable
+            false, --isHoverable,
+            function()return Inputs.getMouseInCanvas(0,0)end,
+            self.round
+        )
+
+        table.insert(infoFaces, diceFaceUI)
+    end
+
+    self.infoFaces = infoFaces
+end
+
+function DeskChoice:updateDiceNet(dt)
+    if(self.currentlySelectedDice) then
+        for i = 1, 6 do
+            self.infoFaces[i]:setRepresentedFace(self.currentlySelectedDice.diceObject:getFace(2))
+            self.infoFaces[i]:updateSprite() 
+            self.infoFaces[i]:updateCanvas(dt) 
+        end
+    end
+end
+
+function DeskChoice:drawDiceDetails(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.diceDetailsCanvas)
     love.graphics.clear(60/255, 99/255, 60/255)
@@ -278,17 +329,17 @@ function DeskChoice:drawDiceDetails()
     --Draw sprite
     love.graphics.draw(DiceInfosSprite, 0, 0)
     
-    --[[ --Draw the dice net
-    if self.currentlyHoveredDice then
+    --Draw the dice net
+    if(self.currentlySelectedDice)then
+        local i = 1
         for k,df in next,self.infoFaces do
-            if(df.representedFace == self.currentlyHoveredDice:getCurrentFaceObject())then
-                love.graphics.setColor(1, 0, 0, 1)
-                love.graphics.rectangle("fill", df.x-5-df.size/2, df.y-5-df.size/2, 125, 125)
-                love.graphics.setColor(1, 1, 1, 1)
-            end
+            df:setRepresentedFace(self.currentlySelectedDice.diceObject:getFace(i))
+            df:updateSprite()
+            df:updateCanvas(dt)
             df:draw()
+            i =i+1
         end
-    end ]]
+    end
 
     love.graphics.setCanvas(currentCanvas)
 
