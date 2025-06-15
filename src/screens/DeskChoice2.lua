@@ -300,8 +300,8 @@ function DeskChoice:createDiceNet()
             diceFacesCoords[k][2], --Yposition (centerd)
             120, --Width/Height
             false, --is Selectable
-            false, --isHoverable,
-            function()return Inputs.getMouseInCanvas(0,0)end,
+            true, --isHoverable,
+            function()return Inputs.getMouseInCanvas(self.canvas:getWidth()-30-self.diceDetailsCanvas:getWidth(),30)end,
             self.round
         )
 
@@ -312,13 +312,7 @@ function DeskChoice:createDiceNet()
 end
 
 function DeskChoice:updateDiceNet(dt)
-    if(self.currentlySelectedDice) then
-        for i = 1, 6 do
-            self.infoFaces[i]:setRepresentedFace(self.currentlySelectedDice.diceObject:getFace(2))
-            self.infoFaces[i]:updateSprite() 
-            self.infoFaces[i]:updateCanvas(dt) 
-        end
-    end
+   
 end
 
 function DeskChoice:drawDiceDetails(dt)
@@ -335,7 +329,7 @@ function DeskChoice:drawDiceDetails(dt)
         for k,df in next,self.infoFaces do
             df:setRepresentedFace(self.currentlySelectedDice.diceObject:getFace(i))
             df:updateSprite()
-            df:updateCanvas(dt)
+            df:update(dt)
             df:draw()
             i =i+1
         end
