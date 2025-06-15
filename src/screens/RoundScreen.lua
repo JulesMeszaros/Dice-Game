@@ -536,8 +536,6 @@ function RoundScreen:updateDiceNet(dt)
     else
         self.diceDetailsTimer = 0
     end
-
-    
 end
 
 function RoundScreen:playFigure(figure, params)
