@@ -90,6 +90,9 @@ function DeskChoice:update(dt)
     self:drawRoundDetails()
     self:drawDiceDetails(dt)
 
+    --hovered face
+    self:getCurrentlyHoveredFace()
+
     love.graphics.setCanvas(currentCanvas)
 end
 
@@ -245,28 +248,30 @@ function DeskChoice:drawDescriptionCanvas()
     --Draw Sprite
     love.graphics.draw(descriptionSprite, 0, 0)
 
-    --[[ if(self.currentlyHoveredDice) then
+
+    if(self.currentlyHoveredFace) then
+
         --Face Name
-        local faceName = self.currentlyHoveredDice:getCurrentFaceObject().name
-        local nameText = love.graphics.newText(font30, faceName)
+        local faceName = self.currentlyHoveredFace.representedFace.name
+        local nameText = love.graphics.newText(Fonts.nexaMedium, faceName)
 
         --Face tier
         local tierText = love.graphics.newText(
-            font,
-            self.currentlyHoveredDice:getCurrentFaceObject().tier
+            Fonts.nexaSmall,
+            self.currentlyHoveredFace.representedFace.tier
         )
 
         --Description
-        local faceDescription = self.currentlyHoveredDice:getCurrentFaceObject().description
-        local descWidth, descWrappedtext = font:getWrap( faceDescription, self.faceDetailsCanvas:getWidth()-20 )
-        local descText = love.graphics.newText(font, table.concat(descWrappedtext, "\n"))
+        local faceDescription = self.currentlyHoveredFace.representedFace.description
+        local descWidth, descWrappedtext = Fonts.nexaSmall:getWrap( faceDescription, self.descriptionCanvas:getWidth()-20 )
+        local descText = love.graphics.newText(Fonts.nexaSmall, table.concat(descWrappedtext, "\n"))
         love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.draw(nameText, self.faceDetailsCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
-        love.graphics.draw(tierText, self.faceDetailsCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
-        love.graphics.draw(descText, self.faceDetailsCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
+        love.graphics.draw(nameText, self.descriptionCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
+        love.graphics.draw(tierText, self.descriptionCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
+        love.graphics.draw(descText, self.descriptionCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
         love.graphics.setColor(1, 1, 1, 1)
 
-    end ]]
+    end
 
     love.graphics.setCanvas(currentCanvas)
 
@@ -391,7 +396,6 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
             self:resetSelectedDices()
             face:setSelected(true)
             self.currentlySelectedDice = face
-            print(self.currentlySelectedDice)
         end
     end
 end
@@ -417,18 +421,17 @@ function DeskChoice:getCurrentlyHoveredFace()
     self.previouslyHoveredFace = self.currentlyHoveredFace --We save the state of the frame before
     self.currentlyHoveredFace = nil
 
-    for i,round in next,self.uiElements.faceRewards do
-        for j,face in next,round do
-            if face:isHovered() then self.currentlyHoveredFace = face ; break end
-        end
+    for i,face in next,self.infoFaces do
+        if face:isHovered() then self.currentlyHoveredFace = face ; break end
+        --TODO: add the reward faces
     end
 
     --Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
-    if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
+    --[[ if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
         if (self.currentlyHoveredFace) then
             self.hoverInfosCanvas = self:createFaceInfosCanvas(self.currentlyHoveredFace)
         end
-    end
+    end ]]
 
 end
 
