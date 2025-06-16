@@ -141,7 +141,7 @@ FaceTypes.BlueFace = BlueFace
 --==STONE FACE==--
 
 local StoneFace = setmetatable({}, { __index = FaceObject })
-StoneFace.__index = FaceObject
+StoneFace.__index = StoneFace
 
 function StoneFace:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), StoneFace)
@@ -177,7 +177,7 @@ end
 
 function StoneFace:triggerEffect(round)
     --Ajoute 1€ au solde banquaire
-    round.run.money = round.run.money + 1000
+    round.run.money = round.run.money + 1
     print("test stone")
 end
 

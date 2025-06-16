@@ -13,25 +13,28 @@ Shaders.grayscaleShader = love.graphics.newShader([[
 
 Shaders.rainbowShader = love.graphics.newShader([[
     extern number time;
-    extern number frequency = 0.1; // plus petit = plus étendu
+    extern number frequency = 0.1;
+    extern number intensity = 1.0; // 0 = pas d'effet, 1 = effet complet
 
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
         vec4 texColor = Texel(texture, texture_coords);
         if (texColor.a == 0.0) {
-            return vec4(0.0); // transparence
+            return vec4(0.0);
         }
 
-        // Multiplie les coordonnées pour étendre l'effet spatialement
         number hue = mod(time + (texture_coords.x + texture_coords.y) * frequency, 1.0);
 
-        vec3 rgb = vec3(
+        vec3 rainbowColor = vec3(
             abs(hue * 6.0 - 3.0) - 1.0,
             2.0 - abs(hue * 6.0 - 2.0),
             2.0 - abs(hue * 6.0 - 4.0)
         );
-        rgb = clamp(rgb, 0.0, 1.0);
+        rainbowColor = clamp(rainbowColor, 0.0, 1.0);
 
-        return vec4(rgb, 1.0) * texColor;
+        // Mélange entre la couleur de la texture et l'effet arc-en-ciel
+        vec3 finalColor = mix(texColor.rgb, rainbowColor, intensity);
+
+        return vec4(finalColor, texColor.a);
     }
 ]])
 
@@ -106,22 +109,21 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
 }]])
 
 Shaders.glossy =  love.graphics.newShader([[
-extern number time;
-extern number scale;   // échelle entre ~0.8 et ~1.2
+extern number scale;
 
 vec4 effect(vec4 color, Image texture, vec2 uv, vec2 screen_coords) {
     vec4 texColor = Texel(texture, uv) * color;
 
-    // Position du reflet : diagonale (uv.x + uv.y)
-    float glossPos = uv.x + uv.y + sin(time * 0.5) * 0.05;
+    float glossPos = uv.x + uv.y;
 
-    // Largeur du reflet diminue si scale est petit
-    float gloss = smoothstep(0.4 - 0.1 * scale, 0.5 - 0.1 * scale, glossPos);
+    // Reflet fin
+    float gloss = smoothstep(0.49 - 0.05 * scale, 0.5 - 0.05 * scale, glossPos) ;
 
-    // Intensité du reflet augmente avec le scale
-    float intensity = 0.3 * scale;
+    // Teinte rose personnalisée (RVB)
+    vec3 pinkTint = vec3(1.0, 0.6, 0.8);
 
-    vec3 finalColor = texColor.rgb + gloss * intensity;
+    // Mélange le reflet rose
+    vec3 finalColor = texColor.rgb + pinkTint * gloss * 0.2 * scale*scale*scale;
 
     return vec4(finalColor, texColor.a);
 }]])

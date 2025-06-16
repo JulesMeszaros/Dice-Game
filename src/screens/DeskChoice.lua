@@ -384,7 +384,7 @@ function DeskChoice:generateChoiceCanvas()
         -1000, -1000, 3000, 3000
     }
 
-    for i=1, choiceNumber do
+    for i=1, table.getn(self.possibleRounds) do
         local c = love.graphics.newCanvas(220*1.5, 330*1.5)
         local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 220*1.5, 330*1.5, function()return Inputs.getMouseInCanvas(0, 0)end)
         table.insert(self.choiceCanvas, c)
@@ -471,7 +471,7 @@ function DeskChoice:outAnimation(badge)
         {property = "deckY", from = self.deckY, targetValue = self.canvas:getHeight()+20, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
     })
 
-    for i=1, 4 do
+    for i=1, table.getn(self.badges) do
         self.badges[i].animator:add("y", self.badges[i].y, newBadgeY[i], 0.4, AnimationUtils.Easing.inCubic)
     end
     
