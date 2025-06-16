@@ -7,6 +7,7 @@ local DiceObject = require("src.classes.DiceObject")
 
 local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 
+local Badge = require("src.classes.ui.Badge")
 local Button = require("src.classes.ui.Button")
 local Round = require("src.classes.Round")
 local DiceFace = require("src.classes.ui.DiceFace")
@@ -90,7 +91,7 @@ function DeskChoice:update(dt)
     self:drawFigureGrid()
     self:drawRoundDetails()
     self:drawDiceDetails(dt)
-    self:updateChoiceCanvas()
+    self:updateChoiceCanvas(dt)
 
     --hovered face
     self:getCurrentlyHoveredFace()
@@ -349,15 +350,26 @@ end
 
 --==CHOICES==--
 function DeskChoice:generateChoiceCanvas()
+    self.badges = {}
     self.choiceCanvas = {}
+
+    local coords = {
+        {550, 30},
+        {908, 30},
+        {550, 555},
+        {908, 555},
+    }
 
     for i=1, choiceNumber do
         local c = love.graphics.newCanvas(220*1.5, 330*1.5)
+        local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], 220*1.5, 330*1.5, function()return Inputs.getMouseInCanvas(0, 0)end)
         table.insert(self.choiceCanvas, c)
+        table.insert(self.badges, b)
     end
+
 end
 
-function DeskChoice:updateChoiceCanvas()
+function DeskChoice:updateChoiceCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
 
     local coords = {
@@ -367,14 +379,9 @@ function DeskChoice:updateChoiceCanvas()
         {908, 555},
     }
 
-    for i,canvas in next,self.choiceCanvas do
-        love.graphics.setCanvas(canvas)
-        love.graphics.clear()
-
-        love.graphics.draw(badgeSprite, 0, 0)
-
-        love.graphics.setCanvas(currentCanvas)
-        love.graphics.draw(canvas, coords[i][1], coords[i][2])
+    for i,badge in next,self.badges do
+        badge:update(dt)
+        badge:draw()
     end
     
 end
@@ -391,9 +398,9 @@ function DeskChoice:mousepressed(x, y, button, istouch, presses)
         button:clickEvent()
     end
 
-    --Buttons
-   for key,button in next,self.uiElements.DeskChoiceButtons do
-        button:clickEvent()
+    --Badges
+   for key,badge in next,self.badges do
+        badge:clickEvent()
     end
 
     --Deck faces
@@ -404,10 +411,10 @@ end
 
 function DeskChoice:mousereleased(x, y, button, istouch, presses)
     --release event on UI elements (buttons)
-    for key,button in next,self.uiElements.buttons do
-        local wasReleased = button:releaseEvent()
+    for key,badge in next,self.badges do
+        local wasReleased = badge:releaseEvent()
         if(wasReleased) then --Si le click a été complété
-            button:getCallback()()
+            self.run:startNewRound(badge.round, badge.round.roundtype)
         end
     end
 

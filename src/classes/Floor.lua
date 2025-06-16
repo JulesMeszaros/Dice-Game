@@ -14,9 +14,9 @@ function Floor:new(floornumber, run)
     self.boss = self:generateBoss()
 
     --Create the set of desks (3x3)
-    for i = 1, 4 do
+    for i = 1, 3 do
         local choices = {}
-        for j = 1, 3 do
+        for j = 1, 4 do
             local r = self:generateDesks(i)
             table.insert(choices, r)
         end
