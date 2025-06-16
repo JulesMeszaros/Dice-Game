@@ -1,6 +1,9 @@
 local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
 local Fonts = require("src.utils.fonts")
+local AnimationUtils = require("src.utils.scripts.AnimationUtils")
+
+local Animator = require("src.utils.Animator")
 
 local FaceObject = require("src.classes.FaceTypes.FaceObject")
 local DiceObject = require("src.classes.DiceObject")
@@ -9,7 +12,6 @@ local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 
 local Badge = require("src.classes.ui.Badge")
 local Button = require("src.classes.ui.Button")
-local Round = require("src.classes.Round")
 local DiceFace = require("src.classes.ui.DiceFace")
 
 local DeskChoice = {}
@@ -19,7 +21,6 @@ DeskChoice.__index = DeskChoice
 local choiceNumber = 4
 
 --Images
-local badgeSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/badge-proto.png")
 local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Description-proto.png")
 local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Dice Info-proto.png")
 local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Floor-proto.png")
@@ -38,6 +39,14 @@ function DeskChoice:new(floor, run)
         faceRewards = {}
     }
 
+
+    self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    self.floor = floor
+    self.run = run
+
+    --animator
+    self.animator = Animator:new(self)
+    self.animator:addDelay(0.1)
     --Run dices
     self.diceObjects = run.diceObjects
    
@@ -51,8 +60,25 @@ function DeskChoice:new(floor, run)
     self.deckCanvas = love.graphics.newCanvas(195, 1020)
     self.diceDetailsCanvas = love.graphics.newCanvas(420, 600)
 
+    --Positions
+    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
+    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.canvas:getWidth()-30, 30, self.canvas:getWidth()+600, 30
+    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+600, self.canvas:getHeight()-30
+
+
+
     --Créer le deck
+    self.deckTX, self.deckTY , self.deckX, self.deckY = 1260, 30, 1260, self.canvas:getHeight()+20
     self:createDeck()
+
+    --Entry animation
+    local entryDuration = 0.2
+    self.animator:addGroup({
+        {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
+        {property = "deckY", from = self.deckY, targetValue = self.deckTY, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
+    })
 
     --Créer le dice net
     self:createDiceNet()
@@ -61,9 +87,6 @@ function DeskChoice:new(floor, run)
     self.previouslyHoveredFace = nil
     self.currentlySelectedDice = nil
 
-    self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
-    self.floor = floor
-    self.run = run
 
     if(self.run.floorDeskNumber < 4) then
         self.possibleRounds = self.floor.desks[self.run.floorDeskNumber]
@@ -81,6 +104,8 @@ function DeskChoice:update(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
+
+    self.animator:update(dt)
 
     --UI
     self:drawDeck(dt)
@@ -143,7 +168,7 @@ function DeskChoice:drawDeck(dt)
     end
 
     love.graphics.setCanvas(targetCanvas)
-    love.graphics.draw(self.deckCanvas, 1260, 30)
+    love.graphics.draw(self.deckCanvas, self.deckX, self.deckY)
 end
 
 --Grid
@@ -188,7 +213,7 @@ function DeskChoice:drawFigureGrid()
 
     love.graphics.setCanvas(targetCanvas)
     
-    love.graphics.draw(self.figureButtonsCanvas, 30, 30)
+    love.graphics.draw(self.figureButtonsCanvas, self.gridX, self.gridY)
     
 end
 
@@ -275,7 +300,7 @@ function DeskChoice:drawDescriptionCanvas()
 
     love.graphics.setCanvas(currentCanvas)
 
-    love.graphics.draw(self.descriptionCanvas, self.canvas:getWidth()-30, self.canvas:getHeight()-30, 0, 1, 1, self.descriptionCanvas:getWidth(), self.descriptionCanvas:getHeight())
+    love.graphics.draw(self.descriptionCanvas, self.descriptionX, self.descriptionY, 0, 1, 1, self.descriptionCanvas:getWidth(), self.descriptionCanvas:getHeight())
 end
 --DiceNet
 
@@ -342,7 +367,7 @@ function DeskChoice:drawDiceDetails(dt)
 
     love.graphics.setCanvas(currentCanvas)
 
-    love.graphics.draw(self.diceDetailsCanvas, self.canvas:getWidth()-30, 30, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
+    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
 end
 
 --==CHOICES==--
