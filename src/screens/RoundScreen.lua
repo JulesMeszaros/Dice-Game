@@ -167,10 +167,15 @@ function RoundScreen:new(round)
         {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
         {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
         {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "diceMaty", from = self.diceMaty, targetValue = self.diceMatTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "playerX", from = self.playerX, targetValue = self.playerTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "diceMaty", from = self.diceMaty, targetValue = self.diceMatTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic}
     })
+    self.animator:addGroup({
+        {property = "playerX", from = self.playerX, targetValue = self.playerTX, duration = entryDuration*2, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration*2, eading = AnimationUtils.Easing.inOutCubic},
+
+    })
+    self.animator:addDelay(0.3, function()self.round:makeRoll(self.round.diceObjects)end)
+
     --PLAYERS INFOS
     self.playerInfos = love.graphics.newCanvas(612,255)
     self.enemyInfos = love.graphics.newCanvas(612,255)

@@ -61,8 +61,8 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
         local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
             diceobject, --Dice Object 
             diceobject:getFace(1), --La face représentée
-            0, --X Position (centerd)
-            0, --Yposition (centerd)
+            self.terrain.terrainCanvas:getWidth()/2, --X Position (centerd)
+            self.terrain.terrainCanvas:getHeight()+70, --Yposition (centerd)
             120, --Width/Height
             true, --is Selectable
             true, --isHoverable,
@@ -72,6 +72,8 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 
         self.diceFaces[diceobject] = diceFaceUI
     end
+
+
 
     return self
 end
@@ -351,36 +353,31 @@ function Round:makeRoll(dices)
 
     for key,dice in next,dices do --Creates the roll animation for the rerolled dices
 
-        local randomXPos = math.random(100, self.terrain.dice_tray:getWidth()-100)
-        local randomYPos = math.random(250, self.terrain.dice_tray:getHeight()-250)
+        local randomXPos = math.random(80, self.terrain.dice_tray:getWidth()-80)
+        local randomYPos = math.random(220, self.terrain.dice_tray:getHeight()-150)
         local randomR = ((math.random(0,1000)/1000)*5)-2.5 --(1001 angles possibles entre -2.5 et 5 radians)
 
         --Todo: remplacer le code suivant par une animation Animator
 
         --Set initial position (random X axis, under the terrain)
-        self.diceFaces[dice]:setX(-200)
+        self.diceFaces[dice]:setX(self.terrain.dice_tray:getWidth()/2)
         --self.diceFaces[dice].targetX = 2000
-        self.diceFaces[dice]:setY(-200)
+        self.diceFaces[dice]:setY(self.terrain.dice_tray:getHeight()+100)
         --self.diceFaces[dice].targetY = 2000
         self.diceFaces[dice].rotation = 0
 
         --Add an animation to make them roll
         self.diceFaces[dice].animator:addGroup({
-            {property = "x", from=-200, targetValue = randomXPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
-            {property = "targetX", from=-200, targetValue = randomXPos, duration = 0.5, onComplete=function()end},
-            {property = "y", from=-200, targetValue = randomYPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
-            {property = "targetY", from=-200, targetValue = randomYPos, duration = 0.5, onComplete=function()end},
+            {property = "x", from=self.terrain.terrainCanvas:getWidth()/2, targetValue = randomXPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "targetX", from=self.terrain.terrainCanvas:getWidth()/2, targetValue = randomXPos, duration = 0.5, onComplete=function()end},
+            {property = "y", from=self.terrain.terrainCanvas:getHeight()+100, targetValue = randomYPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "targetY", from=self.terrain.terrainCanvas:getHeight()+100, targetValue = randomYPos, duration = 0.5, onComplete=function()end},
             {property = "rotation", from=-0, targetValue = randomR, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
             {property = "baseRotation", from=-0, targetValue = randomR, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
 
         })
 
         self.diceFaces[dice].animator:addDelay(0.4, function()self.terrain:reorganiseDiceFaces(rerolledDiceFaces)end)
-
-        --Change their target position to make them slide
-        --[[ self.diceFaces[dice].targetX = randomXPos
-        self.diceFaces[dice].targetY = randomYPos
-        self.diceFaces[dice].baseRotation = randomR ]]
     end
 
 end 

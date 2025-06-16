@@ -103,7 +103,7 @@ function Run:startNewRound(round, roundtype)
     --Sets the round number
     self.roundNumber = self.roundNumber + 1
     --Makes the first roll
-    round:makeRoll(self.diceObjects)
+    --round:makeRoll(self.diceObjects)
     --Sets the run's current round
     self.currentRound = round
 
