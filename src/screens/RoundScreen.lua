@@ -4,6 +4,7 @@ local CalculatePoints = require("src.utils.scripts.calculatePoints")
 local Fonts = require("src.utils.fonts")
 local Constants = require("src.utils.constants")
 local FaceHoverInfos = require("src.classes.ui.FaceHoverInfo")
+local AnimationUtils = require("src.utils.scripts.animationUtils")
 --UI
 local Button = require("src.classes.ui.Button")
 --Dices
@@ -22,6 +23,8 @@ local TableauFiguresSprite= love.graphics.newImage("src/assets/sprites/ui/terrai
 local DiceMatSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Tapis-png.png")
 local TurnsSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Turns-proto.png")
 
+local Animator = require("src.utils.Animator")
+
 local RoundScreen = {}
 
 RoundScreen.__index = RoundScreen
@@ -31,6 +34,7 @@ local font30 = Fonts.nexaMedium
 
 function RoundScreen:new(round)
     local self = setmetatable({}, RoundScreen)
+    self.animator = Animator:new(self)
     self.gameCanvas = round.gameCanvas
     self.round = round
 
@@ -45,6 +49,7 @@ function RoundScreen:new(round)
     self.dice_tray = love.graphics.newCanvas(885, 750)
     self.dice_tray:setFilter("linear", "linear")
 
+    
     --Hovered infos
     self.currentlyHoveredFigure = nil 
     self.currentlyHoveredDice = nil
@@ -147,6 +152,25 @@ function RoundScreen:new(round)
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
+    --Positions
+    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
+    self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty =self.terrainCanvas:getWidth()-60-self.faceDetailsCanvas:getWidth() , self.terrainCanvas:getHeight()-30, self.terrainCanvas:getWidth()-60-self.faceDetailsCanvas:getWidth(), self.terrainCanvas:getHeight()+1000
+    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.terrainCanvas:getWidth()-30, 30, self.terrainCanvas:getWidth()+600, 30
+    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.terrainCanvas:getWidth()-30, self.terrainCanvas:getHeight()-30, self.terrainCanvas:getWidth()+600, self.terrainCanvas:getHeight()-30
+    self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 828, 30, self.terrainCanvas:getWidth()+20, 30
+    self.playerTX, self.playerTY, self.playerX, self.playerY = 552, 30, -800, 30
+
+    local entryDuration = 0.3
+
+    --Animation
+    self.animator:addGroup({
+        {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "diceMaty", from = self.diceMaty, targetValue = self.diceMatTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "playerX", from = self.playerX, targetValue = self.playerTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+    })
     --PLAYERS INFOS
     self.playerInfos = love.graphics.newCanvas(612,255)
     self.enemyInfos = love.graphics.newCanvas(612,255)
@@ -157,6 +181,8 @@ end
 function RoundScreen:update(dt)
     --Reset Bouton de figure et Dé survolé
     self.currentlyHoveredFigure = nil
+
+    self.animator:update(dt)
 
     --Hover infos
     self:getCurrentlyHoveredDice() --Le dé survolé
@@ -186,11 +212,11 @@ function RoundScreen:updateCanvas(dt)
     if(self.pointsDetailsCanvas) then
         self.pointsDetailsCanvas:update(dt)
     end
-    self:drawDiceTray(self.terrainCanvas:getWidth()-60-self.faceDetailsCanvas:getWidth(), self.terrainCanvas:getHeight()-30, self.round.diceFaces)
+    self:drawDiceTray(self.diceMatx, self.diceMaty, self.round.diceFaces)
 
     --Figure Buttons
 
-    self:drawFigureGrid(30, 30)
+    self:drawFigureGrid(self.gridX, self.gridY)
     self:getCurrentlyHoveredLine() --La figure survolée
 
 
@@ -200,7 +226,7 @@ function RoundScreen:updateCanvas(dt)
     end
 
     --Face Details
-    self:drawFaceDetails(self.terrainCanvas:getWidth()-30, self.terrainCanvas:getHeight()-30)
+    self:drawFaceDetails(self.descriptionX, self.descriptionY)
 
     --Dice Details
     self:updateDiceNet(dt)
@@ -209,7 +235,7 @@ function RoundScreen:updateCanvas(dt)
         df:updateCanvas(dt) 
         df:update(dt)
     end
-    self:drawDiceDetails(self.terrainCanvas:getWidth()-30, 30)
+    self:drawDiceDetails(self.diceDetailsX, self.diceDetailsY)
     
     --ROUND DETAILS
     self:drawRoundDetails()
@@ -436,8 +462,8 @@ function RoundScreen:drawPlayersInfos()
     love.graphics.setColor(1, 1, 1, 1)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.playerInfos, 552, 30)
-    love.graphics.draw(self.enemyInfos, 828, 30)
+    love.graphics.draw(self.playerInfos, self.playerX, self.playerY)
+    love.graphics.draw(self.enemyInfos, self.enemyX, self.enemyY)
 end
 
 --==CREATE CANVAS FUNCTIONS==--

@@ -64,6 +64,7 @@ function DeskChoice:new(floor, run)
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
     self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.canvas:getWidth()-30, 30, self.canvas:getWidth()+600, 30
     self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+600, self.canvas:getHeight()-30
+    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+600, self.canvas:getHeight()-30
 
     --Créer le deck
     self.deckTX, self.deckTY , self.deckX, self.deckY = 1260, 30, 1260, self.canvas:getHeight()+20
