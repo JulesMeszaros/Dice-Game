@@ -2,7 +2,7 @@ local Round = require("src.classes.Round")
 local GameOverScreen = require("src.screens.GameOverScreen")
 local Constants = require("src.utils.constants")
 local Floor = require("src.classes.Floor")
-local DeskChoice = require("src.screens.DeskChoice2")
+local DeskChoice = require("src.screens.DeskChoice")
 local DiceCustomization = require("src.screens.DiceCustomization")
 
 local FaceTypes = require("src.classes.FaceTypes.FaceTypes")
