@@ -58,18 +58,17 @@ Constants.EMPLOIS = {
     "Assistant.e",
     "Développeur",
     "Chef.fe de projet",
-    "Responsable marketing",
-    "Designer graphique",
-    "Chargé de communication",
-    "Ressources humaines",
-    "Technicien informatique",
+    "Respo marketing",
+    "Designer",
+    "Chargé de com",
+    "Technicien",
     "Support client",
-    "Vendeur / Commercial",
+    "Commercial",
     "Responsable produit",
     "Data analyst",
-    "Juriste d’entreprise",
-    "Assistant administratif",
-    "Responsable logistique"
+    "Juriste",
+    "Assistant admin.",
+    "Responsable"
 }
 
 return Constants

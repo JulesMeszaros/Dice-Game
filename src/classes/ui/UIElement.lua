@@ -1,12 +1,17 @@
 local InputsUtils = require("src.utils.scripts.inputs")
 local Constants = require("src.utils.constants")
+local Animator = require("src.utils.Animator")
 
 local UIElement = {}
 UIElement.__index = {}
 
 function UIElement:new(gameCanvas)
     local self = setmetatable({}, UIElement)
+
+    self.animator = Animator:new(self)
+
     --Parametres d'interractions
+    
     self.sprite = nil 
     self.isSelectable = false
     self.isHoverable = false
@@ -35,7 +40,7 @@ function UIElement:new(gameCanvas)
 end
 
 function UIElement:update(dt)
-    
+
 end
 
 function UIElement:draw(gameCanvas)

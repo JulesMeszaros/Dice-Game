@@ -1,4 +1,7 @@
 local Shaders = require("src.utils.shaders")
+local Fonts = require("src.utils.fonts")
+local Animator = require("src.utils.Animator")
+local AnimationUtils = require("src.utils.scripts.animationUtils")
 
 local UIElement = require("src.classes.ui.UIElement")
 local Inputs = require("src.utils.scripts.inputs")
@@ -11,15 +14,17 @@ Badge.__index = Badge
 function Badge:new(
     round, 
     x, 
-    y, 
+    y,
+    originalY,
     width, 
     height,
     mousePosition)
 
     local self = setmetatable(UIElement.new(), Badge)
+    self.animator = Animator:new(self)
 
     self:setX(x)
-    self:setY(y)
+    self:setY(originalY)
 
     self.sprite = badgeSprite
 
@@ -41,10 +46,17 @@ function Badge:new(
     --Create the canvas ONCE
     self.uiCanvas = self:createCanvas()
 
+    self.animator:addDelay(0.1)
+    self.animator:addGroup({
+        {property = "y", from = self.y, targetValue = y, duration = 0.5, easing = AnimationUtils.Easing.outCubic}
+    })
+
     return self
 end
 
 function Badge:update(dt)
+    self.animator:update(dt)
+
     if(self:isHovered())then
         self.targetedScale = 0.95
         if(love.mouse.isDown(1) and self.isActivated) then
@@ -80,6 +92,16 @@ function Badge:updateCanvas(dt)
     love.graphics.clear()
 
     love.graphics.draw(self.sprite, 0, 0) -- add the background
+
+    --Texts
+    local nameText = love.graphics.newText(Fonts.nexaDesc, "Jean Michel Lionnel.le")
+    local jobDeskText = love.graphics.newText(Fonts.nexaLightMini, 'Office '..tostring(self.round.deskNumber).." - "..tostring(self.round.enemyJob))
+
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.draw(nameText, self.uiCanvas:getWidth()/2, 22, 0, 1, 1, nameText:getWidth()/2, 0)
+    love.graphics.draw(jobDeskText, self.uiCanvas:getWidth()/2, 60, 0, 1, 1, jobDeskText:getWidth()/2, 0)
+
+    love.graphics.setColor(1, 1, 1, 1)
 
     love.graphics.setCanvas(currentCanvas)
 end

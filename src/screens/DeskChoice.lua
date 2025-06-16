@@ -357,9 +357,13 @@ function DeskChoice:generateChoiceCanvas()
         {908, 555},
     }
 
+    local originalY = {
+        -1000, -1000, 3000, 3000
+    }
+
     for i=1, choiceNumber do
         local c = love.graphics.newCanvas(220*1.5, 330*1.5)
-        local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], 220*1.5, 330*1.5, function()return Inputs.getMouseInCanvas(0, 0)end)
+        local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 220*1.5, 330*1.5, function()return Inputs.getMouseInCanvas(0, 0)end)
         table.insert(self.choiceCanvas, c)
         table.insert(self.badges, b)
     end
