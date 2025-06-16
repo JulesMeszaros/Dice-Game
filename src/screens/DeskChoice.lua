@@ -65,8 +65,6 @@ function DeskChoice:new(floor, run)
     self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.canvas:getWidth()-30, 30, self.canvas:getWidth()+600, 30
     self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+600, self.canvas:getHeight()-30
 
-
-
     --Créer le deck
     self.deckTX, self.deckTY , self.deckX, self.deckY = 1260, 30, 1260, self.canvas:getHeight()+20
     self:createDeck()
@@ -440,7 +438,7 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
     for key,badge in next,self.badges do
         local wasReleased = badge:releaseEvent()
         if(wasReleased) then --Si le click a été complété
-            self.run:startNewRound(badge.round, badge.round.roundtype)
+            self:outAnimation(badge)
         end
     end
 
@@ -459,6 +457,26 @@ function DeskChoice:mousemoved(x, y, dx, dy, isDragging)
 end
 
 --==Utils==--
+
+function DeskChoice:outAnimation(badge)
+    local entryDuration = 0.2
+    local newBadgeY = {
+        -1000, -1000, 3000, 3000
+    }
+
+    self.animator:addGroup({
+        {property = "gridY", from = self.gridY, targetValue = -820, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
+        {property = "deckY", from = self.deckY, targetValue = self.canvas:getHeight()+20, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
+    })
+
+    for i=1, 4 do
+        self.badges[i].animator:add("y", self.badges[i].y, newBadgeY[i], 0.4, AnimationUtils.Easing.inCubic)
+    end
+    
+    self.animator:addDelay(0.5, function()self.run:startNewRound(badge.round, badge.round.roundtype)end)
+end
 
 function DeskChoice:resetSelectedDices()
     --Dice faces
