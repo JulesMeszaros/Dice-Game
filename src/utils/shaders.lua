@@ -105,4 +105,25 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
     return vec4(shifted, texColor.a) * color;
 }]])
 
+Shaders.glossy =  love.graphics.newShader([[
+extern number time;
+extern number scale;   // échelle entre ~0.8 et ~1.2
+
+vec4 effect(vec4 color, Image texture, vec2 uv, vec2 screen_coords) {
+    vec4 texColor = Texel(texture, uv) * color;
+
+    // Position du reflet : diagonale (uv.x + uv.y)
+    float glossPos = uv.x + uv.y + sin(time * 0.5) * 0.05;
+
+    // Largeur du reflet diminue si scale est petit
+    float gloss = smoothstep(0.4 - 0.1 * scale, 0.5 - 0.1 * scale, glossPos);
+
+    // Intensité du reflet augmente avec le scale
+    float intensity = 0.3 * scale;
+
+    vec3 finalColor = texColor.rgb + gloss * intensity;
+
+    return vec4(finalColor, texColor.a);
+}]])
+
 return Shaders

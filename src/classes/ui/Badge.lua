@@ -90,8 +90,9 @@ function Badge:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.uiCanvas)
     love.graphics.clear()
-
     love.graphics.draw(self.sprite, 0, 0) -- add the background
+
+    Shaders.glossy:send("scale", self.scale)
 
     --Texts
     local nameText = love.graphics.newText(Fonts.nexaDesc, "Jean Michel Lionnel.le")
@@ -107,16 +108,10 @@ function Badge:updateCanvas(dt)
 end
 
 function Badge:draw()
+    love.graphics.setShader(Shaders.glossy)
     love.graphics.draw(self.uiCanvas, self.x+self.uiCanvas:getWidth()/2, self.y+self.uiCanvas:getHeight()/2, 0, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
+    love.graphics.setShader()
 end
-
---[[ function Badge:getCallback()
-    if(self.isActivated==true) then
-        return self.callbackFunction --Returns the function
-    else
-        return function()end --Doesnt do anything
-    end
-end ]]
 
 function Badge:isHovered() --Check if mouse is above the face
     --Utilise la fonction passée en paramètre, qui permet d'avoir la position de la souris dans laquelle elle est rendue.
