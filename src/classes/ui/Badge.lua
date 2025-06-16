@@ -61,6 +61,7 @@ end
 
 function Badge:update(dt)
     self.animator:update(dt)
+    self:getCurrentlyHoveredFace()
 
     if(self:isHovered())then
         self.targetedScale = 0.95
@@ -161,6 +162,13 @@ function Badge:updateFaceCanvas(dt)
 end
 
 --==Utils==--
+function Badge:getCurrentlyHoveredFace()
+    self.currentlyHoveredFace = nil
+    for i,uiFace in next,self.faceRewards do
+        if uiFace:isHovered() then self.currentlyHoveredFace = uiFace ; break end
+    end
+end
+
 function Badge:getCenteredPositions(count, objectWidth, spacing, centerX)
     local totalWidth = count * objectWidth + (count - 1) * spacing
     local startX = centerX - totalWidth / 2

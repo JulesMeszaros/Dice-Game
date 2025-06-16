@@ -495,7 +495,10 @@ function DeskChoice:getCurrentlyHoveredFace()
 
     for i,face in next,self.infoFaces do
         if face:isHovered() then self.currentlyHoveredFace = face ; break end
-        --TODO: add the reward faces
+    end
+
+    for i,badge in next,self.badges do
+        if(badge.currentlyHoveredFace) then self.currentlyHoveredFace = badge.currentlyHoveredFace ; break end
     end
 
     --Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
