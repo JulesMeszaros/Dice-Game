@@ -162,29 +162,29 @@ function RoundScreen:new(round)
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
-    local entryDuration = 0.5
+    local entryDuration = 0.3
 
     --Animation
     self.animator:addGroup({
-        {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "diceMaty", from = self.diceMaty, targetValue = self.diceMatTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "moneyY", from = self.moneyY, targetValue = self.moneyTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "diceMaty", from = self.diceMaty, targetValue = self.diceMatTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyY", from = self.moneyY, targetValue = self.moneyTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
     self.animator:addDelay(0.2)
     self.animator:addGroup({
-        {property = "playerX", from = self.playerX, targetValue = self.playerTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "playerX", from = self.playerX, targetValue = self.playerTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
 
     })
     --Buttons animation
-    self.uiElements.roundButtons["rerollButton"].animator:add('y', self.rerollBtnY, self.rerollBtnTY, entryDuration)
-    self.uiElements.roundButtons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration)
-    self.uiElements.roundButtons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration)
+    self.uiElements.roundButtons["rerollButton"].animator:add('y', self.rerollBtnY, self.rerollBtnTY, entryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.roundButtons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.roundButtons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
 
 
     self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects)end)

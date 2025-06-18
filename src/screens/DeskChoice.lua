@@ -507,21 +507,21 @@ end
 --==Utils==--
 
 function DeskChoice:outAnimation(badge)
-    local entryDuration = 0.4
+    local entryDuration = 0.2
     local newBadgeY = {
         -1000, -1000, 3000, 3000
     }
 
     self.animator:addGroup({
-        {property = "gridY", from = self.gridY, targetValue = -820, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
-        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
-        {property = "deckY", from = self.deckY, targetValue = self.canvas:getHeight()+20, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
+        {property = "gridY", from = self.gridY, targetValue = -820, duration = entryDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = entryDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = entryDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "deckY", from = self.deckY, targetValue = self.canvas:getHeight()+20, duration = entryDuration, easing = AnimationUtils.Easing.inCubic},
 
-        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
 
 
