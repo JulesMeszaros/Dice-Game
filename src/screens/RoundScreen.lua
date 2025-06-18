@@ -282,19 +282,20 @@ function RoundScreen:drawFigureGrid(x, y)
 
     --Write the calculatedPoints
     love.graphics.setColor(0, 0, 0, 1)
+    --Draw the scores
     for i=1, 13 do
         local calcScore = love.graphics.newText(Fonts.nexaSmall, self.calcBasePoints[i]()[1])
-        love.graphics.draw(calcScore, 150+85, 45*i+25, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
+        love.graphics.draw(calcScore, 225, 50*(i-1)+38, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
     end
 
     --Write the remaining possible hands
     for i=1, 13 do
         local handsRemaining = love.graphics.newText(Fonts.nexaSmall, self.round.run.availableFigures[i])
-        love.graphics.draw(handsRemaining, 320+85, 45*i+25, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
+        love.graphics.draw(handsRemaining, 368, 50*(i-1)+38, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
         --if no hands remaining, grey out the line
         if(self.round.run.availableFigures[i]<=0) then
             love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
-            love.graphics.rectangle("fill", 0, i*45, self.figureButtonsCanvas:getWidth(), 45)
+            love.graphics.rectangle("fill", 10, (i-1)*50+10, self.figureButtonsCanvas:getWidth()-20, 50)
             love.graphics.setColor(0, 0, 0, 1)
         end
     end
@@ -302,12 +303,13 @@ function RoundScreen:drawFigureGrid(x, y)
     love.graphics.setColor(1, 1, 1, 1)
 
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
-    local i = math.floor(mv.y/45)
+    local i = math.floor((mv.y-10)/50)+1
 
     self:highlightDices({})
 
     --If we are hovering a line
     if(i>0 and i<=13)then
+        print(i)
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             self:highlightDices(self.calcBasePoints[i]()[2])
             --Draw a shadow on the line
@@ -317,7 +319,7 @@ function RoundScreen:drawFigureGrid(x, y)
                 else
                     love.graphics.setColor(1, 0, 0, 0.3)
                 end
-                love.graphics.rectangle("fill", 0, i*45, self.figureButtonsCanvas:getWidth(), 45)
+                love.graphics.rectangle("fill", 10, (i-1)*50+10, self.figureButtonsCanvas:getWidth()-20, 50)
             end
             love.graphics.setColor(1, 1, 1, 1)
         end
