@@ -526,6 +526,20 @@ function RoundScreen:getCurrentlyHoveredLine()
 end
 
 
+--==Animations==--
+function RoundScreen:outAnimation()
+    local outDuration = 0.4
+    self.animator:addGroup({
+        {property = "gridY", from = self.gridY, targetValue = -950, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.terrainCanvas:getWidth()+600, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.terrainCanvas:getWidth()+600, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
+        {property = "diceMaty", from = self.diceMaty, targetValue = self.terrainCanvas:getHeight()+1000, duration = outDuration, eading = AnimationUtils.Easing.inCubic}
+    })
+    self.animator:addGroup({
+        {property = "playerX", from = self.playerX, targetValue = -800, duration = outDuration*2, eading = AnimationUtils.Easing.inCubic},
+        {property = "enemyX", from = self.enemyX, targetValue = self.terrainCanvas:getWidth()+20, duration = outDuration*2, eading = AnimationUtils.Easing.inCubic, onComplete=function()self.round.run:endRound()end},
+    })
+end
 
 --==UTILS FUNCTIONS==--
 function RoundScreen:getCurrentlyHoveredDice()

@@ -84,7 +84,7 @@ end
 
 --==ROUND FUNCTION==--
 function Round:endRound()
-    self.run:endRound()
+    self.terrain:outAnimation()
 end
 
 --==MOUSE/KEYBOARD FUNCTIONS==--
