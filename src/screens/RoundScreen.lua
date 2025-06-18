@@ -221,7 +221,7 @@ function RoundScreen:updateCanvas(dt)
     if(self.round.roundType == Constants.ROUND_TYPES.BASE)then
         love.graphics.clear(40/255, 40/255, 43/255)
     else
-        love.graphics.clear(0, 1, 1)
+        love.graphics.clear(55/255, 96/255, 85/255)
     end
 
     --PlayersInfos

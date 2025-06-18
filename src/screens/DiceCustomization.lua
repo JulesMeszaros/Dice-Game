@@ -172,7 +172,7 @@ end
 function DiceCustomization:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
-    love.graphics.clear(89/255, 153/255, 255/255)
+    love.graphics.clear()
 
     --UI
 
