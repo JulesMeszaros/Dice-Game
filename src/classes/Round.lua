@@ -99,7 +99,8 @@ function Round:keypressed(key) --(Mainly for debug)
     end
 
     if(key=='a')then
-        
+        self.roundScore = 10000000
+        self.terrain:outAnimation()
     end
 end
 

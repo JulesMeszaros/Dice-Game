@@ -142,7 +142,7 @@ function DiceCustomization:new(previousRound, newFaceObjects)
         function()return Inputs.getMouseInCanvas(0, 0)end
     ) ]]
 
-    --self:createNewFacesUI()
+    self:createNewFacesUI()
 
 
     return self
@@ -172,14 +172,9 @@ function DiceCustomization:update(dt)
     end ]]
 
     --New faces
-    --[[ for i,uiFace in next,self.newUIFaces do
+    for i,uiFace in next,self.newUIFaces do
         uiFace:update(dt)
-        if(uiFace:getIsSelected())then
-            uiFace.selectionScale = -0.2
-        else
-            uiFace.selectionScale = 0
-        end
-    end ]]
+    end
 
     --Buttons
     for key,button in next,self.uiElements.buttons do
@@ -211,6 +206,8 @@ function DiceCustomization:updateCanvas(dt)
         button:draw()
     end
 
+    self:drawNewFaces()
+
     --[[ --Draw the uiFaces on the canvas
     for i,uiDice in next,self.uiDices do
         for j,uiFace in next,uiDice do
@@ -218,10 +215,7 @@ function DiceCustomization:updateCanvas(dt)
         end
     end
 
-    --New faces
-    for i,uiFace in next,self.newUIFaces do
-        uiFace:draw()
-    end
+    
 
     --Buttons
      ]]
@@ -245,17 +239,17 @@ function DiceCustomization:keypressed(key)
 end
 
 function DiceCustomization:mousepressed(x, y, button, istouch, presses)
-   --[[ --Buttons
+   --Dice faces
+    for key,face in next,self.newUIFaces do
+        face:clickEvent()
+    end
+   
+    --[[ --Buttons
     for key,button in next,self.uiElements.buttons do
         button:clickEvent()
     end
 
-    --Dice faces
-    for key,dice in next,self.uiDices do
-        for j, uiFace in next,dice do
-            uiFace:clickEvent()
-        end
-    end
+    
 
     --New Dice Faces
     for i,uiFace in next,self.newUIFaces do
@@ -265,6 +259,17 @@ function DiceCustomization:mousepressed(x, y, button, istouch, presses)
 end
 
 function DiceCustomization:mousereleased(x, y, button, istouch, presses)
+
+    for i,face in next,self.newUIFaces do
+        face:releaseEvent()
+        if(face.anchorX)then
+            face.targetX = face.anchorX
+        end
+        if(face.anchorY)then
+            face.targetY = face.anchorY
+        end
+    end
+
     --release event on UI elements (buttons)
     --[[ for key,button in next,self.uiElements.buttons do
         local wasReleased = button:releaseEvent()
@@ -295,7 +300,16 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
 end
 
 function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
-    
+    if(isDragging == true)then 
+        for key,diceui in next, self.newUIFaces do
+            if(diceui.isDraggable and diceui.isBeingClicked) then
+                diceui.isBeingDragged = true
+                diceui.dragXspeed = dx
+                diceui.targetX = (diceui.targetX + dx) 
+                diceui.targetY = (diceui.targetY + dy) 
+            end
+        end
+    end
 end
 
 --==Draw UI==--
@@ -408,6 +422,14 @@ function DiceCustomization:drawCustomizationMat()
     love.graphics.draw(self.customizationMat, self.customizationMatX, self.customizationMatY, 0, 1, 1)
 end
 
+function DiceCustomization:drawNewFaces()
+    for i,face in next,self.newUIFaces do
+        face:draw()
+    end
+end
+
+
+
 function DiceCustomization:flipFaces()
     print("flip faces")
     --First, get the dice concerned by the change
@@ -483,12 +505,15 @@ function DiceCustomization:createNewFacesUI()
         local diceFace = DiceFace:new(nil,
                                     face,
                                     xPositions[i],
-                                    120,
+                                    880,
                                     120,
                                     true,
                                     true,
                                     function()return Inputs.getMouseInCanvas(0, 0)end,
                                     nil)
+
+        diceFace.anchorX = xPositions[i]
+        diceFace.anchorY = 880
 
         table.insert(self.newUIFaces, diceFace)
                                     
