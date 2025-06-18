@@ -68,7 +68,33 @@ function DeskChoice:new(floor, run)
     self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 260, 721, -500, 721
     self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 30, 721, -730, 721
     self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, 190, self.canvas:getHeight()+400
-    self.moneyTX, self.moneyTY, self.moneyX, self.moneyTY = 190, 860, self.canvas:getHeight()+300
+    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, 190, self.canvas:getHeight()+300
+
+    --Btns positions
+    self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
+    self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 100, 1010, -150, 1010
+
+    self.uiElements.buttons["menuButton"] = Button:new(
+        function()print("menu")end,
+        "src/assets/sprites/ui/Menu.png",
+        self.menuBtnX,
+        self.menuBtnY,
+        140,
+        80,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
+    self.uiElements.buttons["planButton"] = Button:new(
+        function()print("plan")end,
+        "src/assets/sprites/ui/Plan.png",
+        self.planBtnX,
+        self.planBtnY,
+        140,
+        100,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
 
     --Créer le deck
     self.deckTX, self.deckTY , self.deckX, self.deckY = 1300, 110, 1300, self.canvas:getHeight()+20
@@ -77,11 +103,20 @@ function DeskChoice:new(floor, run)
     --Entry animation
     local entryDuration = 0.2
     self.animator:addGroup({
-        {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
-        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
-        {property = "deckY", from = self.deckY, targetValue = self.deckTY, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
+        {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = entryDuration, easing = AnimationUtils.Easing.outCubic},
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = entryDuration, easing = AnimationUtils.Easing.outCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, easing = AnimationUtils.Easing.outCubic},
+        {property = "deckY", from = self.deckY, targetValue = self.deckTY, duration = entryDuration, easing = AnimationUtils.Easing.outCubic},
+        {property = "moneyY", from = self.moneyY, targetValue = self.moneyTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},    
     })
+
+    --Buttons animation
+    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration*2, AnimationUtils.Easing.outCubic)
+    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration*2, AnimationUtils.Easing.outCubic)
+
 
     --Créer le dice net
     self:createDiceNet()
@@ -97,27 +132,7 @@ function DeskChoice:new(floor, run)
         self.possibleRounds = {self.floor.boss}
     end
 
-    self.uiElements.buttons["menuButton"] = Button:new(
-        function()print("menu")end,
-        "src/assets/sprites/ui/Menu.png",
-        100,
-        1010,
-        140,
-        80,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-    )
-
-    self.uiElements.buttons["planButton"] = Button:new(
-        function()print("plan")end,
-        "src/assets/sprites/ui/Plan.png",
-        100,
-        910,
-        140,
-        100,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-    )
+    
 
     --Création des différents canvas de choix de round
     self:generateChoiceCanvas()
@@ -290,10 +305,10 @@ function DeskChoice:drawRoundDetails()
 
     --DRAW ALL THE CANVAS
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.roundNumberCanvas, 190, 970)
-    love.graphics.draw(self.handsCanvas, 30, 721)
-    love.graphics.draw(self.rerollsCanvas, 260, 721)
-    love.graphics.draw(self.moneyCanvas, 190, 860)
+    love.graphics.draw(self.roundNumberCanvas, self.floorX, self.floorY)
+    love.graphics.draw(self.handsCanvas, self.turnsX, self.turnsY)
+    love.graphics.draw(self.rerollsCanvas, self.rerollsX, self.rerollsY)
+    love.graphics.draw(self.moneyCanvas, self.moneyX, self.moneyY)
 end
 
 --Description
@@ -492,7 +507,7 @@ end
 --==Utils==--
 
 function DeskChoice:outAnimation(badge)
-    local entryDuration = 0.2
+    local entryDuration = 0.4
     local newBadgeY = {
         -1000, -1000, 3000, 3000
     }
@@ -502,11 +517,22 @@ function DeskChoice:outAnimation(badge)
         {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
         {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
         {property = "deckY", from = self.deckY, targetValue = self.canvas:getHeight()+20, duration = entryDuration, eading = AnimationUtils.Easing.inCubic},
+
+        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
     })
+
 
     for i=1, table.getn(self.badges) do
         self.badges[i].animator:add("y", self.badges[i].y, newBadgeY[i], 0.4, AnimationUtils.Easing.inCubic)
     end
+
+    --Buttons animation
+    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, entryDuration)
+    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, entryDuration)
+
     
     self.animator:addDelay(0.5, function()self.run:startNewRound(badge.round, badge.round.roundtype)end)
 end
