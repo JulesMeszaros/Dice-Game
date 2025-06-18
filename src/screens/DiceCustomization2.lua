@@ -48,9 +48,10 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 
     self.newUIFaces = {}
     --On peuple notre table
-    --[[ for i,dice in next, self.diceObjects do
+    
+    for i,dice in next, self.diceObjects do
         table.insert(self.uiDices, self:createDiceUI(dice, i))
-    end ]]
+    end
 
     --Create the canvas
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
@@ -159,16 +160,11 @@ function DiceCustomization:update(dt)
 
     --Update the dice faces
     --Draw the uiFaces on the canvas
-    --[[ for i,uiDice in next,self.uiDices do
+    for i,uiDice in next,self.uiDices do
         for j,uiFace in next,uiDice do
             uiFace:update(dt)
-            if(uiFace:getIsSelected())then
-                uiFace.selectionScale = -0.2
-            else
-                uiFace.selectionScale = 0
-            end
         end
-    end ]]
+    end
 
     --New faces
     for i,uiFace in next,self.newUIFaces do
@@ -195,7 +191,7 @@ function DiceCustomization:updateCanvas(dt)
     self:drawRoundDetails()
     --Description
     self:drawDescriptionCanvas()
-    --New Faces
+    --New Faces Canvas
     self:drawNewFacesCanvas()
     --Customization mat
     self:drawCustomizationMat()
@@ -205,19 +201,16 @@ function DiceCustomization:updateCanvas(dt)
         button:draw()
     end
 
-    self:drawNewFaces()
-
-    --[[ --Draw the uiFaces on the canvas
+    --Draw the deck dices on the canvas
     for i,uiDice in next,self.uiDices do
         for j,uiFace in next,uiDice do
             uiFace:draw()
         end
     end
 
-    
+    self:drawNewFaces()
 
-    --Buttons
-     ]]
+    
 
     --[[  --Update the hover info
     if(self.currentlyHoveredFace)then
@@ -561,8 +554,8 @@ end
 function DiceCustomization:createDiceUI(diceObject, i)
     --This function creates every faces of a ui Dice and stores them in a table located in self.uiDices
     local diceUI = {}
-    local xOffset = (20)+(i-1)*380 -- the base position of the dice
-    local yOffset = 400
+    local xOffset = 120+360*(i-1) - 60 -- the base position of the dice
+    local yOffset = 180 - 60
     
     local relativeXPositions = { -- this table represents the position of the dice after applying the offset
         180, 60, 180, 300, 180, 180
