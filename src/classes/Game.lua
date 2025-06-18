@@ -76,7 +76,7 @@ end
 
 function Game:draw()
     love.graphics.setCanvas(self.gameCanvas)
-    love.graphics.clear(26/255, 79/255, 37/255)
+    love.graphics.clear(40/255, 40/255, 43/255)
     --Rendu du jeu dans le game canvas--
     if(self.currentScreen == Constants.PAGES.MAIN_MENU)then
         self.mainMenu:draw()

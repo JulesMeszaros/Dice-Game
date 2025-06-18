@@ -146,7 +146,7 @@ function RoundScreen:new(round)
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
     self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.terrainCanvas:getHeight()+1000
     self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.terrainCanvas:getWidth()-30, 30, self.terrainCanvas:getWidth()+600, 30
-    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.terrainCanvas:getWidth()-30, self.terrainCanvas:getHeight()-30, self.terrainCanvas:getWidth()+600, self.terrainCanvas:getHeight()-30
+    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.terrainCanvas:getWidth()-30, 650, self.terrainCanvas:getWidth()+600, 650
     self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.terrainCanvas:getWidth()+20, 30
     self.playerTX, self.playerTY, self.playerX, self.playerY = 510, 30, -800, 30
 
@@ -363,7 +363,7 @@ function RoundScreen:drawFaceDetails(x, y)
 
     love.graphics.setCanvas(currentCanvas)
 
-    love.graphics.draw(self.faceDetailsCanvas, x, y, 0, 1, 1, self.faceDetailsCanvas:getWidth(), self.faceDetailsCanvas:getHeight())
+    love.graphics.draw(self.faceDetailsCanvas, x, y, 0, 1, 1, self.faceDetailsCanvas:getWidth(), 0)
 end
 
 function RoundScreen:drawDiceDetails(x, y)

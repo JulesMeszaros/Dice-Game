@@ -8,7 +8,7 @@ local DiceFace = require("src.classes.ui.DiceFace")
 local UIElement = require("src.classes.ui.UIElement")
 local Inputs = require("src.utils.scripts.inputs")
 
-local badgeSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/badge-proto.png")
+local badgeSprite = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
 
 local Badge = setmetatable({}, { __index = UIElement })
 Badge.__index = Badge
@@ -96,10 +96,10 @@ function Badge:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.uiCanvas)
     love.graphics.clear()
-    love.graphics.setShader(Shaders.rainbowShader)
-    Shaders.rainbowShader:send("time", 4*self.scale)
-    Shaders.rainbowShader:send("frequency", 0.3)
-    Shaders.rainbowShader:send("intensity", 0.2)
+    love.graphics.setShader(Shaders.grayRainbowShader)
+    Shaders.grayRainbowShader:send("time", 4*self.scale)
+    Shaders.grayRainbowShader:send("frequency", 0.3)
+    Shaders.grayRainbowShader:send("intensity", 0.3)
     love.graphics.draw(self.sprite, 0, 0) -- add the background
     love.graphics.setShader()
 
@@ -110,7 +110,7 @@ function Badge:updateCanvas(dt)
     local jobDeskText = love.graphics.newText(Fonts.nexaLightMini, 'Office '..tostring(self.round.deskNumber).." - "..tostring(self.round.enemyJob))
 
     love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(nameText, self.uiCanvas:getWidth()/2, 22, 0, 1, 1, nameText:getWidth()/2, 0)
+    love.graphics.draw(nameText, self.uiCanvas:getWidth()/2, 25, 0, 1, 1, nameText:getWidth()/2, 0)
     love.graphics.draw(jobDeskText, self.uiCanvas:getWidth()/2, 60, 0, 1, 1, jobDeskText:getWidth()/2, 0)
 
     love.graphics.setColor(1, 1, 1, 1)
@@ -144,8 +144,8 @@ function Badge:createFaceRewards()
         local diceFace = DiceFace:new(nil,
                                     faceReward,
                                     xPos[i],
-                                    self.uiCanvas:getHeight()-95,
-                                    120,
+                                    408,
+                                    100,
                                     false,
                                     true,
                                     function()return Inputs.getMouseInCanvas(self.x, self.y)end,

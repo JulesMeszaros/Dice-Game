@@ -38,6 +38,38 @@ Shaders.rainbowShader = love.graphics.newShader([[
     }
 ]])
 
+Shaders.grayRainbowShader = love.graphics.newShader([[
+    extern number time;
+    extern number frequency = 0.1;
+    extern number intensity = 1.0; // 0 = pas d'effet, 1 = effet complet
+
+    vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+        vec4 texColor = Texel(texture, texture_coords);
+        if (texColor.a == 0.0) {
+            return vec4(0.0);
+        }
+
+        number hue = mod(time + (texture_coords.x + texture_coords.y) * frequency, 1.0);
+
+        // Couleur arc-en-ciel
+        vec3 rainbowColor = vec3(
+            abs(hue * 6.0 - 3.0) - 1.0,
+            2.0 - abs(hue * 6.0 - 2.0),
+            2.0 - abs(hue * 6.0 - 4.0)
+        );
+        rainbowColor = clamp(rainbowColor, 0.0, 1.0);
+
+        // Convertir en niveau de gris (luminance approx.)
+        number gray = dot(rainbowColor, vec3(0.299, 0.587, 0.114));
+        vec3 grayColor = vec3(gray);
+
+        // Mélange entre la couleur d'origine et l'effet en niveaux de gris
+        vec3 finalColor = mix(texColor.rgb, grayColor, intensity);
+
+        return vec4(finalColor, texColor.a);
+    }
+]])
+
 Shaders.crt = love.graphics.newShader([[
     extern vec2 iResolution;
     extern number warp = 0.60;

@@ -21,14 +21,14 @@ DeskChoice.__index = DeskChoice
 local choiceNumber = 4
 
 --Images
-local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Description-proto.png")
-local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Dice Info-proto.png")
-local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Floor-proto.png")
-local MoneySprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Money-proto.png")
-local RerollsSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Rerolls-proto.png")
-local TableauFiguresSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Tableau-proto.png")
-local TurnsSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Turns-proto.png")
-local deckBackGroundImage = love.graphics.newImage("src/assets/sprites/ui/terrain/deck_deskchoice_proto.png")
+local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/Description.png")
+local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/DiceComposition.png")
+local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/Office.png")
+local MoneySprite= love.graphics.newImage("src/assets/sprites/ui/Money.png")
+local RerollsSprite= love.graphics.newImage("src/assets/sprites/ui/Rerolls.png")
+local TableauFiguresSprite= love.graphics.newImage("src/assets/sprites/ui/Grid.png")
+local TurnsSprite= love.graphics.newImage("src/assets/sprites/ui/Turns.png")
+local deckBackGroundImage = love.graphics.newImage("src/assets/sprites/ui/Deck.png")
 
 function DeskChoice:new(floor, run)
     local self = setmetatable({}, DeskChoice)
@@ -51,23 +51,22 @@ function DeskChoice:new(floor, run)
     self.diceObjects = run.diceObjects
    
     --UI
-    self.descriptionCanvas = love.graphics.newCanvas(420, 390)
-    self.figureButtonsCanvas = love.graphics.newCanvas(495,630)
-    self.rerollsCanvas = love.graphics.newCanvas(240, 150)
-    self.handsCanvas = love.graphics.newCanvas(240, 150)
-    self.roundNumberCanvas = love.graphics.newCanvas(240, 90)
-    self.moneyCanvas = love.graphics.newCanvas(240, 90)
-    self.deckCanvas = love.graphics.newCanvas(195, 1020)
+    self.descriptionCanvas = love.graphics.newCanvas(420, 240)
+    self.figureButtonsCanvas = love.graphics.newCanvas(450,670)
+    self.rerollsCanvas = love.graphics.newCanvas(220, 120)
+    self.handsCanvas = love.graphics.newCanvas(220, 120)
+    self.roundNumberCanvas = love.graphics.newCanvas(290, 80)
+    self.moneyCanvas = love.graphics.newCanvas(290, 100)
+    self.deckCanvas = love.graphics.newCanvas(140, 860)
     self.diceDetailsCanvas = love.graphics.newCanvas(420, 600)
 
     --Positions
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
     self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.canvas:getWidth()-30, 30, self.canvas:getWidth()+600, 30
-    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+600, self.canvas:getHeight()-30
-    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+600, self.canvas:getHeight()-30
+    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, 650, self.canvas:getWidth()+600, 650
 
     --Créer le deck
-    self.deckTX, self.deckTY , self.deckX, self.deckY = 1260, 30, 1260, self.canvas:getHeight()+20
+    self.deckTX, self.deckTY , self.deckX, self.deckY = 1300, 110, 1300, self.canvas:getHeight()+20
     self:createDeck()
 
     --Entry animation
@@ -93,6 +92,28 @@ function DeskChoice:new(floor, run)
         self.possibleRounds = {self.floor.boss}
     end
 
+    self.uiElements.buttons["menuButton"] = Button:new(
+        function()print("menu")end,
+        "src/assets/sprites/ui/Menu.png",
+        100,
+        1010,
+        140,
+        80,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
+    self.uiElements.buttons["planButton"] = Button:new(
+        function()print("plan")end,
+        "src/assets/sprites/ui/Plan.png",
+        100,
+        910,
+        140,
+        100,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
     --Création des différents canvas de choix de round
     self:generateChoiceCanvas()
 
@@ -105,6 +126,11 @@ function DeskChoice:update(dt)
     love.graphics.clear()
 
     self.animator:update(dt)
+
+    for key,button in next,self.uiElements.buttons do
+        button:update(dt)
+        button:draw()
+    end
 
     --UI
     self:drawDeck(dt)
@@ -135,11 +161,11 @@ function DeskChoice:createDeck()
                 dice,
                 dice:getFace(1),
                 self.deckCanvas:getWidth()/2+1,
-                160+((i-1)*192)-1,
+                70+((i-1)*180),
                 120,
                 true,
                 true,
-                function()return Inputs.getMouseInCanvas(1260, 30)end,
+                function()return Inputs.getMouseInCanvas(1300, 110)end,
                 nil
             )
         deckFaces[dice] = faceUI
@@ -184,11 +210,11 @@ function DeskChoice:drawFigureGrid()
     --Write the remaining possible hands
     for i=1, 13 do
         local handsRemaining = love.graphics.newText(Fonts.nexaSmall, self.run.availableFigures[i])
-        love.graphics.draw(handsRemaining, 320+85, 45*i+25, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
+        love.graphics.draw(handsRemaining, 368, 50*(i-1)+38, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
         --if no hands remaining, grey out the line
         if(self.run.availableFigures[i]<=0) then
             love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
-            love.graphics.rectangle("fill", 0, i*45, self.figureButtonsCanvas:getWidth(), 45)
+            love.graphics.rectangle("fill", 10, (i-1)*50+10, self.figureButtonsCanvas:getWidth()-20, 50)
             love.graphics.setColor(0, 0, 0, 1)
         end
     end
@@ -196,7 +222,7 @@ function DeskChoice:drawFigureGrid()
     love.graphics.setColor(1, 1, 1, 1)
 
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
-    local i = math.floor(mv.y/45)
+    local i = math.floor((mv.y-10)/50)+1
 
     --If we are hovering a line
     if(i>0 and i<=13)then
@@ -204,7 +230,7 @@ function DeskChoice:drawFigureGrid()
             --Draw a shadow on the line
             if(self.run.availableFigures[i]>=1)then
                 love.graphics.setColor(1, 0, 0, 0.3)
-                love.graphics.rectangle("fill", 0, i*45, self.figureButtonsCanvas:getWidth(), 45)
+                love.graphics.rectangle("fill", 10, (i-1)*50+10, self.figureButtonsCanvas:getWidth()-20, 50)
             end
             love.graphics.setColor(1, 1, 1, 1)
         end
@@ -223,52 +249,53 @@ function DeskChoice:drawRoundDetails()
     local rerollText = love.graphics.newText(Fonts.nexaBig, tostring("-"))
     local currentHands = love.graphics.newText(Fonts.nexaBig, tostring("-"))
     local currentRoundText = love.graphics.newText(Fonts.nexaSmall, 'Floor '..tostring(self.run.floorNumber)..'\nDesk : '..tostring(0))
-    local moneyText = love.graphics.newText(Fonts.nexaSmall, tostring(self.run.money).."€")
+    local moneyText = love.graphics.newText(Fonts.nexaBig, tostring(self.run.money).."€")
 
     --ROUND
     love.graphics.setCanvas(self.roundNumberCanvas)
-    love.graphics.clear(0, 0, 1)
+    love.graphics.clear()
     love.graphics.draw(FloorInfosSprite, 0, 0)
+    love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(currentRoundText, self.roundNumberCanvas:getWidth()/2, self.roundNumberCanvas:getHeight()/2, 0, 1, 1, currentRoundText:getWidth()/2, currentRoundText:getHeight()/2)
-
+    love.graphics.setColor(1, 1, 1, 1)
     --HANDS
     love.graphics.setCanvas(self.handsCanvas)
     love.graphics.clear()
     love.graphics.draw(TurnsSprite, 0, 0)
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2)
+    love.graphics.setColor(245/255, 247/255, 228/255, 1)
+    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
 
     --REROLLS
     love.graphics.setCanvas(self.rerollsCanvas)
     love.graphics.clear()
     love.graphics.draw(RerollsSprite, 0, 0)
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2)
+    love.graphics.setColor(245/255, 247/255, 228/255, 1)
+    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
 
     --MONEY
     love.graphics.setCanvas(self.moneyCanvas)
-    love.graphics.clear(1, 1, 0)
+    love.graphics.clear()
     love.graphics.draw(MoneySprite,0,0)
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2)
+    love.graphics.setColor(1, 195/256, 132/256, 1)
+    love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
     love.graphics.setColor(1, 1, 1, 1)
 
 
     --DRAW ALL THE CANVAS
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.roundNumberCanvas, 30, 690)
-    love.graphics.draw(self.handsCanvas, 30, 795)
-    love.graphics.draw(self.rerollsCanvas, 295, 795)
-    love.graphics.draw(self.moneyCanvas, 295, 690)
+    love.graphics.draw(self.roundNumberCanvas, 190, 970)
+    love.graphics.draw(self.handsCanvas, 30, 721)
+    love.graphics.draw(self.rerollsCanvas, 260, 721)
+    love.graphics.draw(self.moneyCanvas, 190, 860)
 end
 
 --Description
 function DeskChoice:drawDescriptionCanvas()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.descriptionCanvas)
-    love.graphics.clear(60/255, 99/255, 60/255)
+    love.graphics.clear()
     --Draw Sprite
     love.graphics.draw(descriptionSprite, 0, 0)
 
@@ -277,7 +304,7 @@ function DeskChoice:drawDescriptionCanvas()
 
         --Face Name
         local faceName = self.currentlyHoveredFace.representedFace.name
-        local nameText = love.graphics.newText(Fonts.nexaMedium, faceName)
+        local nameText = love.graphics.newText(Fonts.nexa30, faceName)
 
         --Face tier
         local tierText = love.graphics.newText(
@@ -288,7 +315,7 @@ function DeskChoice:drawDescriptionCanvas()
         --Description
         local faceDescription = self.currentlyHoveredFace.representedFace.description
         local descWidth, descWrappedtext = Fonts.nexaSmall:getWrap( faceDescription, self.descriptionCanvas:getWidth()-20 )
-        local descText = love.graphics.newText(Fonts.nexaSmall, table.concat(descWrappedtext, "\n"))
+        local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.draw(nameText, self.descriptionCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
         love.graphics.draw(tierText, self.descriptionCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
@@ -299,7 +326,7 @@ function DeskChoice:drawDescriptionCanvas()
 
     love.graphics.setCanvas(currentCanvas)
 
-    love.graphics.draw(self.descriptionCanvas, self.descriptionX, self.descriptionY, 0, 1, 1, self.descriptionCanvas:getWidth(), self.descriptionCanvas:getHeight())
+    love.graphics.draw(self.descriptionCanvas, self.descriptionX, self.descriptionY, 0, 1, 1, self.descriptionCanvas:getWidth(), 0)
 end
 --DiceNet
 
@@ -310,12 +337,12 @@ function DeskChoice:createDiceNet()
 
     --Create the coordinates of each dice face
     local diceFacesCoords = {
-        {self.diceDetailsCanvas:getWidth()/2-120, self.diceDetailsCanvas:getHeight()/2-10}, --1
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-120-10}, --2
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-10}, --3
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+240-10}, --4
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+120-10}, --5
-        {self.diceDetailsCanvas:getWidth()/2+120, self.diceDetailsCanvas:getHeight()/2-10}, --6
+        {self.diceDetailsCanvas:getWidth()/2-120, self.diceDetailsCanvas:getHeight()/2-30}, --1
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-120-30}, --2
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-30}, --3
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+240-30}, --4
+        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+120-30}, --5
+        {self.diceDetailsCanvas:getWidth()/2+120, self.diceDetailsCanvas:getHeight()/2-30}, --6
     }
     
     -- Create the uiFaces objects
@@ -375,10 +402,10 @@ function DeskChoice:generateChoiceCanvas()
     self.choiceCanvas = {}
 
     local coords = {
-        {550, 30},
-        {908, 30},
-        {550, 555},
-        {908, 555},
+        {510, 30},
+        {905, 30},
+        {510, 550},
+        {905, 550},
     }
 
     local originalY = {
@@ -387,7 +414,7 @@ function DeskChoice:generateChoiceCanvas()
 
     for i=1, table.getn(self.possibleRounds) do
         local c = love.graphics.newCanvas(220*1.5, 330*1.5)
-        local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 220*1.5, 330*1.5, function()return Inputs.getMouseInCanvas(0, 0)end)
+        local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 370, 500, function()return Inputs.getMouseInCanvas(0, 0)end)
         table.insert(self.choiceCanvas, c)
         table.insert(self.badges, b)
     end
