@@ -196,7 +196,7 @@ end
 function RoundScreen:updateCanvas(dt)
     love.graphics.setCanvas(self.terrainCanvas)
     if(self.round.roundType == Constants.ROUND_TYPES.BASE)then
-        love.graphics.clear()
+        love.graphics.clear(40/255, 40/255, 43/255)
     else
         love.graphics.clear(0, 1, 1)
     end
@@ -252,7 +252,7 @@ end
 function RoundScreen:drawDiceTray(x, y, dices2)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.dice_tray)
-    love.graphics.clear(60/255, 99/255, 60/255)
+    love.graphics.clear()
 
     love.graphics.draw(DiceMatSprite, 0, 0, 0, 1, 1)
 
@@ -309,7 +309,6 @@ function RoundScreen:drawFigureGrid(x, y)
 
     --If we are hovering a line
     if(i>0 and i<=13)then
-        print(i)
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             self:highlightDices(self.calcBasePoints[i]()[2])
             --Draw a shadow on the line
@@ -334,25 +333,26 @@ end
 function RoundScreen:drawFaceDetails(x, y)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.faceDetailsCanvas)
-    love.graphics.clear(60/255, 99/255, 60/255)
+    love.graphics.clear()
     --Draw Sprite
     love.graphics.draw(descriptionSprite, 0, 0)
 
     if(self.currentlyHoveredDice) then
         --Face Name
         local faceName = self.currentlyHoveredDice:getCurrentFaceObject().name
-        local nameText = love.graphics.newText(font30, faceName)
+        local nameText = love.graphics.newText(Fonts.nexa30, faceName)
 
         --Face tier
         local tierText = love.graphics.newText(
-            font,
+            Fonts.nexaSmall,
             self.currentlyHoveredDice:getCurrentFaceObject().tier
         )
 
         --Description
         local faceDescription = self.currentlyHoveredDice:getCurrentFaceObject().description
-        local descWidth, descWrappedtext = font:getWrap( faceDescription, self.faceDetailsCanvas:getWidth()-20 )
-        local descText = love.graphics.newText(font, table.concat(descWrappedtext, "\n"))
+        local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap( faceDescription, self.faceDetailsCanvas:getWidth()-18 )
+        local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
+
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.draw(nameText, self.faceDetailsCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
         love.graphics.draw(tierText, self.faceDetailsCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
@@ -369,7 +369,7 @@ end
 function RoundScreen:drawDiceDetails(x, y)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.diceDetailsCanvas)
-    love.graphics.clear(60/255, 99/255, 60/255)
+    love.graphics.clear()
 
     --Draw sprite
     love.graphics.draw(DiceInfosSprite, 0, 0)
@@ -397,36 +397,37 @@ function RoundScreen:drawRoundDetails()
     local rerollText = love.graphics.newText(Fonts.nexaBig, tostring(self.round.availableRerolls))
     local currentHands = love.graphics.newText(Fonts.nexaBig, tostring(self.round.remainingHands))
     local currentRoundText = love.graphics.newText(font, 'Floor '..tostring(self.round.floorNumber)..'\nDesk : '..tostring(self.round.deskNumber))
-    local moneyText = love.graphics.newText(font, tostring(self.round.run.money).."€")
+    local moneyText = love.graphics.newText(Fonts.nexaBig, tostring(self.round.run.money).."€")
 
     --ROUND
     love.graphics.setCanvas(self.roundNumberCanvas)
-    love.graphics.clear(0, 0, 1)
+    love.graphics.clear()
     love.graphics.draw(FloorInfosSprite, 0, 0)
+    love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(currentRoundText, self.roundNumberCanvas:getWidth()/2, self.roundNumberCanvas:getHeight()/2, 0, 1, 1, currentRoundText:getWidth()/2, currentRoundText:getHeight()/2)
-
+    love.graphics.setColor(1, 1, 1, 1)
     --HANDS
     love.graphics.setCanvas(self.handsCanvas)
     love.graphics.clear()
     love.graphics.draw(TurnsSprite, 0, 0)
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2)
+    love.graphics.setColor(245/255, 247/255, 228/255, 1)
+    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
 
     --REROLLS
     love.graphics.setCanvas(self.rerollsCanvas)
     love.graphics.clear()
     love.graphics.draw(RerollsSprite, 0, 0)
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2)
+    love.graphics.setColor(245/255, 247/255, 228/255, 1)
+    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
 
     --MONEY
     love.graphics.setCanvas(self.moneyCanvas)
-    love.graphics.clear(1, 1, 0)
+    love.graphics.clear()
     love.graphics.draw(MoneySprite,0,0)
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2)
+    love.graphics.setColor(1, 195/256, 132/256, 1)
+    love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
     love.graphics.setColor(1, 1, 1, 1)
 
 
@@ -446,7 +447,7 @@ function RoundScreen:drawPlayersInfos()
     love.graphics.draw(PlayerInfosSprite, 0, 0)
     local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.round.roundScore))
     love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(scoreText, self.playerInfos:getWidth()-10, 72, 0, 1, 1, scoreText:getWidth(), 0)
+    love.graphics.draw(scoreText, self.playerInfos:getWidth()-20, 72, 0, 1, 1, scoreText:getWidth(), 0)
     love.graphics.setColor(1, 1, 1, 1)
 
     --Ennemy
@@ -455,7 +456,7 @@ function RoundScreen:drawPlayersInfos()
     love.graphics.draw(EnemyInfosSprite, 0, 0)
     local targetScoreText = love.graphics.newText(font, 'Target : '..tostring(self.round.targetScore))
     love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(targetScoreText, 10, 207)
+    love.graphics.draw(targetScoreText, 20, 210)
     love.graphics.setColor(1, 1, 1, 1)
 
     love.graphics.setCanvas(currentCanvas)
