@@ -66,7 +66,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
             120, --Width/Height
             true, --is Selectable
             true, --isHoverable,
-            function()return Inputs.getMouseInCanvas((self.gameCanvas:getWidth()-self.terrain.dice_tray:getWidth()-self.terrain.faceDetailsCanvas:getWidth()-60),(self.gameCanvas:getHeight())-self.terrain.dice_tray:getHeight()-30)end,
+            function()return Inputs.getMouseInCanvas(510 , 320)end,
             self
         )
 

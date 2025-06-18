@@ -46,7 +46,7 @@ function RoundScreen:new(round)
     self.terrainCanvas = love.graphics.newCanvas(round.gameCanvas:getWidth(),round.gameCanvas:getHeight() )
 
     --DICE TRAY
-    self.dice_tray = love.graphics.newCanvas(885, 750)
+    self.dice_tray = love.graphics.newCanvas(930, 630)
     self.dice_tray:setFilter("linear", "linear")
 
     
@@ -57,7 +57,7 @@ function RoundScreen:new(round)
     self.previouslyHoveredFace = nil
 
     --FIGURE BUTTONS
-    self.figureButtonsCanvas = love.graphics.newCanvas(495,630)
+    self.figureButtonsCanvas = love.graphics.newCanvas(450,670)
     self.figureButtonsCanvas:setFilter("linear", "linear")
     self.clickedFigure = nil
     --Calculate points functions
@@ -94,7 +94,7 @@ function RoundScreen:new(round)
     }
     
     --FACE DETAILS
-    self.faceDetailsCanvas = love.graphics.newCanvas(420, 390)
+    self.faceDetailsCanvas = love.graphics.newCanvas(420, 240)
     self.pointsDetailsCanvas = nil
 
     --DICE DETAILS
@@ -108,57 +108,47 @@ function RoundScreen:new(round)
     self:createRoundInfos()
 
     --LEFT PANNEL BUTTONS
-    self.uiElements.roundButtons["reorganiserButton"] = Button:new(
-        function()self:reorganiseDiceFaces(self.round.diceFaces)end, 
-        "src/assets/sprites/ui/terrain/Order_btn-proto.png", 
-        self.terrainCanvas:getWidth()-self.faceDetailsCanvas:getWidth()-60-self.dice_tray:getWidth()/2-215, 
-        self.terrainCanvas:getHeight()-75, 
-        420, 
-        60,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-    )
 
     self.uiElements.roundButtons["rerollButton"] = Button:new(
         function()self.round:rerollDices()end, 
-        "src/assets/sprites/ui/terrain/Reroll-proto.png", 
-        self.terrainCanvas:getWidth()-self.faceDetailsCanvas:getWidth()-60-self.dice_tray:getWidth()/2+215, 
-        self.terrainCanvas:getHeight()-75, 
-        420, 
-        60,
+        "src/assets/sprites/ui/Reroll.png", 
+        555+(840/2),
+        970+(40),
+        840, 
+        80,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
     self.uiElements.roundButtons["menuButton"] = Button:new(
         function()print("menu")end,
-        "src/assets/sprites/ui/terrain/Menu_btn-proto.png",
-        150,
-        1005,
-        240,
-        90,
+        "src/assets/sprites/ui/Menu.png",
+        100,
+        1010,
+        140,
+        80,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
     self.uiElements.roundButtons["planButton"] = Button:new(
         function()print("plan")end,
-        "src/assets/sprites/ui/terrain/Plan_btn-proto.png",
-        415,
-        1005,
-        240,
-        90,
+        "src/assets/sprites/ui/Plan.png",
+        100,
+        910,
+        140,
+        100,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
     --Positions
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
-    self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty =self.terrainCanvas:getWidth()-60-self.faceDetailsCanvas:getWidth() , self.terrainCanvas:getHeight()-30, self.terrainCanvas:getWidth()-60-self.faceDetailsCanvas:getWidth(), self.terrainCanvas:getHeight()+1000
+    self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.terrainCanvas:getHeight()+1000
     self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.terrainCanvas:getWidth()-30, 30, self.terrainCanvas:getWidth()+600, 30
     self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.terrainCanvas:getWidth()-30, self.terrainCanvas:getHeight()-30, self.terrainCanvas:getWidth()+600, self.terrainCanvas:getHeight()-30
-    self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 828, 30, self.terrainCanvas:getWidth()+20, 30
-    self.playerTX, self.playerTY, self.playerX, self.playerY = 552, 30, -800, 30
+    self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.terrainCanvas:getWidth()+20, 30
+    self.playerTX, self.playerTY, self.playerX, self.playerY = 510, 30, -800, 30
 
     local entryDuration = 0.3
 
@@ -177,8 +167,8 @@ function RoundScreen:new(round)
     self.animator:addDelay(0.3, function()self.round:makeRoll(self.round.diceObjects)end)
 
     --PLAYERS INFOS
-    self.playerInfos = love.graphics.newCanvas(612,255)
-    self.enemyInfos = love.graphics.newCanvas(612,255)
+    self.playerInfos = love.graphics.newCanvas(650,260)
+    self.enemyInfos = love.graphics.newCanvas(650,260)
 
     return self
 end
@@ -279,7 +269,7 @@ function RoundScreen:drawDiceTray(x, y, dices2)
     --On retourne au canvas précédent
     love.graphics.setCanvas(targetCanvas)
     --On déssine le terrain à dés sur le canvas
-    love.graphics.draw(self.dice_tray, x, y, 0, 1, 1, self.dice_tray:getWidth(), self.dice_tray:getHeight()) --On fixe son offset sur son angle superieur droit
+    love.graphics.draw(self.dice_tray, x, y) --On fixe son offset sur son angle superieur droit
 
 end
 
@@ -440,10 +430,10 @@ function RoundScreen:drawRoundDetails()
 
     --DRAW ALL THE CANVAS
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.roundNumberCanvas, 30, 690)
-    love.graphics.draw(self.handsCanvas, 30, 795)
-    love.graphics.draw(self.rerollsCanvas, 295, 795)
-    love.graphics.draw(self.moneyCanvas, 295, 690)
+    love.graphics.draw(self.roundNumberCanvas, 190, 970)
+    love.graphics.draw(self.handsCanvas, 30, 721)
+    love.graphics.draw(self.rerollsCanvas, 260, 721)
+    love.graphics.draw(self.moneyCanvas, 190, 860)
 end
 
 function RoundScreen:drawPlayersInfos()
@@ -511,10 +501,10 @@ end
 
 function RoundScreen:createRoundInfos()
     --Create the canvas
-    self.rerollsCanvas = love.graphics.newCanvas(240, 150)
-    self.handsCanvas = love.graphics.newCanvas(240, 150)
-    self.roundNumberCanvas = love.graphics.newCanvas(240, 90)
-    self.moneyCanvas = love.graphics.newCanvas(240, 90)
+    self.rerollsCanvas = love.graphics.newCanvas(220, 120)
+    self.handsCanvas = love.graphics.newCanvas(220, 120)
+    self.roundNumberCanvas = love.graphics.newCanvas(290, 80)
+    self.moneyCanvas = love.graphics.newCanvas(290, 100)
 end
 
 --==FIGURES TABLE==--
