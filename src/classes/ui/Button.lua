@@ -3,6 +3,8 @@ local Shaders = require("src.utils.shaders")
 local UIElement = require("src.classes.ui.UIElement")
 local Inputs = require("src.utils.scripts.inputs")
 
+local Animator = require("src.utils.Animator")
+
 local Button = setmetatable({}, { __index = UIElement })
 Button.__index = Button
 
@@ -17,6 +19,8 @@ function Button:new(
     mousePosition)
 
     self.gameCanvas = gameCanvas
+
+    self.animator = Animator:new(self)
 
     local self = setmetatable(UIElement.new(), Button)
 
@@ -47,6 +51,7 @@ function Button:new(
 end
 
 function Button:update(dt)
+    self.animator:update(dt)
     if(self:isHovered())then
         self.targetedScale = 0.95
         if(love.mouse.isDown(1) and self.isActivated) then

@@ -107,13 +107,33 @@ function RoundScreen:new(round)
     --ROUND DETAILS
     self:createRoundInfos()
 
+    
+
+    --Positions
+    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
+    self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.terrainCanvas:getHeight()+1000
+    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.terrainCanvas:getWidth()-30, 30, self.terrainCanvas:getWidth()+600, 30
+    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.terrainCanvas:getWidth()-30, 650, self.terrainCanvas:getWidth()+600, 650
+    self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.terrainCanvas:getWidth()+20, 30
+    self.playerTX, self.playerTY, self.playerX, self.playerY = 510, 30, -800, 30
+    
+    self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 260, 721, -500, 721
+    self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 30, 721, -730, 721
+    self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, 190, self.terrainCanvas:getHeight()+400
+    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, 190, self.terrainCanvas:getHeight()+300
+
+    --Btns positions
+    self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
+    self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
+    self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 100, 1010, -150, 1010
+
     --LEFT PANNEL BUTTONS
 
     self.uiElements.roundButtons["rerollButton"] = Button:new(
         function()self.round:rerollDices()end, 
         "src/assets/sprites/ui/Reroll.png", 
-        555+(840/2),
-        970+(40),
+        self.rerollBtnX,
+        self.rerollBtnY,
         840, 
         80,
         self.gameCanvas,
@@ -123,8 +143,8 @@ function RoundScreen:new(round)
     self.uiElements.roundButtons["menuButton"] = Button:new(
         function()print("menu")end,
         "src/assets/sprites/ui/Menu.png",
-        100,
-        1010,
+        self.menuBtnX,
+        self.menuBtnY,
         140,
         80,
         self.gameCanvas,
@@ -134,37 +154,40 @@ function RoundScreen:new(round)
     self.uiElements.roundButtons["planButton"] = Button:new(
         function()print("plan")end,
         "src/assets/sprites/ui/Plan.png",
-        100,
-        910,
+        self.planBtnX,
+        self.planBtnY,
         140,
         100,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
-    --Positions
-    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
-    self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.terrainCanvas:getHeight()+1000
-    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.terrainCanvas:getWidth()-30, 30, self.terrainCanvas:getWidth()+600, 30
-    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.terrainCanvas:getWidth()-30, 650, self.terrainCanvas:getWidth()+600, 650
-    self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.terrainCanvas:getWidth()+20, 30
-    self.playerTX, self.playerTY, self.playerX, self.playerY = 510, 30, -800, 30
-
-    local entryDuration = 0.3
+    local entryDuration = 0.5
 
     --Animation
     self.animator:addGroup({
         {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
         {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
         {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "diceMaty", from = self.diceMaty, targetValue = self.diceMatTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic}
+        {property = "diceMaty", from = self.diceMaty, targetValue = self.diceMatTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyY", from = self.moneyY, targetValue = self.moneyTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
     })
+    self.animator:addDelay(0.2)
     self.animator:addGroup({
-        {property = "playerX", from = self.playerX, targetValue = self.playerTX, duration = entryDuration*2, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration*2, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "playerX", from = self.playerX, targetValue = self.playerTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
 
     })
-    self.animator:addDelay(0.3, function()self.round:makeRoll(self.round.diceObjects)end)
+    --Buttons animation
+    self.uiElements.roundButtons["rerollButton"].animator:add('y', self.rerollBtnY, self.rerollBtnTY, entryDuration)
+    self.uiElements.roundButtons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration)
+    self.uiElements.roundButtons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration)
+
+
+    self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects)end)
 
     --PLAYERS INFOS
     self.playerInfos = love.graphics.newCanvas(650,260)
@@ -433,10 +456,10 @@ function RoundScreen:drawRoundDetails()
 
     --DRAW ALL THE CANVAS
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.roundNumberCanvas, 190, 970)
-    love.graphics.draw(self.handsCanvas, 30, 721)
-    love.graphics.draw(self.rerollsCanvas, 260, 721)
-    love.graphics.draw(self.moneyCanvas, 190, 860)
+    love.graphics.draw(self.roundNumberCanvas, self.floorX, self.floorY)
+    love.graphics.draw(self.handsCanvas, self.turnsX, self.turnsY)
+    love.graphics.draw(self.rerollsCanvas, self.rerollsX, self.rerollsY)
+    love.graphics.draw(self.moneyCanvas, self.moneyX, self.moneyY)
 end
 
 function RoundScreen:drawPlayersInfos()
@@ -533,12 +556,24 @@ function RoundScreen:outAnimation()
         {property = "gridY", from = self.gridY, targetValue = -950, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
         {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.terrainCanvas:getWidth()+600, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
         {property = "descriptionX", from = self.descriptionX, targetValue = self.terrainCanvas:getWidth()+600, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
-        {property = "diceMaty", from = self.diceMaty, targetValue = self.terrainCanvas:getHeight()+1000, duration = outDuration, eading = AnimationUtils.Easing.inCubic}
+        {property = "diceMaty", from = self.diceMaty, targetValue = self.terrainCanvas:getHeight()+1000, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
+        
+        {property = "moneyY", from = self.moneyY, targetValue = self.terrainCanvas:getHeight()+300, duration = outDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.terrainCanvas:getHeight()+400, duration = outDuration, eading = AnimationUtils.Easing.inOutCubic},
     })
+    self.animator:addDelay(0.2)
     self.animator:addGroup({
-        {property = "playerX", from = self.playerX, targetValue = -800, duration = outDuration*2, eading = AnimationUtils.Easing.inCubic},
-        {property = "enemyX", from = self.enemyX, targetValue = self.terrainCanvas:getWidth()+20, duration = outDuration*2, eading = AnimationUtils.Easing.inCubic, onComplete=function()self.round.run:endRound()end},
+        {property = "playerX", from = self.playerX, targetValue = -800, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
+        {property = "enemyX", from = self.enemyX, targetValue = self.terrainCanvas:getWidth()+20, duration = outDuration, eading = AnimationUtils.Easing.inCubic, onComplete=function()self.round.run:endRound()end},
     })
+
+    --Buttons animation
+    self.uiElements.roundButtons["rerollButton"].animator:add('y', self.rerollBtnY, 1500, outDuration)
+    self.uiElements.roundButtons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)
+    self.uiElements.roundButtons["planButton"].animator:add('x', self.planBtnX, -150, outDuration)
+
 end
 
 --==UTILS FUNCTIONS==--
