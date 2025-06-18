@@ -15,14 +15,15 @@ local DiceCustomization = {}
 DiceCustomization.__index = DiceCustomization
 
 --Sprites
-local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/terrain/Description-proto.png")
-local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Floor-proto.png")
-local MoneySprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Money-proto.png")
-local RerollsSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Rerolls-proto.png")
-local TurnsSprite= love.graphics.newImage("src/assets/sprites/ui/terrain/Turns-proto.png")
-local deckBackGroundImage = love.graphics.newImage("src/assets/sprites/ui/terrain/deck_deskchoice_proto.png")
-local newFacesImage = love.graphics.newImage("src/assets/sprites/ui/terrain/newfaces-proto.png")
-local dicesImage = love.graphics.newImage("src/assets/sprites/ui/terrain/customization-mat-proto")
+local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/Description.png")
+local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/DiceComposition.png")
+local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/Office.png")
+local MoneySprite= love.graphics.newImage("src/assets/sprites/ui/Money.png")
+local RerollsSprite= love.graphics.newImage("src/assets/sprites/ui/Rerolls.png")
+local TurnsSprite= love.graphics.newImage("src/assets/sprites/ui/Turns.png")
+local newFacesImage = love.graphics.newImage("src/assets/sprites/ui/Rewards.png")
+local CustomMatImage = love.graphics.newImage("src/assets/sprites/ui/Customization Mat.png")
+
 
 function DiceCustomization:new(previousRound, newFaceObjects)
     local self = setmetatable({}, DiceCustomization)
@@ -53,36 +54,77 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     end ]]
 
     --Create the canvas
-    self.screenCanvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
     --The other canvas
-    self.newFacesCanvas = love.graphics.newCanvas(620*1.5, 260*1.5)
+    self.newFacesCanvas = love.graphics.newCanvas(950, 400)
     self.descriptionCanvas = love.graphics.newCanvas(420, 390)
-    self.handsCanvas = love.graphics.newCanvas(240, 150)
-    self.rerollsCanvas = love.graphics.newCanvas(240, 150)
-    self.moneyCanvas = love.graphics.newCanvas(240, 90)
-    self.roundNumberCanvas = love.graphics.newCanvas(240, 90)
+    self.rerollsCanvas = love.graphics.newCanvas(220, 120)
+    self.handsCanvas = love.graphics.newCanvas(220, 120)
+    self.roundNumberCanvas = love.graphics.newCanvas(290, 80)
+    self.moneyCanvas = love.graphics.newCanvas(290, 100)
+    self.customizationMat = love.graphics.newCanvas(1860, 600)
 
-    --Positions
-    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
-    self.newFacesTX, self.newFacesTY, self.newFacesX, self.newFacesY = self.screenCanvas:getWidth()/2, self.screenCanvas:getHeight()-30, self.screenCanvas:getWidth()/2, self.screenCanvas:getHeight()+600
-    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.screenCanvas:getWidth()-30, self.screenCanvas:getHeight()-30, self.screenCanvas:getWidth()+600, self.screenCanvas:getHeight()-30
-    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.screenCanvas:getWidth()-30, self.screenCanvas:getHeight()-30, self.screenCanvas:getWidth()+600, self.screenCanvas:getHeight()-30
+     --Positions
+    self.newFacesTX, self.newFacesTY, self.newFacesX, self.newFacesY = 500, 650, 500, self.canvas:getHeight()+450
+    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.canvas:getWidth()-30, 30, self.canvas:getWidth()+600, 30
+    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, 650, self.canvas:getWidth()+600, 650
+    
+    self.customizationMatTX, self.customizationMatTY, self.customizationMatX, self.customizationMatY = 30, 30, 30, -700
+
+    self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 260, 721, -500, 721
+    self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 30, 721, -730, 721
+    self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, 190, self.canvas:getHeight()+400
+    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, 190, self.canvas:getHeight()+300
+
+    --Btns positions
+    self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
+    self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 100, 1010, -150, 1010
 
     --Entry animation
     local entryDuration = 0.2
     self.animator:addGroup({
-        --{property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
         {property = "newFacesY", from = self.newFacesY, targetValue = self.newFacesTY, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
         {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
-        --{property = "deckY", from = self.deckY, targetValue = self.deckTY, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
+        {property = "moneyY", from = self.moneyY, targetValue = self.moneyTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "customizationMatY", from = self.customizationMatY, targetValue = self.customizationMatTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+    
     })
+
+    self.uiElements.buttons["menuButton"] = Button:new(
+        function()print("menu")end,
+        "src/assets/sprites/ui/Menu.png",
+        self.menuBtnX,
+        self.menuBtnY,
+        140,
+        80,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
+    self.uiElements.buttons["planButton"] = Button:new(
+        function()print("plan")end,
+        "src/assets/sprites/ui/Plan.png",
+        self.planBtnX,
+        self.planBtnY,
+        140,
+        100,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
+    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
+
 
     --Create the switch button
     --[[ self.uiElements.buttons.switchButton = Button:new(
         function()self:flipFaces()end, 
         "src/assets/sprites/ui/terrain/Reroll-proto.png", 
-        self.screenCanvas:getWidth()/2, 
-        self.screenCanvas:getHeight()-75, 
+        self.canvas:getWidth()/2, 
+        self.canvas:getHeight()-75, 
         420, 
         60,
         self.gameCanvas,
@@ -92,8 +134,8 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     self.uiElements.buttons.nextRoundButton = Button:new(
         function()self:goToRoundSelection()end, 
         "src/assets/sprites/ui/buttons/next_round.png", 
-        self.screenCanvas:getWidth()/2, 
-        self.screenCanvas:getHeight()-150, 
+        self.canvas:getWidth()/2, 
+        self.canvas:getHeight()-150, 
         420, 
         60,
         self.gameCanvas,
@@ -150,7 +192,7 @@ end
 
 function DiceCustomization:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.screenCanvas)
+    love.graphics.setCanvas(self.canvas)
     love.graphics.clear(89/255, 153/255, 255/255)
 
     --UI
@@ -161,6 +203,13 @@ function DiceCustomization:updateCanvas(dt)
     self:drawDescriptionCanvas()
     --New Faces
     self:drawNewFacesCanvas()
+    --Customization mat
+    self:drawCustomizationMat()
+
+    --Buttons
+    for key,button in next,self.uiElements.buttons do
+        button:draw()
+    end
 
     --[[ --Draw the uiFaces on the canvas
     for i,uiDice in next,self.uiDices do
@@ -175,9 +224,7 @@ function DiceCustomization:updateCanvas(dt)
     end
 
     --Buttons
-    for key,button in next,self.uiElements.buttons do
-        button:draw()
-    end ]]
+     ]]
 
     --[[  --Update the hover info
     if(self.currentlyHoveredFace)then
@@ -189,7 +236,7 @@ function DiceCustomization:updateCanvas(dt)
 end
 
 function DiceCustomization:draw()
-    love.graphics.draw(self.screenCanvas, 0, 0)
+    love.graphics.draw(self.canvas, 0, 0)
 end
 
 --==INPUTS FUNCTIONS==--
@@ -256,48 +303,49 @@ end
 function DiceCustomization:drawRoundDetails()
     local currentCanvas = love.graphics.getCanvas()
     --Create the texts
-    local rerollText = love.graphics.newText(Fonts.nexaBig, tostring("-"))
-    local currentHands = love.graphics.newText(Fonts.nexaBig, tostring("-"))
-    local currentRoundText = love.graphics.newText(Fonts.nexaSmall, 'Floor '..tostring(self.previousRound.floorNumber)..'\nDesk : '..tostring(0))
-    local moneyText = love.graphics.newText(Fonts.nexaSmall, tostring(self.previousRound.run.money).."€")
+    local rerollText = love.graphics.newText(Fonts.nexaBig, tostring(self.previousRound.availableRerolls))
+    local currentHands = love.graphics.newText(Fonts.nexaBig, tostring(self.previousRound.remainingHands))
+    local currentRoundText = love.graphics.newText(Fonts.nexa30, 'Floor '..tostring(self.previousRound.floorNumber)..'\nDesk : '..tostring(self.previousRound.deskNumber))
+    local moneyText = love.graphics.newText(Fonts.nexaBig, tostring(self.previousRound.run.money).."€")
 
     --ROUND
     love.graphics.setCanvas(self.roundNumberCanvas)
-    love.graphics.clear(0, 0, 1)
+    love.graphics.clear()
     love.graphics.draw(FloorInfosSprite, 0, 0)
+    love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(currentRoundText, self.roundNumberCanvas:getWidth()/2, self.roundNumberCanvas:getHeight()/2, 0, 1, 1, currentRoundText:getWidth()/2, currentRoundText:getHeight()/2)
-
+    love.graphics.setColor(1, 1, 1, 1)
     --HANDS
     love.graphics.setCanvas(self.handsCanvas)
     love.graphics.clear()
     love.graphics.draw(TurnsSprite, 0, 0)
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2)
+    love.graphics.setColor(245/255, 247/255, 228/255, 1)
+    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
 
     --REROLLS
     love.graphics.setCanvas(self.rerollsCanvas)
     love.graphics.clear()
     love.graphics.draw(RerollsSprite, 0, 0)
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2)
+    love.graphics.setColor(245/255, 247/255, 228/255, 1)
+    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
 
     --MONEY
     love.graphics.setCanvas(self.moneyCanvas)
-    love.graphics.clear(1, 1, 0)
+    love.graphics.clear()
     love.graphics.draw(MoneySprite,0,0)
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2)
+    love.graphics.setColor(1, 195/256, 132/256, 1)
+    love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
     love.graphics.setColor(1, 1, 1, 1)
 
 
     --DRAW ALL THE CANVAS
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.roundNumberCanvas, 30, 690)
-    love.graphics.draw(self.handsCanvas, 30, 795)
-    love.graphics.draw(self.rerollsCanvas, 295, 795)
-    love.graphics.draw(self.moneyCanvas, 295, 690)
+    love.graphics.draw(self.roundNumberCanvas, self.floorX, self.floorY)
+    love.graphics.draw(self.handsCanvas, self.turnsX, self.turnsY)
+    love.graphics.draw(self.rerollsCanvas, self.rerollsX, self.rerollsY)
+    love.graphics.draw(self.moneyCanvas, self.moneyX, self.moneyY)
 end
 
 --Description
@@ -335,7 +383,7 @@ function DiceCustomization:drawDescriptionCanvas()
 
     love.graphics.setCanvas(currentCanvas)
 
-    love.graphics.draw(self.descriptionCanvas, self.descriptionX, self.descriptionY, 0, 1, 1, self.descriptionCanvas:getWidth(), self.descriptionCanvas:getHeight())
+    love.graphics.draw(self.descriptionCanvas, self.descriptionX, self.descriptionY, 0, 1, 1, self.descriptionCanvas:getWidth(), 0)
 end
 
 function DiceCustomization:drawNewFacesCanvas()
@@ -346,7 +394,18 @@ function DiceCustomization:drawNewFacesCanvas()
     love.graphics.draw(newFacesImage, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.newFacesCanvas, self.newFacesX, self.newFacesY, 0, 1, 1, self.newFacesCanvas:getWidth()/2, self.newFacesCanvas:getHeight())
+    love.graphics.draw(self.newFacesCanvas, self.newFacesX, self.newFacesY, 0, 1, 1)
+end
+
+function DiceCustomization:drawCustomizationMat()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.customizationMat)
+    love.graphics.clear()
+
+    love.graphics.draw(CustomMatImage, 0, 0)
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.customizationMat, self.customizationMatX, self.customizationMatY, 0, 1, 1)
 end
 
 function DiceCustomization:flipFaces()
@@ -418,7 +477,7 @@ function DiceCustomization:resetSelectedNewFace()
 end
 
 function DiceCustomization:createNewFacesUI()
-    local xPositions = self:getCenteredPositions(table.getn(self.newFaceObjects), 120, 20, self.screenCanvas:getWidth()/2+60)
+    local xPositions = self:getCenteredPositions(table.getn(self.newFaceObjects), 120, 20, self.canvas:getWidth()/2+60)
 
     for i,face in next,self.newFaceObjects do
         local diceFace = DiceFace:new(nil,

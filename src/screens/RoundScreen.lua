@@ -94,7 +94,7 @@ function RoundScreen:new(round)
     }
     
     --FACE DETAILS
-    self.faceDetailsCanvas = love.graphics.newCanvas(420, 240)
+    self.descriptionCanvas = love.graphics.newCanvas(420, 240)
     self.pointsDetailsCanvas = nil
 
     --DICE DETAILS
@@ -355,7 +355,7 @@ end
 
 function RoundScreen:drawFaceDetails(x, y)
     local currentCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.faceDetailsCanvas)
+    love.graphics.setCanvas(self.descriptionCanvas)
     love.graphics.clear()
     --Draw Sprite
     love.graphics.draw(descriptionSprite, 0, 0)
@@ -373,20 +373,20 @@ function RoundScreen:drawFaceDetails(x, y)
 
         --Description
         local faceDescription = self.currentlyHoveredDice:getCurrentFaceObject().description
-        local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap( faceDescription, self.faceDetailsCanvas:getWidth()-18 )
+        local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap( faceDescription, self.descriptionCanvas:getWidth()-18 )
         local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
 
         love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.draw(nameText, self.faceDetailsCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
-        love.graphics.draw(tierText, self.faceDetailsCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
-        love.graphics.draw(descText, self.faceDetailsCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
+        love.graphics.draw(nameText, self.descriptionCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
+        love.graphics.draw(tierText, self.descriptionCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
+        love.graphics.draw(descText, self.descriptionCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
         love.graphics.setColor(1, 1, 1, 1)
 
     end
 
     love.graphics.setCanvas(currentCanvas)
 
-    love.graphics.draw(self.faceDetailsCanvas, x, y, 0, 1, 1, self.faceDetailsCanvas:getWidth(), 0)
+    love.graphics.draw(self.descriptionCanvas, x, y, 0, 1, 1, self.descriptionCanvas:getWidth(), 0)
 end
 
 function RoundScreen:drawDiceDetails(x, y)
