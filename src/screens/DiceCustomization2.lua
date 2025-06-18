@@ -24,7 +24,6 @@ local TurnsSprite= love.graphics.newImage("src/assets/sprites/ui/Turns.png")
 local newFacesImage = love.graphics.newImage("src/assets/sprites/ui/Rewards.png")
 local CustomMatImage = love.graphics.newImage("src/assets/sprites/ui/Customization Mat.png")
 
-
 function DiceCustomization:new(previousRound, newFaceObjects)
     local self = setmetatable({}, DiceCustomization)
 
@@ -262,12 +261,26 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
 
     for i,face in next,self.newUIFaces do
         face:releaseEvent()
+        
+        closestFace = self:detectClosestFace(face.x, face.y)
+
+        print(closestFace)
+
+        if(closestFace) then
+            face.anchorX = closestFace[1]
+            face.anchorY = closestFace[2]
+        else
+            face.anchorX = self.xPositions[i]
+            face.anchorY = 880
+        end
+
         if(face.anchorX)then
             face.targetX = face.anchorX
         end
         if(face.anchorY)then
             face.targetY = face.anchorY
         end
+
     end
 
     --release event on UI elements (buttons)
@@ -306,7 +319,8 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
                 diceui.isBeingDragged = true
                 diceui.dragXspeed = dx
                 diceui.targetX = (diceui.targetX + dx) 
-                diceui.targetY = (diceui.targetY + dy) 
+                diceui.targetY = (diceui.targetY + dy)
+                
             end
         end
     end
@@ -482,6 +496,30 @@ function DiceCustomization:flipFaces()
 end
 
 --==UTILS=--
+function DiceCustomization:detectClosestFace(x, y)
+    local relativeXPositions = { -- this table represents the position of the dice after applying the offset
+        180, 60, 180, 300, 180, 180
+    }
+
+    local relativeYPositions = {
+        60, 180, 180, 180, 300, 420
+    }
+
+    local basisY = 180
+
+    for i=1,5 do --loop over dices
+        local basisX = 120+360*(i-1)
+
+        
+        for j=1,6 do --loop over faces 
+            if(math.abs((x+60)-(relativeXPositions[j]+basisX))<40 and math.abs((y+60)-(relativeYPositions[j]+basisY))<40) then
+                return({relativeXPositions[j]+basisX-60, relativeYPositions[j]+basisY-60})
+            end
+        end
+    end
+    return nil
+end
+
 function DiceCustomization:resetSelectedDices()
     --Dice faces
     for key,dice in next,self.uiDices do
@@ -499,12 +537,12 @@ function DiceCustomization:resetSelectedNewFace()
 end
 
 function DiceCustomization:createNewFacesUI()
-    local xPositions = self:getCenteredPositions(table.getn(self.newFaceObjects), 120, 20, self.canvas:getWidth()/2+60)
+    self.xPositions = self:getCenteredPositions(table.getn(self.newFaceObjects), 120, 20, self.canvas:getWidth()/2+60)
 
     for i,face in next,self.newFaceObjects do
         local diceFace = DiceFace:new(nil,
                                     face,
-                                    xPositions[i],
+                                    self.xPositions[i],
                                     880,
                                     120,
                                     true,
@@ -512,7 +550,7 @@ function DiceCustomization:createNewFacesUI()
                                     function()return Inputs.getMouseInCanvas(0, 0)end,
                                     nil)
 
-        diceFace.anchorX = xPositions[i]
+        diceFace.anchorX = self.xPositions[i]
         diceFace.anchorY = 880
 
         table.insert(self.newUIFaces, diceFace)
