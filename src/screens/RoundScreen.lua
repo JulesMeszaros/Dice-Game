@@ -241,8 +241,8 @@ end
 function RoundScreen:updateSelectedPosDices()
     local i = 1
     for k,d in next,self.round.selectedDices do
-        self.round.diceFaces[d].targetY = 82
-        self.round.diceFaces[d].targetX = 82 + (i-1)*(180)
+        self.round.diceFaces[d].targetY = 70
+        self.round.diceFaces[d].targetX = 105 + (i-1)*(180)
         i=i+1
     end
 end
