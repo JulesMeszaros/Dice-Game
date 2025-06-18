@@ -79,6 +79,7 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     --Btns positions
     self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
     self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 100, 1010, -150, 1010
+    self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY = 255, 680, -255, 680
 
     --Entry animation
     local entryDuration = 0.2
@@ -115,32 +116,20 @@ function DiceCustomization:new(previousRound, newFaceObjects)
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
-    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
-    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
-
-
-    --Create the switch button
-    --[[ self.uiElements.buttons.switchButton = Button:new(
-        function()self:flipFaces()end, 
-        "src/assets/sprites/ui/terrain/Reroll-proto.png", 
-        self.canvas:getWidth()/2, 
-        self.canvas:getHeight()-75, 
-        420, 
+    self.uiElements.buttons["nextRound"] = Button:new(
+        function()print("plan")end,
+        "src/assets/sprites/ui/Next Round.png",
+        self.nextRoundX,
+        self.nextRoundY,
+        450,
         60,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
-    self.uiElements.buttons.nextRoundButton = Button:new(
-        function()self:goToRoundSelection()end, 
-        "src/assets/sprites/ui/buttons/next_round.png", 
-        self.canvas:getWidth()/2, 
-        self.canvas:getHeight()-150, 
-        420, 
-        60,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-    ) ]]
+    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["nextRound"].animator:add('x', self.nextRoundX, self.nextRoundTX, entryDuration, AnimationUtils.Easing.inOutCubic)
 
     self:createNewFacesUI()
 
@@ -210,8 +199,6 @@ function DiceCustomization:updateCanvas(dt)
 
     self:drawNewFaces()
 
-    
-
     --[[  --Update the hover info
     if(self.currentlyHoveredFace)then
         self.hoverInfosCanvas:update(dt)
@@ -236,17 +223,10 @@ function DiceCustomization:mousepressed(x, y, button, istouch, presses)
         face:clickEvent()
     end
    
-    --[[ --Buttons
+    --Buttons
     for key,button in next,self.uiElements.buttons do
         button:clickEvent()
     end
-
-    
-
-    --New Dice Faces
-    for i,uiFace in next,self.newUIFaces do
-        uiFace:clickEvent()
-    end ]]
 
 end
 
@@ -277,32 +257,13 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
     end
 
     --release event on UI elements (buttons)
-    --[[ for key,button in next,self.uiElements.buttons do
+    for key,button in next,self.uiElements.buttons do
         local wasReleased = button:releaseEvent()
         if(wasReleased) then --Si le click a été complété
             button:getCallback()()
         end
     end
 
-    for i,dice in next,self.diceObjects do
-        for key,face in next,self.uiDices[i] do
-            local wasReleased = face:releaseEvent()
-            if(wasReleased)then --On sélectionne la face a switcher
-                self:resetSelectedDices()
-                face:setSelected(true)
-                self.selectedDiceFace = face.representedFace
-            end
-        end
-    end
-
-    for i,face in next,self.newUIFaces do
-        local wasReleased = face:releaseEvent()
-        if(wasReleased)then --On sélectionne la face a switcher
-            self:resetSelectedNewFace()
-            face:setSelected(true)
-            self.selectedNewDiceFace = face.representedFace
-        end
-    end ]]
 end
 
 function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
