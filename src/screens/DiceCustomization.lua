@@ -25,6 +25,8 @@ local CustomMatImage = love.graphics.newImage("src/assets/sprites/ui/Customizati
 
 function DiceCustomization:new(previousRound, newFaceObjects)
     local self = setmetatable({}, DiceCustomization)
+    --Create the canvas
+    self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 
     self.uiElements = {
         buttons = {}
@@ -52,8 +54,7 @@ function DiceCustomization:new(previousRound, newFaceObjects)
         table.insert(self.uiDices, self:createDiceUI(dice, i))
     end
 
-    --Create the canvas
-    self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    
     --The other canvas
     self.newFacesCanvas = love.graphics.newCanvas(950, 400)
     self.descriptionCanvas = love.graphics.newCanvas(420, 390)
@@ -409,12 +410,36 @@ function DiceCustomization:outAnimation()
         {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
-    self.animator:addDelay(0.8, function()self:goToRoundSelection() end)
 
     --Buttons animation
     self.uiElements.buttons["nextRound"].animator:add('x', self.nextRoundX, -500, outDuration)
     self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)
     self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration)
+
+    --Dices exit
+    for i,dice in next,self.uiDices do
+        for j,face in next,dice do
+            --Add a random animation for every faces
+            local randomSide = math.random(0,1)
+            local exitX = -200
+            if(randomSide == 0)then
+                exitX = -200
+            else
+                exitX = self.canvas:getWidth()+200
+            end
+            local exitY = math.random(-60, self.canvas:getHeight()/2)
+            face.animator:addGroup({
+                {property = "x", from = face.x, targetValue = exitX, duration = 0.3,easing = AnimationUtils.Easing.inCubic},
+                {property = "targetX", from = face.targetX, targetValue = exitX, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
+                {property = "y", from = face.y, targetValue = exitY, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
+                {property = "targetY", from = face.targetY, targetValue = exitY, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
+            })
+
+        end
+    end
+
+    self.animator:addDelay(0.8, function()self:goToRoundSelection() end)
+
 
 end
 
@@ -424,7 +449,6 @@ function DiceCustomization:switchFaces()
         if(closestFace) then
             local diceObject = self.uiDices[closestFace[3]][closestFace[4]].diceObject
             diceObject:setFace(face.representedFace, closestFace[4])
-            --print(self.uiDices[closestFace[3]][closestFace[4]].representedFace.name, self.uiDices[closestFace[3]][closestFace[4]].representedFace.faceValue, self.uiDices[closestFace[3]][closestFace[4]].diceObject)
         end
     end
     self:outAnimation()
@@ -506,16 +530,31 @@ function DiceCustomization:createDiceUI(diceObject, i)
 
     for k,faceObject in next,diceObject:getAllFaces() do
         
+        local possibleXs = {-200, self.canvas:getWidth()+200}
+
+        local startX = possibleXs[math.random(1, #possibleXs)]
+        local startY = math.random(0, self.canvas:getHeight())
+
         --Create a dice face ui with the dice
         local diceFace = DiceFace:new(diceObject,
                                     faceObject,
-                                    xOffset + relativeXPositions[k],
-                                    yOffset + relativeYPosition[k],
+                                    startX,
+                                    startY,
                                     120,
                                     true,
                                     true,
                                     function()return Inputs.getMouseInCanvas(0, 0)end,
                                     nil)
+
+        diceFace.animator:addDelay(0.3)
+        diceFace.animator:addGroup({
+            {property = "x", from = startX, targetValue = xOffset + relativeXPositions[k], duration = 0.4, easing = AnimationUtils.Easing.outCubic},
+            {property = "y", from = startY, targetValue = yOffset + relativeYPosition[k], duration = 0.4, easing = AnimationUtils.Easing.outCubic},
+            {property = "targetX", from = startX, targetValue = xOffset + relativeXPositions[k], duration = 0.4, easing = AnimationUtils.Easing.outCubic},
+            {property = "targetY", from = startY, targetValue = yOffset + relativeYPosition[k], duration = 0.4, easing = AnimationUtils.Easing.outCubic}
+
+        })
+        
         table.insert(diceUI, diceFace)
     end
 
