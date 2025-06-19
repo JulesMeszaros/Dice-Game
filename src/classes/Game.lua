@@ -21,29 +21,17 @@ local virtualWidth, virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRT
 local gameCanvas = love.graphics.newCanvas(virtualWidth, virtualHeight)
 gameCanvas:setFilter("linear", "linear")
 
---Testing the new faces system implementation
+--Creating the dices
 local diceObjects = {} --liste des 6 dés blancs
 
 for i=1, 5 do 
     local fs = {}
-    for i=1,6 do
-        local f = FaceTypes.WhiteFace:new(i, i)
+    for j=1,6 do
+        local f = FaceTypes.WhiteFace:new(j, j)
         table.insert(fs,f)
     end
     table.insert(diceObjects, DiceObject:new(fs))
 end
-
-local stoneface = FaceTypes.StoneFace:new(2, 2)
-local redface = FaceTypes.RedFace:new(4, 4)
-local static = FaceTypes.StaticFace:new(3, 3)
-local blueface = FaceTypes.BlueFace:new(3, 3)
-local blueface2 = FaceTypes.BlueFace:new(3, 3)
-
-diceObjects[1]:setFace(redface, 3)
-diceObjects[2]:setFace(stoneface, 6)
---diceObjects[3]:setFace(blueface, 5)
-diceObjects[4]:setFace(static, 5)
---diceObjects[4]:setFace(blueface2, 2)
 
 function Game:start()
     local self = setmetatable({}, Game)
@@ -120,15 +108,6 @@ function Game:keypressed(key)
         applyCRT = not applyCRT
     end
 
-    if(key=="b")then
-        self.currentScreen = Constants.PAGES.GAME
-        self.run = Run:new(dices, self.gameCanvas, self)
-    end
-
-    if(key=="o")then
-        self.currentScreen = Constants.PAGES.MAIN_MENU
-    end
-
     if(self.currentScreen == Constants.PAGES.MAIN_MENU)then
 
     elseif(self.currentScreen == Constants.PAGES.GAME)then
@@ -137,7 +116,7 @@ function Game:keypressed(key)
 end
 
 function Game:mousepressed(x, y, button, istouch, presses)
-    local vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    local vx, vy = Inputs.getVirtualMousePosition()
 
     if(self.currentScreen == Constants.PAGES.MAIN_MENU)then
         self.mainMenu:mousepressed(vx, vy, button, istouch, presses)
@@ -147,7 +126,7 @@ function Game:mousepressed(x, y, button, istouch, presses)
 end
 
 function Game:mousereleased(vx, vy, button, istouch, presses)
-    local vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    local vx, vy = Inputs.getVirtualMousePosition()
     
     if(self.currentScreen == Constants.PAGES.MAIN_MENU)then
         self.mainMenu:mousereleased(vx, vy, button, istouch, presses)
@@ -157,10 +136,8 @@ function Game:mousereleased(vx, vy, button, istouch, presses)
 end
 
 function Game:mousemoved(x, y, dx, dy)
-    local vx, vy = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
-    
-    local scale = Inputs.getCanvasScale(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
-    
+    local vx, vy = Inputs.getVirtualMousePosition()
+    local scale = Inputs.getCanvasScale()
     local vdx, vdy = dx / scale, dy / scale
     
     if(self.currentScreen == Constants.PAGES.MAIN_MENU)then
