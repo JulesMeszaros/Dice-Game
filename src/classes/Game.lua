@@ -27,7 +27,7 @@ local diceObjects = {} --liste des 6 dés blancs
 for i=1, 5 do 
     local fs = {}
     for i=1,6 do
-        local f = FaceTypes.WhiteFace:new(i, 10000)
+        local f = FaceTypes.WhiteFace:new(i, i)
         table.insert(fs,f)
     end
     table.insert(diceObjects, DiceObject:new(fs))
