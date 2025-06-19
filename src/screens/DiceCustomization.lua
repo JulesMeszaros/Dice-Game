@@ -16,7 +16,6 @@ DiceCustomization.__index = DiceCustomization
 
 --Sprites
 local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/Description.png")
-local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/DiceComposition.png")
 local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/Office.png")
 local MoneySprite= love.graphics.newImage("src/assets/sprites/ui/Money.png")
 local RerollsSprite= love.graphics.newImage("src/assets/sprites/ui/Rerolls.png")
@@ -234,7 +233,7 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
     for i,face in next,self.newUIFaces do
         face:releaseEvent()
         
-        closestFace = self:detectClosestFace(face.x, face.y)
+        local closestFace = self:detectClosestFace(face.x, face.y)
 
         print(closestFace)
 
@@ -395,70 +394,40 @@ function DiceCustomization:drawNewFaces()
     end
 end
 
+--==UTILS=--
 
+function DiceCustomization:outAnimation()
+    local outDuration = 0.4
+    self.animator:addGroup({
+        --{property = "gridY", from = self.gridY, targetValue = -950, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "customizationMatY", from = self.customizationMatY, targetValue = -700, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+600, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "newFacesY", from = self.newFacesY, targetValue = self.canvas:getHeight()+500, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        
+        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+    })
+    self.animator:addDelay(0.8, function()self:goToRoundSelection() end)
 
-function DiceCustomization:flipFaces()
-    print("flip faces")
-    --First, get the dice concerned by the change
-    local dice = self.selectedDiceFace.diceObject
-    local oldFace = self.selectedDiceFace
-    local newFace = self.selectedNewDiceFace
+    --Buttons animation
+    self.uiElements.buttons["nextRound"].animator:add('x', self.nextRoundX, -500, outDuration)
+    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)
+    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration)
 
-    --Then, find the index of the face in the dice
-    local oldfaceindex = nil
-    for i,f in next,dice:getAllFaces() do
-        if(f == self.selectedDiceFace) then
-            oldfaceindex = i
-        end
-    end
-
-    --Find the index of the new face selected
-    local newfaceindex = nil
-    for i,f in next,self.newFaceObjects do
-        print(tostring(f).." "..tostring(self.selectedNewDiceFace))
-        if(f == self.selectedNewDiceFace) then
-            newfaceindex = i
-        end
-    end
-
-    --Also, get the index of the dice that will get the change
-    local diceindex = nil
-    for i,f in next,self.diceObjects do
-        if(f==dice)then
-            diceindex = i
-        end
-    end
-
-    --Set the new face on the dice
-    dice:setFace(newFace, oldfaceindex) --We set the new face
-    oldFace:setDiceObject(nil) --We reset the dice attached to the old dice face object
-
-    --Then, Change the new face as the previous face on the dice
-    self.newFaceObjects[newfaceindex] = oldFace 
-
-    --Flip the UI on the dice
-    self.uiDices[diceindex][oldfaceindex]:flipChange(newFace)
-
-    --Flip the UI on the top
-    self.newUIFaces[newfaceindex]:flipChange(oldFace)
-
-    --Reset the selection
-    self:resetSelectedDices()
-    self:resetSelectedNewFace()
-    self.selectedDiceFace, self.selectedNewDiceFace = nil, nil
 end
 
---==UTILS=--
 function DiceCustomization:switchFaces()
     for i,face in next,self.newUIFaces do
-        closestFace = self:detectClosestFace(face.x, face.y)
+        local closestFace = self:detectClosestFace(face.x, face.y)
         if(closestFace) then
             local diceObject = self.uiDices[closestFace[3]][closestFace[4]].diceObject
             diceObject:setFace(face.representedFace, closestFace[4])
             --print(self.uiDices[closestFace[3]][closestFace[4]].representedFace.name, self.uiDices[closestFace[3]][closestFace[4]].representedFace.faceValue, self.uiDices[closestFace[3]][closestFace[4]].diceObject)
         end
     end
-    self:goToRoundSelection()
+    self:outAnimation()
 end
 
 function DiceCustomization:detectClosestFace(x, y)
