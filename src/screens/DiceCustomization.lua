@@ -393,7 +393,6 @@ end
 function DiceCustomization:outAnimation()
     local outDuration = 0.4
     self.animator:addGroup({
-        --{property = "gridY", from = self.gridY, targetValue = -950, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
         {property = "customizationMatY", from = self.customizationMatY, targetValue = -700, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
         {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+600, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
         {property = "newFacesY", from = self.newFacesY, targetValue = self.canvas:getHeight()+500, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
@@ -423,12 +422,15 @@ function DiceCustomization:outAnimation()
             local exitY = self.canvas:getHeight()/2
             local duration = math.random(3, 5)/10
             local delayStart = math.random(1, 3)/100
+            local randomAngle = math.random(-500, 500)/100
             face.animator:addDelay(delayStart)
             face.animator:addGroup({
                 {property = "x", from = face.x, targetValue = exitX, duration = duration,easing = AnimationUtils.Easing.inCubic},
                 {property = "targetX", from = face.targetX, targetValue = exitX, duration = duration, easing = AnimationUtils.Easing.inCubic},
                 {property = "y", from = face.y, targetValue = exitY, duration = duration, easing = AnimationUtils.Easing.inCubic},
                 {property = "targetY", from = face.targetY, targetValue = exitY, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "rotation", from = face.rotation, targetValue = randomAngle, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "baseRotation", from = face.baseRotation, targetValue = randomAngle, duration = duration, easing = AnimationUtils.Easing.inCubic},
             })
 
         end
@@ -444,12 +446,18 @@ function DiceCustomization:outAnimation()
             exitX = self.canvas:getWidth()+200
         end
         local exitY = self.canvas:getHeight()/2
+        local duration = math.random(3, 5)/10
+
+        local randomAngle = math.random(-500, 500)/100
+
 
         face.animator:addGroup({
-                {property = "x", from = face.x, targetValue = exitX, duration = 0.3,easing = AnimationUtils.Easing.inCubic},
-                {property = "targetX", from = face.targetX, targetValue = exitX, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
-                {property = "y", from = face.y, targetValue = exitY, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
-                {property = "targetY", from = face.targetY, targetValue = exitY, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
+                {property = "x", from = face.x, targetValue = exitX, duration = duration,easing = AnimationUtils.Easing.inCubic},
+                {property = "targetX", from = face.targetX, targetValue = exitX, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "y", from = face.y, targetValue = exitY, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "rotation", from = face.rotation, targetValue = randomAngle, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "baseRotation", from = face.baseRotation, targetValue = randomAngle, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "targetY", from = face.targetY, targetValue = exitY, duration = duration, easing = AnimationUtils.Easing.inCubic},
             })
     end
 
@@ -526,11 +534,15 @@ function DiceCustomization:createNewFacesUI()
         diceFace.animator:addDelay(0.3)
         local duration = math.random(2, 8)/10
         
+        local randomAngle = math.random(-500, 500)/100
+
         diceFace.animator:addGroup({
                 {property = "x", from = startX, targetValue = self.xPositions[i], duration = duration,easing = AnimationUtils.Easing.outQuad},
                 {property = "targetX", from = startX, targetValue = self.xPositions[i], duration = duration, easing = AnimationUtils.Easing.outQuad},
                 {property = "y", from = startY, targetValue = 880, duration = duration, easing = AnimationUtils.Easing.outQuad},
                 {property = "targetY", from = startY, targetValue = 880, duration = duration, easing = AnimationUtils.Easing.outQuad},
+                {property = "rotation", from = randomAngle, targetValue = 0, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "baseRotation", from = randomAngle, targetValue = 0, duration = duration, easing = AnimationUtils.Easing.inCubic},
             })
 
         table.insert(self.newUIFaces, diceFace)
@@ -570,16 +582,20 @@ function DiceCustomization:createDiceUI(diceObject, i)
                                     function()return Inputs.getMouseInCanvas(0, 0)end,
                                     nil)
 
-        local duration = math.random(3, 5)/10
-        local delayStart = math.random(1, 3)/10
-        diceFace.animator:addDelay(delayStart)
+        local duration = math.random(3, 5)/10 -- the duration of the animation
+        local delayStart = math.random(1, 3)/10 --a little delay before it starts to desynchronize the dices
+        diceFace.animator:addDelay(delayStart) --applying the delay
+
+        local randomAngle = math.random(-500, 500)/100
 
         diceFace.animator:addDelay(0.3)
         diceFace.animator:addGroup({
             {property = "x", from = startX, targetValue = xOffset + relativeXPositions[k], duration = duration, easing = AnimationUtils.Easing.outCubic},
             {property = "y", from = startY, targetValue = yOffset + relativeYPosition[k], duration = duration, easing = AnimationUtils.Easing.outCubic},
             {property = "targetX", from = startX, targetValue = xOffset + relativeXPositions[k], duration = duration, easing = AnimationUtils.Easing.outCubic},
-            {property = "targetY", from = startY, targetValue = yOffset + relativeYPosition[k], duration = duration, easing = AnimationUtils.Easing.outCubic}
+            {property = "targetY", from = startY, targetValue = yOffset + relativeYPosition[k], duration = duration, easing = AnimationUtils.Easing.outCubic},
+            {property = "rotation", from = randomAngle, targetValue = 0, duration = duration, easing = AnimationUtils.Easing.outCubic},
+            {property = "baseRotation", from = randomAngle, targetValue = 0, duration = duration, easing = AnimationUtils.Easing.outCubic}
 
         })
         
