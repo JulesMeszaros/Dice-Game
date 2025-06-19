@@ -139,7 +139,7 @@ end
 
 function DiceCustomization:update(dt)
     --Get hovered face
-    --self:getCurrentlyHoveredFace()
+    self:getCurrentlyHoveredFace()
     
     --Update animations
     self.animator:update(dt)
@@ -164,8 +164,6 @@ function DiceCustomization:update(dt)
     for key,button in next,self.uiElements.buttons do
         button:update(dt)
     end
-    --Disable switch button
-    --self.uiElements.buttons.switchButton:setActivated(self.selectedDiceFace ~= nil and self.selectedNewDiceFace ~= nil)
     
 end
 
@@ -199,11 +197,12 @@ function DiceCustomization:updateCanvas(dt)
 
     self:drawNewFaces()
 
-    --[[  --Update the hover info
+     --Update the hover info
     if(self.currentlyHoveredFace)then
+        print("ok")
         self.hoverInfosCanvas:update(dt)
         self.hoverInfosCanvas:draw()
-    end]]
+    end
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -339,7 +338,7 @@ function DiceCustomization:drawDescriptionCanvas()
     love.graphics.draw(descriptionSprite, 0, 0)
 
 
-    --[[ if(self.currentlyHoveredFace) then
+    if(self.currentlyHoveredFace) then
 
         --Face Name
         local faceName = self.currentlyHoveredFace.representedFace.name
@@ -353,15 +352,15 @@ function DiceCustomization:drawDescriptionCanvas()
 
         --Description
         local faceDescription = self.currentlyHoveredFace.representedFace.description
-        local descWidth, descWrappedtext = Fonts.nexaSmall:getWrap( faceDescription, self.descriptionCanvas:getWidth()-20 )
-        local descText = love.graphics.newText(Fonts.nexaSmall, table.concat(descWrappedtext, "\n"))
+        local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap( faceDescription, self.descriptionCanvas:getWidth()-20 )
+        local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.draw(nameText, self.descriptionCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
         love.graphics.draw(tierText, self.descriptionCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
         love.graphics.draw(descText, self.descriptionCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
         love.graphics.setColor(1, 1, 1, 1)
 
-    end ]]
+    end
 
     love.graphics.setCanvas(currentCanvas)
 
@@ -573,7 +572,7 @@ function DiceCustomization:getCenteredPositions(count, objectWidth, spacing, cen
 end
 
 function DiceCustomization:createFaceInfosCanvas(face)
-    return FaceHoverInfo:new(face, "both")
+    return FaceHoverInfo:new(face, "points")
 end
 
 function DiceCustomization:getCurrentlyHoveredFace()
