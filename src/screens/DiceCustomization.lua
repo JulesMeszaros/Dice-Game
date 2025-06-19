@@ -1,15 +1,14 @@
+--==IMPORTS==--
 local DiceFace = require("src.classes.ui.DiceFace")
 local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
 local Button = require("src.classes.ui.Button")
 local DeskChoice = require("src.screens.DeskChoice")
-
 local Fonts = require("src.utils.fonts")
-
 local Animator = require("src.utils.Animator")
 local AnimationUtils = require("src.utils.scripts.animationUtils")
-
 local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
+--===========--
 
 local DiceCustomization = {}
 DiceCustomization.__index = DiceCustomization
@@ -54,7 +53,6 @@ function DiceCustomization:new(previousRound, newFaceObjects)
         table.insert(self.uiDices, self:createDiceUI(dice, i))
     end
 
-    
     --The other canvas
     self.newFacesCanvas = love.graphics.newCanvas(950, 400)
     self.descriptionCanvas = love.graphics.newCanvas(420, 390)
@@ -68,9 +66,7 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     self.newFacesTX, self.newFacesTY, self.newFacesX, self.newFacesY = 500, 650, 500, self.canvas:getHeight()+450
     self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.canvas:getWidth()-30, 30, self.canvas:getWidth()+600, 30
     self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, 650, self.canvas:getWidth()+600, 650
-    
     self.customizationMatTX, self.customizationMatTY, self.customizationMatX, self.customizationMatY = 30, 30, 30, -700
-
     self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 260, 721, -500, 721
     self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 30, 721, -730, 721
     self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, 190, self.canvas:getHeight()+400
@@ -199,7 +195,6 @@ function DiceCustomization:updateCanvas(dt)
 
      --Update the hover info
     if(self.currentlyHoveredFace)then
-        print("ok")
         self.hoverInfosCanvas:update(dt)
         self.hoverInfosCanvas:draw()
     end
@@ -235,8 +230,6 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
         face:releaseEvent()
         
         local closestFace = self:detectClosestFace(face.x, face.y)
-
-        print(closestFace)
 
         if(closestFace) then
             face.anchorX = closestFace[1]
@@ -427,18 +420,40 @@ function DiceCustomization:outAnimation()
             else
                 exitX = self.canvas:getWidth()+200
             end
-            local exitY = math.random(-60, self.canvas:getHeight()/2)
+            local exitY = self.canvas:getHeight()/2
+            local duration = math.random(3, 5)/10
+            local delayStart = math.random(1, 3)/100
+            face.animator:addDelay(delayStart)
             face.animator:addGroup({
-                {property = "x", from = face.x, targetValue = exitX, duration = 0.3,easing = AnimationUtils.Easing.inCubic},
-                {property = "targetX", from = face.targetX, targetValue = exitX, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
-                {property = "y", from = face.y, targetValue = exitY, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
-                {property = "targetY", from = face.targetY, targetValue = exitY, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
+                {property = "x", from = face.x, targetValue = exitX, duration = duration,easing = AnimationUtils.Easing.inCubic},
+                {property = "targetX", from = face.targetX, targetValue = exitX, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "y", from = face.y, targetValue = exitY, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "targetY", from = face.targetY, targetValue = exitY, duration = duration, easing = AnimationUtils.Easing.inCubic},
             })
 
         end
     end
 
-    self.animator:addDelay(0.8, function()self:goToRoundSelection() end)
+    --Reward Faces exit
+    for i,face in next,self.newUIFaces do
+        local randomSide = math.random(0,1)
+        local exitX = -200
+        if(randomSide == 0)then
+            exitX = -200
+        else
+            exitX = self.canvas:getWidth()+200
+        end
+        local exitY = self.canvas:getHeight()/2
+
+        face.animator:addGroup({
+                {property = "x", from = face.x, targetValue = exitX, duration = 0.3,easing = AnimationUtils.Easing.inCubic},
+                {property = "targetX", from = face.targetX, targetValue = exitX, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
+                {property = "y", from = face.y, targetValue = exitY, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
+                {property = "targetY", from = face.targetY, targetValue = exitY, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
+            })
+    end
+
+    self.animator:addDelay(0.5, function()self:goToRoundSelection() end)
 
 
 end
@@ -495,19 +510,28 @@ end
 function DiceCustomization:createNewFacesUI()
     self.xPositions = self:getCenteredPositions(table.getn(self.newFaceObjects), 120, 20, self.canvas:getWidth()/2+60)
 
+    local startY = self.canvas:getHeight()/2
+    local startX = -120
+
     for i,face in next,self.newFaceObjects do
         local diceFace = DiceFace:new(nil,
                                     face,
-                                    self.xPositions[i],
-                                    880,
+                                    startX,
+                                    startY,
                                     120,
                                     true,
                                     true,
                                     function()return Inputs.getMouseInCanvas(0, 0)end,
                                     nil)
-
-        diceFace.anchorX = self.xPositions[i]
-        diceFace.anchorY = 880
+        diceFace.animator:addDelay(0.3)
+        local duration = math.random(2, 8)/10
+        
+        diceFace.animator:addGroup({
+                {property = "x", from = startX, targetValue = self.xPositions[i], duration = duration,easing = AnimationUtils.Easing.outQuad},
+                {property = "targetX", from = startX, targetValue = self.xPositions[i], duration = duration, easing = AnimationUtils.Easing.outQuad},
+                {property = "y", from = startY, targetValue = 880, duration = duration, easing = AnimationUtils.Easing.outQuad},
+                {property = "targetY", from = startY, targetValue = 880, duration = duration, easing = AnimationUtils.Easing.outQuad},
+            })
 
         table.insert(self.newUIFaces, diceFace)
                                     
@@ -533,7 +557,7 @@ function DiceCustomization:createDiceUI(diceObject, i)
         local possibleXs = {-200, self.canvas:getWidth()+200}
 
         local startX = possibleXs[math.random(1, #possibleXs)]
-        local startY = math.random(0, self.canvas:getHeight())
+        local startY = self.canvas:getHeight()/2
 
         --Create a dice face ui with the dice
         local diceFace = DiceFace:new(diceObject,
@@ -546,12 +570,16 @@ function DiceCustomization:createDiceUI(diceObject, i)
                                     function()return Inputs.getMouseInCanvas(0, 0)end,
                                     nil)
 
+        local duration = math.random(3, 5)/10
+        local delayStart = math.random(1, 3)/10
+        diceFace.animator:addDelay(delayStart)
+
         diceFace.animator:addDelay(0.3)
         diceFace.animator:addGroup({
-            {property = "x", from = startX, targetValue = xOffset + relativeXPositions[k], duration = 0.4, easing = AnimationUtils.Easing.outCubic},
-            {property = "y", from = startY, targetValue = yOffset + relativeYPosition[k], duration = 0.4, easing = AnimationUtils.Easing.outCubic},
-            {property = "targetX", from = startX, targetValue = xOffset + relativeXPositions[k], duration = 0.4, easing = AnimationUtils.Easing.outCubic},
-            {property = "targetY", from = startY, targetValue = yOffset + relativeYPosition[k], duration = 0.4, easing = AnimationUtils.Easing.outCubic}
+            {property = "x", from = startX, targetValue = xOffset + relativeXPositions[k], duration = duration, easing = AnimationUtils.Easing.outCubic},
+            {property = "y", from = startY, targetValue = yOffset + relativeYPosition[k], duration = duration, easing = AnimationUtils.Easing.outCubic},
+            {property = "targetX", from = startX, targetValue = xOffset + relativeXPositions[k], duration = duration, easing = AnimationUtils.Easing.outCubic},
+            {property = "targetY", from = startY, targetValue = yOffset + relativeYPosition[k], duration = duration, easing = AnimationUtils.Easing.outCubic}
 
         })
         
