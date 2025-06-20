@@ -1,7 +1,7 @@
 local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
 local Fonts = require("src.utils.fonts")
-local AnimationUtils = require("src.utils.scripts.AnimationUtils")
+local AnimationUtils = require("src.utils.scripts.animationUtils")
 
 local Animator = require("src.utils.Animator")
 
