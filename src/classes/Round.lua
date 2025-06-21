@@ -49,6 +49,9 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
         self.enemyJob = "Manager"
     end
 
+    --Ciggies
+    self.ciggiesObjects = self.run.ciggiesObjects
+
     --Dices
     self.diceObjects = diceObjects
     self.targetScore = target or (0 + 20*(n-1)) --Calcul à revoir bien sur

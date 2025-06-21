@@ -5,7 +5,8 @@
 - Cigarettes : Implémenter un exemple de cigarette dans le jeu :
   - Implémenter l'emplacement des cigarettes dans les écrans
   - Implémenter l'objet visuel dans les écrans
-  - Implémenter l'objet logique des cigarettes (classe CiggiesObject)
+    - Desk Choice
+    - Dice Customization
   - Implémenter un exemple d'effet de cigarette (1 reroll en plus au round actuel)
 
 - Améliorer la phase de scoring :

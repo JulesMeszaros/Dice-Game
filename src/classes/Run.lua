@@ -4,6 +4,7 @@ local Constants = require("src.utils.constants")
 local Floor = require("src.classes.Floor")
 local DeskChoice = require("src.screens.DeskChoice")
 local DiceCustomization = require("src.screens.DiceCustomization")
+local CiggieObject = require("src.classes.CiggieObject")
 
 local FaceTypes = require("src.classes.FaceTypes.FaceTypes")
 
@@ -16,6 +17,13 @@ local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
 
 function Run:new(dices, gameCanvas, game, diceObjects)
     local self = setmetatable({}, Run)
+
+    --Ciggies
+    self.ciggiesObjects = {
+        CiggieObject:new(),
+        CiggieObject:new(),
+        
+    }
 
     --Dices variables
     self.drawedDices = {} --Current Drawed Dices

@@ -45,7 +45,7 @@ function RoundScreen:new(round)
 
     self.uiElements = {
         roundButtons = {},
-        ciggiesUI = {Ciggie:new(CiggieObject:new(), 1670, 949, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)}
+        ciggiesUI = {}
     }
 
     --Create the terrain canvas
@@ -116,6 +116,10 @@ function RoundScreen:new(round)
     --Ciggies tray
     self.ciggiesTray = love.graphics.newCanvas(420, 140)
     
+    --Ciggies UI
+    for i,ciggie in next,self.round.run.ciggiesObjects do
+        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(CiggieObject:new(), 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+    end
 
     --Positions
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
