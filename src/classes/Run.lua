@@ -244,7 +244,7 @@ end
 function Run:resetAvailableFigures()
     self.availableFigures = {}
     for k,f in next, Constants.FIGURES do
-        self.availableFigures[f] = 2
+        self.availableFigures[f] = 1
     end
 end
 
