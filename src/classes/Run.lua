@@ -116,6 +116,7 @@ function Run:startNewRound(round, roundtype)
     --round:makeRoll(self.diceObjects)
     --Sets the run's current round
     self.currentRound = round
+    self.currentRound.terrain:generateCiggiesUI()
 
     --Changes the screen to the round screen
     self.currentState = Constants.RUN_STATES.ROUND

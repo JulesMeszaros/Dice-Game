@@ -101,6 +101,12 @@ function Round:keypressed(key) --(Mainly for debug)
         self.availableRerolls = 10
     end
 
+    if(key=="g")then
+        for i,v in next,self.terrain.uiElements.ciggiesUI do
+            print(i)
+        end
+    end
+
     if(key=='a')then
         self.roundScore = 10000000
         self.terrain:outAnimation()

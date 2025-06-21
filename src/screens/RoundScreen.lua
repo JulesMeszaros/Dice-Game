@@ -117,9 +117,7 @@ function RoundScreen:new(round)
     self.ciggiesTray = love.graphics.newCanvas(420, 140)
     
     --Ciggies UI
-    for i,ciggie in next,self.round.run.ciggiesObjects do
-        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
-    end
+    
 
     --Positions
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
@@ -692,6 +690,12 @@ function RoundScreen:highlightDices(usedDices)
                     break
             end
         end
+    end
+end
+
+function RoundScreen:generateCiggiesUI()
+    for i,ciggie in next,self.round.run.ciggiesObjects do
+        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
     end
 end
 
