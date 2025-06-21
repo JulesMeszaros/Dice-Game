@@ -8,6 +8,8 @@ local AnimationUtils = require("src.utils.scripts.animationUtils")
 --UI
 local Button = require("src.classes.ui.Button")
 local Sprites = require("src.utils.Sprites")
+--Ciggies
+local Ciggie = require("src.classes.ui.Ciggie")
 --Dices
 local DiceObject = require("src.classes.DiceObject")
 local FaceObject = require("src.classes.FaceTypes.FaceObject")
@@ -42,6 +44,7 @@ function RoundScreen:new(round)
 
     self.uiElements = {
         roundButtons = {},
+        ciggiesUI = {Ciggie:new(nil, 1670, 949, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)}
     }
 
     --Create the terrain canvas
@@ -111,7 +114,6 @@ function RoundScreen:new(round)
 
     --Ciggies tray
     self.ciggiesTray = love.graphics.newCanvas(420, 140)
-
     
 
     --Positions
@@ -219,6 +221,11 @@ function RoundScreen:update(dt)
         button:update(dt)
     end
 
+    --Ciggies UI
+    for i, ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:update(dt)
+    end
+
     self:updateCanvas(dt)
 
 end
@@ -267,6 +274,11 @@ function RoundScreen:updateCanvas(dt)
 
     --Ciggies Tray
     self:drawCiggiesTray()
+
+    --Ciggies UI
+    for i, ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:draw()
+    end
 
     love.graphics.setCanvas(self.gameCanvas)
 end

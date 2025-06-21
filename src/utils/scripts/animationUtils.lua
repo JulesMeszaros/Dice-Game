@@ -64,4 +64,14 @@ end
 
 AnimationUtils.Easing = Easing
 
+function AnimationUtils.springUpdate(current, target, velocity, dt, frequency, damping)
+    local f = frequency * 2 * math.pi
+    local g = damping
+    local delta = target - current
+    local accel = f * f * delta - 2 * g * f * velocity
+    velocity = velocity + accel * dt
+    current = current + velocity * dt
+    return current, velocity
+end
+
 return AnimationUtils 

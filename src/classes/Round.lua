@@ -110,6 +110,11 @@ function Round:mousepressed(x, y, button, istouch, presses)
         uiFace:clickEvent()
     end
 
+    --Ciggies
+    for key,ciggie in next,self.terrain.uiElements.ciggiesUI do
+        ciggie:clickEvent()
+    end
+
     --Round Buttons
     for key,button in next,self.terrain.uiElements.roundButtons do
         button:clickEvent()
@@ -144,6 +149,12 @@ function Round:mousereleased(x, y, button, istouch, presses)
             self.terrain.calculatePointsFunctions[self.terrain.clickedFigure]()
         end
     end
+
+    --Ciggies
+    for key,ciggie in next,self.terrain.uiElements.ciggiesUI do
+        ciggie:releaseEvent()
+        ciggie.isBeingDragged = false
+    end
 end
 
 function Round:mousemoved(x, y, dx, dy, isDragging)
@@ -159,6 +170,22 @@ function Round:mousemoved(x, y, dx, dy, isDragging)
 
                 if(diceui.targetY+dy<self.terrain.dice_tray:getHeight()-diceui.size/2-85 and diceui.targetY+dy>165+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
                     diceui.targetY = (diceui.targetY + dy) 
+                end
+            end
+        end
+    end
+    --Drag and drop Ciggies
+    if(isDragging == true)then 
+        for key,ciggie in next, self.terrain.uiElements.ciggiesUI do
+            if(ciggie.isDraggable and ciggie.isBeingClicked) then
+                ciggie.isBeingDragged = true
+                ciggie.dragXspeed = dx
+                if(ciggie.targetX+dx<self.terrain.canvas:getWidth()-ciggie.width/2 and ciggie.targetX+dx>0+ciggie.width/2) then --Vérification qu'on ne dépasse par les limites horizontales
+                    ciggie.targetX = (ciggie.targetX + dx) 
+                end
+
+                if(ciggie.targetY+dy<self.terrain.canvas:getHeight()-ciggie.height/2 and ciggie.targetY+dy>0+ciggie.height/2) then --Vérification qu'on ne dépasse pas les limites verticales
+                    ciggie.targetY = (ciggie.targetY + dy) 
                 end
             end
         end
@@ -410,7 +437,6 @@ function Round:getUnSelectedDices()
     for i,dice in next,self.diceObjects do
         local selected = false
         for d,diceFace in next,self.selectedDices do
-            print(diceFace.x)
             if(d==dice)then selected = true end
         end
         if(selected==false)then
