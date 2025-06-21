@@ -1,34 +1,22 @@
-# TO-DO LIST : DICE GAME
+# TO-DO LIST
 
-## A Implémenter
+## A implémenter
 
-### Général
+- Cigarettes : Implémenter un exemple de cigarette dans le jeu :
+  - Implémenter l'emplacement des cigarettes dans les écrans
+  - Implémenter l'objet visuel dans les écrans
+  - Implémenter l'objet logique des cigarettes (classe CiggiesObject)
+  - Implémenter un exemple d'effet de cigarette (1 reroll en plus au round actuel)
 
-#### Phase de trigger
+- Améliorer la phase de scoring :
+  - Afficher les points marqués en direct
+  - Déclancher les effets des dés PENDANT l'animation de trigger
 
-- TODO: Accentuer l'animation de trigger au fil de la phase (plus rapide, plus grande, plus exagérée)
+## Corrections mineures
 
-### Graphismes/Animations
-
-- TODO: Suivre quelque tutos de shaders
-- TODO: Ajouter un compteur en direct des points gagnés pendant la main jouée
-- TODO: reconstruire les écrans selon les maquettes fournies par ming
-
-#### HUD
-
-- FIXME: régler les incohérence d'affichage des patrons de dés entre l'écran de customization et l'écran de jeu
-
-### Gameplay
-
-- TODO: coder un début de shop
-
-### Code
-
-- TODO: Raffiner le drag and drop pour éviter un conflict entre les dés superposés
-- FIXME: Déplacer quelques morceaux de codes dans des fichiers **utils** pour aérer les classes
-- TODO: Créer un fichier unique de type YAML ou JSON pour centraliser les métadonnées spécifique à chaque dé
-
-
-## Bugs
-
-- FIXME: Régler le bouton reorganiser pour uniquement réorganiser les dés non sélectionnés
+- Afficher les valeurs de points des faces de dés dans les badges
+- Changer le nombre de mains de base autorisées par figure à 1
+- Ajouter des animations d'apparition aux faces de dés du patron dans l'écran de choix de round
+- Afficher des petits ronds à la place des numéros pour le nombre de mains restantes pour les figures
+- Modifier le comptage des points pour ne compter que les premiers dés qui correspondent à la figure
+- Ajouter la bulle de points au patron de dé de l'écran de choix de round
