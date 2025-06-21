@@ -134,6 +134,7 @@ function Ciggie:releaseEvent() --S'active lorsqu'un click est complété
     if(self:isHovered()==true and self.isBeingClicked == true and not self.isBeingDragged)then --s'active uniquement si la souris est encore sur l'objet et qu'elle etait en train d'appuyer dessus
         self:clickAction()
         wasReleased = true
+
     end
 
     
@@ -145,11 +146,11 @@ function Ciggie:releaseEvent() --S'active lorsqu'un click est complété
 end
 
 function Ciggie:detectBelowCanvas(round)
-    print(round.roundType)
+    local wasReleasedOnCanvas = false
     if(round.roundType == Constants.RUN_STATES.ROUND) then
         --Dice mat
         if(self.x>500 and self.x<1440)and(self.y>491 and self.y<950)then
-            return 1
+            self.ciggieObject:trigger(round)
         end
     end
 end
