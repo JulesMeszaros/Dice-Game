@@ -136,10 +136,22 @@ function Ciggie:releaseEvent() --S'active lorsqu'un click est complété
         wasReleased = true
     end
 
+    
+
     self.isBeingClicked = false
     self.targetX = self.anchorX
     self.targetY = self.anchorY
     return wasReleased
+end
+
+function Ciggie:detectBelowCanvas(round)
+    print(round.roundType)
+    if(round.roundType == Constants.RUN_STATES.ROUND) then
+        --Dice mat
+        if(self.x>500 and self.x<1440)and(self.y>491 and self.y<950)then
+            return 1
+        end
+    end
 end
 
 return Ciggie

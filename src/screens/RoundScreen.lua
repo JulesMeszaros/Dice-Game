@@ -10,6 +10,7 @@ local Button = require("src.classes.ui.Button")
 local Sprites = require("src.utils.Sprites")
 --Ciggies
 local Ciggie = require("src.classes.ui.Ciggie")
+local CiggieObject = require("src.classes.CiggieObject")
 --Dices
 local DiceObject = require("src.classes.DiceObject")
 local FaceObject = require("src.classes.FaceTypes.FaceObject")
@@ -44,7 +45,7 @@ function RoundScreen:new(round)
 
     self.uiElements = {
         roundButtons = {},
-        ciggiesUI = {Ciggie:new(nil, 1670, 949, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)}
+        ciggiesUI = {Ciggie:new(CiggieObject:new(), 1670, 949, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)}
     }
 
     --Create the terrain canvas
