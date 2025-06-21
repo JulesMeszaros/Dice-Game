@@ -21,7 +21,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     --Ciggies
     self.ciggiesObjects = {
         CiggieTypes.BaseCiggie:new(),
-        CiggieTypes.BlueCiggie:new()
+        CiggieTypes.GoldenCiggie:new()
     }
 
     --Dices variables
