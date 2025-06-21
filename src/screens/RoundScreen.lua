@@ -7,10 +7,12 @@ local FaceHoverInfos = require("src.classes.ui.FaceHoverInfo")
 local AnimationUtils = require("src.utils.scripts.animationUtils")
 --UI
 local Button = require("src.classes.ui.Button")
+local Sprites = require("src.utils.Sprites")
 --Dices
 local DiceObject = require("src.classes.DiceObject")
 local FaceObject = require("src.classes.FaceTypes.FaceObject")
 local DiceFace = require("src.classes.ui.DiceFace")
+
 --Sprites
 local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/Description.png")
 local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/DiceComposition.png")
@@ -43,7 +45,7 @@ function RoundScreen:new(round)
     }
 
     --Create the terrain canvas
-    self.terrainCanvas = love.graphics.newCanvas(round.gameCanvas:getWidth(),round.gameCanvas:getHeight() )
+    self.canvas = love.graphics.newCanvas(round.gameCanvas:getWidth(),round.gameCanvas:getHeight() )
 
     --DICE TRAY
     self.dice_tray = love.graphics.newCanvas(930, 630)
@@ -107,20 +109,24 @@ function RoundScreen:new(round)
     --ROUND DETAILS
     self:createRoundInfos()
 
+    --Ciggies tray
+    self.ciggiesTray = love.graphics.newCanvas(420, 140)
+
     
 
     --Positions
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
-    self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.terrainCanvas:getHeight()+1000
-    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.terrainCanvas:getWidth()-30, 30, self.terrainCanvas:getWidth()+600, 30
-    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.terrainCanvas:getWidth()-30, 650, self.terrainCanvas:getWidth()+600, 650
-    self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.terrainCanvas:getWidth()+20, 30
+    self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.canvas:getHeight()+1000
+    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.canvas:getWidth()-30, 30, self.canvas:getWidth()+600, 30
+    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, 650, self.canvas:getWidth()+600, 650
+    self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.canvas:getWidth()+20, 30
     self.playerTX, self.playerTY, self.playerX, self.playerY = 510, 30, -800, 30
-    
+    self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+450, self.canvas:getHeight()-30
+
     self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 260, 721, -500, 721
     self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 30, 721, -730, 721
-    self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, 190, self.terrainCanvas:getHeight()+400
-    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, 190, self.terrainCanvas:getHeight()+300
+    self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, 190, self.canvas:getHeight()+400
+    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, 190, self.canvas:getHeight()+300
 
     --Btns positions
     self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
@@ -174,6 +180,7 @@ function RoundScreen:new(round)
         {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.ciggiesTrayTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
     self.animator:addDelay(0.2)
     self.animator:addGroup({
@@ -217,7 +224,7 @@ function RoundScreen:update(dt)
 end
 
 function RoundScreen:updateCanvas(dt)
-    love.graphics.setCanvas(self.terrainCanvas)
+    love.graphics.setCanvas(self.canvas)
     if(self.round.roundType == Constants.ROUND_TYPES.BASE)then
         love.graphics.clear(40/255, 40/255, 43/255)
     else
@@ -257,6 +264,9 @@ function RoundScreen:updateCanvas(dt)
     
     --ROUND DETAILS
     self:drawRoundDetails()
+
+    --Ciggies Tray
+    self:drawCiggiesTray()
 
     love.graphics.setCanvas(self.gameCanvas)
 end
@@ -462,6 +472,16 @@ function RoundScreen:drawRoundDetails()
     love.graphics.draw(self.moneyCanvas, self.moneyX, self.moneyY)
 end
 
+function RoundScreen:drawCiggiesTray()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.ciggiesTray)
+
+    love.graphics.draw(Sprites.CIGGIES_TRAY, 0, 0)
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
+end
+
 function RoundScreen:drawPlayersInfos()
     local currentCanvas = love.graphics.getCanvas()
     --Player
@@ -553,20 +573,21 @@ end
 function RoundScreen:outAnimation()
     local outDuration = 0.4
     self.animator:addGroup({
-        {property = "gridY", from = self.gridY, targetValue = -950, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
-        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.terrainCanvas:getWidth()+600, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.terrainCanvas:getWidth()+600, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
-        {property = "diceMaty", from = self.diceMaty, targetValue = self.terrainCanvas:getHeight()+1000, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
+        {property = "gridY", from = self.gridY, targetValue = -820, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "diceMaty", from = self.diceMaty, targetValue = self.canvas:getHeight()+1000, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
         
-        {property = "moneyY", from = self.moneyY, targetValue = self.terrainCanvas:getHeight()+300, duration = outDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.terrainCanvas:getHeight()+400, duration = outDuration, eading = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
     self.animator:addDelay(0.2)
     self.animator:addGroup({
-        {property = "playerX", from = self.playerX, targetValue = -800, duration = outDuration, eading = AnimationUtils.Easing.inCubic},
-        {property = "enemyX", from = self.enemyX, targetValue = self.terrainCanvas:getWidth()+20, duration = outDuration, eading = AnimationUtils.Easing.inCubic, onComplete=function()self.round.run:endRound()end},
+        {property = "playerX", from = self.playerX, targetValue = -800, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "enemyX", from = self.enemyX, targetValue = self.canvas:getWidth()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic, onComplete=function()self.round.run:endRound()end},
     })
 
     --Buttons animation

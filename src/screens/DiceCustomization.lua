@@ -1,4 +1,5 @@
 --==IMPORTS==--
+local Sprites = require("src.utils.Sprites")
 local DiceFace = require("src.classes.ui.DiceFace")
 local Constants = require("src.utils.constants")
 local Inputs = require("src.utils.scripts.inputs")
@@ -61,6 +62,7 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     self.roundNumberCanvas = love.graphics.newCanvas(290, 80)
     self.moneyCanvas = love.graphics.newCanvas(290, 100)
     self.customizationMat = love.graphics.newCanvas(1860, 600)
+    self.ciggiesTray = love.graphics.newCanvas(420, 140)
 
      --Positions
     self.newFacesTX, self.newFacesTY, self.newFacesX, self.newFacesY = 500, 650, 500, self.canvas:getHeight()+450
@@ -70,6 +72,7 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 260, 721, -500, 721
     self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 30, 721, -730, 721
     self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, 190, self.canvas:getHeight()+400
+    self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+450, self.canvas:getHeight()-30
     self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, 190, self.canvas:getHeight()+300
 
     --Btns positions
@@ -80,12 +83,13 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     --Entry animation
     local entryDuration = 0.2
     self.animator:addGroup({
-        {property = "newFacesY", from = self.newFacesY, targetValue = self.newFacesTY, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, eading = AnimationUtils.Easing.outCubic},
+        {property = "newFacesY", from = self.newFacesY, targetValue = self.newFacesTY, duration = entryDuration, easing = AnimationUtils.Easing.outCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "moneyY", from = self.moneyY, targetValue = self.moneyTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.ciggiesTrayTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "customizationMatY", from = self.customizationMatY, targetValue = self.customizationMatTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
     
     })
@@ -178,6 +182,8 @@ function DiceCustomization:updateCanvas(dt)
     self:drawNewFacesCanvas()
     --Customization mat
     self:drawCustomizationMat()
+    --Ciggies
+    self:drawCiggiesTray()
 
     --Buttons
     for key,button in next,self.uiElements.buttons do
@@ -322,6 +328,16 @@ function DiceCustomization:drawRoundDetails()
     love.graphics.draw(self.moneyCanvas, self.moneyX, self.moneyY)
 end
 
+function DiceCustomization:drawCiggiesTray()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.ciggiesTray)
+
+    love.graphics.draw(Sprites.CIGGIES_TRAY, 0, 0)
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
+end
+
 --Description
 function DiceCustomization:drawDescriptionCanvas()
     local currentCanvas = love.graphics.getCanvas()
@@ -396,6 +412,7 @@ function DiceCustomization:outAnimation()
         {property = "customizationMatY", from = self.customizationMatY, targetValue = -700, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
         {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+600, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
         {property = "newFacesY", from = self.newFacesY, targetValue = self.canvas:getHeight()+500, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+450, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
         
         {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},

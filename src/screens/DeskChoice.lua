@@ -5,6 +5,8 @@ local AnimationUtils = require("src.utils.scripts.animationUtils")
 
 local Animator = require("src.utils.Animator")
 
+local Sprites = require("src.utils.Sprites")
+
 local FaceObject = require("src.classes.FaceTypes.FaceObject")
 local DiceObject = require("src.classes.DiceObject")
 
@@ -21,14 +23,6 @@ DeskChoice.__index = DeskChoice
 local choiceNumber = 4
 
 --Images
-local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/Description.png")
-local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/DiceComposition.png")
-local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/Office.png")
-local MoneySprite= love.graphics.newImage("src/assets/sprites/ui/Money.png")
-local RerollsSprite= love.graphics.newImage("src/assets/sprites/ui/Rerolls.png")
-local TableauFiguresSprite= love.graphics.newImage("src/assets/sprites/ui/Grid.png")
-local TurnsSprite= love.graphics.newImage("src/assets/sprites/ui/Turns.png")
-local deckBackGroundImage = love.graphics.newImage("src/assets/sprites/ui/Deck.png")
 
 function DeskChoice:new(floor, run)
     local self = setmetatable({}, DeskChoice)
@@ -59,6 +53,7 @@ function DeskChoice:new(floor, run)
     self.moneyCanvas = love.graphics.newCanvas(290, 100)
     self.deckCanvas = love.graphics.newCanvas(140, 860)
     self.diceDetailsCanvas = love.graphics.newCanvas(420, 600)
+    self.ciggiesTray = love.graphics.newCanvas(420, 140)
 
     --Positions
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
@@ -69,6 +64,7 @@ function DeskChoice:new(floor, run)
     self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 30, 721, -730, 721
     self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, 190, self.canvas:getHeight()+400
     self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, 190, self.canvas:getHeight()+300
+    self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+450, self.canvas:getHeight()-30
 
     --Btns positions
     self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
@@ -107,10 +103,11 @@ function DeskChoice:new(floor, run)
         {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = entryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "deckY", from = self.deckY, targetValue = self.deckTY, duration = entryDuration, easing = AnimationUtils.Easing.outCubic},
-        {property = "moneyY", from = self.moneyY, targetValue = self.moneyTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = entryDuration, eading = AnimationUtils.Easing.inOutCubic},    
+        {property = "moneyY", from = self.moneyY, targetValue = self.moneyTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.ciggiesTrayTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},    
     })
 
     --Buttons animation
@@ -159,6 +156,7 @@ function DeskChoice:update(dt)
     self:drawRoundDetails()
     self:drawDiceDetails(dt)
     self:updateChoiceCanvas(dt)
+    self:drawCiggiesTray()
 
     --hovered face
     self:getCurrentlyHoveredFace()
@@ -199,7 +197,7 @@ function DeskChoice:drawDeck(dt)
     love.graphics.clear()
     
     --Draw the background
-    love.graphics.draw(deckBackGroundImage, 0, 0)
+    love.graphics.draw(Sprites.DECK, 0, 0)
 
     --draw the deck faces
     for dice,face in next,self.deckFaces do
@@ -222,7 +220,7 @@ function DeskChoice:drawFigureGrid()
     love.graphics.setCanvas(self.figureButtonsCanvas)
     love.graphics.clear()
     --Draw the table
-    love.graphics.draw(TableauFiguresSprite, 0, 0)
+    love.graphics.draw(Sprites.GRID, 0, 0)
 
     --Write the calculatedPoints
     love.graphics.setColor(0, 0, 0, 1)
@@ -274,14 +272,14 @@ function DeskChoice:drawRoundDetails()
     --ROUND
     love.graphics.setCanvas(self.roundNumberCanvas)
     love.graphics.clear()
-    love.graphics.draw(FloorInfosSprite, 0, 0)
+    love.graphics.draw(Sprites.FLOOR_INFOS, 0, 0)
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(currentRoundText, self.roundNumberCanvas:getWidth()/2, self.roundNumberCanvas:getHeight()/2, 0, 1, 1, currentRoundText:getWidth()/2, currentRoundText:getHeight()/2)
     love.graphics.setColor(1, 1, 1, 1)
     --HANDS
     love.graphics.setCanvas(self.handsCanvas)
     love.graphics.clear()
-    love.graphics.draw(TurnsSprite, 0, 0)
+    love.graphics.draw(Sprites.TURNS, 0, 0)
     love.graphics.setColor(245/255, 247/255, 228/255, 1)
     love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
@@ -289,7 +287,7 @@ function DeskChoice:drawRoundDetails()
     --REROLLS
     love.graphics.setCanvas(self.rerollsCanvas)
     love.graphics.clear()
-    love.graphics.draw(RerollsSprite, 0, 0)
+    love.graphics.draw(Sprites.REROLLS, 0, 0)
     love.graphics.setColor(245/255, 247/255, 228/255, 1)
     love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
@@ -297,7 +295,7 @@ function DeskChoice:drawRoundDetails()
     --MONEY
     love.graphics.setCanvas(self.moneyCanvas)
     love.graphics.clear()
-    love.graphics.draw(MoneySprite,0,0)
+    love.graphics.draw(Sprites.MONEY,0,0)
     love.graphics.setColor(1, 195/256, 132/256, 1)
     love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
     love.graphics.setColor(1, 1, 1, 1)
@@ -311,13 +309,24 @@ function DeskChoice:drawRoundDetails()
     love.graphics.draw(self.moneyCanvas, self.moneyX, self.moneyY)
 end
 
+function DeskChoice:drawCiggiesTray()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.ciggiesTray)
+
+    love.graphics.draw(Sprites.CIGGIES_TRAY, 0, 0)
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
+end
+
+
 --Description
 function DeskChoice:drawDescriptionCanvas()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.descriptionCanvas)
     love.graphics.clear()
     --Draw Sprite
-    love.graphics.draw(descriptionSprite, 0, 0)
+    love.graphics.draw(Sprites.DESCRIPTION, 0, 0)
 
 
     if(self.currentlyHoveredFace) then
@@ -404,7 +413,7 @@ function DeskChoice:drawDiceDetails(dt)
     love.graphics.clear(60/255, 99/255, 60/255)
 
     --Draw sprite
-    love.graphics.draw(DiceInfosSprite, 0, 0)
+    love.graphics.draw(Sprites.DICE_INFOS, 0, 0)
     
     --Draw the dice net
     if(self.currentlySelectedDice)then
@@ -507,21 +516,22 @@ end
 --==Utils==--
 
 function DeskChoice:outAnimation(badge)
-    local entryDuration = 0.2
+    local outDuration = 0.2
     local newBadgeY = {
         -1000, -1000, 3000, 3000
     }
 
     self.animator:addGroup({
-        {property = "gridY", from = self.gridY, targetValue = -820, duration = entryDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = entryDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = entryDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "deckY", from = self.deckY, targetValue = self.canvas:getHeight()+20, duration = entryDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "gridY", from = self.gridY, targetValue = -820, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "deckY", from = self.deckY, targetValue = self.canvas:getHeight()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+450, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
 
-        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
 
 
@@ -530,8 +540,8 @@ function DeskChoice:outAnimation(badge)
     end
 
     --Buttons animation
-    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, entryDuration)
-    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, entryDuration)
+    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)
+    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration)
 
     
     self.animator:addDelay(0.5, function()self.run:startNewRound(badge.round, badge.round.roundtype)end)

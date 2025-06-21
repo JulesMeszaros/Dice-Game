@@ -61,8 +61,8 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
         local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
             diceobject, --Dice Object 
             diceobject:getFace(1), --La face représentée
-            self.terrain.terrainCanvas:getWidth()/2, --X Position (centerd)
-            self.terrain.terrainCanvas:getHeight()+70, --Yposition (centerd)
+            self.terrain.canvas:getWidth()/2, --X Position (centerd)
+            self.terrain.canvas:getHeight()+70, --Yposition (centerd)
             120, --Width/Height
             true, --is Selectable
             true, --isHoverable,
@@ -369,10 +369,10 @@ function Round:makeRoll(dices)
 
         --Add an animation to make them roll
         self.diceFaces[dice].animator:addGroup({
-            {property = "x", from=self.terrain.terrainCanvas:getWidth()/2, targetValue = randomXPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
-            {property = "targetX", from=self.terrain.terrainCanvas:getWidth()/2, targetValue = randomXPos, duration = 0.5, onComplete=function()end},
-            {property = "y", from=self.terrain.terrainCanvas:getHeight()+100, targetValue = randomYPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
-            {property = "targetY", from=self.terrain.terrainCanvas:getHeight()+100, targetValue = randomYPos, duration = 0.5, onComplete=function()end},
+            {property = "x", from=self.terrain.canvas:getWidth()/2, targetValue = randomXPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "targetX", from=self.terrain.canvas:getWidth()/2, targetValue = randomXPos, duration = 0.5, onComplete=function()end},
+            {property = "y", from=self.terrain.canvas:getHeight()+100, targetValue = randomYPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "targetY", from=self.terrain.canvas:getHeight()+100, targetValue = randomYPos, duration = 0.5, onComplete=function()end},
             {property = "rotation", from=-0, targetValue = randomR, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
             {property = "baseRotation", from=-0, targetValue = randomR, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
 

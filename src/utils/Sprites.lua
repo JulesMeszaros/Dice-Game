@@ -18,6 +18,7 @@ Sprites.DICE_MAT = love.graphics.newImage("src/assets/sprites/ui/Dice Mat.png")
 
 Sprites.REWARDS = love.graphics.newImage("src/assets/sprites/ui/Rewards.png")
 Sprites.CUSTOMIZATION_MAT = love.graphics.newImage("src/assets/sprites/ui/Customization Mat.png")
+Sprites.CIGGIES_TRAY = love.graphics.newImage("src/assets/sprites/ui/CiggieTray.png")
 
 Sprites.BADGE = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
 
