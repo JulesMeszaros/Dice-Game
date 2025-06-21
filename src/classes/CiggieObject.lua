@@ -10,8 +10,9 @@ function CiggieObject:new()
     return self
 end
 
-function CiggieObject:effect()
+function CiggieObject:effect(round)
     print("Clope fumée")
+    round.availableRerolls = 100
 end
 
 return CiggieObject
