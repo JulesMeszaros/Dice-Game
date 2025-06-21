@@ -25,7 +25,7 @@ function MainMenu:new(gameCanvas, game)
 
     self.uiElements.buttons["newRun"] = Button:new(
         function()self.game:startNewRun()end,
-        "src/assets/sprites/ui/buttons/new_run.png",
+        "src/assets/sprites/ui/new_run.png",
         self.gameCanvas:getWidth()/2,
         self.gameCanvas:getHeight()/2,
         400,
