@@ -61,7 +61,7 @@ function Ciggie:new(ciggieObject, x, y, isSelectable, isHoverable, mousePosition
 
     self.canvas = self:createCanvas()
 
-    self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/basicCiggie.png")
+    self.sprite = ciggieObject.sprite
 
     return self
 end

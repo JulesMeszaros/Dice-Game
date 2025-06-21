@@ -8,7 +8,7 @@ local Shaders = require("src.utils.shaders")
 
 --Dice Face Types
 local DiceObject = require("src.classes.DiceObject") 
-local FaceTypes = require("src.classes.FaceTypes.FaceTypes")
+local FaceTypes = require("src.classes.FaceTypes")
 
 local applyCRT = false
 

@@ -13,7 +13,7 @@ local Ciggie = require("src.classes.ui.Ciggie")
 local CiggieObject = require("src.classes.CiggieObject")
 --Dices
 local DiceObject = require("src.classes.DiceObject")
-local FaceObject = require("src.classes.FaceTypes.FaceObject")
+local FaceObject = require("src.classes.FaceObject")
 local DiceFace = require("src.classes.ui.DiceFace")
 
 --Sprites
@@ -118,7 +118,7 @@ function RoundScreen:new(round)
     
     --Ciggies UI
     for i,ciggie in next,self.round.run.ciggiesObjects do
-        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(CiggieObject:new(), 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
     end
 
     --Positions

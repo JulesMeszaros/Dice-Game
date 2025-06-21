@@ -7,7 +7,7 @@ local Animator = require("src.utils.Animator")
 
 local Sprites = require("src.utils.Sprites")
 
-local FaceObject = require("src.classes.FaceTypes.FaceObject")
+local FaceObject = require("src.classes.FaceObject")
 local DiceObject = require("src.classes.DiceObject")
 
 local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")

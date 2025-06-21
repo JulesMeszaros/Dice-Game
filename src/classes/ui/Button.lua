@@ -18,12 +18,12 @@ function Button:new(
     gameCanvas, 
     mousePosition)
 
+    
+
+    local self = setmetatable(UIElement.new(), Button)
     self.gameCanvas = gameCanvas
 
     self.animator = Animator:new(self)
-
-    local self = setmetatable(UIElement.new(), Button)
-
     self:setSprite(love.graphics.newImage(spritePath))
 
     self:setX(x)

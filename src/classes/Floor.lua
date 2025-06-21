@@ -1,5 +1,5 @@
 local Constants = require("src.utils.constants")
-local FaceTypes = require("src.classes.FaceTypes.FaceTypes")
+local FaceTypes = require("src.classes.FaceTypes")
 local Round = require("src.classes.Round")
 
 local Floor = {}

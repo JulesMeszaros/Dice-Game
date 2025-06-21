@@ -5,8 +5,8 @@ local Floor = require("src.classes.Floor")
 local DeskChoice = require("src.screens.DeskChoice")
 local DiceCustomization = require("src.screens.DiceCustomization")
 local CiggieObject = require("src.classes.CiggieObject")
-
-local FaceTypes = require("src.classes.FaceTypes.FaceTypes")
+local CiggieTypes = require("src.classes.CiggieTypes")
+local FaceTypes = require("src.classes.FaceTypes")
 
 local Run = {}
 
@@ -20,9 +20,8 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 
     --Ciggies
     self.ciggiesObjects = {
-        CiggieObject:new(),
-        CiggieObject:new(),
-        
+        CiggieTypes.BaseCiggie:new(),
+        CiggieTypes.BlueCiggie:new()
     }
 
     --Dices variables
@@ -60,6 +59,9 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.floorDeskNumber = 1 --Représente le numéro de bureau dans l'étage actuel (retourne à 1 après un boss)
     self.deskChoice = DeskChoice:new(self.currentFloor, self)
     self.currentState = Constants.RUN_STATES.ROUND_CHOICE
+    
+    
+
     return self
 end
 

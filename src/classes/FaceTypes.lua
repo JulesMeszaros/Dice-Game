@@ -1,4 +1,4 @@
-local FaceObject = require("src.classes.FaceTypes.FaceObject")
+local FaceObject = require("src.classes.FaceObject")
 local FaceTypes = {}
 
 --==WHITE FACE==--

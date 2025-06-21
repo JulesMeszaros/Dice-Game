@@ -158,7 +158,7 @@ function Round:mousereleased(x, y, button, istouch, presses)
         ciggie:releaseEvent()
         local belowCanvas = ciggie:detectBelowCanvas(self)
         if(belowCanvas == 1) then
-            ciggie.ciggieObject:effect(self)
+            ciggie.ciggieObject:trigger(self)
         end
         ciggie.isBeingDragged = false
     end
