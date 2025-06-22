@@ -252,6 +252,8 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
             face.targetY = face.anchorY
         end
 
+        face.isBeingDragged = false
+
     end
 
     --release event on UI elements (buttons)

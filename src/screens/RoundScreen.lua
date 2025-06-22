@@ -117,7 +117,9 @@ function RoundScreen:new(round)
     self.ciggiesTray = love.graphics.newCanvas(420, 140)
     
     --Hand Score
-    self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)    
+    self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)
+    self.handScoreRX, self.handScoreRY = 1
+    self.handScoreRot = 0
 
     --Positions
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
@@ -589,6 +591,15 @@ end
 
 
 --==Animations==--
+function RoundScreen:animateHandScore()
+    local randomAngle = math.random(2, 5)/10
+    local randomDir = math.random(0, 1) == 0 and -1 or 1
+    self.animator:addGroup({
+        {property="handScoreRX", from=1.4, targetValue=1, duration = 0.2}, --Makes it instantly bigger and animate it to its base size
+        {property="handScoreRot", from=randomAngle*randomDir, targetValue=0, duration = 0.2}, --Makes it instantly bigger and animate it to its base size
+    })
+end
+
 function RoundScreen:drawHandScore()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.handScoreCanvas)
@@ -596,7 +607,7 @@ function RoundScreen:drawHandScore()
 
     local scoreText = love.graphics.newText(Fonts.nexaBig, self.round.handScore)
     love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(scoreText, self.handScoreCanvas:getWidth()/2, self.handScoreCanvas:getHeight()/2, 0, 1, 1, scoreText:getWidth()/2-10, scoreText:getHeight()/2-10)
+    love.graphics.draw(scoreText, self.handScoreCanvas:getWidth()/2, self.handScoreCanvas:getHeight()/2, self.handScoreRot, self.handScoreRX, self.handScoreRY, scoreText:getWidth()/2-10, scoreText:getHeight()/2-10)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.handScoreCanvas, 0, 200)
