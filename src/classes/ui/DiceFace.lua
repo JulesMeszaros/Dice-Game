@@ -225,7 +225,7 @@ function DiceFace:calculateScale()
 end
 
 --==TRIGGER FUNCTIONS==--
-function DiceFace:trigger() --Lance le trigger du dé
+function DiceFace:trigger(round) --Lance le trigger du dé
     self.animator:addDelay(0.3)
 
     self.animator:addGroup({
@@ -233,7 +233,7 @@ function DiceFace:trigger() --Lance le trigger du dé
         {property="scaleY", from=1, targetValue=0.8, duration=0.1}
     })
 
-    self.animator:addDelay(0.1)
+    self.animator:addDelay(0.1, function() self.representedFace:trigger(round) end) --On déclenche l'effet du dé ici
 
     self.animator:addGroup({
         {property="scaleX", from=1.6, targetValue=0.5, duration=0.05},

@@ -290,8 +290,8 @@ end
 function Round:triggerNextDice()
     if(table.getn(self.dicesTriggerQueue)>=1) then
         --On déclenche le dé
-        self.diceFacesTriggerQueue[1]:trigger()
-        self.dicesTriggerQueue[1]:trigger(self)
+        self.diceFacesTriggerQueue[1]:trigger(self)
+        --self.dicesTriggerQueue[1]:trigger(self)
             
         --On ajoute à l'historique (en dernière position)
         table.insert(self.triggerDiceHistory, self.dicesTriggerQueue[1])
