@@ -9,7 +9,6 @@
 
 - Améliorer la phase de scoring :
   - Afficher les points marqués en direct
-  - Déclancher les effets des dés PENDANT l'animation de trigger
 
 ## Corrections mineures
 

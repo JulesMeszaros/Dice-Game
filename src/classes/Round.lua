@@ -21,6 +21,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.faceRewards = faceRewards
 
     --==Triggering Phase==--
+    self.handScore = 0
     self.phase = Constants.ROUND_STATES.PLAYING
     self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
     self.dicesOrder = {} --Same but for the dice objects
@@ -329,6 +330,8 @@ function Round:endTriggeringPhase()
         self:resetselectedDices()
         self:makeRoll(self.diceObjects) -- On effectue un reroll
         self.availableRerolls = Constants.BASE_REROLLS
+        self.roundScore = self.roundScore + self.handScore
+        self.handScore = 0
     end
 
     if(self.roundScore >= self.targetScore or self.remainingHands == 0) then
@@ -360,6 +363,7 @@ function Round:updateselectedDices(uiFace)
 
     --Update the selected dices position
     self.terrain:updateSelectedPosDices()
+    --Update the unselected dices position
 end
 
 --==REROLL FUNCTIONS (NEW)==--
@@ -438,7 +442,7 @@ end
 function Round:playFigure(points, usedDices) --Function that triggers the hand
     self:startTriggeringPhase(usedDices)
 
-    self.roundScore = self.roundScore + points -- On ajoute les points au score
+    self.handScore = self.handScore+points -- On ajoute les points au score
 end
 
 --==UTILS==--

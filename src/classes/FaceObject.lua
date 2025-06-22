@@ -39,7 +39,7 @@ end
 --==Trigger functions==--
 
 function FaceObject:trigger(round)
-    round.roundScore = round.roundScore + self.pointsValue
+    round.handScore = round.handScore + self.pointsValue
     self.totalTriggered = self.totalTriggered + 1
     self:triggerEffect(round)
 end

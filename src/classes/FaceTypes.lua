@@ -38,7 +38,7 @@ end
 FaceTypes.WhiteFace = WhiteFace
 
 function WhiteFace:trigger(round)
-    round.roundScore = round.roundScore + self.pointsValue
+    round.handScore = round.handScore + self.pointsValue
     self.totalTriggered = self.totalTriggered + 1
     self:triggerEffect(round)    
 end
@@ -86,7 +86,7 @@ function RedFace:new(faceValue, pointsValue)
 end
 
 function RedFace:triggerEffect(round)
-    round.roundScore = round.roundScore + 2*self.pointsValue
+    round.handScore = round.handScore + 2*self.pointsValue
 end
 
 FaceTypes.RedFace = RedFace
@@ -221,7 +221,7 @@ function StaticFace:new(faceValue, pointsValue)
 end
 
 function StaticFace:triggerEffect(round)
-    round.roundScore = round.roundScore + self.totalTriggered
+    round.handScore = round.handScore + self.totalTriggered
 end
 
 FaceTypes.StaticFace = StaticFace

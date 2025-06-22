@@ -116,8 +116,8 @@ function RoundScreen:new(round)
     --Ciggies tray
     self.ciggiesTray = love.graphics.newCanvas(420, 140)
     
-    --Ciggies UI
-    
+    --Hand Score
+    self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)    
 
     --Positions
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
@@ -312,6 +312,10 @@ function RoundScreen:drawDiceTray(x, y, dices2)
     --On dessine la bulle des points
     if(self.currentlyHoveredFace)then
         self.pointsDetailsCanvas:draw()
+    end
+    --Score de la main en direct
+    if(self.round.phase == Constants.ROUND_STATES.TRIGGERING)then
+        self:drawHandScore()
     end
 
     --On retourne au canvas précédent
@@ -585,6 +589,19 @@ end
 
 
 --==Animations==--
+function RoundScreen:drawHandScore()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.handScoreCanvas)
+    love.graphics.clear()
+
+    local scoreText = love.graphics.newText(Fonts.nexaBig, self.round.handScore)
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.draw(scoreText, self.handScoreCanvas:getWidth()/2, self.handScoreCanvas:getHeight()/2, 0, 1, 1, scoreText:getWidth()/2-10, scoreText:getHeight()/2-10)
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.handScoreCanvas, 0, 200)
+end
+
 function RoundScreen:outAnimation()
     local outDuration = 0.4
     self.animator:addGroup({
@@ -675,7 +692,7 @@ function RoundScreen:reorganiseDiceFaces(dices)
     local i = 1
     for key,uiFace in next,reorganisedDices do
         uiFace.targetX = (i)*(((self.dice_tray:getWidth()-100)/(table.getn(reorganisedDices)+1)))+50
-        uiFace.targetY = (self.dice_tray:getHeight()/2)
+        uiFace.targetY = (self.dice_tray:getHeight()/2+140)
         uiFace.baseRotation = 0
         i = i+1
     end    
