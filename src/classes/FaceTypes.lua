@@ -130,9 +130,11 @@ end
 
 function BlueFace:triggerEffect(round)
     --On rettriger le dé précédement trigger, s'il n'est pas un blue face
-    if(table.getn(round.triggerDiceHistory) > 0 and round.triggerDiceHistory[table.getn(round.triggerDiceHistory)].currentFaceObject.name ~= "Blue Face") then
-        table.insert(round.dicesTriggerQueue, 2, round.triggerDiceHistory[table.getn(round.triggerDiceHistory)])
-        table.insert(round.diceFacesTriggerQueue, 2, round.triggerFaceHistory[table.getn(round.triggerFaceHistory)])
+    if(table.getn(round.triggerDiceHistory) > 1 and round.triggerDiceHistory[table.getn(round.triggerDiceHistory)-1].currentFaceObject.name ~= "Blue Face") then
+        --[[ print(round.triggerDiceHistory[table.getn(round.triggerDiceHistory)-1].currentFaceObject.name)
+        print(table.getn(round.triggerDiceHistory)) ]]
+        table.insert(round.dicesTriggerQueue, 1, round.triggerDiceHistory[table.getn(round.triggerDiceHistory)-1])
+        table.insert(round.diceFacesTriggerQueue, 1, round.triggerFaceHistory[table.getn(round.triggerFaceHistory)-1])
     end
 end
 
