@@ -250,7 +250,7 @@ function RoundScreen:updateCanvas(dt)
     --PlayersInfos
     self:drawPlayersInfos()
     --Dice Tray
-    if(self.pointsDetailsCanvas) then
+    if(self.pointsDetailsCanvas and self.hoveredFaceCanvas==1) then
         self.pointsDetailsCanvas:update(dt)
     end
     self:drawDiceTray(self.diceMatx, self.diceMaty, self.round.diceFaces)
@@ -320,7 +320,7 @@ function RoundScreen:drawDiceTray(x, y, dices2)
     end
 
     --On dessine la bulle des points
-    if(self.currentlyHoveredFace)then
+    if(self.currentlyHoveredFace and self.pointsDetailsCanvas and self.hoveredFaceCanvas==1)then
         self.pointsDetailsCanvas:draw()
     end
     --Score de la main en direct
@@ -649,17 +649,31 @@ function RoundScreen:getCurrentlyHoveredDice()
     self.previouslyHoveredFace = self.currentlyHoveredFace
     self.currentlyHoveredFace = nil
 
+    self.hoveredFaceCanvas = nil
+
+    --Dés dans le terrain de jeu
     for key,diceface in next,self.round.diceFaces do
         if diceface:isHovered() then
             self.currentlyHoveredDice = diceface.diceObject
             self.currentlyHoveredFace = diceface
+            self.hoveredFaceCanvas = 1
+            break
+        end
+    end
+    --Dés dans l'encart à droite
+    for key,diceface in next,self.infoFaces do
+        if diceface:isHovered() then
+            print(diceface.diceObject)
+                self.currentlyHoveredFace = diceface
+                self.hoveredFaceCanvas = 2
             break
         end
     end
 
-    if(self.previouslyHoveredFace ~= self.currentlyHoveredFace and self.currentlyHoveredFace~= nil)then
+    if(self.previouslyHoveredFace ~= self.currentlyHoveredFace and self.currentlyHoveredFace~= nil and self.hoveredFaceCanvas==1)then
         self.pointsDetailsCanvas = FaceHoverInfos:new(self.currentlyHoveredFace, "points")
     end
+
 end
 
 function RoundScreen:updateDiceNet(dt)

@@ -2,7 +2,6 @@ local Constants = require("src.utils.Constants")
 local DiceFace = require("src.classes.ui.DiceFace")
 local RoundScreen = require("src.screens.RoundScreen")
 local AnimationUtils = require("src.utils.scripts.Animations")
-
 local Inputs = require("src.utils.scripts.Inputs")
 
 local Round = {}

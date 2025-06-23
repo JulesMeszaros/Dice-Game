@@ -4,7 +4,6 @@
 
 ## Corrections mineures
 
-- Afficher les valeurs de points des faces de dés dans les badges
 - Ajouter des animations d'apparition aux faces de dés du patron dans l'écran de choix de round
 - Afficher des petits ronds à la place des numéros pour le nombre de mains restantes pour les figures
 - Modifier le comptage des points pour ne compter que les premiers dés qui correspondent à la figure
