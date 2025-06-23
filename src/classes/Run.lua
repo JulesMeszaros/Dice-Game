@@ -58,6 +58,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.floorNumber = 1 --Représente l'étage (augmente de 1 après un boss)
     self.floorDeskNumber = 1 --Représente le numéro de bureau dans l'étage actuel (retourne à 1 après un boss)
     self.deskChoice = DeskChoice:new(self.currentFloor, self)
+    self.deskChoice:generateCiggiesUI()
     self.currentState = Constants.RUN_STATES.ROUND_CHOICE
     
     
@@ -152,6 +153,7 @@ function Run:endRound()
         end
         
         self.customizationScreen = DiceCustomization:new(self.currentRound, self.currentRound.faceRewards)
+        self.customizationScreen:generateCiggiesUI()
         self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION
     else --gameover case
         local gameOver = GameOverScreen:new(self.gameCanvas, self)

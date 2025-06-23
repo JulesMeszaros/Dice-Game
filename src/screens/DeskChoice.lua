@@ -6,7 +6,7 @@ local AnimationUtils = require("src.utils.scripts.animationUtils")
 local Animator = require("src.utils.Animator")
 
 local Sprites = require("src.utils.Sprites")
-
+local Ciggie = require("src.classes.ui.Ciggie")
 local FaceObject = require("src.classes.FaceObject")
 local DiceObject = require("src.classes.DiceObject")
 
@@ -30,7 +30,8 @@ function DeskChoice:new(floor, run)
     self.uiElements = {
         buttons = {},
         DeskChoiceButtons = {},
-        faceRewards = {}
+        faceRewards = {},
+        ciggiesUI = {}
     }
 
 
@@ -144,6 +145,9 @@ function DeskChoice:update(dt)
 
     self.animator:update(dt)
 
+    --hovered face
+    self:getCurrentlyHoveredFace()
+
     for key,button in next,self.uiElements.buttons do
         button:update(dt)
         button:draw()
@@ -158,8 +162,11 @@ function DeskChoice:update(dt)
     self:updateChoiceCanvas(dt)
     self:drawCiggiesTray()
 
-    --hovered face
-    self:getCurrentlyHoveredFace()
+     --Ciggies UI
+    for i, ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:update(dt)
+        ciggie:draw()
+    end
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -425,6 +432,12 @@ function DeskChoice:drawDiceDetails(dt)
     love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
 end
 
+function DeskChoice:generateCiggiesUI()
+    for i,ciggie in next,self.run.ciggiesObjects do
+        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+    end
+end
+
 --==CHOICES==--
 function DeskChoice:generateChoiceCanvas()
     self.badges = {}
@@ -488,6 +501,12 @@ function DeskChoice:mousepressed(x, y, button, istouch, presses)
     for key,uiFace in next,self.deckFaces do
         uiFace:clickEvent()
     end
+
+    --Ciggies
+    for key,ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:clickEvent()
+    end
+
 end
 
 function DeskChoice:mousereleased(x, y, button, istouch, presses)
@@ -507,10 +526,32 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
             self.currentlySelectedDice = face
         end
     end
+
+    --Ciggies
+    for key,ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:releaseEvent()
+        ciggie:detectBelowCanvas(self)
+        ciggie.isBeingDragged = false
+    end
 end
 
 function DeskChoice:mousemoved(x, y, dx, dy, isDragging)
+    --Drag and drop Ciggies
+    if(isDragging == true)then 
+        for key,ciggie in next, self.uiElements.ciggiesUI do
+            if(ciggie.isDraggable and ciggie.isBeingClicked) then
+                ciggie.isBeingDragged = true
+                ciggie.dragXspeed = dx
+                if(ciggie.targetX+dx<self.canvas:getWidth()-ciggie.width/2 and ciggie.targetX+dx>0+ciggie.width/2) then --Vérification qu'on ne dépasse par les limites horizontales
+                    ciggie.targetX = (ciggie.targetX + dx) 
+                end
 
+                if(ciggie.targetY+dy<self.canvas:getHeight()-ciggie.height/2 and ciggie.targetY+dy>0+ciggie.height/2) then --Vérification qu'on ne dépasse pas les limites verticales
+                    ciggie.targetY = (ciggie.targetY + dy) 
+                end
+            end
+        end
+    end
 end
 
 --==Utils==--

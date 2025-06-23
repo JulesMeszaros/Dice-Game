@@ -6,6 +6,7 @@ local Inputs = require("src.utils.scripts.inputs")
 local Button = require("src.classes.ui.Button")
 local DeskChoice = require("src.screens.DeskChoice")
 local Fonts = require("src.utils.fonts")
+local Ciggie = require("src.classes.ui.Ciggie")
 local Animator = require("src.utils.Animator")
 local AnimationUtils = require("src.utils.scripts.animationUtils")
 local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
@@ -29,7 +30,8 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 
     self.uiElements = {
-        buttons = {}
+        buttons = {},
+        ciggiesUI = {}
     }
 
     self.animator = Animator:new(self)
@@ -205,6 +207,12 @@ function DiceCustomization:updateCanvas(dt)
         self.hoverInfosCanvas:draw()
     end
 
+    --Ciggies UI
+    for i, ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:update(dt)
+        ciggie:draw()
+    end
+
     love.graphics.setCanvas(currentCanvas)
 end
 
@@ -226,6 +234,11 @@ function DiceCustomization:mousepressed(x, y, button, istouch, presses)
     --Buttons
     for key,button in next,self.uiElements.buttons do
         button:clickEvent()
+    end
+
+    --Ciggies
+    for key,ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:clickEvent()
     end
 
 end
@@ -264,6 +277,12 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
         end
     end
 
+    --Ciggies
+    for key,ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:releaseEvent()
+        ciggie.isBeingDragged = false
+    end
+
 end
 
 function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
@@ -275,6 +294,20 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
                 diceui.targetX = (diceui.targetX + dx) 
                 diceui.targetY = (diceui.targetY + dy)
                 
+            end
+        end
+
+        for key,ciggie in next, self.uiElements.ciggiesUI do
+            if(ciggie.isDraggable and ciggie.isBeingClicked) then
+                ciggie.isBeingDragged = true
+                ciggie.dragXspeed = dx
+                if(ciggie.targetX+dx<self.canvas:getWidth()-ciggie.width/2 and ciggie.targetX+dx>0+ciggie.width/2) then --Vérification qu'on ne dépasse par les limites horizontales
+                    ciggie.targetX = (ciggie.targetX + dx) 
+                end
+
+                if(ciggie.targetY+dy<self.canvas:getHeight()-ciggie.height/2 and ciggie.targetY+dy>0+ciggie.height/2) then --Vérification qu'on ne dépasse pas les limites verticales
+                    ciggie.targetY = (ciggie.targetY + dy) 
+                end
             end
         end
     end
@@ -625,7 +658,10 @@ function DiceCustomization:createDiceUI(diceObject, i)
 end
 
 function DiceCustomization:goToRoundSelection()
-    self.previousRound.run.deskChoice = DeskChoice:new(self.previousRound.run.currentFloor, self.previousRound.run)
+    local deskchoice = DeskChoice:new(self.previousRound.run.currentFloor, self.previousRound.run)
+    deskchoice:generateCiggiesUI()
+    self.previousRound.run.deskChoice = deskchoice
+
     self.previousRound.run.currentState = Constants.RUN_STATES.ROUND_CHOICE --Change d'état de Run
 end
 
@@ -644,6 +680,12 @@ end
 
 function DiceCustomization:createFaceInfosCanvas(face)
     return FaceHoverInfo:new(face, "points")
+end
+
+function DiceCustomization:generateCiggiesUI()
+    for i,ciggie in next,self.previousRound.run.ciggiesObjects do
+        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+    end
 end
 
 function DiceCustomization:getCurrentlyHoveredFace()
