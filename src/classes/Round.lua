@@ -163,7 +163,9 @@ function Round:mousereleased(x, y, button, istouch, presses)
     --Ciggies
     for key,ciggie in next,self.terrain.uiElements.ciggiesUI do
         ciggie:releaseEvent()
-        ciggie:detectBelowCanvas(self)
+        if(ciggie:detectBelowCanvas(self)==1)then
+            ciggie.ciggieObject:trigger(self)
+        end
         ciggie.isBeingDragged = false
     end
 end

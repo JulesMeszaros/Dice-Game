@@ -113,8 +113,9 @@ function RoundScreen:new(round)
     --ROUND DETAILS
     self:createRoundInfos()
 
-    --Ciggies tray
+    --Ciggies
     self.ciggiesTray = love.graphics.newCanvas(420, 140)
+    self.hoveredByCiggie = nil
     
     --Hand Score
     self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)
@@ -230,6 +231,16 @@ function RoundScreen:update(dt)
     for i, ciggie in next,self.uiElements.ciggiesUI do
         ciggie:update(dt)
     end
+    self.hoveredByCiggie = nil
+    for i, ciggie in next,self.uiElements.ciggiesUI do --get the current canvas hovered by a ciggie (if one is hovered)
+        local canvas = ciggie:detectBelowCanvas(self.round)
+        if(canvas)then
+            self.hoveredByCiggie = canvas
+            break
+        end
+    end
+
+    print(self.hoveredByCiggie)
 
     self:updateCanvas(dt)
 
@@ -303,9 +314,13 @@ function RoundScreen:drawDiceTray(x, y, dices2)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.dice_tray)
     love.graphics.clear()
-
+    if(self.hoveredByCiggie) then
+        love.graphics.setColor(0, 0.8, 0, 1)
+    else
+        love.graphics.setColor(1, 1, 1, 1)
+    end
     love.graphics.draw(DiceMatSprite, 0, 0, 0, 1, 1)
-
+    love.graphics.setColor(1, 1, 1, 1)
     --On déssine les autres dés
     for key,uiFace in next,dices2 do
         uiFace:draw()

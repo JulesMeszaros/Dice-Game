@@ -150,7 +150,8 @@ function Ciggie:detectBelowCanvas(round)
     if(round.run.currentState == Constants.RUN_STATES.ROUND) then
         --Dice mat
         if(self.x>500 and self.x<1440)and(self.y>491 and self.y<950)then
-            self.ciggieObject:trigger(round)
+            --self.ciggieObject:trigger(round)
+            return 1
         end
     end
 end
