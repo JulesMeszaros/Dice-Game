@@ -2,6 +2,7 @@ local Shaders = require("src.utils.Shaders")
 local Fonts = require("src.utils.Fonts")
 local Animator = require("src.utils.Animator")
 local AnimationUtils = require("src.utils.scripts.Animations")
+local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 
 local DiceFace = require("src.classes.ui.DiceFace")
 
@@ -117,6 +118,12 @@ function Badge:updateCanvas(dt)
 
     self:updateFaceCanvas(dt)
 
+    --Hover infos
+    if(self.currentlyHoveredFace)then
+        self.hoverInfosCanvas:update(dt)
+        self.hoverInfosCanvas:draw("above")
+    end
+
     love.graphics.setCanvas(currentCanvas)
 end
 
@@ -163,9 +170,18 @@ end
 
 --==Utils==--
 function Badge:getCurrentlyHoveredFace()
+    self.previouslyHoveredFace = self.currentlyHoveredFace
     self.currentlyHoveredFace = nil
+    
     for i,uiFace in next,self.faceRewards do
         if uiFace:isHovered() then self.currentlyHoveredFace = uiFace ; break end
+    end
+
+    --Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
+    if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
+        if (self.currentlyHoveredFace) then
+            self.hoverInfosCanvas = FaceHoverInfo:new(self.currentlyHoveredFace, "points")
+        end
     end
 end
 

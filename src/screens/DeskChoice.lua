@@ -162,6 +162,8 @@ function DeskChoice:update(dt)
     self:updateChoiceCanvas(dt)
     self:drawCiggiesTray()
 
+    
+
      --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
         ciggie:update(dt)
@@ -611,11 +613,11 @@ function DeskChoice:getCurrentlyHoveredFace()
     end
 
     --Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
-    --[[ if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
+    if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
         if (self.currentlyHoveredFace) then
             self.hoverInfosCanvas = self:createFaceInfosCanvas(self.currentlyHoveredFace)
         end
-    end ]]
+    end
 
 end
 

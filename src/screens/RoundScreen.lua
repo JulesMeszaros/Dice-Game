@@ -342,13 +342,14 @@ function RoundScreen:drawFigureGrid(x, y)
     --Draw the table
     love.graphics.draw(TableauFiguresSprite, 0, 0)
 
-    --Write the calculatedPoints
-    love.graphics.setColor(0, 0, 0, 1)
     --Draw the scores
+    love.graphics.setColor(249/255, 130/255, 132/255)
+
     for i=1, 13 do
         local calcScore = love.graphics.newText(Fonts.nexaSmall, self.calcBasePoints[i]()[1])
         love.graphics.draw(calcScore, 225, 50*(i-1)+38, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
     end
+    love.graphics.setColor(0, 0, 0, 1)
 
     --Write the remaining possible hands
     for i=1, 13 do
@@ -399,7 +400,7 @@ function RoundScreen:drawFaceDetails(x, y)
     --Draw Sprite
     love.graphics.draw(descriptionSprite, 0, 0)
 
-    if(self.currentlyHoveredDice) then
+    if(self.currentlyHoveredFace) then
         --Face Name
         local faceName = self.currentlyHoveredDice:getCurrentFaceObject().name
         local nameText = love.graphics.newText(Fonts.nexa30, faceName)
@@ -439,11 +440,6 @@ function RoundScreen:drawDiceDetails(x, y)
     --Draw the dice net
     if self.currentlyHoveredDice then
         for k,df in next,self.infoFaces do
-            if(df.representedFace == self.currentlyHoveredDice:getCurrentFaceObject())then
-                love.graphics.setColor(1, 0, 0, 1)
-                --love.graphics.rectangle("fill", df.x-5-df.size/2, df.y-5-df.size/2, 125, 125)
-                love.graphics.setColor(1, 1, 1, 1)
-            end
             df:draw()
         end
     end
@@ -563,8 +559,8 @@ function RoundScreen:createDiceNet()
             diceFacesCoords[k][2], --Yposition (centerd)
             120, --Width/Height
             false, --is Selectable
-            false, --isHoverable,
-            function()return Inputs.getMouseInCanvas(0,0)end,
+            true, --isHoverable,
+            function()return Inputs.getMouseInCanvas(self.diceDetailsX - self.diceDetailsCanvas:getWidth(), self.diceDetailsY)end,
             self.round
         )
 
@@ -652,7 +648,6 @@ end
 function RoundScreen:getCurrentlyHoveredDice()
     self.previouslyHoveredFace = self.currentlyHoveredFace
     self.currentlyHoveredFace = nil
-    self.currentlyHoveredDice = nil
 
     for key,diceface in next,self.round.diceFaces do
         if diceface:isHovered() then
@@ -672,6 +667,7 @@ function RoundScreen:updateDiceNet(dt)
         for i = 1, 6 do
             self.infoFaces[i]:setRepresentedFace(self.currentlyHoveredDice:getFace(i))
             self.infoFaces[i]:updateSprite()
+            self.infoFaces[i]:update(dt)
         end
         if(self.diceDetailsTimer+100*dt<self.diceDetailsTime)then
             self.diceDetailsTimer = self.diceDetailsTimer+100*dt

@@ -47,14 +47,18 @@ function FaceHoverInfo:update(dt)
     self:updateSmallCanvas(dt)
 end
 
-function FaceHoverInfo:draw()
+function FaceHoverInfo:draw(wherepoints)
     love.graphics.setColor(1, 1, 1, self.opacity)
     --Draw the canvas id they are supposed to be shown
     if(self.shownCanvas == "details" or self.shownCanvas == "both") then
         love.graphics.draw(self.canvas, self.x, self.y, 0, 1, 1, self.canvas:getWidth()/2)
     end
     if(self.shownCanvas == "points" or self.shownCanvas == "both") then
-        love.graphics.draw(self.smallCanvas, self.sx, self.sy, 0, 1, 1, self.smallCanvas:getWidth()/2)
+        local y = self.sy
+        if(wherepoints == "above") then
+            y = self.sy-190
+        end
+        love.graphics.draw(self.smallCanvas, self.sx, y, 0, 1, 1, self.smallCanvas:getWidth()/2)
     end
     love.graphics.setColor(1, 1, 1, 1)
 end
