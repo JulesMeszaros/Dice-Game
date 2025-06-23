@@ -97,6 +97,19 @@ end
 --==GAME FUNCTION==--
 
 function Game:startNewRun()
+    local diceObjects = {} --liste des 6 dés blancs
+
+    for i=1, 5 do 
+        local fs = {}
+        for j=1,6 do
+            local f = FaceTypes.WhiteFace:new(j, j)
+            table.insert(fs,f)
+        end
+        table.insert(diceObjects, DiceObject:new(fs))
+    end
+
+    self.diceObjects = diceObjects
+
     self.currentScreen = Constants.PAGES.GAME
     self.run = Run:new(dices, self.gameCanvas, self, self.diceObjects)
 end

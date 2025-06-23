@@ -32,7 +32,7 @@ function GameOverScreen:new(gameCanvas, run)
 
     self.uiElements.buttons["main Menu"] = Button:new(
         function()self:goToMainMenu()end,
-        "src/assets/sprites/ui/main_menu.png",
+        "src/assets/sprites/ui/Menu.png",
         self.gameoverCanvas:getWidth()/2,
         self.gameoverCanvas:getHeight()/2 + 200,
         400,

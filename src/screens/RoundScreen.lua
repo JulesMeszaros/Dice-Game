@@ -231,16 +231,7 @@ function RoundScreen:update(dt)
     for i, ciggie in next,self.uiElements.ciggiesUI do
         ciggie:update(dt)
     end
-    self.hoveredByCiggie = nil
-    for i, ciggie in next,self.uiElements.ciggiesUI do --get the current canvas hovered by a ciggie (if one is hovered)
-        local canvas = ciggie:detectBelowCanvas(self.round)
-        if(canvas)then
-            self.hoveredByCiggie = canvas
-            break
-        end
-    end
-
-    print(self.hoveredByCiggie)
+    self:getCanvasHoveredByCiggie()
 
     self:updateCanvas(dt)
 
@@ -739,6 +730,17 @@ end
 function RoundScreen:generateCiggiesUI()
     for i,ciggie in next,self.round.run.ciggiesObjects do
         self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+    end
+end
+
+function RoundScreen:getCanvasHoveredByCiggie()
+    self.hoveredByCiggie = nil
+    for i, ciggie in next,self.uiElements.ciggiesUI do --get the current canvas hovered by a ciggie (if one is hovered)
+        local canvas = ciggie:detectBelowCanvas(self.round)
+        if(canvas)then
+            self.hoveredByCiggie = canvas
+            break
+        end
     end
 end
 

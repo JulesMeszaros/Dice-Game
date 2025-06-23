@@ -3,7 +3,7 @@ local Constants = {
     VIRTUAL_GAME_HEIGHT = 1080,
     BASE_REROLLS = 2,
     BASE_TRIGGER_ANIMATION_TIME = 0.15,--secondes
-    GAME_VERSION = "0.1.0"
+    GAME_VERSION = "0.1.2"
 }
 
 --Enums
