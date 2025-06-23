@@ -2,14 +2,6 @@
 
 ## A implémenter
 
-- Cigarettes : Implémenter un exemple de cigarette dans le jeu :
-  - Implémenter l'objet visuel dans les écrans
-    - Desk Choice
-    - Dice Customization
-
-- Améliorer la phase de scoring :
-  - Afficher les points marqués en direct
-
 ## Corrections mineures
 
 - Afficher les valeurs de points des faces de dés dans les badges

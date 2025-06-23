@@ -1,5 +1,5 @@
-local InputsUtils = require("src.utils.scripts.inputs")
-local Constants = require("src.utils.constants")
+local InputsUtils = require("src.utils.scripts.Inputs")
+local Constants = require("src.utils.Constants")
 local Animator = require("src.utils.Animator")
 
 local UIElement = {}

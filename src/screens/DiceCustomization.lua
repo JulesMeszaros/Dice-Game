@@ -1,14 +1,14 @@
 --==IMPORTS==--
 local Sprites = require("src.utils.Sprites")
 local DiceFace = require("src.classes.ui.DiceFace")
-local Constants = require("src.utils.constants")
-local Inputs = require("src.utils.scripts.inputs")
+local Constants = require("src.utils.Constants")
+local Inputs = require("src.utils.scripts.Inputs")
 local Button = require("src.classes.ui.Button")
 local DeskChoice = require("src.screens.DeskChoice")
-local Fonts = require("src.utils.fonts")
+local Fonts = require("src.utils.Fonts")
 local Ciggie = require("src.classes.ui.Ciggie")
 local Animator = require("src.utils.Animator")
-local AnimationUtils = require("src.utils.scripts.animationUtils")
+local AnimationUtils = require("src.utils.scripts.Animations")
 local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 --===========--
 

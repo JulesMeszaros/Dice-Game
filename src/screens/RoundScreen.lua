@@ -1,10 +1,10 @@
 --Utils
-local Inputs = require("src.utils.scripts.inputs")
-local CalculatePoints = require("src.utils.scripts.calculatePoints")
-local Fonts = require("src.utils.fonts")
-local Constants = require("src.utils.constants")
+local Inputs = require("src.utils.scripts.Inputs")
+local CalculatePoints = require("src.utils.scripts.CalculatePoints")
+local Fonts = require("src.utils.Fonts")
+local Constants = require("src.utils.Constants")
 local FaceHoverInfos = require("src.classes.ui.FaceHoverInfo")
-local AnimationUtils = require("src.utils.scripts.animationUtils")
+local AnimationUtils = require("src.utils.scripts.Animations")
 --UI
 local Button = require("src.classes.ui.Button")
 local Sprites = require("src.utils.Sprites")

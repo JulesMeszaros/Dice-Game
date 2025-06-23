@@ -1,6 +1,6 @@
-local Fonts = require("src.utils.fonts")
+local Fonts = require("src.utils.Fonts")
 local Button = require("src.classes.ui.Button")
-local Inputs = require("src.utils.scripts.inputs")
+local Inputs = require("src.utils.scripts.Inputs")
 
 local GameOverScreen = {}
 GameOverScreen.__index = GameOverScreen

@@ -1,7 +1,7 @@
-local Shaders = require("src.utils.shaders")
+local Shaders = require("src.utils.Shaders")
 
 local UIElement = require("src.classes.ui.UIElement")
-local Inputs = require("src.utils.scripts.inputs")
+local Inputs = require("src.utils.scripts.Inputs")
 
 local Animator = require("src.utils.Animator")
 

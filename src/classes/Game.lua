@@ -2,9 +2,9 @@ local Run = require("src.classes.Run")
 local MainMenu = require("src.screens.MainMenu")
 
 --Utils
-local Constants = require("src.utils.constants")
-local Inputs = require("src.utils.scripts.inputs")
-local Shaders = require("src.utils.shaders")
+local Constants = require("src.utils.Constants")
+local Inputs = require("src.utils.scripts.Inputs")
+local Shaders = require("src.utils.Shaders")
 
 --Dice Face Types
 local DiceObject = require("src.classes.DiceObject") 

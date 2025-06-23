@@ -1,4 +1,4 @@
-local Fonts = require("src.utils.fonts")
+local Fonts = require("src.utils.Fonts")
 
 local Game = require("src.classes.Game")
 

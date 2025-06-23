@@ -1,12 +1,12 @@
-local Shaders = require("src.utils.shaders")
-local Fonts = require("src.utils.fonts")
+local Shaders = require("src.utils.Shaders")
+local Fonts = require("src.utils.Fonts")
 local Animator = require("src.utils.Animator")
-local AnimationUtils = require("src.utils.scripts.animationUtils")
+local AnimationUtils = require("src.utils.scripts.Animations")
 
 local DiceFace = require("src.classes.ui.DiceFace")
 
 local UIElement = require("src.classes.ui.UIElement")
-local Inputs = require("src.utils.scripts.inputs")
+local Inputs = require("src.utils.scripts.Inputs")
 
 local badgeSprite = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
 

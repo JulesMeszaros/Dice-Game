@@ -1,4 +1,4 @@
-local Constants = require("src.utils.constants")
+local Constants = require("src.utils.Constants")
 local FaceTypes = require("src.classes.FaceTypes")
 local Round = require("src.classes.Round")
 

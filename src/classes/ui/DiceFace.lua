@@ -1,10 +1,10 @@
 --Classe servant à afficher une face de dé, avec ses propriétés et ses effets et ses interractions
 local UIElement = require("src.classes.ui.UIElement")
 --Utils
-local AnimationUtils = require("src.utils.scripts.animationUtils")
-local InputsUtils = require("src.utils.scripts.inputs")
-local Constants = require("src.utils.constants")
-local Shaders = require("src.utils.shaders")
+local AnimationUtils = require("src.utils.scripts.Animations")
+local InputsUtils = require("src.utils.scripts.Inputs")
+local Constants = require("src.utils.Constants")
+local Shaders = require("src.utils.Shaders")
 local Animator = require("src.utils.Animator")
 
 local DiceFace = setmetatable({}, { __index = UIElement })

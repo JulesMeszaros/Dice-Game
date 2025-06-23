@@ -1,4 +1,4 @@
-local Constants = require("src.utils.constants")
+local Constants = require("src.utils.Constants")
 
 local Inputs = {}
 
