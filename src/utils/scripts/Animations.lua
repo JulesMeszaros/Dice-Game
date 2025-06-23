@@ -4,6 +4,38 @@ function AnimationUtils.osccilate(time, periode, amp) --Periode en secondes
     return (amp/2) + (amp/2) * math.sin(2 * math.pi * time / periode)
 end
 
+function AnimationUtils.springUpdate(current, target, velocity, dt, frequency, damping)
+    local f = frequency * 2 * math.pi
+    local g = damping
+    local delta = target - current
+    local accel = f * f * delta - 2 * g * f * velocity
+    velocity = velocity + accel * dt
+    current = current + velocity * dt
+    return current, velocity
+end
+
+function AnimationUtils.shake(target, xintensity, yintensity, duration)
+    local shakeDuration = 0.01 --seconds
+    local nIterations = duration/shakeDuration
+
+    for i=1, nIterations do
+
+        local xShake = math.random(-1*xintensity, xintensity)
+        local yShake = math.random(-1*yintensity, yintensity)
+
+        target.animator:addGroup({
+            {property = "x", from=0, targetValue=xShake, duration=shakeDuration},
+            {property = "y", from=0, targetValue=yShake, duration=shakeDuration},
+        })
+    end
+    target.animator:addGroup({
+            {property = "x", from=target.x, targetValue=0, duration=shakeDuration},
+            {property = "y", from=target.y, targetValue=0, duration=shakeDuration},
+        })
+
+end
+
+--Easings
 local Easing = {}
 
 function Easing.linear(t)
@@ -63,15 +95,5 @@ function Easing.outBounce(t)
 end
 
 AnimationUtils.Easing = Easing
-
-function AnimationUtils.springUpdate(current, target, velocity, dt, frequency, damping)
-    local f = frequency * 2 * math.pi
-    local g = damping
-    local delta = target - current
-    local accel = f * f * delta - 2 * g * f * velocity
-    velocity = velocity + accel * dt
-    current = current + velocity * dt
-    return current, velocity
-end
 
 return AnimationUtils 

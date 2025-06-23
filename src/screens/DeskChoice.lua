@@ -530,7 +530,6 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
     --Ciggies
     for key,ciggie in next,self.uiElements.ciggiesUI do
         ciggie:releaseEvent()
-        ciggie:detectBelowCanvas(self)
         ciggie.isBeingDragged = false
     end
 end

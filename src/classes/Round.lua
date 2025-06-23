@@ -94,23 +94,21 @@ end
 --==MOUSE/KEYBOARD FUNCTIONS==--
 
 function Round:keypressed(key) --(Mainly for debug)
-    if(key=='h')then
+    if(key=='h')then --add 10 hands
         self.remainingHands = self.remainingHands + 10
     end
 
-    if(key=="r") then
+    if(key=="r") then --set rerolls to 10
         self.availableRerolls = 10
     end
 
-    if(key=="g")then
-        for i,v in next,self.terrain.uiElements.ciggiesUI do
-            print(i)
-        end
-    end
-
-    if(key=='a')then
+    if(key=='a')then --skip round
         self.roundScore = 10000000
         self.terrain:outAnimation()
+    end
+
+    if(key=="s")then
+        AnimationUtils.shake(self.terrain, 30, 3, 0.2)
     end
 end
 
@@ -163,7 +161,7 @@ function Round:mousereleased(x, y, button, istouch, presses)
     --Ciggies
     for key,ciggie in next,self.terrain.uiElements.ciggiesUI do
         ciggie:releaseEvent()
-        if(ciggie:detectBelowCanvas(self)==1)then
+        if(ciggie:detectBelowCanvas(self)==Constants.CANVAS.DICE_MAT)then
             ciggie.ciggieObject:trigger(self)
         end
         ciggie.isBeingDragged = false

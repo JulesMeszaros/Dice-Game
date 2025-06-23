@@ -48,6 +48,8 @@ function RoundScreen:new(round)
         ciggiesUI = {}
     }
 
+    self.x, self.y = 0, 0
+
     --Create the terrain canvas
     self.canvas = love.graphics.newCanvas(round.gameCanvas:getWidth(),round.gameCanvas:getHeight() )
 
@@ -192,16 +194,15 @@ function RoundScreen:new(round)
     })
     self.animator:addDelay(0.2)
     self.animator:addGroup({
-        {property = "playerX", from = self.playerX, targetValue = self.playerTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-
+        {property = "playerX", from = self.playerX, targetValue = self.playerTX, duration = entryDuration, },
+        {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration,},
     })
     --Buttons animation
     self.uiElements.roundButtons["rerollButton"].animator:add('y', self.rerollBtnY, self.rerollBtnTY, entryDuration, AnimationUtils.Easing.inOutCubic)
     self.uiElements.roundButtons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
     self.uiElements.roundButtons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
 
-
+    AnimationUtils.shake(self, 0, 10, 0.1)
     self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects)end)
 
     --PLAYERS INFOS
@@ -238,6 +239,7 @@ function RoundScreen:update(dt)
 end
 
 function RoundScreen:updateCanvas(dt)
+    local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     if(self.round.roundType == Constants.ROUND_TYPES.BASE)then
         love.graphics.clear(40/255, 40/255, 43/255)
@@ -287,7 +289,7 @@ function RoundScreen:updateCanvas(dt)
         ciggie:draw()
     end
 
-    love.graphics.setCanvas(self.gameCanvas)
+    love.graphics.setCanvas(currentCanvas)
 end
 
 function RoundScreen:updateSelectedPosDices()
@@ -305,7 +307,7 @@ function RoundScreen:drawDiceTray(x, y, dices2)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.dice_tray)
     love.graphics.clear()
-    if(self.hoveredByCiggie) then
+    if(self.hoveredByCiggie == Constants.CANVAS.DICE_MAT) then
         love.graphics.setColor(0, 0.8, 0, 1)
     else
         love.graphics.setColor(1, 1, 1, 1)

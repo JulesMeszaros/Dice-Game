@@ -165,7 +165,7 @@ end
 
 function Run:drawRound()
     --Set the right canvas
-    love.graphics.draw(self.currentRound.terrain.canvas, 0, 0)
+    love.graphics.draw(self.currentRound.terrain.canvas, self.currentRound.terrain.x, self.currentRound.terrain.y)
 
 end
 

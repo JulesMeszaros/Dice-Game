@@ -71,4 +71,8 @@ Constants.EMPLOIS = {
     "Responsable"
 }
 
+Constants.CANVAS = { --Used for the ciggies
+    DICE_MAT = 1,
+}
+
 return Constants
