@@ -15,7 +15,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 
     self.dragOriginX = nil
     self.dragOriginY = nil
-    self.remainingHands = 4
+    self.remainingHands = Constants.BASE_TURNS
     self.roundScore = 0
     self.faceRewards = faceRewards
 

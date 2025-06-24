@@ -234,7 +234,7 @@ end
 function Run:resetAvailableFigures()
     self.availableFigures = {}
     for k,f in next, Constants.FIGURES do
-        self.availableFigures[f] = 1
+        self.availableFigures[f] = Constants.BASE_AVAILABLE_HANDS
     end
 end
 
