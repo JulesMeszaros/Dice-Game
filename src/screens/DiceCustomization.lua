@@ -140,8 +140,9 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 end
 
 function DiceCustomization:update(dt)
-    --Get hovered face
+    --Get hovered objects
     self:getCurrentlyHoveredFace()
+    self:getCurrentlyHoveredCiggie()
     
     --Update animations
     self.animator:update(dt)
@@ -179,7 +180,7 @@ function DiceCustomization:updateCanvas(dt)
     --Run informations
     self:drawRoundDetails()
     --Description
-    self:drawDescriptionCanvas()
+    self:drawDescription()
     --New Faces Canvas
     self:drawNewFacesCanvas()
     --Customization mat
@@ -374,30 +375,33 @@ function DiceCustomization:drawCiggiesTray()
 end
 
 --Description
-function DiceCustomization:drawDescriptionCanvas()
+function DiceCustomization:drawDescription()
+    local hoveredObject = self:getCurrentlyHoveredObject()
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.descriptionCanvas)
     love.graphics.clear()
     --Draw Sprite
-    love.graphics.draw(descriptionSprite, 0, 0)
+    love.graphics.draw(Sprites.DESCRIPTION, 0, 0)
 
 
-    if(self.currentlyHoveredFace) then
+    if(hoveredObject) then
 
         --Face Name
-        local faceName = self.currentlyHoveredFace.representedFace.name
-        local nameText = love.graphics.newText(Fonts.nexaMedium, faceName)
+        local objectName = hoveredObject.name
+        local nameText = love.graphics.newText(Fonts.nexa30, objectName)
 
         --Face tier
         local tierText = love.graphics.newText(
             Fonts.nexaSmall,
-            self.currentlyHoveredFace.representedFace.tier
+            hoveredObject.tier
         )
 
         --Description
-        local faceDescription = self.currentlyHoveredFace.representedFace.description
-        local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap( faceDescription, self.descriptionCanvas:getWidth()-20 )
+        local faceDescription = hoveredObject.description
+        local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap(faceDescription, self.descriptionCanvas:getWidth()-18 )
         local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
+        
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.draw(nameText, self.descriptionCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
         love.graphics.draw(tierText, self.descriptionCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
@@ -680,6 +684,8 @@ function DiceCustomization:generateCiggiesUI()
     end
 end
 
+--==Hovered objects==--
+
 function DiceCustomization:getCurrentlyHoveredFace()
     self.previouslyHoveredFace = self.currentlyHoveredFace --We save the state of the frame before
     self.currentlyHoveredFace = nil
@@ -701,6 +707,30 @@ function DiceCustomization:getCurrentlyHoveredFace()
         end
     end
 
+end
+
+function DiceCustomization:getCurrentlyHoveredCiggie()
+    self.currentlyHoveredCiggie = nil
+
+    for i,ciggie in next,self.uiElements.ciggiesUI do
+        if(ciggie:isHovered())then
+            self.currentlyHoveredCiggie = ciggie
+            break
+        end
+    end
+end
+
+--Gets the currently hovered object (dice, ciggie, etc...)
+function DiceCustomization:getCurrentlyHoveredObject()
+    local object = nil
+
+    if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie.representedObject
+    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedFace
+    else object = nil end
+    
+    if(object) then print(object.name) end
+
+    return object
 end
 
 return DiceCustomization
