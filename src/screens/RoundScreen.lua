@@ -118,6 +118,7 @@ function RoundScreen:new(round)
     --Ciggies
     self.ciggiesTray = love.graphics.newCanvas(420, 140)
     self.hoveredByCiggie = nil
+    self.currentlyHoveredCiggie = nil
     
     --Hand Score
     self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)
@@ -196,6 +197,7 @@ function RoundScreen:update(dt)
 
     --Hover infos
     self:getCurrentlyHoveredDice() --Le dé survolé
+    self:getCurrentlyHoveredCiggie() --Ciggie survolée
 
     --Utilities buttons
     for key,button in next,self.uiElements.roundButtons do
@@ -243,11 +245,11 @@ function RoundScreen:updateCanvas(dt)
     end
 
     --Face Details
-    self:drawFaceDetails(self.descriptionX, self.descriptionY)
+    self:drawDescription(self.descriptionX, self.descriptionY)
 
     --Dice Details
     self:updateDiceNet(dt)
-    for k,df in next,self.infoFaces do --éventuellement à bouger dans la fonction drawFaceDetails
+    for k,df in next,self.infoFaces do --éventuellement à bouger dans la fonction drawDescription
         df.targetedScale = self.diceDetailsTimer/self.diceDetailsTime
         df:updateCanvas(dt) 
         df:update(dt)
@@ -369,33 +371,35 @@ function RoundScreen:drawFigureGrid(x, y)
     
 end
 
-function RoundScreen:drawFaceDetails(x, y)
+function RoundScreen:drawDescription(x, y)
+    local hoveredObject = self:getCurrentlyHoveredObject()
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.descriptionCanvas)
     love.graphics.clear()
     --Draw Sprite
     love.graphics.draw(descriptionSprite, 0, 0)
 
-    if(self.currentlyHoveredFace) then
+    if(hoveredObject) then
         --Face Name
-        local faceName = self.currentlyHoveredDice:getCurrentFaceObject().name
+        local objectName = hoveredObject.name
         local nameText = love.graphics.newText(Fonts.nexa30, faceName)
 
         --Face tier
         local tierText = love.graphics.newText(
             Fonts.nexaSmall,
-            self.currentlyHoveredDice:getCurrentFaceObject().tier
+            hoveredObject.tier
         )
 
         --Description
-        local faceDescription = self.currentlyHoveredDice:getCurrentFaceObject().description
-        local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap( faceDescription, self.descriptionCanvas:getWidth()-18 )
-        local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
+        --local faceDescription = hoveredObject.description
+        --local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap(faceDescription, self.descriptionCanvas:getWidth()-18 )
+        --local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
 
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.draw(nameText, self.descriptionCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
         love.graphics.draw(tierText, self.descriptionCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
-        love.graphics.draw(descText, self.descriptionCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
+        --love.graphics.draw(descText, self.descriptionCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
         love.graphics.setColor(1, 1, 1, 1)
 
     end
@@ -554,22 +558,6 @@ function RoundScreen:createRoundInfos()
     self.moneyCanvas = love.graphics.newCanvas(290, 100)
 end
 
---==FIGURES TABLE==--
-function RoundScreen:getCurrentlyHoveredLine()
-    local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
-    local i = math.floor((mv.y-10)/50)+1
-    if(i>0 and i<=13)then
-        if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
-            self:highlightDices(self.calcBasePoints[i]()[2])
-            return i
-        end
-    else
-        self:highlightDices({})
-        return nil
-    end 
-end
-
-
 --==Animations==--
 function RoundScreen:inAnimations()
     local entryDuration = 0.3
@@ -651,6 +639,20 @@ function RoundScreen:outAnimation()
 end
 
 --==UTILS FUNCTIONS==--
+--HOVER FUNCTIONS
+function RoundScreen:getCurrentlyHoveredLine()
+    local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
+    local i = math.floor((mv.y-10)/50)+1
+    if(i>0 and i<=13)then
+        if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
+            self:highlightDices(self.calcBasePoints[i]()[2])
+            return i
+        end
+    else
+        self:highlightDices({})
+        return nil
+    end 
+end
 --Gets the currenty hovered dice, both in the mat AND in the dice net
 function RoundScreen:getCurrentlyHoveredDice()
     self.previouslyHoveredFace = self.currentlyHoveredFace
@@ -682,6 +684,31 @@ function RoundScreen:getCurrentlyHoveredDice()
     end
 
 end
+
+function RoundScreen:getCurrentlyHoveredCiggie()
+    self.currentlyHoveredCiggie = nil
+
+    for i,ciggie in next,self.uiElements.ciggiesUI do
+        if(ciggie:isHovered())then
+            self.currentlyHoveredCiggie = ciggie
+            break
+        end
+    end
+end
+
+--Gets the currently hovered object (dice, ciggie, etc...)
+function RoundScreen:getCurrentlyHoveredObject()
+    local object = nil
+
+    if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie 
+    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace
+    else object = nil end
+    
+    if(object) then print(object.name) end
+
+    return object
+end
+
 -- Updates the dice net
 function RoundScreen:updateDiceNet(dt)
     if(self.currentlyHoveredDice) then

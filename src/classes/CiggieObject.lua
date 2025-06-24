@@ -6,6 +6,7 @@ function CiggieObject:new()
     self.name = "Cigarette"
     self.description = "Donne le cancer askiiiip"
     self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/basicCiggie.png")
+    self.tier = "Clope"
     return self
 end
 

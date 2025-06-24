@@ -22,7 +22,7 @@ function Ciggie:new(ciggieObject, x, y, isSelectable, isHoverable, mousePosition
     self.dragXspeed = 0
 
     --Dice parameters
-    self.ciggieObject = ciggieObject
+    self.representedObject = ciggieObject
     
     --Position
     self.targetX = x
@@ -150,7 +150,7 @@ function Ciggie:detectBelowCanvas(round)
     if(round.run.currentState == Constants.RUN_STATES.ROUND) then
         --Dice mat
         if(self.x>500 and self.x<1440)and(self.y>491 and self.y<950)then
-            --self.ciggieObject:trigger(round)
+            --selfrepresentedObject:trigger(round)
             return Constants.CANVAS.DICE_MAT
         end
     end
