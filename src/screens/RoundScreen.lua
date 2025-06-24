@@ -383,7 +383,7 @@ function RoundScreen:drawDescription(x, y)
     if(hoveredObject) then
         --Face Name
         local objectName = hoveredObject.name
-        local nameText = love.graphics.newText(Fonts.nexa30, faceName)
+        local nameText = love.graphics.newText(Fonts.nexa30, objectName)
 
         --Face tier
         local tierText = love.graphics.newText(
@@ -392,14 +392,14 @@ function RoundScreen:drawDescription(x, y)
         )
 
         --Description
-        --local faceDescription = hoveredObject.description
-        --local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap(faceDescription, self.descriptionCanvas:getWidth()-18 )
-        --local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
+        local faceDescription = hoveredObject.description
+        local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap(faceDescription, self.descriptionCanvas:getWidth()-18 )
+        local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
 
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.draw(nameText, self.descriptionCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
         love.graphics.draw(tierText, self.descriptionCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
-        --love.graphics.draw(descText, self.descriptionCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
+        love.graphics.draw(descText, self.descriptionCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
         love.graphics.setColor(1, 1, 1, 1)
 
     end
@@ -700,8 +700,8 @@ end
 function RoundScreen:getCurrentlyHoveredObject()
     local object = nil
 
-    if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie 
-    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace
+    if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie.representedObject
+    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedFace
     else object = nil end
     
     if(object) then print(object.name) end
