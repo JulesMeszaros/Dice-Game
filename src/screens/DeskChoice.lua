@@ -141,8 +141,9 @@ function DeskChoice:update(dt)
 
     self.animator:update(dt)
 
-    --hovered face
+    --hovered objects
     self:getCurrentlyHoveredFace()
+    self:getCurrentlyHoveredCiggie()
 
     for key,button in next,self.uiElements.buttons do
         button:update(dt)
@@ -151,7 +152,7 @@ function DeskChoice:update(dt)
 
     --UI
     self:drawDeck(dt)
-    self:drawDescriptionCanvas()
+    self:drawDescription()
     self:drawFigureGrid()
     self:drawRoundDetails()
     self:drawDiceDetails(dt)
@@ -326,7 +327,9 @@ end
 
 
 --Description
-function DeskChoice:drawDescriptionCanvas()
+function DeskChoice:drawDescription()
+    local hoveredObject = self:getCurrentlyHoveredObject()
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.descriptionCanvas)
     love.graphics.clear()
@@ -334,22 +337,23 @@ function DeskChoice:drawDescriptionCanvas()
     love.graphics.draw(Sprites.DESCRIPTION, 0, 0)
 
 
-    if(self.currentlyHoveredFace) then
+    if(hoveredObject) then
 
-        --Face Name
-        local faceName = self.currentlyHoveredFace.representedFace.name
-        local nameText = love.graphics.newText(Fonts.nexa30, faceName)
+        --Name
+        local objectName = hoveredObject.name
+        local nameText = love.graphics.newText(Fonts.nexa30, objectName)
 
         --Face tier
         local tierText = love.graphics.newText(
             Fonts.nexaSmall,
-            self.currentlyHoveredFace.representedFace.tier
+            hoveredObject.tier
         )
 
         --Description
-        local faceDescription = self.currentlyHoveredFace.representedFace.description
-        local descWidth, descWrappedtext = Fonts.nexaSmall:getWrap( faceDescription, self.descriptionCanvas:getWidth()-20 )
+        local faceDescription = hoveredObject.description
+        local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap(faceDescription, self.descriptionCanvas:getWidth()-18 )
         local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
+        
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.draw(nameText, self.descriptionCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
         love.graphics.draw(tierText, self.descriptionCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
@@ -615,6 +619,30 @@ function DeskChoice:getCurrentlyHoveredFace()
         end
     end
 
+end
+
+function DeskChoice:getCurrentlyHoveredCiggie()
+    self.currentlyHoveredCiggie = nil
+
+    for i,ciggie in next,self.uiElements.ciggiesUI do
+        if(ciggie:isHovered())then
+            self.currentlyHoveredCiggie = ciggie
+            break
+        end
+    end
+end
+
+--Gets the currently hovered object (dice, ciggie, etc...)
+function DeskChoice:getCurrentlyHoveredObject()
+    local object = nil
+
+    if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie.representedObject
+    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedFace
+    else object = nil end
+    
+    if(object) then print(object.name) end
+
+    return object
 end
 
 function DeskChoice:getCenteredPositions(count, objectWidth, spacing, centerX)

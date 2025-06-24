@@ -18,3 +18,4 @@
 
 - Déplacer les fonctions "Go to xxxx" dans la classe game.lua ou run.lua
 - Modifier la classe dice hover info pour la rendre utilisable beaucoup plus facilement, et compatible avec tous les canvas
+- Utiliser le fichier Sprites.lua partout dans le code pour alléger les importations
