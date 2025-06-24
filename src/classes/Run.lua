@@ -57,9 +57,10 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.currentFloor = Floor:new(1, self)
     self.floorNumber = 1 --Représente l'étage (augmente de 1 après un boss)
     self.floorDeskNumber = 1 --Représente le numéro de bureau dans l'étage actuel (retourne à 1 après un boss)
-    self.deskChoice = DeskChoice:new(self.currentFloor, self)
+    self:goToRoundSelection()
+    --[[ self.deskChoice = DeskChoice:new(self.currentFloor, self)
     self.deskChoice:generateCiggiesUI()
-    self.currentState = Constants.RUN_STATES.ROUND_CHOICE
+    self.currentState = Constants.RUN_STATES.ROUND_CHOICE ]]
     
     
 
@@ -108,19 +109,6 @@ function Run:createNewFloor()
     local floorNumber = self.currentFloor.floorNumber + 1
     local newFloor = Floor:new(floorNumber, self)
     return newFloor
-end
-
-function Run:startNewRound(round, roundtype)
-    --Sets the round number
-    self.roundNumber = self.roundNumber + 1
-    --Makes the first roll
-    --round:makeRoll(self.diceObjects)
-    --Sets the run's current round
-    self.currentRound = round
-    self.currentRound.terrain:generateCiggiesUI()
-
-    --Changes the screen to the round screen
-    self.currentState = Constants.RUN_STATES.ROUND
 end
 
 function Run:endRound()
@@ -248,6 +236,26 @@ function Run:resetAvailableFigures()
     for k,f in next, Constants.FIGURES do
         self.availableFigures[f] = 1
     end
+end
+
+--==Change screen==--
+function Run:goToRoundSelection()
+    local deskchoice = DeskChoice:new(self.currentFloor, self)
+    deskchoice:generateCiggiesUI()
+    self.deskChoice = deskchoice
+
+    self.currentState = Constants.RUN_STATES.ROUND_CHOICE --Change d'état de Run
+end
+
+function Run:startNewRound(round, roundtype)
+    --Sets the round number
+    self.roundNumber = self.roundNumber + 1
+
+    self.currentRound = round
+    self.currentRound.terrain:generateCiggiesUI()
+
+    --Changes the screen to the round screen
+    self.currentState = Constants.RUN_STATES.ROUND
 end
 
 return Run

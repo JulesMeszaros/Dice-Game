@@ -513,7 +513,7 @@ function DiceCustomization:outAnimation()
             })
     end
 
-    self.animator:addDelay(0.5, function()self:goToRoundSelection() end)
+    self.animator:addDelay(0.5, function()self.previousRound.run:goToRoundSelection() end)
 
 
 end
@@ -655,14 +655,6 @@ function DiceCustomization:createDiceUI(diceObject, i)
     end
 
     return diceUI
-end
-
-function DiceCustomization:goToRoundSelection()
-    local deskchoice = DeskChoice:new(self.previousRound.run.currentFloor, self.previousRound.run)
-    deskchoice:generateCiggiesUI()
-    self.previousRound.run.deskChoice = deskchoice
-
-    self.previousRound.run.currentState = Constants.RUN_STATES.ROUND_CHOICE --Change d'état de Run
 end
 
 function DiceCustomization:getCenteredPositions(count, objectWidth, spacing, centerX)

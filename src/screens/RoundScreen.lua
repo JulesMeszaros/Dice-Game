@@ -124,6 +124,10 @@ function RoundScreen:new(round)
     self.handScoreRX, self.handScoreRY = 1
     self.handScoreRot = 0
 
+    --PLAYERS INFOS
+    self.playerInfos = love.graphics.newCanvas(650,260)
+    self.enemyInfos = love.graphics.newCanvas(650,260)
+
     --Positions
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
     self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.canvas:getHeight()+1000
@@ -178,36 +182,8 @@ function RoundScreen:new(round)
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
-    local entryDuration = 0.3
-
-    --Animation
-    self.animator:addGroup({
-        {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "diceMaty", from = self.diceMaty, targetValue = self.diceMatTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "moneyY", from = self.moneyY, targetValue = self.moneyTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.ciggiesTrayTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
-    })
-    self.animator:addDelay(0.2)
-    self.animator:addGroup({
-        {property = "playerX", from = self.playerX, targetValue = self.playerTX, duration = entryDuration, },
-        {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration,},
-    })
-    --Buttons animation
-    self.uiElements.roundButtons["rerollButton"].animator:add('y', self.rerollBtnY, self.rerollBtnTY, entryDuration, AnimationUtils.Easing.inOutCubic)
-    self.uiElements.roundButtons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
-    self.uiElements.roundButtons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
-
-    AnimationUtils.shake(self, 0, 10, 0.1)
-    self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects)end)
-
-    --PLAYERS INFOS
-    self.playerInfos = love.graphics.newCanvas(650,260)
-    self.enemyInfos = love.graphics.newCanvas(650,260)
+    --Starts the round with animations
+    self:inAnimations()
 
     return self
 end
@@ -595,6 +571,36 @@ end
 
 
 --==Animations==--
+function RoundScreen:inAnimations()
+    local entryDuration = 0.3
+
+    --Start Round Animations
+    self.animator:addGroup({
+        {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "diceMaty", from = self.diceMaty, targetValue = self.diceMatTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyY", from = self.moneyY, targetValue = self.moneyTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.ciggiesTrayTX, duration = entryDuration, easing = AnimationUtils.Easing.inOutCubic},
+    })
+    self.animator:addDelay(0.2)
+    self.animator:addGroup({
+        {property = "playerX", from = self.playerX, targetValue = self.playerTX, duration = entryDuration, },
+        {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration,},
+    })
+    --Buttons animation
+    self.uiElements.roundButtons["rerollButton"].animator:add('y', self.rerollBtnY, self.rerollBtnTY, entryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.roundButtons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.roundButtons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
+
+    AnimationUtils.shake(self, 0, 10, 0.1)
+    --Ends the animations by making the first roll
+    self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects)end)
+end
+
 function RoundScreen:animateHandScore()
     local randomAngle = math.random(2, 5)/10
     local randomDir = math.random(0, 1) == 0 and -1 or 1
@@ -645,6 +651,7 @@ function RoundScreen:outAnimation()
 end
 
 --==UTILS FUNCTIONS==--
+--Gets the currenty hovered dice, both in the mat AND in the dice net
 function RoundScreen:getCurrentlyHoveredDice()
     self.previouslyHoveredFace = self.currentlyHoveredFace
     self.currentlyHoveredFace = nil
@@ -675,7 +682,7 @@ function RoundScreen:getCurrentlyHoveredDice()
     end
 
 end
-
+-- Updates the dice net
 function RoundScreen:updateDiceNet(dt)
     if(self.currentlyHoveredDice) then
         for i = 1, 6 do
@@ -700,7 +707,7 @@ function RoundScreen:playFigure(figure, params)
         self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure]-1
     end
 end
-
+--Reorganises the UI faces by face order
 function RoundScreen:reorganiseDiceFaces(dices)
     --Reorganise the dice by face (increasing)
     local reorganisedDices = {}
@@ -726,7 +733,7 @@ function RoundScreen:reorganiseDiceFaces(dices)
         i = i+1
     end    
 end
-
+--Highlight the dices when hovering a figure
 function RoundScreen:highlightDices(usedDices)
     for key,diceface in next,self.round.diceFaces do
         diceface:setHighlighted(false)
@@ -738,13 +745,13 @@ function RoundScreen:highlightDices(usedDices)
         end
     end
 end
-
+--Used to generate the ciggies UI before switching to the screen
 function RoundScreen:generateCiggiesUI()
     for i,ciggie in next,self.round.run.ciggiesObjects do
         self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
     end
 end
-
+--Returns the current canvas hovered by a ciggie
 function RoundScreen:getCanvasHoveredByCiggie()
     self.hoveredByCiggie = nil
     for i, ciggie in next,self.uiElements.ciggiesUI do --get the current canvas hovered by a ciggie (if one is hovered)

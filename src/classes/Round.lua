@@ -76,8 +76,6 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
         self.diceFaces[diceobject] = diceFaceUI
     end
 
-
-
     return self
 end
 
@@ -364,7 +362,7 @@ function Round:updateselectedDices(uiFace)
     --Update the unselected dices position
 end
 
---==REROLL FUNCTIONS (NEW)==--
+--==REROLL FUNCTIONS==--
 function Round:rerollDices() --Triggers the makeRoll function after clicking the reroll button
     local dicesToReroll = {}
     for k,d in next,self.diceObjects do
