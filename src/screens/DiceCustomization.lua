@@ -15,14 +15,6 @@ local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 local DiceCustomization = {}
 DiceCustomization.__index = DiceCustomization
 
---Sprites
-local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/Description.png")
-local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/Office.png")
-local MoneySprite= love.graphics.newImage("src/assets/sprites/ui/Money.png")
-local RerollsSprite= love.graphics.newImage("src/assets/sprites/ui/Rerolls.png")
-local TurnsSprite= love.graphics.newImage("src/assets/sprites/ui/Turns.png")
-local newFacesImage = love.graphics.newImage("src/assets/sprites/ui/Rewards.png")
-local CustomMatImage = love.graphics.newImage("src/assets/sprites/ui/Customization Mat.png")
 
 function DiceCustomization:new(previousRound, newFaceObjects)
     local self = setmetatable({}, DiceCustomization)
@@ -327,14 +319,14 @@ function DiceCustomization:drawRoundDetails()
     --ROUND
     love.graphics.setCanvas(self.roundNumberCanvas)
     love.graphics.clear()
-    love.graphics.draw(FloorInfosSprite, 0, 0)
+    love.graphics.draw(Sprites.FLOOR_INFOS, 0, 0)
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(currentRoundText, self.roundNumberCanvas:getWidth()/2, self.roundNumberCanvas:getHeight()/2, 0, 1, 1, currentRoundText:getWidth()/2, currentRoundText:getHeight()/2)
     love.graphics.setColor(1, 1, 1, 1)
     --HANDS
     love.graphics.setCanvas(self.handsCanvas)
     love.graphics.clear()
-    love.graphics.draw(TurnsSprite, 0, 0)
+    love.graphics.draw(Sprites.TURNS, 0, 0)
     love.graphics.setColor(245/255, 247/255, 228/255, 1)
     love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
@@ -342,7 +334,7 @@ function DiceCustomization:drawRoundDetails()
     --REROLLS
     love.graphics.setCanvas(self.rerollsCanvas)
     love.graphics.clear()
-    love.graphics.draw(RerollsSprite, 0, 0)
+    love.graphics.draw(Sprites.REROLLS, 0, 0)
     love.graphics.setColor(245/255, 247/255, 228/255, 1)
     love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
@@ -350,7 +342,7 @@ function DiceCustomization:drawRoundDetails()
     --MONEY
     love.graphics.setCanvas(self.moneyCanvas)
     love.graphics.clear()
-    love.graphics.draw(MoneySprite,0,0)
+    love.graphics.draw(Sprites.MONEY,0,0)
     love.graphics.setColor(1, 195/256, 132/256, 1)
     love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
     love.graphics.setColor(1, 1, 1, 1)
@@ -420,7 +412,7 @@ function DiceCustomization:drawNewFacesCanvas()
     love.graphics.setCanvas(self.newFacesCanvas)
     love.graphics.clear()
 
-    love.graphics.draw(newFacesImage, 0, 0)
+    love.graphics.draw(Sprites.REWARDS, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.newFacesCanvas, self.newFacesX, self.newFacesY, 0, 1, 1)
@@ -431,7 +423,7 @@ function DiceCustomization:drawCustomizationMat()
     love.graphics.setCanvas(self.customizationMat)
     love.graphics.clear()
 
-    love.graphics.draw(CustomMatImage, 0, 0)
+    love.graphics.draw(Sprites.CUSTOMIZATION_MAT, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.customizationMat, self.customizationMatX, self.customizationMatY, 0, 1, 1)

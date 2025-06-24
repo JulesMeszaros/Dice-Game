@@ -16,18 +16,6 @@ local DiceObject = require("src.classes.DiceObject")
 local FaceObject = require("src.classes.FaceObject")
 local DiceFace = require("src.classes.ui.DiceFace")
 
---Sprites
-local descriptionSprite = love.graphics.newImage("src/assets/sprites/ui/Description.png")
-local DiceInfosSprite = love.graphics.newImage("src/assets/sprites/ui/DiceComposition.png")
-local EnemyInfosSprite= love.graphics.newImage("src/assets/sprites/ui/Enemy.png")
-local FloorInfosSprite= love.graphics.newImage("src/assets/sprites/ui/Office.png")
-local PlayerInfosSprite = love.graphics.newImage("src/assets/sprites/ui/Player.png")
-local MoneySprite= love.graphics.newImage("src/assets/sprites/ui/Money.png")
-local RerollsSprite= love.graphics.newImage("src/assets/sprites/ui/Rerolls.png")
-local TableauFiguresSprite= love.graphics.newImage("src/assets/sprites/ui/Grid.png")
-local DiceMatSprite = love.graphics.newImage("src/assets/sprites/ui/Dice Mat.png")
-local TurnsSprite= love.graphics.newImage("src/assets/sprites/ui/Turns.png")
-
 local Animator = require("src.utils.Animator")
 
 local RoundScreen = {}
@@ -290,7 +278,7 @@ function RoundScreen:drawDiceTray(x, y, dices2)
     else
         love.graphics.setColor(1, 1, 1, 1)
     end
-    love.graphics.draw(DiceMatSprite, 0, 0, 0, 1, 1)
+    love.graphics.draw(Sprites.DICE_MAT, 0, 0, 0, 1, 1)
     love.graphics.setColor(1, 1, 1, 1)
     --On déssine les autres dés
     for key,uiFace in next,dices2 do
@@ -318,7 +306,7 @@ function RoundScreen:drawFigureGrid(x, y)
     love.graphics.setCanvas(self.figureButtonsCanvas)
     love.graphics.clear()
     --Draw the table
-    love.graphics.draw(TableauFiguresSprite, 0, 0)
+    love.graphics.draw(Sprites.GRID, 0, 0)
 
     --Draw the scores
     love.graphics.setColor(249/255, 130/255, 132/255)
@@ -378,7 +366,7 @@ function RoundScreen:drawDescription(x, y)
     love.graphics.setCanvas(self.descriptionCanvas)
     love.graphics.clear()
     --Draw Sprite
-    love.graphics.draw(descriptionSprite, 0, 0)
+    love.graphics.draw(Sprites.DESCRIPTION, 0, 0)
 
     if(hoveredObject) then
         --Face Name
@@ -415,7 +403,7 @@ function RoundScreen:drawDiceDetails(x, y)
     love.graphics.clear()
 
     --Draw sprite
-    love.graphics.draw(DiceInfosSprite, 0, 0)
+    love.graphics.draw(Sprites.DICE_INFOS, 0, 0)
     
     --Draw the dice net
     if self.currentlyHoveredDice then
@@ -440,14 +428,14 @@ function RoundScreen:drawRoundDetails()
     --ROUND
     love.graphics.setCanvas(self.roundNumberCanvas)
     love.graphics.clear()
-    love.graphics.draw(FloorInfosSprite, 0, 0)
+    love.graphics.draw(Sprites.FLOOR_INFOS, 0, 0)
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(currentRoundText, self.roundNumberCanvas:getWidth()/2, self.roundNumberCanvas:getHeight()/2, 0, 1, 1, currentRoundText:getWidth()/2, currentRoundText:getHeight()/2)
     love.graphics.setColor(1, 1, 1, 1)
     --HANDS
     love.graphics.setCanvas(self.handsCanvas)
     love.graphics.clear()
-    love.graphics.draw(TurnsSprite, 0, 0)
+    love.graphics.draw(Sprites.TURNS, 0, 0)
     love.graphics.setColor(245/255, 247/255, 228/255, 1)
     love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
@@ -455,7 +443,7 @@ function RoundScreen:drawRoundDetails()
     --REROLLS
     love.graphics.setCanvas(self.rerollsCanvas)
     love.graphics.clear()
-    love.graphics.draw(RerollsSprite, 0, 0)
+    love.graphics.draw(Sprites.REROLLS, 0, 0)
     love.graphics.setColor(245/255, 247/255, 228/255, 1)
     love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
@@ -463,7 +451,7 @@ function RoundScreen:drawRoundDetails()
     --MONEY
     love.graphics.setCanvas(self.moneyCanvas)
     love.graphics.clear()
-    love.graphics.draw(MoneySprite,0,0)
+    love.graphics.draw(Sprites.MONEY,0,0)
     love.graphics.setColor(1, 195/256, 132/256, 1)
     love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
     love.graphics.setColor(1, 1, 1, 1)
@@ -492,7 +480,7 @@ function RoundScreen:drawPlayersInfos()
     --Player
     love.graphics.setCanvas(self.playerInfos)
     love.graphics.clear()
-    love.graphics.draw(PlayerInfosSprite, 0, 0)
+    love.graphics.draw(Sprites.PLAYER_INFOS, 0, 0)
     local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.round.roundScore))
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(scoreText, self.playerInfos:getWidth()-20, 72, 0, 1, 1, scoreText:getWidth(), 0)
@@ -501,7 +489,7 @@ function RoundScreen:drawPlayersInfos()
     --Ennemy
     love.graphics.setCanvas(self.enemyInfos)
     love.graphics.clear()
-    love.graphics.draw(EnemyInfosSprite, 0, 0)
+    love.graphics.draw(Sprites.ENEMY_INFOS, 0, 0)
     local targetScoreText = love.graphics.newText(font, 'Target : '..tostring(self.round.targetScore))
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(targetScoreText, 20, 210)
