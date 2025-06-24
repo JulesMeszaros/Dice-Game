@@ -11,9 +11,9 @@ local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 local Badge = require("src.classes.ui.Badge")
 local Button = require("src.classes.ui.Button")
 local DiceFace = require("src.classes.ui.DiceFace")
+local Screen = require("src.classes.GameScreen")
 
-local DeskChoice = {}
-
+local DeskChoice = setmetatable({}, { __index = Screen })
 DeskChoice.__index = DeskChoice
 
 local choiceNumber = 4
@@ -21,7 +21,7 @@ local choiceNumber = 4
 --Images
 
 function DeskChoice:new(floor, run)
-    local self = setmetatable({}, DeskChoice)
+    local self = setmetatable(Screen.new(), DeskChoice)
   
     self.uiElements = {
         buttons = {},
@@ -598,27 +598,6 @@ end
 
 function DeskChoice:createFaceInfosCanvas(face)
     return FaceHoverInfo:new(face, "both")
-end
-
-function DeskChoice:getCurrentlyHoveredFace()
-    self.previouslyHoveredFace = self.currentlyHoveredFace --We save the state of the frame before
-    self.currentlyHoveredFace = nil
-
-    for i,face in next,self.infoFaces do
-        if face:isHovered() then self.currentlyHoveredFace = face ; break end
-    end
-
-    for i,badge in next,self.badges do
-        if(badge.currentlyHoveredFace) then self.currentlyHoveredFace = badge.currentlyHoveredFace ; break end
-    end
-
-    --Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
-    if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
-        if (self.currentlyHoveredFace) then
-            self.hoverInfosCanvas = self:createFaceInfosCanvas(self.currentlyHoveredFace)
-        end
-    end
-
 end
 
 function DeskChoice:getCurrentlyHoveredCiggie()
