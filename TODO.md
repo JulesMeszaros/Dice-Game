@@ -15,5 +15,4 @@
 
 - Déplacer les fonctions "Go to xxxx" dans la classe game.lua ou run.lua
 - Modifier la classe dice hover info pour la rendre utilisable beaucoup plus facilement, et compatible avec tous les canvas
-- Utiliser le fichier Sprites.lua partout dans le code pour alléger les importations
 - Essayer de créer une classe game screen qui puisse au moins généraliser les 4 écrans principaux de jeu : shop, round, desk choice, et dice custmization pour distribuer la quantité de code
