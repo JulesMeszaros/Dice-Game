@@ -4,11 +4,8 @@ local Fonts = require("src.utils.Fonts")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local Animator = require("src.utils.Animator")
 local Sprites = require("src.utils.Sprites")
-local Ciggie = require("src.classes.ui.Ciggie")
 local FaceObject = require("src.classes.FaceObject")
 local DiceObject = require("src.classes.DiceObject")
-local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
-local Badge = require("src.classes.ui.Badge")
 local Button = require("src.classes.ui.Button")
 local DiceFace = require("src.classes.ui.DiceFace")
 
@@ -47,6 +44,8 @@ function GameScreen:new(floor, run, screenType, round)
     self.animator = Animator:new(self)
 
     --UI Canvas
+    self.customizationMat = love.graphics.newCanvas(1860, 600)
+    self.newFacesCanvas = love.graphics.newCanvas(950, 400)
     self.dice_tray = love.graphics.newCanvas(930, 630)
     self.descriptionCanvas = love.graphics.newCanvas(420, 240)
     self.figureButtonsCanvas = love.graphics.newCanvas(450,670)
@@ -77,15 +76,21 @@ function GameScreen:new(floor, run, screenType, round)
     self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+450, self.canvas:getHeight()-30
     self.deckTX, self.deckTY , self.deckX, self.deckY = 1300, 110, 1300, self.canvas:getHeight()+20
 
+    self.customizationMatTX, self.customizationMatTY, self.customizationMatX, self.customizationMatY = 30, 30, 30, -700
+    self.newFacesTX, self.newFacesTY, self.newFacesX, self.newFacesY = 500, 650, 500, self.canvas:getHeight()+450
+
     --Btns positions
     self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
     self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 100, 1010, -150, 1010
     self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
+    self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY = 255, 680, -255, 680
 
     --Entry animation
     self.animator:addDelay(0.1)
 
     self.animator:addGroup({
+        {property = "customizationMatY", from = self.customizationMatY, targetValue = self.customizationMatTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "newFacesY", from = self.newFacesY, targetValue = self.newFacesTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},

@@ -6,18 +6,11 @@ local Constants = require("src.utils.Constants")
 local FaceHoverInfos = require("src.classes.ui.FaceHoverInfo")
 local AnimationUtils = require("src.utils.scripts.Animations")
 --UI
-local Button = require("src.classes.ui.Button")
 local Sprites = require("src.utils.Sprites")
 --Ciggies
 local Ciggie = require("src.classes.ui.Ciggie")
-local CiggieObject = require("src.classes.CiggieObject")
 --Dices
-local DiceObject = require("src.classes.DiceObject")
-local FaceObject = require("src.classes.FaceObject")
-local DiceFace = require("src.classes.ui.DiceFace")
 local Screen = require("src.classes.GameScreen")
-
-local Animator = require("src.utils.Animator")
 
 local RoundScreen = setmetatable({}, { __index = Screen })
 RoundScreen.__index = RoundScreen
@@ -70,7 +63,6 @@ function RoundScreen:new(round)
     self.pointsDetailsCanvas = nil
 
     --DICE DETAILS
-    self.diceDetailsCanvas = love.graphics.newCanvas(420, 600)
     self.diceDetailsTimer = 0
     self.diceDetailsTime = 0.5
     --Creating the different ui faces that will be shown
@@ -119,6 +111,7 @@ end
 function RoundScreen:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
+    --set background
     if(self.round.roundType == Constants.ROUND_TYPES.BASE)then
         love.graphics.clear(40/255, 40/255, 43/255)
     else
@@ -137,7 +130,6 @@ function RoundScreen:updateCanvas(dt)
 
     self:drawFigureGrid(self.gridX, self.gridY)
     self:getCurrentlyHoveredLine() --La figure survolée
-
 
     --Bouttouns de round
     for k,b in next,self.uiElements.buttons do

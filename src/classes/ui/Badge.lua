@@ -3,12 +3,9 @@ local Fonts = require("src.utils.Fonts")
 local Animator = require("src.utils.Animator")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
-
 local DiceFace = require("src.classes.ui.DiceFace")
-
 local UIElement = require("src.classes.ui.UIElement")
 local Inputs = require("src.utils.scripts.Inputs")
-
 local badgeSprite = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
 
 local Badge = setmetatable({}, { __index = UIElement })
