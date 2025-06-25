@@ -167,6 +167,171 @@ function GameScreen:draw()
 
 end
 
+--==UI Draw functions==--
+
+--Description
+function GameScreen:drawDescription()
+    local hoveredObject = self:getCurrentlyHoveredObject()
+
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.descriptionCanvas)
+    love.graphics.clear()
+    --Draw Sprite
+    love.graphics.draw(Sprites.DESCRIPTION, 0, 0)
+
+
+    if(hoveredObject) then
+
+        --Name
+        local objectName = hoveredObject.name
+        local nameText = love.graphics.newText(Fonts.nexa30, objectName)
+
+        --Face tier
+        local tierText = love.graphics.newText(
+            Fonts.nexaSmall,
+            hoveredObject.tier
+        )
+
+        --Description
+        local faceDescription = hoveredObject.description
+        local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap(faceDescription, self.descriptionCanvas:getWidth()-18 )
+        local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
+        
+        love.graphics.setColor(0, 0, 0, 1)
+        love.graphics.draw(nameText, self.descriptionCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
+        love.graphics.draw(tierText, self.descriptionCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
+        love.graphics.draw(descText, self.descriptionCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
+        love.graphics.setColor(1, 1, 1, 1)
+
+    end
+
+    love.graphics.setCanvas(currentCanvas)
+
+    love.graphics.draw(self.descriptionCanvas, self.descriptionX, self.descriptionY, 0, 1, 1, self.descriptionCanvas:getWidth(), 0)
+end
+
+--Round details canvas
+function GameScreen:drawRoundDetails()
+    local currentCanvas = love.graphics.getCanvas()
+    --Create the texts
+    local rerollText = love.graphics.newText(Fonts.nexaBig, '-')
+    local currentHands = love.graphics.newText(Fonts.nexaBig, '-')
+    local currentRoundText = love.graphics.newText(Fonts.nexaSmall, 'Floor '..tostring(self.run.floorNumber)..'\nDesk : '..tostring("-"))
+    local moneyText = love.graphics.newText(Fonts.nexaBig, tostring(self.run.money).."€")
+
+    if(self.round) then
+        rerollText = love.graphics.newText(Fonts.nexaBig, tostring(self.round.availableRerolls))
+        currentHands = love.graphics.newText(Fonts.nexaBig, tostring(self.round.remainingHands))
+        currentRoundText = love.graphics.newText(Fonts.nexaSmall, 'Floor '..tostring(self.round.floorNumber)..'\nDesk : '..tostring(self.round.deskNumber))
+        moneyText = love.graphics.newText(Fonts.nexaBig, tostring(self.round.run.money).."€")
+    end
+
+    --ROUND
+    love.graphics.setCanvas(self.roundNumberCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.FLOOR_INFOS, 0, 0)
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.draw(currentRoundText, self.roundNumberCanvas:getWidth()/2, self.roundNumberCanvas:getHeight()/2, 0, 1, 1, currentRoundText:getWidth()/2, currentRoundText:getHeight()/2)
+    love.graphics.setColor(1, 1, 1, 1)
+    --HANDS
+    love.graphics.setCanvas(self.handsCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.TURNS, 0, 0)
+    love.graphics.setColor(245/255, 247/255, 228/255, 1)
+    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2+3)
+    love.graphics.setColor(1, 1, 1, 1)
+
+    --REROLLS
+    love.graphics.setCanvas(self.rerollsCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.REROLLS, 0, 0)
+    love.graphics.setColor(245/255, 247/255, 228/255, 1)
+    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2+3)
+    love.graphics.setColor(1, 1, 1, 1)
+
+    --MONEY
+    love.graphics.setCanvas(self.moneyCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.MONEY,0,0)
+    love.graphics.setColor(1, 195/256, 132/256, 1)
+    love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
+    love.graphics.setColor(1, 1, 1, 1)
+
+
+    --DRAW ALL THE CANVAS
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.roundNumberCanvas, self.floorX, self.floorY)
+    love.graphics.draw(self.handsCanvas, self.turnsX, self.turnsY)
+    love.graphics.draw(self.rerollsCanvas, self.rerollsX, self.rerollsY)
+    love.graphics.draw(self.moneyCanvas, self.moneyX, self.moneyY)
+end
+
+function GameScreen:drawCiggiesTray()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.ciggiesTray)
+
+    love.graphics.draw(Sprites.CIGGIES_TRAY, 0, 0)
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
+end
+
+function GameScreen:drawFigureGrid()
+    local targetCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.figureButtonsCanvas)
+    love.graphics.clear()
+    --Draw the table
+    love.graphics.draw(Sprites.GRID, 0, 0)
+
+    if(self.screenType == Constants.ROUND_STATES.ROUND)then
+        --Draw the scores
+        love.graphics.setColor(249/255, 130/255, 132/255)
+
+        for i=1, 13 do
+            local calcScore = love.graphics.newText(Fonts.nexaSmall, self.calcBasePoints[i]()[1])
+            love.graphics.draw(calcScore, 225, 50*(i-1)+38, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
+        end
+    end
+
+    --Write the remaining possible hands
+    love.graphics.setColor(0, 0, 0, 1)
+
+    for i=1, 13 do
+        local handsRemaining = love.graphics.newText(Fonts.nexaSmall, self.run.availableFigures[i])
+        love.graphics.draw(handsRemaining, 368, 50*(i-1)+38, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
+        --if no hands remaining, grey out the line
+        if(self.run.availableFigures[i]<=0) then
+            love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
+            love.graphics.rectangle("fill", 10, (i-1)*50+10, self.figureButtonsCanvas:getWidth()-20, 50)
+            love.graphics.setColor(0, 0, 0, 1)
+        end
+    end
+
+    love.graphics.setColor(1, 1, 1, 1)
+
+    local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
+    local i = math.floor((mv.y-10)/50)+1
+
+    --If we are hovering a line
+    if(i>0 and i<=13)then
+        if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
+            --Draw a shadow on the line
+            if(self.run.availableFigures[i]>=1)then
+                love.graphics.setColor(1, 0, 0, 0.3)
+                love.graphics.rectangle("fill", 10, (i-1)*50+10, self.figureButtonsCanvas:getWidth()-20, 50)
+            end
+            love.graphics.setColor(1, 1, 1, 1)
+        end
+    end
+
+    love.graphics.setCanvas(targetCanvas)
+    
+    love.graphics.draw(self.figureButtonsCanvas, self.gridX, self.gridY)
+    
+end
+
+--==Initialization functions==--
+
 function GameScreen:createDiceNet()
     --Create a temp dice with a temp face repeated 6 times
     local tempFace = FaceObject:new(6)
@@ -207,6 +372,5 @@ end
 --==Input Functions==--
 
 --==Hovered Elements==--
-
 
 return GameScreen
