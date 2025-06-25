@@ -4,9 +4,6 @@ local DiceFace = require("src.classes.ui.DiceFace")
 local Constants = require("src.utils.Constants")
 local Inputs = require("src.utils.scripts.Inputs")
 local Button = require("src.classes.ui.Button")
-local Fonts = require("src.utils.Fonts")
-local Ciggie = require("src.classes.ui.Ciggie")
-local Animator = require("src.utils.Animator")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 local Screen = require("src.classes.GameScreen")
@@ -14,7 +11,6 @@ local Screen = require("src.classes.GameScreen")
 
 local DiceCustomization = setmetatable({}, { __index = Screen })
 DiceCustomization.__index = DiceCustomization
-
 
 function DiceCustomization:new(previousRound, newFaceObjects)
     local self = setmetatable(Screen:new(previousRound.run.currentFloor, previousRound.run, Constants.RUN_STATES.DICE_CUSTOMIZATION, previousRound), DiceCustomization)
@@ -337,7 +333,7 @@ function DiceCustomization:switchFaces()
         local closestFace = self:detectClosestFace(face.x, face.y)
         if(closestFace) then
             local diceObject = self.uiDices[closestFace[3]][closestFace[4]].diceObject
-            diceObject:setFace(face.representedFace, closestFace[4])
+            diceObject:setFace(face.representedObject, closestFace[4])
         end
     end
     self:outAnimation()
@@ -363,22 +359,6 @@ function DiceCustomization:detectClosestFace(x, y)
         end
     end
     return nil
-end
-
-function DiceCustomization:resetSelectedDices()
-    --Dice faces
-    for key,dice in next,self.uiDices do
-        for j, uiFace in next,dice do
-            uiFace:setSelected(false)
-        end
-    end 
-end
-
-function DiceCustomization:resetSelectedNewFace()
-    --Dice faces
-    for key,face in next,self.newUIFaces do
-        face:setSelected(false)
-    end 
 end
 
 function DiceCustomization:createNewFacesUI()
@@ -471,28 +451,11 @@ function DiceCustomization:createDiceUI(diceObject, i)
     return diceUI
 end
 
-function DiceCustomization:getCenteredPositions(count, objectWidth, spacing, centerX)
-    local totalWidth = count * objectWidth + (count - 1) * spacing
-    local startX = centerX - totalWidth / 2
-
-    local positions = {}
-    for i = 0, count - 1 do
-        local x = startX + i * (objectWidth + spacing)
-        table.insert(positions, x)
-    end
-
-    return positions
-end
-
 function DiceCustomization:createFaceInfosCanvas(face)
     return FaceHoverInfo:new(face, "points")
 end
 
-function DiceCustomization:generateCiggiesUI()
-    for i,ciggie in next,self.round.run.ciggiesObjects do
-        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
-    end
-end
+
 
 --==Hovered objects==--
 
@@ -535,7 +498,7 @@ function DiceCustomization:getCurrentlyHoveredObject()
     local object = nil
 
     if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie.representedObject
-    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedFace
+    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedObject
     else object = nil end
     
     if(object) then print(object.name) end

@@ -25,7 +25,7 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
 
     --Dice parameters
     self.diceObject = diceObject -- link to the diceObject it represents
-    self.representedFace = representedFace --Sets the represented face of the dice
+    self.representedObject = representedFace --Sets the represented face of the dice
     self:updateSprite() --Updates the sprite a first time with the given parameters
     
     --Position
@@ -192,13 +192,13 @@ function DiceFace:updateCanvas(dt)
 end
 
 function DiceFace:updateSprite()
-    self.spriteSheet = self.representedFace:getSpriteSheet()
-    self.quad = self.representedFace:getQuad(self.representedFace.faceValue)
-    self.dim = self.representedFace:getFaceDim()
+    self.spriteSheet = self.representedObject:getSpriteSheet()
+    self.quad = self.representedObject:getQuad(self.representedObject.faceValue)
+    self.dim = self.representedObject:getFaceDim()
 end
 
 function DiceFace:setRepresentedFace(face)
-    self.representedFace = face
+    self.representedObject = face
     self:updateSprite()
 end
 
@@ -233,7 +233,7 @@ function DiceFace:trigger(round) --Lance le trigger du dé
         {property="scaleY", from=1, targetValue=0.8, duration=0.1}
     })
 
-    self.animator:addDelay(0.1, function() self.representedFace:trigger(round); round.terrain:animateHandScore() end) --On déclenche l'effet du dé ici
+    self.animator:addDelay(0.1, function() self.representedObject:trigger(round); round.terrain:animateHandScore() end) --On déclenche l'effet du dé ici
 
     self.animator:addGroup({
         {property="scaleX", from=1.6, targetValue=0.5, duration=0.05},
@@ -270,7 +270,7 @@ function DiceFace:setHighlighted(state)
 end
 
 function DiceFace:setFaceObject(faceObject)
-    self.representedFace = faceObject
+    self.representedObject = faceObject
     self:updateSprite()
 end
 

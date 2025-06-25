@@ -8,6 +8,7 @@ local FaceObject = require("src.classes.FaceObject")
 local DiceObject = require("src.classes.DiceObject")
 local Button = require("src.classes.ui.Button")
 local DiceFace = require("src.classes.ui.DiceFace")
+local Ciggie = require("src.classes.ui.Ciggie")
 
 local GameScreen = {}
 GameScreen.__index = GameScreen
@@ -374,8 +375,27 @@ function GameScreen:createDiceNet()
     self.infoFaces = infoFaces
 end
 
+function GameScreen:generateCiggiesUI()
+    for i,ciggie in next,self.run.ciggiesObjects do
+        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+    end
+end
 --==Input Functions==--
 
 --==Hovered Elements==--
+
+--==Utils==--
+function GameScreen:getCenteredPositions(count, objectWidth, spacing, centerX)
+    local totalWidth = count * objectWidth + (count - 1) * spacing
+    local startX = centerX - totalWidth / 2
+
+    local positions = {}
+    for i = 0, count - 1 do
+        local x = startX + i * (objectWidth + spacing)
+        table.insert(positions, x)
+    end
+
+    return positions
+end
 
 return GameScreen

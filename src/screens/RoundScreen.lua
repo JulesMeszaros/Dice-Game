@@ -395,7 +395,7 @@ function RoundScreen:getCurrentlyHoveredObject()
     local object = nil
 
     if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie.representedObject
-    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedFace
+    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedObject
     else object = nil end
     
     if(object) then print(object.name) end
@@ -440,7 +440,7 @@ function RoundScreen:reorganiseDiceFaces(dices)
     end
 
     table.sort(temp, function(a, b)
-        return a.representedFace.faceValue < b.representedFace.faceValue
+        return a.representedObject.faceValue < b.representedObject.faceValue
     end)
     for _, dice in ipairs(temp) do
         table.insert(reorganisedDices, dice)

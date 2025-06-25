@@ -353,25 +353,12 @@ function DeskChoice:getCurrentlyHoveredObject()
     local object = nil
 
     if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie.representedObject
-    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedFace
+    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedObject
     else object = nil end
     
     if(object) then print(object.name) end
 
     return object
-end
-
-function DeskChoice:getCenteredPositions(count, objectWidth, spacing, centerX)
-    local totalWidth = count * objectWidth + (count - 1) * spacing
-    local startX = centerX - totalWidth / 2
-
-    local positions = {}
-    for i = 0, count - 1 do
-        local x = startX + i * (objectWidth + spacing)
-        table.insert(positions, x)
-    end
-
-    return positions
 end
 
 return DeskChoice
