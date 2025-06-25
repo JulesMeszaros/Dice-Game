@@ -61,14 +61,18 @@ function DeskChoice:update(dt)
     self:updateChoiceCanvas(dt)
     self:drawCiggiesTray()
 
-    
-
      --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
         ciggie:update(dt)
         ciggie:draw()
     end
-
+    
+    if(self.hoverInfosCanvas and self.currentlyHoveredFace)then
+        self.hoverInfosCanvas:update(dt)
+        self.hoverInfosCanvas:draw()
+        print(self.hoverInfosCanvas.x)
+    end
+    
     love.graphics.setCanvas(currentCanvas)
 end
 
@@ -307,10 +311,6 @@ function DeskChoice:resetSelectedDices()
     end
 end
 
-function DeskChoice:createFaceInfosCanvas(face)
-    return FaceHoverInfo:new(face, "both")
-end
-
 function DeskChoice:getCurrentlyHoveredCiggie()
     self.currentlyHoveredCiggie = nil
 
@@ -326,20 +326,32 @@ function DeskChoice:getCurrentlyHoveredFace()
     self.previouslyHoveredFace = self.currentlyHoveredFace --We save the state of the frame before
     self.currentlyHoveredFace = nil
 
+    local canvasX = nil
+    local canvasY = nil
+
+    --Pour les faces dans le patron à droite
     for i,face in next,self.infoFaces do
-        if face:isHovered() then self.currentlyHoveredFace = face ; break end
+        if face:isHovered() then 
+            self.currentlyHoveredFace = face
+
+            if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
+                self.hoverInfosCanvas = FaceHoverInfo:new(
+                    self.currentlyHoveredFace, 
+                    "points", 
+                    self.diceDetailsX - self.diceDetailsCanvas:getWidth(), 30)
+            end
+
+            break 
+        end
     end
 
+    --Pour les faces de badges
     for i,badge in next,self.badges do
         if(badge.currentlyHoveredFace) then self.currentlyHoveredFace = badge.currentlyHoveredFace ; break end
     end
 
     --Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
-    if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
-        if (self.currentlyHoveredFace) then
-            self.hoverInfosCanvas = self:createFaceInfosCanvas(self.currentlyHoveredFace)
-        end
-    end
+    
 end
 
 --Gets the currently hovered object (dice, ciggie, etc...)

@@ -121,7 +121,7 @@ function RoundScreen:updateCanvas(dt)
     --PlayersInfos
     self:drawPlayersInfos()
     --Dice Tray
-    if(self.pointsDetailsCanvas and self.hoveredFaceCanvas==1) then
+    if(self.pointsDetailsCanvas) then
         self.pointsDetailsCanvas:update(dt)
     end
     self:drawDiceTray(self.diceMatx, self.diceMaty, self.round.diceFaces)
@@ -159,6 +159,11 @@ function RoundScreen:updateCanvas(dt)
         ciggie:draw()
     end
 
+    --On dessine la bulle des points
+    if(self.currentlyHoveredFace and self.pointsDetailsCanvas)then
+        self.pointsDetailsCanvas:draw()
+    end
+
     love.graphics.setCanvas(currentCanvas)
 end
 
@@ -189,10 +194,6 @@ function RoundScreen:drawDiceTray(x, y, dices2)
         uiFace:draw()
     end
 
-    --On dessine la bulle des points
-    if(self.currentlyHoveredFace and self.pointsDetailsCanvas and self.hoveredFaceCanvas==1)then
-        self.pointsDetailsCanvas:draw()
-    end
     --Score de la main en direct
     if(self.round.phase == Constants.ROUND_STATES.TRIGGERING)then
         self:drawHandScore()
@@ -372,8 +373,20 @@ function RoundScreen:getCurrentlyHoveredDice()
         end
     end
 
-    if(self.previouslyHoveredFace ~= self.currentlyHoveredFace and self.currentlyHoveredFace~= nil and self.hoveredFaceCanvas==1)then
-        self.pointsDetailsCanvas = FaceHoverInfos:new(self.currentlyHoveredFace, "points")
+    if(self.previouslyHoveredFace ~= self.currentlyHoveredFace and self.currentlyHoveredFace~= nil)then
+        if(self.hoveredFaceCanvas==1) then
+            self.pointsDetailsCanvas = FaceHoverInfos:new(
+                self.currentlyHoveredFace, 
+                "points", 
+                self.diceMatx, 
+                self.diceMaty)
+        elseif(self.hoveredFaceCanvas==2) then
+            self.pointsDetailsCanvas = FaceHoverInfos:new(
+                self.currentlyHoveredFace, 
+                "points", 
+                self.diceDetailsX - self.diceDetailsCanvas:getWidth(), 
+                30)
+        end
     end
 
 end

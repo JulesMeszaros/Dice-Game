@@ -451,12 +451,6 @@ function DiceCustomization:createDiceUI(diceObject, i)
     return diceUI
 end
 
-function DiceCustomization:createFaceInfosCanvas(face)
-    return FaceHoverInfo:new(face, "points")
-end
-
-
-
 --==Hovered objects==--
 
 function DiceCustomization:getCurrentlyHoveredFace()
@@ -476,7 +470,7 @@ function DiceCustomization:getCurrentlyHoveredFace()
     --Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
     if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
         if (self.currentlyHoveredFace) then
-            self.hoverInfosCanvas = self:createFaceInfosCanvas(self.currentlyHoveredFace)
+            self.hoverInfosCanvas = FaceHoverInfo:new(self.currentlyHoveredFace, "points", 0, 0)
         end
     end
 

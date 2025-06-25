@@ -179,7 +179,7 @@ function Badge:getCurrentlyHoveredFace()
     --Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
     if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
         if (self.currentlyHoveredFace) then
-            self.hoverInfosCanvas = FaceHoverInfo:new(self.currentlyHoveredFace, "points")
+            self.hoverInfosCanvas = FaceHoverInfo:new(self.currentlyHoveredFace, "points", 0, 0)
         end
     end
 end
