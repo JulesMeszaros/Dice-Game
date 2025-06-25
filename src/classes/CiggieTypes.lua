@@ -13,7 +13,6 @@ function BaseCiggie:new()
     self.description="Adds one additionnal reroll to the current hand"
 
     self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/basicCiggie.png")
-    print(self.sprite)
     return self
 end
 

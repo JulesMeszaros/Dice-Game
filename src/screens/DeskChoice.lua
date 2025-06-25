@@ -151,12 +151,6 @@ function DeskChoice:drawDiceDetails(dt)
     love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
 end
 
-function DeskChoice:generateCiggiesUI()
-    for i,ciggie in next,self.run.ciggiesObjects do
-        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
-    end
-end
-
 --==CHOICES==--
 function DeskChoice:generateChoiceCanvas()
     self.badges = {}
@@ -355,8 +349,6 @@ function DeskChoice:getCurrentlyHoveredObject()
     if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie.representedObject
     elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedObject
     else object = nil end
-    
-    if(object) then print(object.name) end
 
     return object
 end

@@ -131,8 +131,6 @@ end
 function BlueFace:triggerEffect(round)
     --On rettriger le dé précédement trigger, s'il n'est pas un blue face
     if(table.getn(round.triggerDiceHistory) > 1 and round.triggerDiceHistory[table.getn(round.triggerDiceHistory)-1].currentFaceObject.name ~= "Blue Face") then
-        --[[ print(round.triggerDiceHistory[table.getn(round.triggerDiceHistory)-1].currentFaceObject.name)
-        print(table.getn(round.triggerDiceHistory)) ]]
         table.insert(round.dicesTriggerQueue, 1, round.triggerDiceHistory[table.getn(round.triggerDiceHistory)-1])
         table.insert(round.diceFacesTriggerQueue, 1, round.triggerFaceHistory[table.getn(round.triggerFaceHistory)-1])
     end
@@ -180,7 +178,6 @@ end
 function StoneFace:triggerEffect(round)
     --Ajoute 1€ au solde banquaire
     round.run.money = round.run.money + 1
-    print("test stone")
 end
 
 FaceTypes.StoneFace = StoneFace

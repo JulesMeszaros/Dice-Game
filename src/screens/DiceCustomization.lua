@@ -501,8 +501,6 @@ function DiceCustomization:getCurrentlyHoveredObject()
     elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedObject
     else object = nil end
     
-    if(object) then print(object.name) end
-
     return object
 end
 

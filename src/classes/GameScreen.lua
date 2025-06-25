@@ -19,6 +19,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.screenType = screenType
 
     --Hovered Objects
+    self.hoverableObjects = {}
     self.currentlyHoveredFace = nil
     self.previouslyHoveredFace = nil
     self.currentlySelectedDice = nil
@@ -377,7 +378,8 @@ end
 
 function GameScreen:generateCiggiesUI()
     for i,ciggie in next,self.run.ciggiesObjects do
-        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+        local c = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+        self.uiElements.ciggiesUI[ciggie] = c
     end
 end
 --==Input Functions==--

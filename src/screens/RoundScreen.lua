@@ -366,7 +366,6 @@ function RoundScreen:getCurrentlyHoveredDice()
     --Dés dans l'encart à droite
     for key,diceface in next,self.infoFaces do
         if diceface:isHovered() then
-            print(diceface.diceObject)
                 self.currentlyHoveredFace = diceface
                 self.hoveredFaceCanvas = 2
             break
@@ -397,8 +396,6 @@ function RoundScreen:getCurrentlyHoveredObject()
     if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie.representedObject
     elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedObject
     else object = nil end
-    
-    if(object) then print(object.name) end
 
     return object
 end
@@ -466,12 +463,7 @@ function RoundScreen:highlightDices(usedDices)
         end
     end
 end
---Used to generate the ciggies UI before switching to the screen
-function RoundScreen:generateCiggiesUI()
-    for i,ciggie in next,self.round.run.ciggiesObjects do
-        self.uiElements.ciggiesUI[ciggie] = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
-    end
-end
+
 --Returns the current canvas hovered by a ciggie
 function RoundScreen:getCanvasHoveredByCiggie()
     self.hoveredByCiggie = nil
