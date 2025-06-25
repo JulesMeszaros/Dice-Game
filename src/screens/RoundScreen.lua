@@ -15,46 +15,23 @@ local CiggieObject = require("src.classes.CiggieObject")
 local DiceObject = require("src.classes.DiceObject")
 local FaceObject = require("src.classes.FaceObject")
 local DiceFace = require("src.classes.ui.DiceFace")
+local Screen = require("src.classes.GameScreen")
 
 local Animator = require("src.utils.Animator")
 
-local RoundScreen = {}
-
+local RoundScreen = setmetatable({}, { __index = Screen })
 RoundScreen.__index = RoundScreen
 
 local font = Fonts.nexaSmall
 local font30 = Fonts.nexaMedium
 
 function RoundScreen:new(round)
-    local self = setmetatable({}, RoundScreen)
-    self.animator = Animator:new(self)
+    local self = setmetatable(Screen:new(round.run.currentFloor, round.run, Constants.ROUND_STATES.ROUND, round), RoundScreen)
+
     self.gameCanvas = round.gameCanvas
     self.round = round
 
-    self.uiElements = {
-        roundButtons = {},
-        ciggiesUI = {}
-    }
-
-    self.x, self.y = 0, 0
-
-    --Create the terrain canvas
-    self.canvas = love.graphics.newCanvas(round.gameCanvas:getWidth(),round.gameCanvas:getHeight() )
-
-    --DICE TRAY
-    self.dice_tray = love.graphics.newCanvas(930, 630)
-    self.dice_tray:setFilter("linear", "linear")
-
-    
-    --Hovered infos
-    self.currentlyHoveredFigure = nil 
-    self.currentlyHoveredDice = nil
-    self.currentlyHoveredFace = nil
-    self.previouslyHoveredFace = nil
-
     --FIGURE BUTTONS
-    self.figureButtonsCanvas = love.graphics.newCanvas(450,670)
-    self.figureButtonsCanvas:setFilter("linear", "linear")
     self.clickedFigure = nil
     --Calculate points functions
     self.calcBasePoints = {
@@ -90,7 +67,6 @@ function RoundScreen:new(round)
     }
     
     --FACE DETAILS
-    self.descriptionCanvas = love.graphics.newCanvas(420, 240)
     self.pointsDetailsCanvas = nil
 
     --DICE DETAILS
@@ -100,79 +76,15 @@ function RoundScreen:new(round)
     --Creating the different ui faces that will be shown
     self:createDiceNet()
 
-    --ROUND DETAILS
-    self:createRoundInfos()
-
     --Ciggies
-    self.ciggiesTray = love.graphics.newCanvas(420, 140)
     self.hoveredByCiggie = nil
-    self.currentlyHoveredCiggie = nil
-    
+
     --Hand Score
-    self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)
     self.handScoreRX, self.handScoreRY = 1
     self.handScoreRot = 0
 
-    --PLAYERS INFOS
-    self.playerInfos = love.graphics.newCanvas(650,260)
-    self.enemyInfos = love.graphics.newCanvas(650,260)
-
-    --Positions
-    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
-    self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.canvas:getHeight()+1000
-    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.canvas:getWidth()-30, 30, self.canvas:getWidth()+600, 30
-    self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, 650, self.canvas:getWidth()+600, 650
-    self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.canvas:getWidth()+20, 30
-    self.playerTX, self.playerTY, self.playerX, self.playerY = 510, 30, -800, 30
-    self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+450, self.canvas:getHeight()-30
-
-    self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 260, 721, -500, 721
-    self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 30, 721, -730, 721
-    self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, 190, self.canvas:getHeight()+400
-    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, 190, self.canvas:getHeight()+300
-
-    --Btns positions
-    self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
-    self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
-    self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 100, 1010, -150, 1010
-
-    --LEFT PANNEL BUTTONS
-
-    self.uiElements.roundButtons["rerollButton"] = Button:new(
-        function()self.round:rerollDices()end, 
-        "src/assets/sprites/ui/Reroll.png", 
-        self.rerollBtnX,
-        self.rerollBtnY,
-        840, 
-        80,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-    )
-
-    self.uiElements.roundButtons["menuButton"] = Button:new(
-        function()print("menu")end,
-        "src/assets/sprites/ui/Menu.png",
-        self.menuBtnX,
-        self.menuBtnY,
-        140,
-        80,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-    )
-
-    self.uiElements.roundButtons["planButton"] = Button:new(
-        function()print("plan")end,
-        "src/assets/sprites/ui/Plan.png",
-        self.planBtnX,
-        self.planBtnY,
-        140,
-        100,
-        self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
-    )
-
-    --Starts the round with animations
-    self:inAnimations()
+    --Start the round with the first roll
+    self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects)end)
 
     return self
 end
@@ -188,8 +100,8 @@ function RoundScreen:update(dt)
     self:getCurrentlyHoveredCiggie() --Ciggie survolée
 
     --Utilities buttons
-    for key,button in next,self.uiElements.roundButtons do
-        self.uiElements.roundButtons["rerollButton"]:setActivated(self.round.availableRerolls>0 and table.getn(self.round.selectedDices)<table.getn(self.round.diceObjects))
+    for key,button in next,self.uiElements.buttons do
+        self.uiElements.buttons["rerollButton"]:setActivated(self.round.availableRerolls>0 and table.getn(self.round.selectedDices)<table.getn(self.round.diceObjects))
 
         button:update(dt)
     end
@@ -228,7 +140,7 @@ function RoundScreen:updateCanvas(dt)
 
 
     --Bouttouns de round
-    for k,b in next,self.uiElements.roundButtons do
+    for k,b in next,self.uiElements.buttons do
         b:draw()
     end
 
@@ -501,53 +413,9 @@ function RoundScreen:drawPlayersInfos()
 end
 
 --==CREATE CANVAS FUNCTIONS==--
-function RoundScreen:createDiceNet()
-    --Create a temp dice with a temp face repeated 6 times
-    local tempFace = FaceObject:new(6)
-    self.tempDice = DiceObject:new({tempFace, tempFace, tempFace, tempFace, tempFace, tempFace})
-
-    --Create the coordinates of each dice face
-    local diceFacesCoords = {
-        {self.diceDetailsCanvas:getWidth()/2-120, self.diceDetailsCanvas:getHeight()/2-30}, --1
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-120-30}, --2
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-30}, --3
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+240-30}, --4
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+120-30}, --5
-        {self.diceDetailsCanvas:getWidth()/2+120, self.diceDetailsCanvas:getHeight()/2-30}, --6
-    }
-    
-    -- Create the uiFaces objects
-    local infoFaces = {}
-
-    for k,d in next,self.tempDice:getAllFaces() do
-        local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
-            self.tempDice, --Dice Object 
-            d, --La face représentée
-            diceFacesCoords[k][1], --X Position (centerd)
-            diceFacesCoords[k][2], --Yposition (centerd)
-            120, --Width/Height
-            false, --is Selectable
-            true, --isHoverable,
-            function()return Inputs.getMouseInCanvas(self.diceDetailsX - self.diceDetailsCanvas:getWidth(), self.diceDetailsY)end,
-            self.round
-        )
-
-        table.insert(infoFaces, diceFaceUI)
-    end
-
-    self.infoFaces = infoFaces
-end
-
-function RoundScreen:createRoundInfos()
-    --Create the canvas
-    self.rerollsCanvas = love.graphics.newCanvas(220, 120)
-    self.handsCanvas = love.graphics.newCanvas(220, 120)
-    self.roundNumberCanvas = love.graphics.newCanvas(290, 80)
-    self.moneyCanvas = love.graphics.newCanvas(290, 100)
-end
 
 --==Animations==--
-function RoundScreen:inAnimations()
+--[[ function RoundScreen:inAnimations()
     local entryDuration = 0.3
 
     --Start Round Animations
@@ -568,14 +436,14 @@ function RoundScreen:inAnimations()
         {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = entryDuration,},
     })
     --Buttons animation
-    self.uiElements.roundButtons["rerollButton"].animator:add('y', self.rerollBtnY, self.rerollBtnTY, entryDuration, AnimationUtils.Easing.inOutCubic)
-    self.uiElements.roundButtons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
-    self.uiElements.roundButtons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["rerollButton"].animator:add('y', self.rerollBtnY, self.rerollBtnTY, entryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, entryDuration, AnimationUtils.Easing.inOutCubic)
 
     AnimationUtils.shake(self, 0, 10, 0.1)
     --Ends the animations by making the first roll
     self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects)end)
-end
+end ]]
 
 function RoundScreen:animateHandScore()
     local randomAngle = math.random(2, 5)/10
@@ -620,9 +488,9 @@ function RoundScreen:outAnimation()
     })
 
     --Buttons animation
-    self.uiElements.roundButtons["rerollButton"].animator:add('y', self.rerollBtnY, 1500, outDuration)
-    self.uiElements.roundButtons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)
-    self.uiElements.roundButtons["planButton"].animator:add('x', self.planBtnX, -150, outDuration)
+    self.uiElements.buttons["rerollButton"].animator:add('y', self.rerollBtnY, 1500, outDuration)
+    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)
+    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration)
 
 end
 

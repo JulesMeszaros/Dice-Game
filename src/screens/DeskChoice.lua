@@ -19,7 +19,7 @@ DeskChoice.__index = DeskChoice
 local choiceNumber = 4
 
 function DeskChoice:new(floor, run)
-    local self = setmetatable(Screen:new(floor, run), DeskChoice)
+    local self = setmetatable(Screen:new(floor, run, Constants.RUN_STATES.ROUND_CHOICE), DeskChoice)
 
     --Créer le deck
     self:createDeck()
