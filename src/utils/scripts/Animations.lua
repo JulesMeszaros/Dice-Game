@@ -96,4 +96,6 @@ end
 
 AnimationUtils.Easing = Easing
 
+AnimationUtils.EntryDuration = 0.2
+
 return AnimationUtils 

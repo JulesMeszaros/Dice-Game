@@ -1,4 +1,4 @@
-local Constants = require("src.utils.Constants")
+local Constants = require("src.utils.constants")
 
 local Inputs = {}
 
@@ -23,7 +23,7 @@ function Inputs.getCanvasScale()
 end
 
 function Inputs.getMouseInCanvas(canvasX, canvasY)
-    local virtualX, virtualY = Inputs.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    local virtualX, virtualY = Inputs.getVirtualMousePosition()
     return {x = virtualX - canvasX, y=virtualY - canvasY}
 end
 
