@@ -12,3 +12,6 @@
 ## Code
 
 - Modifier la classe dice hover info pour la rendre utilisable beaucoup plus facilement, et compatible avec tous les canvas
+
+## Shaders
+- Implémenter des shaders de base
