@@ -35,9 +35,8 @@ function Shop:new(run)
     --Inventory faces
     self.inventoryFacesUI = {}
 
-    self:generateNewShop()
-    self:createInventoryFaces()
-
+    --Wait for all the animations to end, then show the inventory and the shop
+    self.animator:addDelay(0.2, function()self:generateNewShop();self:createInventoryFaces()end)
     return self
 end
 
@@ -256,8 +255,23 @@ function Shop:generateNewShop()
             function() return Inputs.getMouseInCanvas(0, 0) end,
             nil
         )
+        --Add them an anchor
         faceUI.anchorX = 180*i + self.shopBGTX - 60
         faceUI.anchorY = 80+ self.shopBGTY + 60
+
+        --Add an animation for their apparition
+        local apparitionDuration = 0.3
+        faceUI.animator:addGroup({
+            --Rotation
+            {property = "rotation", from = 3, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 3, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            --Scale
+            {property = "baseTargetedScale", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleX", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleY", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            
+        })
 
         table.insert(self.availableFaceObjectsUI, faceUI)
     end
@@ -338,6 +352,18 @@ function Shop:createInventoryFaces()
                 function()return Inputs.getMouseInCanvas(0, 0)end,
                 nil
             )
+        local apparitionDuration = 0.3
+        faceUI.animator:addGroup({
+            --Rotation
+            {property = "rotation", from = 3, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 3, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            --Scale
+            {property = "baseTargetedScale", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleX", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleY", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            
+        })
 
         table.insert(self.inventoryFacesUI, faceUI)
     end

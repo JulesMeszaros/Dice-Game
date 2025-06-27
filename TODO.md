@@ -15,3 +15,7 @@
 
 ## Shaders
 - Implémenter des shaders de base
+
+## Shop
+- Ajouter animation d'apparition des dés lors de la génération du shop
+- Ajouter possibilité de revendre des faces de dé dans le shop
