@@ -19,7 +19,7 @@ local font = Fonts.nexaSmall
 local font30 = Fonts.nexaMedium
 
 function RoundScreen:new(round)
-    local self = setmetatable(Screen:new(round.run.currentFloor, round.run, Constants.ROUND_STATES.ROUND, round), RoundScreen)
+    local self = setmetatable(Screen:new(round.run.currentFloor, round.run, Constants.RUN_STATES.ROUND, round), RoundScreen)
 
     self.gameCanvas = round.gameCanvas
     self.round = round

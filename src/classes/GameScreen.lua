@@ -61,13 +61,15 @@ function GameScreen:new(floor, run, screenType, round)
     self.playerInfos = love.graphics.newCanvas(650,260)
     self.enemyInfos = love.graphics.newCanvas(650,260)
     self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)
+    self.inventoryCanvas = love.graphics.newCanvas(680, 410)
+    self.shopCanvas = love.graphics.newCanvas(780, 510)
 
     --Positions
     self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.canvas:getHeight()+1000
     self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.canvas:getWidth()+20, 30
     self.playerTX, self.playerTY, self.playerX, self.playerY = 510, 30, -800, 30
     
-    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -650
+    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -900
     self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.canvas:getWidth()-30, 30, self.canvas:getWidth()+600, 30
     self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, 650, self.canvas:getWidth()+600, 650
 
@@ -81,14 +83,20 @@ function GameScreen:new(floor, run, screenType, round)
     self.customizationMatTX, self.customizationMatTY, self.customizationMatX, self.customizationMatY = 30, 30, 30, -700
     self.newFacesTX, self.newFacesTY, self.newFacesX, self.newFacesY = 500, 650, 500, self.canvas:getHeight()+450
 
+    self.shopBGTX, self.shopBGTY, self.shopBGX, self.shopBGY = 500, 30, 500, -600
+    self.inventoryTX, self.inventoryTY, self.inventoryX, self.inventoryY = 550, 640, 550, self.canvas:getHeight()+450
+
+
     --Btns positions
     self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
     self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 100, 1010, -150, 1010
     self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
     self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY = 255, 680, -255, 680
+    self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY = 510+(370/2), 590, -255, 590
+    self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY = 900+(370/2), 590, self.canvas:getWidth()+255, 590
 
     --Entry animation
-    self.animator:addDelay(0.1)
+    self.animator:addDelay(0.2)
 
     self.animator:addGroup({
         {property = "customizationMatY", from = self.customizationMatY, targetValue = self.customizationMatTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
@@ -103,10 +111,12 @@ function GameScreen:new(floor, run, screenType, round)
         {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.ciggiesTrayTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
+        {property = "shopBGY", from = self.shopBGY, targetValue = self.shopBGTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
+        {property = "inventoryY", from = self.inventoryY, targetValue = self.inventoryTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
     })
     
     --Cas particulier de l'écran de round
-    if(self.screenType == Constants.ROUND_STATES.ROUND) then
+    if(self.screenType == Constants.RUN_STATES.ROUND) then
         self.animator:addDelay(0.2)
         --Enemy and player
         self.animator:addGroup({
@@ -142,8 +152,9 @@ function GameScreen:new(floor, run, screenType, round)
     --Buttons animation
     self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.outCubic)
     self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.outCubic)
+    
     --Cas particulier de l'écran de round
-    if(self.screenType == Constants.ROUND_STATES.ROUND) then
+    if(self.screenType == Constants.RUN_STATES.ROUND) then
 
         self.uiElements.buttons["rerollButton"] = Button:new(
             function()self.round:rerollDices()end, 
@@ -156,6 +167,37 @@ function GameScreen:new(floor, run, screenType, round)
             function()return Inputs.getMouseInCanvas(0, 0)end
         )
         self.uiElements.buttons["rerollButton"].animator:add('y', self.rerollBtnY, self.rerollBtnTY, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.outCubic)
+
+    end
+
+    --Cas particulier du shop
+    if(self.screenType == Constants.RUN_STATES.SHOP) then
+
+        self.uiElements.buttons["rerollShopButton"] = Button:new(
+            function()print("reroll shop")end, 
+            "src/assets/sprites/ui/Reroll Shop.png", 
+            self.rerollShopX,
+            self.rerollShopY,
+            370, 
+            60,
+            self.gameCanvas,
+            function()return Inputs.getMouseInCanvas(0, 0)end
+        )
+        self.uiElements.buttons["rerollShopButton"].animator:addDelay(0.2)
+        self.uiElements.buttons["rerollShopButton"].animator:add('x', self.rerollShopX, self.rerollShopTX, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.outCubic)
+
+        self.uiElements.buttons["nextRoundSmallBtn"] = Button:new(
+            function()print("reroll shop")end, 
+            "src/assets/sprites/ui/Next Round Small.png", 
+            self.rerollShopX,
+            self.rerollShopY,
+            370, 
+            60,
+            self.gameCanvas,
+            function()return Inputs.getMouseInCanvas(0, 0)end
+        )
+        self.uiElements.buttons["nextRoundSmallBtn"].animator:addDelay(0.2)
+        self.uiElements.buttons["nextRoundSmallBtn"].animator:add('x', self.nextRoundSMX, self.nextRoundSMTX, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.outCubic)
 
     end
 
@@ -335,6 +377,20 @@ function GameScreen:drawFigureGrid()
     
     love.graphics.draw(self.figureButtonsCanvas, self.gridX, self.gridY)
     
+end
+
+function GameScreen:drawShopBackground()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.shopCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.SHOP_BG, 0, 0)
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.shopCanvas, self.shopBGX, self.shopBGY)
+end
+
+function GameScreen:drawInventoryBackGround()
+    love.graphics.draw(Sprites.INVENTORY, self.inventoryX, self.inventoryY)
 end
 
 --==Initialization functions==--

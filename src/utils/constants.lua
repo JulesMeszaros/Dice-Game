@@ -34,7 +34,7 @@ Constants.PAGES = {
 
 Constants.RUN_STATES = {
     ROUND = 1, --Phase de jeu
-    SHOP = 2, --TBD
+    SHOP = 2, --SHOP
     ROUND_CHOICE = 3, --Choix du prochain round à jouer
     GAME_OVER = 4, --Ecran de game over
     MAP = 5, --Map du batiment, et infos de run

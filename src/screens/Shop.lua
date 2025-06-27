@@ -12,7 +12,7 @@ local Shop = setmetatable({}, {__index = Screen})
 Shop.__index = Shop
 
 function Shop:new(run)
-    local self = setmetatable(Screen:new(run.currentFloor, run, Constants.RUN_STATES.SHOP), Shop)
+    local self = setmetatable(Screen:new(run.currentFloor, run, Constants.RUN_STATES.SHOP, run.currentRound), Shop)
 
     self:createDiceNet()
     self:createDeck()
@@ -47,6 +47,8 @@ function Shop:updateCanvas(dt)
     self:drawRoundDetails()
     self:drawDiceDetails(dt)
     self:drawCiggiesTray()
+    self:drawInventoryBackGround()
+    self:drawShopBackground()
 
      --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
