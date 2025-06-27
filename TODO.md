@@ -14,8 +14,13 @@
 - Modifier la classe dice hover info pour la rendre utilisable beaucoup plus facilement, et compatible avec tous les canvas
 
 ## Shaders
+
 - Implémenter des shaders de base
 
 ## Shop
+
 - Ajouter animation d'apparition des dés lors de la génération du shop
-- Ajouter possibilité de revendre des faces de dé dans le shop
+- Ajouter possibilité de revendre des faces de dé et les cigarettes dans le shop
+- Ajouter les informations de tous les dés survolés (shop, inventaire, patron de dé)
+- Ajouter les informations des cigarettes survolées
+- Implémenter l'achat de cigarettes

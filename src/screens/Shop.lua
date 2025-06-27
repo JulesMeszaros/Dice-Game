@@ -163,6 +163,10 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 
         face.targetX = face.anchorX
         face.targetY = face.anchorY
+
+        if(wasReleased) then
+            self:sellDiceFace(face.representedObject, face, key)
+        end
     end
 
     --Shop
@@ -261,6 +265,30 @@ function Shop:buyDiceFace(face, faceUI, key)
     else
         print("no more space in iventory")
     end
+end
+
+function Shop:sellDiceFace(face, faceUI, key)
+    --Add money to bank account
+    self.run.money = self.run.money + 5
+
+    --Remove dice face object from inventory
+
+    table.remove(self.run.facesInventory, key)
+    local apparitionDuration = 0.3
+
+    --Remove dice face from ui with animation
+    faceUI.animator:addGroup({
+            --Rotation
+            {property = "rotation", from = 0, targetValue = -2, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 0, targetValue = -2, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            --Scale
+            {property = "baseTargetedScale", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleX", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleY", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack, onComplete = function()table.remove(self.inventoryFacesUI, key);self:updateInventoryPositions()end},
+            
+        })
+    
 end
 
 --==Shop generation==--
