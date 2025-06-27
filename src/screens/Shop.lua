@@ -207,8 +207,11 @@ end
 
 --==Shop Functions==--
 function Shop:buyDiceFace(face, faceUI, key)
-    if(table.getn(self.run.facesInventory)<8)then
+    if(table.getn(self.run.facesInventory)<8 and self.run.money>=5)then
         print("face bought : ", face.name, face.faceValue)
+
+        --Remove the money
+        self.run.money = self.run.money-5
 
         --Add face to inventory
         table.insert(self.run.facesInventory, face)
