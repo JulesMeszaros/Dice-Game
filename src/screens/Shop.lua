@@ -32,7 +32,11 @@ function Shop:new(run)
     self.availableCiggiesUI = {}
     self.availableCoffeesUI = {}
 
+    --Inventory faces
+    self.inventoryFacesUI = {}
+
     self:generateNewShop()
+    self:createInventoryFaces()
 
     return self
 end
@@ -65,6 +69,8 @@ function Shop:updateCanvas(dt)
     self:drawCiggiesTray()
     self:drawInventoryBackGround()
     self:drawShopBackground()
+
+    self:drawInventoryFaces(dt)
 
     --Shop faces UI
     for i,faceUI in next,self.availableFaceObjectsUI do
@@ -149,11 +155,15 @@ function Shop:mousereleased(x, y, button, istouch, presses)
     --Shop
     --Faces
     for key,face in next,self.availableFaceObjectsUI do
-        face:releaseEvent()
+        local wasReleased = face:releaseEvent()
         face.isBeingDragged = false
 
         face.targetX = face.anchorX
         face.targetY = face.anchorY
+
+        if(wasReleased)then
+            self:buyDiceFace(face.representedObject, face, key)
+        end
     end
 end
 
@@ -193,6 +203,36 @@ end
 
 function Shop:keypressed(key)
     print(key)
+end
+
+--==Shop Functions==--
+function Shop:buyDiceFace(face, faceUI, key)
+    if(table.getn(self.run.facesInventory)<8)then
+        print("face bought : ", face.name, face.faceValue)
+
+        --Add face to inventory
+        table.insert(self.run.facesInventory, face)
+
+        --Remove faceUI from shop list
+        table.remove(self.availableFaceObjectsUI, key)
+
+        --Add FaceUI to inventory
+        table.insert(self.inventoryFacesUI, faceUI)
+
+        --Remove face from shop
+        table.remove(self.availableFaceObjects, key)
+        print("-------")
+        print("Inventory")
+
+        --Update the positions of the dices
+        self:updateInventoryPositions()
+
+        for i,k in next,self.run.facesInventory do
+            print(k.name, k.faceValue)
+        end
+    else
+        print("no more space in iventory")
+    end
 end
 
 --==Shop generation==--
@@ -277,6 +317,29 @@ function Shop:createDeck()
     self.deckFaces = deckFaces
 end 
 
+function Shop:createInventoryFaces()
+    local xPos = {160, 320, 480, 640, 160, 320, 480, 640}
+    local yPos = {160,160,160,160, 320, 320, 320, 320}
+
+    for i,face in next,self.run.facesInventory do
+        --Create the UIFaces
+
+        local faceUI = DiceFace:new(
+                nil,
+                face,
+                xPos[i] - 60 + self.inventoryTX,
+                yPos[i] + self.inventoryTY -10,
+                120,
+                false,
+                true,
+                function()return Inputs.getMouseInCanvas(0, 0)end,
+                nil
+            )
+
+        table.insert(self.inventoryFacesUI, faceUI)
+    end
+end
+
 --==Additionnal draw functions==--
 function Shop:drawDeck(dt)
     local targetCanvas = love.graphics.getCanvas()
@@ -317,6 +380,25 @@ function Shop:drawDiceDetails(dt)
     love.graphics.setCanvas(currentCanvas)
 
     love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
+end
+
+function Shop:drawInventoryFaces(dt)
+    for k,uiFace in next,self.inventoryFacesUI do
+        uiFace:update(dt)
+        uiFace:draw()
+    end
+end
+
+function Shop:updateInventoryPositions()
+    local xPos = {160, 320, 480, 640, 160, 320, 480, 640}
+    local yPos = {160,160,160,160, 320, 320, 320, 320}
+
+    for i,uiFace in next,self.inventoryFacesUI do
+        uiFace.anchorX = xPos[i] - 60 + self.inventoryTX
+        uiFace.anchorY = yPos[i] + self.inventoryTY -10
+        uiFace.targetX = xPos[i] - 60 + self.inventoryTX
+        uiFace.targetY = yPos[i] + self.inventoryTY -10
+    end
 end
 
 --==Hover functions==--

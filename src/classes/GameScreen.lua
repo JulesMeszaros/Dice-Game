@@ -332,7 +332,7 @@ function GameScreen:drawFigureGrid()
     --Draw the table
     love.graphics.draw(Sprites.GRID, 0, 0)
 
-    if(self.screenType == Constants.ROUND_STATES.ROUND)then
+    if(self.screenType == Constants.RUN_STATES.ROUND)then
         --Draw the scores
         love.graphics.setColor(249/255, 130/255, 132/255)
 

@@ -18,6 +18,7 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
     --Parametres d'interractions
     self.mousePosition = mousePosition --The function returning the mousePosition for this dice.
     self.isSelectable = isSelectable
+    self.isSelectableAll = isSelectable
     self.isHoverable = isHoverable
     self.isDraggable = true
     self.dragXspeed = 0
@@ -139,10 +140,14 @@ function DiceFace:clickEvent()
 end
 
 function DiceFace:clickAction()
-    self:selectOrDeselect()
+    if(self.isSelectableAll == true) then
+        print(self.isSelectable)
+        self:selectOrDeselect()
+    end
 end
 
 function DiceFace:selectOrDeselect()
+    print("t")
     local newState = not self:getIsSelected()
     self:setSelected(newState)
 
