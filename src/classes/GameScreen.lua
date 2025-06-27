@@ -174,7 +174,7 @@ function GameScreen:new(floor, run, screenType, round)
     if(self.screenType == Constants.RUN_STATES.SHOP) then
 
         self.uiElements.buttons["rerollShopButton"] = Button:new(
-            function()print("reroll shop")end, 
+            function()self:generateNewShop()end, 
             "src/assets/sprites/ui/Reroll Shop.png", 
             self.rerollShopX,
             self.rerollShopY,

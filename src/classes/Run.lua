@@ -18,6 +18,8 @@ local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
 function Run:new(dices, gameCanvas, game, diceObjects)
     local self = setmetatable({}, Run)
 
+    self.facesInventory = {}
+    
     --Ciggies
     self.ciggiesObjects = {
         CiggieTypes.BaseCiggie:new(),
@@ -60,9 +62,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.floorNumber = 1 --Représente l'étage (augmente de 1 après un boss)
     self.floorDeskNumber = 1 --Représente le numéro de bureau dans l'étage actuel (retourne à 1 après un boss)
     self:goToRoundSelection()
-    --[[ self.deskChoice = DeskChoice:new(self.currentFloor, self)
-    self.deskChoice:generateCiggiesUI()
-    self.currentState = Constants.RUN_STATES.ROUND_CHOICE ]]
+
     
     
 

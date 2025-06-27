@@ -6,8 +6,12 @@ local Ciggie = require("src.classes.ui.Ciggie")
 local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 local Badge = require("src.classes.ui.Badge")
 local DiceFace = require("src.classes.ui.DiceFace")
+local FaceObject = require("src.classes.FaceObject")
 local Screen = require("src.classes.GameScreen")
 local DiceCustomization = require("src.screens.DiceCustomization")
+local FaceTypes = require("src.classes.FaceTypes")
+
+
 local Shop = setmetatable({}, {__index = Screen})
 Shop.__index = Shop
 
@@ -17,6 +21,18 @@ function Shop:new(run)
     self:createDiceNet()
     self:createDeck()
     self:generateCiggiesUI()
+
+    --Shop Objects
+    self.availableFaceObjects = {}
+    self.availableCiggies = {}
+    self.availableCoffees = {}
+
+    --Shop Objects UI
+    self.availableFaceObjectsUI = {}
+    self.availableCiggiesUI = {}
+    self.availableCoffeesUI = {}
+
+    self:generateNewShop()
 
     return self
 end
@@ -50,7 +66,13 @@ function Shop:updateCanvas(dt)
     self:drawInventoryBackGround()
     self:drawShopBackground()
 
-     --Ciggies UI
+    --Shop faces UI
+    for i,faceUI in next,self.availableFaceObjectsUI do
+        faceUI:update(dt)
+        faceUI:draw()
+    end
+
+    --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
         ciggie:update(dt)
         ciggie:draw()
@@ -91,6 +113,12 @@ function Shop:mousepressed(x, y, button, istouch, presses)
     for key,uiFace in next,self.deckFaces do
         uiFace:clickEvent()
     end
+
+    --Shop elements
+    --Faces
+    for key,uiFace in next,self.availableFaceObjectsUI do
+        uiFace:clickEvent()
+    end
 end
 
 function Shop:mousereleased(x, y, button, istouch, presses)
@@ -117,6 +145,16 @@ function Shop:mousereleased(x, y, button, istouch, presses)
         ciggie:releaseEvent()
         ciggie.isBeingDragged = false
     end
+
+    --Shop
+    --Faces
+    for key,face in next,self.availableFaceObjectsUI do
+        face:releaseEvent()
+        face.isBeingDragged = false
+
+        face.targetX = face.anchorX
+        face.targetY = face.anchorY
+    end
 end
 
 function Shop:mousemoved(x, y, dx, dy, isDragging)
@@ -137,10 +175,57 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
             end
         end
     end
+
+    --Shop
+    --Faces
+    if(isDragging == true)then 
+        for key,face in next, self.availableFaceObjectsUI do
+            if(face.isDraggable and face.isBeingClicked) then
+                face.isBeingDragged = true
+                face.dragXspeed = dx
+                face.targetX = (face.targetX + dx) 
+                face.targetY = (face.targetY + dy) 
+            end
+        end
+    end
+
 end
 
 function Shop:keypressed(key)
     print(key)
+end
+
+--==Shop generation==--
+function Shop:generateNewShop()
+    --Generate the objects to buy
+    self:generateAvailableFaces()
+    self.availableFaceObjectsUI = {}
+    --Generate the UI elements    
+    for i,f in next,self.availableFaceObjects do
+        local faceUI = DiceFace:new(
+            nil,
+            f,
+            180*i + self.shopBGTX - 60,
+            80+ self.shopBGTY + 60,
+            120,
+            false,
+            true,
+            function() return Inputs.getMouseInCanvas(0, 0) end,
+            nil
+        )
+        faceUI.anchorX = 180*i + self.shopBGTX - 60
+        faceUI.anchorY = 80+ self.shopBGTY + 60
+
+        table.insert(self.availableFaceObjectsUI, faceUI)
+    end
+end
+
+function Shop:generateAvailableFaces()
+    self.availableFaceObjects = {}
+    for i=1, 4 do
+        local f = self:getRandomFaceObject()
+        table.insert(self.availableFaceObjects, f)
+    end
 end
 
 --==UTILS==--
@@ -153,6 +238,22 @@ function Shop:resetSelectedDices()
     for key,face in next,self.deckFaces do
         face:setSelected(false)
     end
+end
+
+function Shop:getRandomFaceObject()
+    --Get the list of keys
+    local keys = {}
+    for key, _ in pairs(FaceTypes) do
+        table.insert(keys, key)
+    end
+
+    local randomFaceKey = keys[math.random(#keys)]
+    local randomFaceType = FaceTypes[randomFaceKey] --On récupère une face type au hasard
+    local randomFaceValue = math.random(1,6) --La face numérique
+
+    local randomFaceObject = randomFaceType:new(randomFaceValue, randomFaceValue)
+
+    return randomFaceObject 
 end
 
 --==Additionnal init functions==--
