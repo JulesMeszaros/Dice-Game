@@ -1,13 +1,13 @@
 local Round = require("src.classes.Round")
 local GameOverScreen = require("src.screens.GameOverScreen")
-local Constants = require("src.utils.Constants")
-local Floor = require("src.classes.Floor")
+local Shop = require("src.screens.Shop")
 local DeskChoice = require("src.screens.DeskChoice")
 local DiceCustomization = require("src.screens.DiceCustomization")
+local Constants = require("src.utils.Constants")
+local Floor = require("src.classes.Floor")
 local CiggieObject = require("src.classes.CiggieObject")
 local CiggieTypes = require("src.classes.CiggieTypes")
 local FaceTypes = require("src.classes.FaceTypes")
-
 local Run = {}
 
 Run.__index = Run
@@ -23,6 +23,8 @@ function Run:new(dices, gameCanvas, game, diceObjects)
         CiggieTypes.BaseCiggie:new(),
         CiggieTypes.GoldenCiggie:new()
     }
+
+    self.shop = nil
 
     --Dices variables
     self.drawedDices = {} --Current Drawed Dices
@@ -117,9 +119,10 @@ function Run:endRound()
         --Calculate the money earned, based on the number of hands remaining
         local moneyEarned = self.currentRound.remainingHands + self.currentRound.baseReward
         self.money = self.money + moneyEarned
-        --Increments the desk, and goes to the next floor if the desk rank is >3
+        --Increments the desk, and goes to the next floor if the desk rank is > 3
         self.floorDeskNumber = self.floorDeskNumber + 1
         if(self.currentRound.roundType==Constants.ROUND_TYPES.BOSS)then--Si le rank de desktop est superieur à 4 (donc que le bosse vient d'etre battu) on créée un nouvel étage
+            
             --On vérifie que la run soit terminée (étage 5 atteint)
             if(self.currentFloor.floorNumber == 5)then
                 self.game.currentScreen = Constants.PAGES.MAIN_MENU
@@ -133,16 +136,15 @@ function Run:endRound()
             self:resetAvailableFigures()        
         end
 
-        --create three random face (to be deleted)
-        local randomFaces = {}
-        for i=1, 3 do
-            local randomFace = FaceTypes.StoneFace:new(math.random(1, 6), 10)
-            table.insert(randomFaces, randomFace)
-        end
-        
-        self.customizationScreen = DiceCustomization:new(self.currentRound, self.currentRound.faceRewards)
+        --GOTO Shop
+        self.shop = Shop:new(self)
+        self.currentState = Constants.RUN_STATES.SHOP
+
+        --GOTO dice customization
+        --[[ self.customizationScreen = DiceCustomization:new(self.currentRound, self.currentRound.faceRewards)
         self.customizationScreen:generateCiggiesUI()
-        self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION
+        self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION ]]
+
     else --gameover case
         local gameOver = GameOverScreen:new(self.gameCanvas, self)
         self.gameOver = gameOver
