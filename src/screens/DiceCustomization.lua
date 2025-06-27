@@ -14,11 +14,11 @@ DiceCustomization.__index = DiceCustomization
 
 function DiceCustomization:new(previousRound, newFaceObjects)
     local self = setmetatable(Screen:new(previousRound.run.currentFloor, previousRound.run, Constants.RUN_STATES.DICE_CUSTOMIZATION, previousRound), DiceCustomization)
+    self.run = previousRound.run
     --Table where we store the ui faces of the face objects earned
     self.newFaceObjects = newFaceObjects
     --Table where we store the ui dice faces, grouped by dice
     self.uiDices = {}
-
     self.newUIFaces = {}
     --On peuple notre table
     
@@ -334,6 +334,10 @@ function DiceCustomization:switchFaces()
         if(closestFace) then
             local diceObject = self.uiDices[closestFace[3]][closestFace[4]].diceObject
             diceObject:setFace(face.representedObject, closestFace[4])
+            --Removing the face from the inventory
+            for k,d in next,self.run.facesInventory do
+                if(d==face.representedObject) then table.remove(self.run.facesInventory, k) ; break end
+            end
         end
     end
     self:outAnimation()

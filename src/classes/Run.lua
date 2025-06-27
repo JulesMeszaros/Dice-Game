@@ -119,6 +119,7 @@ function Run:endRound()
         --Calculate the money earned, based on the number of hands remaining
         local moneyEarned = self.currentRound.remainingHands + self.currentRound.baseReward
         self.money = self.money + moneyEarned
+        
         --Increments the desk, and goes to the next floor if the desk rank is > 3
         self.floorDeskNumber = self.floorDeskNumber + 1
         if(self.currentRound.roundType==Constants.ROUND_TYPES.BOSS)then--Si le rank de desktop est superieur à 4 (donc que le bosse vient d'etre battu) on créée un nouvel étage
@@ -134,6 +135,13 @@ function Run:endRound()
             
             --Resets the available hands
             self:resetAvailableFigures()        
+        end
+
+        --Adds the rewards to inventory, if there is the place to add them
+        for i,face in next,self.currentRound.faceRewards do
+            if(table.getn(self.facesInventory)<8) then
+                table.insert(self.facesInventory, face)
+            end
         end
 
         --GOTO Shop
