@@ -83,6 +83,8 @@ end
 --==UI==--
 
 --Deck
+
+--TODO: move in gamescreen.lua
 function DeskChoice:createDeck()
     local deckFaces = {}
     for i,dice in next,self.diceObjects do
@@ -103,6 +105,7 @@ function DeskChoice:createDeck()
     self.deckFaces = deckFaces
 end 
 
+--TODO: move in gamescreen.lua
 function DeskChoice:drawDeck(dt)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.deckCanvas)
@@ -126,6 +129,7 @@ function DeskChoice:drawDeck(dt)
     love.graphics.draw(self.deckCanvas, self.deckX, self.deckY)
 end
 
+--TODO: move in gamescreen.lua
 function DeskChoice:updateDiceNet(dt)
    local i = 1
     for k,df in next,self.infoFaces do
