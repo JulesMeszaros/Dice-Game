@@ -7,7 +7,7 @@ local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 local Badge = require("src.classes.ui.Badge")
 local DiceFace = require("src.classes.ui.DiceFace")
 local Screen = require("src.classes.GameScreen")
-
+local DiceCustomization = require("src.screens.DiceCustomization")
 local Shop = setmetatable({}, {__index = Screen})
 Shop.__index = Shop
 
@@ -94,6 +94,15 @@ function Shop:mousepressed(x, y, button, istouch, presses)
 end
 
 function Shop:mousereleased(x, y, button, istouch, presses)
+
+    --release event on UI elements (buttons)
+    for key,button in next,self.uiElements.buttons do
+        local wasReleased = button:releaseEvent()
+        if(wasReleased) then --Si le click a été complété
+            button:getCallback()()
+        end
+    end
+
     for key,face in next,self.deckFaces do
         local wasReleased = face:releaseEvent()
         if(wasReleased)then --On sélectionne la face a switcher

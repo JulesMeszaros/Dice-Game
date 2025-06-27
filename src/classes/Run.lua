@@ -260,4 +260,10 @@ function Run:startNewRound(round, roundtype)
     self.currentState = Constants.RUN_STATES.ROUND
 end
 
+function Run:goToDiceCustomization()
+        self.customizationScreen = DiceCustomization:new(self.currentRound, self.currentRound.faceRewards)
+        self.customizationScreen:generateCiggiesUI()
+        self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION
+end
+
 return Run
