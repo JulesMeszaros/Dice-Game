@@ -119,6 +119,11 @@ function Shop:mousepressed(x, y, button, istouch, presses)
         uiFace:clickEvent()
     end
 
+    --Inventory
+    for key,uiFace in next,self.inventoryFacesUI do
+        uiFace:clickEvent()
+    end
+
     --Shop elements
     --Faces
     for key,uiFace in next,self.availableFaceObjectsUI do
@@ -151,6 +156,15 @@ function Shop:mousereleased(x, y, button, istouch, presses)
         ciggie.isBeingDragged = false
     end
 
+    --Inventory
+    for key,face in next,self.inventoryFacesUI do
+        local wasReleased = face:releaseEvent()
+        face.isBeingDragged = false
+
+        face.targetX = face.anchorX
+        face.targetY = face.anchorY
+    end
+
     --Shop
     --Faces
     for key,face in next,self.availableFaceObjectsUI do
@@ -181,6 +195,18 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
                 if(ciggie.targetY+dy<self.canvas:getHeight()-ciggie.height/2 and ciggie.targetY+dy>0+ciggie.height/2) then --Vérification qu'on ne dépasse pas les limites verticales
                     ciggie.targetY = (ciggie.targetY + dy) 
                 end
+            end
+        end
+    end
+
+    --Inventory
+    if(isDragging == true)then 
+        for key,face in next, self.inventoryFacesUI do
+            if(face.isDraggable and face.isBeingClicked) then
+                face.isBeingDragged = true
+                face.dragXspeed = dx
+                face.targetX = (face.targetX + dx) 
+                face.targetY = (face.targetY + dy) 
             end
         end
     end
@@ -352,6 +378,10 @@ function Shop:createInventoryFaces()
                 function()return Inputs.getMouseInCanvas(0, 0)end,
                 nil
             )
+
+        faceUI.anchorX = xPos[i] - 60 + self.inventoryTX
+        faceUI.anchorY = yPos[i] + self.inventoryTY -10
+
         local apparitionDuration = 0.3
         faceUI.animator:addGroup({
             --Rotation
