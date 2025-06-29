@@ -13,8 +13,8 @@ function Floor:new(floornumber, run)
     self.desks = {}
     self.boss = self:generateBoss()
 
-    --Create the set of desks (3x3)
-    for i = 1, 3 do
+    --Create the set of desks (4x3) TODO: changer a 2
+    for i = 1, Constants.DESKS_BY_FLOOR do
         local choices = {}
         for j = 1, 4 do
             local r = self:generateDesks(i)
@@ -28,7 +28,7 @@ end
 
 function Floor:generateDesks(deskRank)
     --Generate money reward
-    local baseReward = 3 + math.random(0, 3)
+    local baseReward = 3
     --Generate target score
     local targetScore = deskRank*5 + 20*self.floorNumber + (math.random(0, 3) * 10)
     --Generate desk number

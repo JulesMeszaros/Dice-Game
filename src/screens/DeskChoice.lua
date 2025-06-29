@@ -24,7 +24,7 @@ function DeskChoice:new(floor, run)
 
     self.round = run.currentRound
 
-    if(self.run.floorDeskNumber < 4) then
+    if(self.run.floorDeskNumber <= Constants.DESKS_BY_FLOOR) then
         self.possibleRounds = self.floor.desks[self.run.floorDeskNumber]
     else
         self.possibleRounds = {self.floor.boss}

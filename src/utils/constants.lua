@@ -5,7 +5,8 @@ local Constants = {
     BASE_TRIGGER_ANIMATION_TIME = 0.15,--secondes
     GAME_VERSION = "0.1.2",
     BASE_TURNS = 3,
-    BASE_AVAILABLE_HANDS = 1
+    BASE_AVAILABLE_HANDS = 1,
+    DESKS_BY_FLOOR = 2
 }
 
 --Enums
