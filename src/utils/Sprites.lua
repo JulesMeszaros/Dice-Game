@@ -24,5 +24,6 @@ Sprites.BADGE = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
 
 Sprites.SHOP_BG = love.graphics.newImage("src/assets/sprites/ui/Shop.png")
 Sprites.INVENTORY = love.graphics.newImage("src/assets/sprites/ui/Inventory.png")
+Sprites.PRICE_TAG = love.graphics.newImage("src/assets/sprites/ui/PriceTag.png")
 
 return Sprites

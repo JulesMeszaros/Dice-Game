@@ -70,7 +70,6 @@ function DeskChoice:update(dt)
     if(self.hoverInfosCanvas and self.currentlyHoveredFace)then
         self.hoverInfosCanvas:update(dt)
         self.hoverInfosCanvas:draw()
-        print(self.hoverInfosCanvas.x)
     end
     
     love.graphics.setCanvas(currentCanvas)
@@ -92,7 +91,7 @@ function DeskChoice:createDeck()
         local faceUI = DiceFace:new(
                 dice,
                 dice:getFace(1),
-                self.deckCanvas:getWidth()/2+1,
+                self.deckCanvas:getWidth()/2,
                 70+((i-1)*180),
                 120,
                 true,

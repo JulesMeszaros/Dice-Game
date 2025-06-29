@@ -2,6 +2,7 @@ local Fonts = {}
 
 --Nexa
 Fonts.nexaDesc = love.graphics.newFont("src/assets/fonts/Nexa-Heavy.ttf", 22)
+Fonts.nexaPrice = love.graphics.newFont("src/assets/fonts/Nexa-Heavy.ttf", 18)
 Fonts.nexaSmall = love.graphics.newFont("src/assets/fonts/Nexa-Heavy.ttf", 25)
 Fonts.nexaMedium = love.graphics.newFont("src/assets/fonts/Nexa-Heavy.ttf", 35)
 Fonts.nexa30 = love.graphics.newFont("src/assets/fonts/Nexa-Heavy.ttf", 30)

@@ -303,7 +303,6 @@ function Round:triggerNextDice()
         local j = 0
         for i,diceface in next,self.diceFaces do
             j = j+1
-            print(j)
             if(j==5)then
                 diceface.animator:add("y", diceface.y, diceface.y-20, 0.1)
                 diceface.animator:add("y", diceface.y-20, 1000, 0.2)

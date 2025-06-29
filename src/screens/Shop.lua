@@ -10,7 +10,7 @@ local FaceObject = require("src.classes.FaceObject")
 local Screen = require("src.classes.GameScreen")
 local DiceCustomization = require("src.screens.DiceCustomization")
 local FaceTypes = require("src.classes.FaceTypes")
-
+local Fonts = require("src.utils.Fonts")
 
 local Shop = setmetatable({}, {__index = Screen})
 Shop.__index = Shop
@@ -31,6 +31,9 @@ function Shop:new(run)
     self.availableFaceObjectsUI = {}
     self.availableCiggiesUI = {}
     self.availableCoffeesUI = {}
+
+    self.facesPriceTags = {}
+    self.ciggiesPriceTags = {}
 
     --Inventory faces
     self.inventoryFacesUI = {}
@@ -82,6 +85,8 @@ function Shop:updateCanvas(dt)
         ciggie:update(dt)
         ciggie:draw()
     end
+
+    self:drawFacesPriceTags()
     
     love.graphics.setCanvas(currentCanvas)
 end
@@ -237,7 +242,6 @@ end
 --==Shop Functions==--
 function Shop:buyDiceFace(face, faceUI, key)
     if(table.getn(self.run.facesInventory)<8 and self.run.money>=5)then
-        print("face bought : ", face.name, face.faceValue)
 
         --Remove the money
         self.run.money = self.run.money-5
@@ -253,15 +257,9 @@ function Shop:buyDiceFace(face, faceUI, key)
 
         --Remove face from shop
         table.remove(self.availableFaceObjects, key)
-        print("-------")
-        print("Inventory")
 
         --Update the positions of the dices
         self:updateInventoryPositions()
-
-        for i,k in next,self.run.facesInventory do
-            print(k.name, k.faceValue)
-        end
     else
         print("no more space in iventory")
     end
@@ -326,6 +324,9 @@ function Shop:generateNewShop()
             {property = "targetedScale", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
             
         })
+
+        --create the price tags
+        self:createFacesPriceTags()
 
         table.insert(self.availableFaceObjectsUI, faceUI)
     end
@@ -427,6 +428,16 @@ function Shop:createInventoryFaces()
     end
 end
 
+function Shop:createFacesPriceTags()
+    self.facesPriceTags = {}
+    for i=1, 4 do
+        local c = love.graphics.newCanvas(95, 40)
+        love.graphics.setBlendMode( "alpha" )
+
+        table.insert(self.facesPriceTags, c)
+    end
+end
+
 --==Additionnal draw functions==--
 function Shop:drawDeck(dt)
     local targetCanvas = love.graphics.getCanvas()
@@ -485,6 +496,25 @@ function Shop:updateInventoryPositions()
         uiFace.anchorY = yPos[i] + self.inventoryTY -10
         uiFace.targetX = xPos[i] - 60 + self.inventoryTX
         uiFace.targetY = yPos[i] + self.inventoryTY -10
+    end
+end
+
+function Shop:drawFacesPriceTags()
+    local currentCanvas = love.graphics.getCanvas()
+    for i,c in next,self.facesPriceTags do
+        love.graphics.setCanvas(c)
+        love.graphics.clear()
+        --Background
+        love.graphics.draw(Sprites.PRICE_TAG, 0, 0)
+        --Text
+        local priceText = love.graphics.newText(Fonts.nexaPrice, '5€')
+
+        love.graphics.setColor(232/255, 79/255, 79/255, 1)
+        love.graphics.draw(priceText, c:getWidth()/2, c:getHeight()/2, 0, 1, 1, priceText:getWidth()/2, priceText:getHeight()/2)
+        love.graphics.setColor(1, 1, 1, 1)
+
+        love.graphics.setCanvas(currentCanvas)
+        love.graphics.draw(c, 180*i + self.shopBGTX - 60, self.shopBGTY+185, 0, 1, 1, c:getWidth()/2, 0)
     end
 end
 
