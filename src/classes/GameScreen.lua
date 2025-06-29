@@ -366,7 +366,7 @@ function GameScreen:drawFigureGrid()
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             --Draw a shadow on the line
             if(self.run.availableFigures[i]>=1)then
-                love.graphics.setColor(1, 0, 0, 0.3)
+                love.graphics.setColor(Constants.FIGURES_COLORS[i][1], Constants.FIGURES_COLORS[i][2], Constants.FIGURES_COLORS[i][3], 0.3)
                 love.graphics.rectangle("fill", 10, (i-1)*50+10, self.figureButtonsCanvas:getWidth()-20, 50)
             end
             love.graphics.setColor(1, 1, 1, 1)
