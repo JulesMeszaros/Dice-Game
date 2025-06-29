@@ -64,7 +64,7 @@ function Floor:generateReward(maxFaces)
         local randomFaceType = FaceTypes[randomFaceKey] --On récupère une face type au hasard
         local randomFaceValue = math.random(1,6) --La face numérique
 
-        local randomFaceObject = randomFaceType:new(randomFaceValue, randomFaceValue)
+        local randomFaceObject = randomFaceType:new(randomFaceValue, 10)
 
         table.insert(faceRewards, randomFaceObject)
     end

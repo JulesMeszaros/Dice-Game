@@ -11,6 +11,8 @@ local Screen = require("src.classes.GameScreen")
 local DiceCustomization = require("src.screens.DiceCustomization")
 local FaceTypes = require("src.classes.FaceTypes")
 local Fonts = require("src.utils.Fonts")
+local CiggieTypes = require("src.classes.CiggieTypes")
+local CiggieObject = require("src.classes.CiggieObject")
 
 local Shop = setmetatable({}, {__index = Screen})
 Shop.__index = Shop
@@ -29,7 +31,7 @@ function Shop:new(run)
 
     --Shop Objects UI
     self.availableFaceObjectsUI = {}
-    self.availableCiggiesUI = {}
+    self.availableCiggieObjectsUI = {}
     self.availableCoffeesUI = {}
 
     self.facesPriceTags = {}
@@ -78,6 +80,12 @@ function Shop:updateCanvas(dt)
     for i,faceUI in next,self.availableFaceObjectsUI do
         faceUI:update(dt)
         faceUI:draw()
+    end
+
+    --Shop Ciggie UI
+    for i,ciggieUI in next,self.availableCiggieObjectsUI do
+        ciggieUI:update(dt)
+        ciggieUI:draw()
     end
 
     --Ciggies UI
@@ -134,6 +142,11 @@ function Shop:mousepressed(x, y, button, istouch, presses)
     for key,uiFace in next,self.availableFaceObjectsUI do
         uiFace:clickEvent()
     end
+
+    --Ciggies
+    for key,ciggie in next,self.availableCiggieObjectsUI do
+        ciggie:clickEvent()
+    end
 end
 
 function Shop:mousereleased(x, y, button, istouch, presses)
@@ -187,6 +200,15 @@ function Shop:mousereleased(x, y, button, istouch, presses)
             self:buyDiceFace(face.representedObject, face, key)
         end
     end
+
+    --Ciggies
+    for key,ciggie in next,self.availableCiggieObjectsUI do
+        ciggie:releaseEvent()
+        ciggie.isBeingDragged = false
+
+        ciggie.targetX = ciggie.anchorX
+        ciggie.targetY = ciggie.anchorY
+    end
 end
 
 function Shop:mousemoved(x, y, dx, dy, isDragging)
@@ -229,6 +251,22 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
                 face.dragXspeed = dx
                 face.targetX = (face.targetX + dx) 
                 face.targetY = (face.targetY + dy) 
+            end
+        end
+    end
+
+    if(isDragging == true)then 
+        for key,ciggie in next, self.availableCiggieObjectsUI do
+            if(ciggie.isDraggable and ciggie.isBeingClicked) then
+                ciggie.isBeingDragged = true
+                ciggie.dragXspeed = dx
+                if(ciggie.targetX+dx<self.canvas:getWidth()-ciggie.width/2 and ciggie.targetX+dx>0+ciggie.width/2) then --Vérification qu'on ne dépasse par les limites horizontales
+                    ciggie.targetX = (ciggie.targetX + dx) 
+                end
+
+                if(ciggie.targetY+dy<self.canvas:getHeight()-ciggie.height/2 and ciggie.targetY+dy>0+ciggie.height/2) then --Vérification qu'on ne dépasse pas les limites verticales
+                    ciggie.targetY = (ciggie.targetY + dy) 
+                end
             end
         end
     end
@@ -293,8 +331,12 @@ end
 function Shop:generateNewShop()
     --Generate the objects to buy
     self:generateAvailableFaces()
+    self:generateAvailableCiggies()
+
     self.availableFaceObjectsUI = {}
-    --Generate the UI elements    
+    self.availableCiggieObjectsUI = {}
+    --Generate the UI elements--
+    --Faces
     for i,f in next,self.availableFaceObjects do
         local faceUI = DiceFace:new(
             nil,
@@ -330,6 +372,23 @@ function Shop:generateNewShop()
 
         table.insert(self.availableFaceObjectsUI, faceUI)
     end
+    --Ciggies
+    for i,c in next,self.availableCiggies do
+        local ciggieUI = Ciggie:new(
+            c,
+            self.shopBGTX+(205+(1-i%2)*370),
+            self.shopBGTY+(410+(math.floor(i/3))*60),
+            false,
+            true,
+            function()return Inputs.getMouseInCanvas(0, 0)end,
+            nil
+        )
+
+        ciggieUI.anchorX = self.shopBGTX+(205+(1-i%2)*370)
+        ciggieUI.anchorY = self.shopBGTY+(410+(math.floor(i/3))*60)
+
+        table.insert(self.availableCiggieObjectsUI, ciggieUI)
+    end
 end
 
 function Shop:generateAvailableFaces()
@@ -337,6 +396,15 @@ function Shop:generateAvailableFaces()
     for i=1, 4 do
         local f = self:getRandomFaceObject()
         table.insert(self.availableFaceObjects, f)
+    end
+end
+
+function Shop:generateAvailableCiggies()
+    self.availableCiggies = {}
+    for i=1, 4 do
+        local c = self:generateRandomCiggie()
+        table.insert(self.availableCiggies, c)
+        print(c.name)
     end
 end
 
@@ -363,9 +431,24 @@ function Shop:getRandomFaceObject()
     local randomFaceType = FaceTypes[randomFaceKey] --On récupère une face type au hasard
     local randomFaceValue = math.random(1,6) --La face numérique
 
-    local randomFaceObject = randomFaceType:new(randomFaceValue, randomFaceValue)
+    local randomFaceObject = randomFaceType:new(randomFaceValue, 10)
 
     return randomFaceObject 
+end
+
+function Shop:generateRandomCiggie()
+    --Get the list of keys
+    local keys = {}
+    for key, _ in pairs(CiggieTypes) do
+        table.insert(keys, key)
+    end
+
+    local randomCiggieKey = keys[math.random(#keys)]
+    local randomCiggieType = CiggieTypes[randomCiggieKey] --On récupère une face type au hasard
+
+    local randomCiggieObject = randomCiggieType:new()
+
+    return randomCiggieObject 
 end
 
 --==Additionnal init functions==--
