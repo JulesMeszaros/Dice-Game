@@ -13,7 +13,6 @@ local Run = {}
 Run.__index = Run
 
 --Get the cool ass font
-local font = love.graphics.newFont("src/assets/fonts/joystix.otf", 20)
 
 function Run:new(dices, gameCanvas, game, diceObjects)
     local self = setmetatable({}, Run)

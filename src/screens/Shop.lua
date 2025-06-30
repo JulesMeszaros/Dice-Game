@@ -652,7 +652,7 @@ function Shop:drawFacesPriceTags()
         --Background
         love.graphics.draw(Sprites.PRICE_TAG, 0, 0)
         --Text
-        local priceText = love.graphics.newText(Fonts.nexaPrice, '5€')
+        local priceText = love.graphics.newText(Fonts.soraPrice, '5€')
 
         love.graphics.setColor(232/255, 79/255, 79/255, 1)
         love.graphics.draw(priceText, c:getWidth()/2, c:getHeight()/2, 0, 1, 1, priceText:getWidth()/2, priceText:getHeight()/2)

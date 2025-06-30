@@ -104,9 +104,9 @@ function Badge:updateCanvas(dt)
     
 
     --Texts
-    local nameText = love.graphics.newText(Fonts.nexaDesc, "Jean Michel Lionnel.le")
-    local jobDeskText = love.graphics.newText(Fonts.nexaLightMini, 'Office '..tostring(self.round.deskNumber).." - "..tostring(self.round.enemyJob))
-    local targetText = love.graphics.newText(Fonts.nexaLightMini, 'Target Score : '..tostring(self.round.targetScore))
+    local nameText = love.graphics.newText(Fonts.soraDesc, "Jean Michel Lionnel.le")
+    local jobDeskText = love.graphics.newText(Fonts.soraLightMini, 'Office '..tostring(self.round.deskNumber).." - "..tostring(self.round.enemyJob))
+    local targetText = love.graphics.newText(Fonts.soraLightMini, 'Target Score : '..tostring(self.round.targetScore))
     
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(nameText, self.uiCanvas:getWidth()/2, 25, 0, 1, 1, nameText:getWidth()/2, 0)

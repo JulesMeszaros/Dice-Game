@@ -54,12 +54,12 @@ function MainMenu:updateCanvas(dt)
 
     --==Animation Dices==--
 
-    local textTitle = love.graphics.newText(Fonts.nexaBig, "DICE GAME")
+    local textTitle = love.graphics.newText(Fonts.soraBig, "DICE GAME")
     --Main title
     love.graphics.draw(textTitle, self.mainMenuCanvas:getWidth()/2, 100, 0, 1, 1, textTitle:getWidth()/2, textTitle:getHeight()/2)
 
     --Version
-    local versionText = love.graphics.newText(Fonts.nexaSmall, "AEROSOL DELUXE GAMES — "..Constants.GAME_VERSION)
+    local versionText = love.graphics.newText(Fonts.soraSmall, "AEROSOL DELUXE GAMES — "..Constants.GAME_VERSION)
     love.graphics.draw(versionText, 20, self.mainMenuCanvas:getHeight()-20, 0, 1, 1, 0, versionText:getHeight())
 
     --Buttons

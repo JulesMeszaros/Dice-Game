@@ -233,18 +233,18 @@ function GameScreen:drawDescription()
 
         --Name
         local objectName = hoveredObject.name
-        local nameText = love.graphics.newText(Fonts.nexa30, objectName)
+        local nameText = love.graphics.newText(Fonts.sora30, objectName)
 
         --Face tier
         local tierText = love.graphics.newText(
-            Fonts.nexaSmall,
+            Fonts.soraSmall,
             hoveredObject.tier
         )
 
         --Description
         local faceDescription = hoveredObject.description
-        local descWidth, descWrappedtext = Fonts.nexaDesc:getWrap(faceDescription, self.descriptionCanvas:getWidth()-18 )
-        local descText = love.graphics.newText(Fonts.nexaDesc, table.concat(descWrappedtext, "\n"))
+        local descWidth, descWrappedtext = Fonts.soraDesc:getWrap(faceDescription, self.descriptionCanvas:getWidth()-18 )
+        local descText = love.graphics.newText(Fonts.soraDesc, table.concat(descWrappedtext, "\n"))
         
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.draw(nameText, self.descriptionCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
@@ -263,16 +263,16 @@ end
 function GameScreen:drawRoundDetails()
     local currentCanvas = love.graphics.getCanvas()
     --Create the texts
-    local rerollText = love.graphics.newText(Fonts.nexaBig, '-')
-    local currentHands = love.graphics.newText(Fonts.nexaBig, '-')
-    local currentRoundText = love.graphics.newText(Fonts.nexaSmall, 'Floor '..tostring(self.run.floorNumber)..'\nDesk : '..tostring("-"))
-    local moneyText = love.graphics.newText(Fonts.nexaBig, tostring(self.run.money).."€")
+    local rerollText = love.graphics.newText(Fonts.soraBig, '-')
+    local currentHands = love.graphics.newText(Fonts.soraBig, '-')
+    local currentRoundText = love.graphics.newText(Fonts.soraSmall, 'Floor '..tostring(self.run.floorNumber)..'\nDesk : '..tostring("-"))
+    local moneyText = love.graphics.newText(Fonts.soraBig, tostring(self.run.money).."€")
 
     if(self.round) then
-        rerollText = love.graphics.newText(Fonts.nexaBig, tostring(self.round.availableRerolls))
-        currentHands = love.graphics.newText(Fonts.nexaBig, tostring(self.round.remainingHands))
-        currentRoundText = love.graphics.newText(Fonts.nexaSmall, 'Floor '..tostring(self.round.floorNumber)..'\nDesk : '..tostring(self.round.deskNumber))
-        moneyText = love.graphics.newText(Fonts.nexaBig, tostring(self.round.run.money).."€")
+        rerollText = love.graphics.newText(Fonts.soraBig, tostring(self.round.availableRerolls))
+        currentHands = love.graphics.newText(Fonts.soraBig, tostring(self.round.remainingHands))
+        currentRoundText = love.graphics.newText(Fonts.soraSmall, 'Floor '..tostring(self.round.floorNumber)..'\nDesk : '..tostring(self.round.deskNumber))
+        moneyText = love.graphics.newText(Fonts.soraBig, tostring(self.round.run.money).."€")
     end
 
     --ROUND
@@ -337,7 +337,7 @@ function GameScreen:drawFigureGrid()
         love.graphics.setColor(249/255, 130/255, 132/255)
 
         for i=1, 13 do
-            local calcScore = love.graphics.newText(Fonts.nexaSmall, self.calcBasePoints[i]()[1])
+            local calcScore = love.graphics.newText(Fonts.soraSmall, self.calcBasePoints[i]()[1])
             love.graphics.draw(calcScore, 225, 50*(i-1)+38, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
         end
     end
@@ -346,7 +346,7 @@ function GameScreen:drawFigureGrid()
     love.graphics.setColor(0, 0, 0, 1)
 
     for i=1, 13 do
-        local handsRemaining = love.graphics.newText(Fonts.nexaSmall, self.run.availableFigures[i])
+        local handsRemaining = love.graphics.newText(Fonts.soraSmall, self.run.availableFigures[i])
         love.graphics.draw(handsRemaining, 368, 50*(i-1)+38, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
         --if no hands remaining, grey out the line
         if(self.run.availableFigures[i]<=0) then

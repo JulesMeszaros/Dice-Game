@@ -14,8 +14,8 @@ function FaceHoverInfo:new(face, wich, canvasX, canvasY)
     self.y = face.y + 70 + canvasY
     local canvasWidth = 350
     
-    self.titleText = love.graphics.newText(Fonts.nexaSmall, self.face.representedObject.name)
-    self.descWidth, self.descWrappedtext = Fonts.nexaDesc:getWrap(self.face.representedObject.description, canvasWidth-18)
+    self.titleText = love.graphics.newText(Fonts.soraSmall, self.face.representedObject.name)
+    self.descWidth, self.descWrappedtext = Fonts.soraDesc:getWrap(self.face.representedObject.description, canvasWidth-18)
 
     --On calcule la hauteur du canvas
     local canvasHeight = 40+(table.getn(self.descWrappedtext))*25+10
@@ -27,7 +27,7 @@ function FaceHoverInfo:new(face, wich, canvasX, canvasY)
     self.sx = face.x + 1000
     self.sy = face.y + canvasHeight + 80
 
-    self.pointsText = love.graphics.newText(Fonts.nexaDesc, "+"..tostring(face.representedObject.pointsValue).." pts")
+    self.pointsText = love.graphics.newText(Fonts.soraDesc, "+"..tostring(face.representedObject.pointsValue).." pts")
 
     local smallCanvasWidth = self.pointsText:getWidth()+30
     local smallCanvasHeight = self.pointsText:getHeight()+30
