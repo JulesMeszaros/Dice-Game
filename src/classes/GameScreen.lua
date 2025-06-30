@@ -433,7 +433,9 @@ function GameScreen:createDiceNet()
 end
 
 function GameScreen:generateCiggiesUI()
+    self.uiElements.ciggiesUI = {}
     for i,ciggie in next,self.run.ciggiesObjects do
+        
         local c = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
         self.uiElements.ciggiesUI[ciggie] = c
     end

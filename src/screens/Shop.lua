@@ -170,8 +170,12 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 
     --Ciggies
     for key,ciggie in next,self.uiElements.ciggiesUI do
-        ciggie:releaseEvent()
+        local wasReleased = ciggie:releaseEvent()
         ciggie.isBeingDragged = false
+
+        if(wasReleased) then
+            self:sellCiggie(ciggie.representedObject, ciggie, key)
+        end
     end
 
     --Inventory
@@ -326,7 +330,7 @@ end
 
 function Shop:sellDiceFace(face, faceUI, key)
     --Add money to bank account
-    self.run.money = self.run.money + 5
+    self.run.money = self.run.money + 3
 
     --Remove dice face object from inventory
 
@@ -346,6 +350,24 @@ function Shop:sellDiceFace(face, faceUI, key)
             
         })
     
+end
+
+function Shop:sellCiggie(ciggie, ciggieUI, key)
+    --Add money to bank account
+    self.run.money = self.run.money+3
+    print("-------")
+    print("ciggies list")
+    for k,m in next,self.run.ciggiesObjects do
+        print(m.name)
+    end
+    
+    --On retire l'objet de l'inventaire
+    for j,c in next,self.run.ciggiesObjects do
+        if(c==ciggie) then table.remove(self.run.ciggiesObjects, j)end
+    end
+    
+    self:generateCiggiesUI()
+
 end
 
 --==Shop generation==--
