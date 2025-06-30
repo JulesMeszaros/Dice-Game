@@ -48,6 +48,7 @@ function Shop:update(dt)
     self.animator:update(dt)
 
     self:getCurrentlyHoveredCiggie()
+    self:getCurrentlyHoveredFace()
 
     self:updateCanvas(dt)
 end
@@ -471,8 +472,26 @@ function Shop:generateAvailableCiggies()
 end
 
 --==UTILS==--
+function Shop:getCurrentlyHoveredFace()
+    self.currentlyHoveredFace = nil
+    --Shop faces
+    for i,face in next,self.availableFaceObjectsUI do
+        if(face:isHovered()) then self.currentlyHoveredFace = face ; return end
+    end
+    --Inventory Faces
+    for i,face in next,self.inventoryFacesUI do
+        if(face:isHovered()) then self.currentlyHoveredFace = face ; return end
+    end
+end
+
 function Shop:getCurrentlyHoveredObject()
-    return nil
+    if(self.currentlyHoveredFace) then
+        return self.currentlyHoveredFace.representedObject
+    elseif(self.currentlyHoveredCiggie)then
+        return self.currentlyHoveredCiggie.representedObject
+    else
+        return nil
+    end
 end
 
 function Shop:resetSelectedDices()
@@ -666,8 +685,15 @@ end
 --==Hover functions==--
 function Shop:getCurrentlyHoveredCiggie()
     self.currentlyHoveredCiggie = nil
-
+    --Inventaire
     for i,ciggie in next,self.uiElements.ciggiesUI do
+        if(ciggie:isHovered())then
+            self.currentlyHoveredCiggie = ciggie
+            break
+        end
+    end
+    --Shop
+    for i,ciggie in next,self.availableCiggieObjectsUI do
         if(ciggie:isHovered())then
             self.currentlyHoveredCiggie = ciggie
             break
