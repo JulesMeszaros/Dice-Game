@@ -311,8 +311,8 @@ function Shop:buyDiceFace(face, faceUI, key)
 end
 
 function Shop:buyCiggie(ciggie, ciggieUI, key)
-    if(table.getn(self.run.ciggiesObjects)<2)then
-        print("ciggie bough", ciggie.name)
+    if(table.getn(self.run.ciggiesObjects)<2 and self.run.money>=5)then
+        self.run.money = self.run.money - 5
         --Add the ciggie to the inventory
         table.insert(self.run.ciggiesObjects, ciggie)
         --Remove the ciggie from the shop
