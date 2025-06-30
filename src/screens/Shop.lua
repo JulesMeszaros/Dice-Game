@@ -203,11 +203,15 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 
     --Ciggies
     for key,ciggie in next,self.availableCiggieObjectsUI do
-        ciggie:releaseEvent()
+        local wasReleased = ciggie:releaseEvent()
         ciggie.isBeingDragged = false
 
         ciggie.targetX = ciggie.anchorX
         ciggie.targetY = ciggie.anchorY
+
+        if(wasReleased)then
+            self:buyCiggie(ciggie.representedObject, ciggie, key)
+        end
     end
 end
 
@@ -300,6 +304,23 @@ function Shop:buyDiceFace(face, faceUI, key)
         self:updateInventoryPositions()
     else
         print("no more space in iventory")
+    end
+end
+
+function Shop:buyCiggie(ciggie, ciggieUI, key)
+    if(table.getn(self.run.ciggiesObjects)<2)then
+        print("ciggie bough", ciggie.name)
+        --Add the ciggie to the inventory
+        table.insert(self.run.ciggiesObjects, ciggie)
+        --Remove the ciggie from the shop
+        table.remove(self.availableCiggies, key)
+        --Remove the ciggie from the shop UI
+        table.remove(self.availableCiggieObjectsUI, key)
+
+        --Regenerate the ciggies inventory
+        self:generateCiggiesUI()
+    else
+        print("too much ciggies")
     end
 end
 
