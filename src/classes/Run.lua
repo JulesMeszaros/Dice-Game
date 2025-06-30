@@ -150,7 +150,6 @@ function Run:endRound()
 
         --GOTO dice customization
         --[[ self.customizationScreen = DiceCustomization:new(self.currentRound, self.currentRound.faceRewards)
-        self.customizationScreen:generateCiggiesUI()
         self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION ]]
 
     else --gameover case
@@ -251,7 +250,6 @@ end
 --==Change screen==--
 function Run:goToRoundSelection()
     local deskchoice = DeskChoice:new(self.currentFloor, self)
-    deskchoice:generateCiggiesUI()
     self.deskChoice = deskchoice
 
     self.currentState = Constants.RUN_STATES.ROUND_CHOICE --Change d'état de Run
@@ -262,7 +260,6 @@ function Run:startNewRound(round, roundtype)
     self.roundNumber = self.roundNumber + 1
 
     self.currentRound = round
-    self.currentRound.terrain:generateCiggiesUI()
 
     --Changes the screen to the round screen
     self.currentState = Constants.RUN_STATES.ROUND
@@ -270,7 +267,6 @@ end
 
 function Run:goToDiceCustomization()
         self.customizationScreen = DiceCustomization:new(self.currentRound, self.facesInventory)
-        self.customizationScreen:generateCiggiesUI()
         self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION
 end
 

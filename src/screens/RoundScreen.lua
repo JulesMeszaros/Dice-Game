@@ -76,7 +76,7 @@ function RoundScreen:new(round)
     self.handScoreRot = 0
 
     --Start the round with the first roll
-    self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects)end)
+    self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects);self:generateCiggiesUI()end)
 
     return self
 end

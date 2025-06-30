@@ -22,7 +22,6 @@ function Shop:new(run)
 
     self:createDiceNet()
     self:createDeck()
-    self:generateCiggiesUI()
 
     --Shop Objects
     self.availableFaceObjects = {}
@@ -40,8 +39,8 @@ function Shop:new(run)
     --Inventory faces
     self.inventoryFacesUI = {}
 
-    --Wait for all the animations to end, then show the inventory and the shop
-    self.animator:addDelay(0.2, function()self:generateNewShop();self:createInventoryFaces()end)
+    --Wait for all the animations to end, then show the inventory and the shop + ciggies UI
+    self.animator:addDelay(0.5, function()self:generateNewShop();self:createInventoryFaces();self:generateCiggiesUI()end)
     return self
 end
 
@@ -411,11 +410,14 @@ function Shop:generateNewShop()
         })
 
         --create the price tags
-        self:createFacesPriceTags()
+        
 
         table.insert(self.availableFaceObjectsUI, faceUI)
     end
+
+    
     --Ciggies
+    --Create the UI
     for i,c in next,self.availableCiggies do
         local ciggieUI = Ciggie:new(
             c,
@@ -426,12 +428,29 @@ function Shop:generateNewShop()
             function()return Inputs.getMouseInCanvas(0, 0)end,
             nil
         )
-
+        --Set an anchor
         ciggieUI.anchorX = self.shopBGTX+(205+(1-i%2)*370)
         ciggieUI.anchorY = self.shopBGTY+(410+(math.floor(i/3))*60)
-
+        --Insert in the table
         table.insert(self.availableCiggieObjectsUI, ciggieUI)
+        
+        --Add them an animation
+        local apparitionDuration = 0.3
+        ciggieUI.animator:addGroup({
+            --Rotation
+            {property = "rotation", from = 0.5, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 0.5, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            --Scale
+            {property = "baseTargetedScale", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleX", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleY", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            
+        })
     end
+
+
+    self:createFacesPriceTags()
 end
 
 function Shop:generateAvailableFaces()

@@ -67,6 +67,8 @@ function Ciggie:new(ciggieObject, x, y, isSelectable, isHoverable, mousePosition
 end
 
 function Ciggie:update(dt)
+    self.animator:update(dt)
+
     self.time=self.time+dt
     self.x, self.velx = AnimationUtils.springUpdate(self.x, self.targetX, self.velx, dt, 4, 0.8)
     self.y, self.vely = AnimationUtils.springUpdate(self.y, self.targetY, self.vely, dt, 4, 0.8)
@@ -79,7 +81,7 @@ function Ciggie:update(dt)
 end
 
 function Ciggie:draw()
-    love.graphics.draw(self.canvas, self.x, self.y, self.rotation, 1, 1, self.canvas:getWidth()/2, self.canvas:getHeight()/2)
+    love.graphics.draw(self.canvas, self.x, self.y, self.rotation, self.scaleX, self.scaleY, self.canvas:getWidth()/2, self.canvas:getHeight()/2)
 end
 
 function Ciggie:createCanvas()
