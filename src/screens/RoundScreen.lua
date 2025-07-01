@@ -59,6 +59,9 @@ function RoundScreen:new(round)
         function()self:playFigure(Constants.FIGURES.DELUXE,CalculatePoints.yatzeeBasePoints(self.round.selectedDices))end,
     }
     
+    self.dragAndDroppedCiggie = nil
+    self.dragAndDroppedFace = nil
+
     --FACE DETAILS
     self.pointsDetailsCanvas = nil
 
@@ -159,6 +162,11 @@ function RoundScreen:updateCanvas(dt)
         ciggie:draw()
     end
 
+    --On dessine l'objet drag and drop au dessus de tout le reste
+    if(self.dragAndDroppedCiggie)then
+        self.dragAndDroppedCiggie:draw()
+    end
+
     --On dessine la bulle des points
     if(self.currentlyHoveredFace and self.pointsDetailsCanvas)then
         self.pointsDetailsCanvas:draw()
@@ -194,10 +202,16 @@ function RoundScreen:drawDiceTray(x, y, dices2)
         uiFace:draw()
     end
 
+    --dessiner le dé drag and drop au dessus des autres
+    if(self.dragAndDroppedDice)then
+        self.dragAndDroppedDice:draw()
+    end
+
     --Score de la main en direct
     if(self.round.phase == Constants.ROUND_STATES.TRIGGERING)then
         self:drawHandScore()
     end
+
 
     --On retourne au canvas précédent
     love.graphics.setCanvas(targetCanvas)

@@ -22,6 +22,8 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     self.newUIFaces = {}
     --On peuple notre table
     
+    self.dragAndDroppedObject = nil
+
     for i,dice in next, self.diceObjects do
         table.insert(self.uiDices, self:createDiceUI(dice, i))
     end
@@ -121,6 +123,11 @@ function DiceCustomization:updateCanvas(dt)
         ciggie:draw()
     end
 
+    --DnDropped object
+    if(self.dragAndDroppedObject)then
+        self.dragAndDroppedObject:draw()
+    end
+
     love.graphics.setCanvas(currentCanvas)
 end
 
@@ -152,7 +159,7 @@ function DiceCustomization:mousepressed(x, y, button, istouch, presses)
 end
 
 function DiceCustomization:mousereleased(x, y, button, istouch, presses)
-
+    self.dragAndDroppedObject = nil
     for i,face in next,self.newUIFaces do
         face:releaseEvent()
         
@@ -198,6 +205,7 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
         for key,diceui in next, self.newUIFaces do
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
+                self.dragAndDroppedObject = diceui
                 diceui.dragXspeed = dx
                 diceui.targetX = (diceui.targetX + dx) 
                 diceui.targetY = (diceui.targetY + dy)
@@ -208,6 +216,7 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
         for key,ciggie in next, self.uiElements.ciggiesUI do
             if(ciggie.isDraggable and ciggie.isBeingClicked) then
                 ciggie.isBeingDragged = true
+                self.dragAndDroppedObject = ciggie
                 ciggie.dragXspeed = dx
                 if(ciggie.targetX+dx<self.canvas:getWidth()-ciggie.width/2 and ciggie.targetX+dx>0+ciggie.width/2) then --Vérification qu'on ne dépasse par les limites horizontales
                     ciggie.targetX = (ciggie.targetX + dx) 

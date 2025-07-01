@@ -16,6 +16,8 @@ local choiceNumber = 4
 function DeskChoice:new(floor, run)
     local self = setmetatable(Screen:new(floor, run, Constants.RUN_STATES.ROUND_CHOICE), DeskChoice)
 
+    self.dragAndDroppedObject = nil
+
     --Créer le deck
     self:createDeck()
 
@@ -73,6 +75,10 @@ function DeskChoice:update(dt)
     if(self.hoverInfosCanvas and self.currentlyHoveredFace)then
         self.hoverInfosCanvas:update(dt)
         self.hoverInfosCanvas:draw()
+    end
+
+    if(self.dragAndDroppedObject)then
+        self.dragAndDroppedObject:draw()
     end
     
     love.graphics.setCanvas(currentCanvas)
@@ -233,6 +239,8 @@ function DeskChoice:mousepressed(x, y, button, istouch, presses)
 end
 
 function DeskChoice:mousereleased(x, y, button, istouch, presses)
+    self.dragAndDroppedObject = nil
+
     --release event on UI elements (buttons)
     for key,badge in next,self.badges do
         local wasReleased = badge:releaseEvent()
@@ -263,6 +271,7 @@ function DeskChoice:mousemoved(x, y, dx, dy, isDragging)
         for key,ciggie in next, self.uiElements.ciggiesUI do
             if(ciggie.isDraggable and ciggie.isBeingClicked) then
                 ciggie.isBeingDragged = true
+                self.dragAndDroppedObject = ciggie
                 ciggie.dragXspeed = dx
                 if(ciggie.targetX+dx<self.canvas:getWidth()-ciggie.width/2 and ciggie.targetX+dx>0+ciggie.width/2) then --Vérification qu'on ne dépasse par les limites horizontales
                     ciggie.targetX = (ciggie.targetX + dx) 

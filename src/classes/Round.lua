@@ -132,6 +132,9 @@ end
 function Round:mousereleased(x, y, button, istouch, presses)
     --release event for dice faces
 
+    self.terrain.dragAndDroppedCiggie = nil
+    self.terrain.dragAndDroppedFace = nil
+
     for key,diceface in next,self.diceFaces do
         local wasReleased = diceface:releaseEvent()
         if(wasReleased)then
@@ -171,6 +174,7 @@ function Round:mousemoved(x, y, dx, dy, isDragging)
         for key,diceui in next, self.diceFaces do
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
+                self.terrain.dragAndDroppedDice = diceui
                 diceui.dragXspeed = dx
                 if(diceui.targetX+dx<self.terrain.dice_tray:getWidth()-diceui.size/2 and diceui.targetX+dx>0+diceui.size/2) then --Vérification qu'on ne dépasse par les limites horizontales
                     diceui.targetX = (diceui.targetX + dx) 
@@ -179,6 +183,7 @@ function Round:mousemoved(x, y, dx, dy, isDragging)
                 if(diceui.targetY+dy<self.terrain.dice_tray:getHeight()-diceui.size/2-85 and diceui.targetY+dy>165+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
                     diceui.targetY = (diceui.targetY + dy) 
                 end
+                break;
             end
         end
     end
@@ -187,6 +192,7 @@ function Round:mousemoved(x, y, dx, dy, isDragging)
         for key,ciggie in next, self.terrain.uiElements.ciggiesUI do
             if(ciggie.isDraggable and ciggie.isBeingClicked) then
                 ciggie.isBeingDragged = true
+                self.terrain.dragAndDroppedCiggie = ciggie
                 ciggie.dragXspeed = dx
                 if(ciggie.targetX+dx<self.terrain.canvas:getWidth()-ciggie.width/2 and ciggie.targetX+dx>0+ciggie.width/2) then --Vérification qu'on ne dépasse par les limites horizontales
                     ciggie.targetX = (ciggie.targetX + dx) 
@@ -195,6 +201,7 @@ function Round:mousemoved(x, y, dx, dy, isDragging)
                 if(ciggie.targetY+dy<self.terrain.canvas:getHeight()-ciggie.height/2 and ciggie.targetY+dy>0+ciggie.height/2) then --Vérification qu'on ne dépasse pas les limites verticales
                     ciggie.targetY = (ciggie.targetY + dy) 
                 end
+                break;
             end
         end
     end
