@@ -17,5 +17,4 @@
 
 ## Shop
 
-- Ajouter le price tag des cigarettes
 - Ajouter un petit pop up temporaire sous la souris 'cliquer pour acheter/vendre'
