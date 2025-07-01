@@ -426,7 +426,6 @@ function Shop:generateNewShop()
             
         })
 
-        --create the price tags
         
 
         table.insert(self.availableFaceObjectsUI, faceUI)
@@ -614,12 +613,23 @@ end
 
 function Shop:createFacesPriceTags()
     self.facesPriceTags = {}
+    --Faces
     for i=1, 4 do
         local c = love.graphics.newCanvas(95, 40)
         love.graphics.setBlendMode( "alpha" )
 
         table.insert(self.facesPriceTags, c)
     end
+
+    --Ciggies
+    self.ciggiesPriceTags = {}
+    for i=1, 4 do
+        local c = love.graphics.newCanvas(95, 40)
+        love.graphics.setBlendMode( "alpha" )
+
+        table.insert(self.ciggiesPriceTags, c)
+    end
+
 end
 
 --==Additionnal draw functions==--
@@ -700,7 +710,25 @@ function Shop:drawFacesPriceTags()
         love.graphics.setCanvas(currentCanvas)
         love.graphics.draw(c, 180*i + self.shopBGTX - 60, self.shopBGTY+185, 0, 1, 1, c:getWidth()/2, 0)
     end
+
+    for i,c in next,self.ciggiesPriceTags do
+        love.graphics.setCanvas(c)
+        love.graphics.clear()
+        --Background
+        love.graphics.draw(Sprites.PRICE_TAG, 0, 0)
+        --Text
+        local priceText = love.graphics.newText(Fonts.soraPrice, '5€')
+
+        love.graphics.setColor(232/255, 79/255, 79/255, 1)
+        love.graphics.draw(priceText, c:getWidth()/2, c:getHeight()/2, 0, 1, 1, priceText:getWidth()/2, priceText:getHeight()/2)
+        love.graphics.setColor(1, 1, 1, 1)
+
+        love.graphics.setCanvas(currentCanvas)
+        love.graphics.draw(c, self.shopBGTX+(205+(1-i%2)*370), self.shopBGTY+(410+(math.floor(i/3))*60)-15, 0, 1, 1, c:getWidth()/2, 0)
+
+    end
 end
+
 
 --==Hover functions==--
 function Shop:getCurrentlyHoveredCiggie()
