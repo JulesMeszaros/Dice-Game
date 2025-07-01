@@ -41,6 +41,8 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 
     self:createNewFacesUI()
 
+    self.animator:addDelay(0.5, function()self:generateCiggiesUI()end)
+
     return self
 end
 

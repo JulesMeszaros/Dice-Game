@@ -15,8 +15,8 @@ local Screen = require("src.classes.GameScreen")
 local RoundScreen = setmetatable({}, { __index = Screen })
 RoundScreen.__index = RoundScreen
 
-local font = Fonts.nexaSmall
-local font30 = Fonts.nexaMedium
+local font = Fonts.soraSmall
+local font30 = Fonts.soraMedium
 
 function RoundScreen:new(round)
     local self = setmetatable(Screen:new(round.run.currentFloor, round.run, Constants.RUN_STATES.ROUND, round), RoundScreen)
@@ -76,7 +76,7 @@ function RoundScreen:new(round)
     self.handScoreRot = 0
 
     --Start the round with the first roll
-    self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects)end)
+    self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects);self:generateCiggiesUI()end)
 
     return self
 end
@@ -298,7 +298,7 @@ function RoundScreen:drawHandScore()
     love.graphics.setCanvas(self.handScoreCanvas)
     love.graphics.clear()
 
-    local scoreText = love.graphics.newText(Fonts.nexaBig, self.round.handScore)
+    local scoreText = love.graphics.newText(Fonts.soraBig, self.round.handScore)
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(scoreText, self.handScoreCanvas:getWidth()/2, self.handScoreCanvas:getHeight()/2, self.handScoreRot, self.handScoreRX, self.handScoreRY, scoreText:getWidth()/2-10, scoreText:getHeight()/2-10)
     love.graphics.setColor(1, 1, 1, 1)

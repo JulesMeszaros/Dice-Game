@@ -33,6 +33,9 @@ function DeskChoice:new(floor, run)
     --Création des différents canvas de choix de round
     self:generateChoiceCanvas()
 
+    --Apparition des cigarettes à la toute fin
+    self.animator:addDelay(0.5, function()self:generateCiggiesUI()end)
+
     return self
 end
 
