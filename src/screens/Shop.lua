@@ -23,6 +23,8 @@ function Shop:new(run)
     self:createDiceNet()
     self:createDeck()
 
+    self.dragAndDroppedObject = nil
+
     --Shop Objects
     self.availableFaceObjects = {}
     self.availableCiggies = {}
@@ -95,6 +97,12 @@ function Shop:updateCanvas(dt)
     end
 
     self:drawFacesPriceTags()
+
+    --Draw the drag and dropped object on top of everything else
+    if(self.dragAndDroppedObject) then
+        print("dnd")
+        self.dragAndDroppedObject:draw()
+    end
     
     love.graphics.setCanvas(currentCanvas)
 end
@@ -150,7 +158,7 @@ function Shop:mousepressed(x, y, button, istouch, presses)
 end
 
 function Shop:mousereleased(x, y, button, istouch, presses)
-
+    self.dragAndDroppedObject = nil
     --release event on UI elements (buttons)
     for key,button in next,self.uiElements.buttons do
         local wasReleased = button:releaseEvent()
@@ -226,6 +234,7 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
         for key,ciggie in next, self.uiElements.ciggiesUI do
             if(ciggie.isDraggable and ciggie.isBeingClicked) then
                 ciggie.isBeingDragged = true
+                self.dragAndDroppedObject = ciggie
                 ciggie.dragXspeed = dx
                 if(ciggie.targetX+dx<self.canvas:getWidth()-ciggie.width/2 and ciggie.targetX+dx>0+ciggie.width/2) then --Vérification qu'on ne dépasse par les limites horizontales
                     ciggie.targetX = (ciggie.targetX + dx) 
@@ -234,6 +243,7 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
                 if(ciggie.targetY+dy<self.canvas:getHeight()-ciggie.height/2 and ciggie.targetY+dy>0+ciggie.height/2) then --Vérification qu'on ne dépasse pas les limites verticales
                     ciggie.targetY = (ciggie.targetY + dy) 
                 end
+                break;
             end
         end
     end
@@ -243,9 +253,11 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
         for key,face in next, self.inventoryFacesUI do
             if(face.isDraggable and face.isBeingClicked) then
                 face.isBeingDragged = true
+                self.dragAndDroppedObject = face
                 face.dragXspeed = dx
-                face.targetX = (face.targetX + dx) 
-                face.targetY = (face.targetY + dy) 
+                face.targetX = (face.targetX + dx)
+                face.targetY = (face.targetY + dy)
+                break;
             end
         end
     end
@@ -256,9 +268,11 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
         for key,face in next, self.availableFaceObjectsUI do
             if(face.isDraggable and face.isBeingClicked) then
                 face.isBeingDragged = true
+                self.dragAndDroppedObject = face
                 face.dragXspeed = dx
                 face.targetX = (face.targetX + dx) 
-                face.targetY = (face.targetY + dy) 
+                face.targetY = (face.targetY + dy)
+                break;
             end
         end
     end
@@ -267,6 +281,7 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
         for key,ciggie in next, self.availableCiggieObjectsUI do
             if(ciggie.isDraggable and ciggie.isBeingClicked) then
                 ciggie.isBeingDragged = true
+                self.dragAndDroppedObject = ciggie
                 ciggie.dragXspeed = dx
                 if(ciggie.targetX+dx<self.canvas:getWidth()-ciggie.width/2 and ciggie.targetX+dx>0+ciggie.width/2) then --Vérification qu'on ne dépasse par les limites horizontales
                     ciggie.targetX = (ciggie.targetX + dx) 
@@ -275,6 +290,7 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
                 if(ciggie.targetY+dy<self.canvas:getHeight()-ciggie.height/2 and ciggie.targetY+dy>0+ciggie.height/2) then --Vérification qu'on ne dépasse pas les limites verticales
                     ciggie.targetY = (ciggie.targetY + dy) 
                 end
+                break;
             end
         end
     end
@@ -474,6 +490,10 @@ end
 --==UTILS==--
 function Shop:getCurrentlyHoveredFace()
     self.currentlyHoveredFace = nil
+    --Dice Net
+    for i,face in next,self.infoFaces do
+        if(face:isHovered()) then self.currentlyHoveredFace = face ; return end
+    end
     --Shop faces
     for i,face in next,self.availableFaceObjectsUI do
         if(face:isHovered()) then self.currentlyHoveredFace = face ; return end
