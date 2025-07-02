@@ -5,6 +5,8 @@ function AnimationUtils.osccilate(time, periode, amp) --Periode en secondes
 end
 
 function AnimationUtils.springUpdate(current, target, velocity, dt, frequency, damping)
+    dt = math.min(dt, 1 / 30)
+    
     local f = frequency * 2 * math.pi
     local g = damping
     local delta = target - current
