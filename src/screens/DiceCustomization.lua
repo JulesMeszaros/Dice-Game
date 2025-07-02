@@ -126,7 +126,7 @@ function DiceCustomization:updateCanvas(dt)
     --DnDropped object
     if(self.dragAndDroppedObject)then
         self.dragAndDroppedObject:draw()
-    end
+    end 
 
     love.graphics.setCanvas(currentCanvas)
 end
