@@ -365,6 +365,9 @@ end
 
 --==Animations==--
 function springUpdate(current, target, velocity, dt, frequency, damping)
+    --On met un cap sur le dt
+    dt = math.min(dt, 1 / 30)
+
     local f = frequency * 2 * math.pi
     local g = damping
     local delta = target - current
