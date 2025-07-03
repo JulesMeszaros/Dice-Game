@@ -16,7 +16,7 @@ function WhiteFace:new(faceValue, pointsValue)
     self.description = "When triggered, adds its points value to the hand's score"
 
     --Metadatas about the graphics of the WhiteFace
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice-demo.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
@@ -63,7 +63,7 @@ function RedFace:new(faceValue, pointsValue)
     self.description = "When triggered, adds the double of its points value to the hand's score"
 
     --Metadatas about the graphics of the WhiteFace
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Red Dice-demo.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Red Dice.png")
     self.spriteSheet:setFilter("nearest", "nearest")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
@@ -89,7 +89,7 @@ function RedFace:triggerEffect(round)
     round.handScore = round.handScore + 2*self.pointsValue
 end
 
-FaceTypes.RedFace = RedFace
+--FaceTypes.RedFace = RedFace
 
 --==BLUE FACE==--
 
@@ -106,7 +106,7 @@ function BlueFace:new(faceValue, pointsValue)
     self.description = "Triggers the previously triggered dice again (doesn't work with other Blue Faces)"
 
     --Metadatas about the graphics of the WhiteFace
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Blue Dice-demo.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Blue Dice.png")
     self.spriteSheet:setFilter("nearest", "nearest")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
@@ -153,7 +153,7 @@ function StoneFace:new(faceValue, pointsValue)
     self.description = "When triggered, adds 1€ to the balance"
 
     --Metadatas about the graphics of the WhiteFace
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Gold Dice-demo.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Gold Dice.png")
     self.spriteSheet:setFilter("nearest", "nearest")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
@@ -197,7 +197,7 @@ function StaticFace:new(faceValue, pointsValue)
     self.description = "When triggered, adds its total number of triggers to the score"
 
     --Metadatas about the graphics of the WhiteFace
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Deluxe Dice-demo.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Deluxe Dice.png")
     self.spriteSheet:setFilter("nearest", "nearest")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
