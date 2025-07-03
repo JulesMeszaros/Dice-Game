@@ -5,7 +5,7 @@ local FaceTypes = {}
 
 --==WHITE FACE==--
 local WhiteFace = setmetatable({}, { __index = FaceObject })
-WhiteFace.__index = FaceObject
+WhiteFace.__index = WhiteFace
 
 function WhiteFace:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), WhiteFace)
@@ -36,12 +36,15 @@ function WhiteFace:new(faceValue, pointsValue)
     return self
 end
 
-FaceTypes.WhiteFace = WhiteFace
-
 function WhiteFace:triggerEffect(round)
     --Complementary effect triggered by the face
+    print("test")
     round.handScore = round.handScore + self.pointsValue
 end
+
+FaceTypes.WhiteFace = WhiteFace
+
+
 
 --==CHUNKY DICE==--
 local ChunkyFace = setmetatable({}, { __index = FaceObject })
@@ -56,7 +59,7 @@ function ChunkyFace:new(faceValue, pointsValue)
     self.tier = "Common"
     self.description = "Scoring : +20pts"
 
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Chunky Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
@@ -75,12 +78,14 @@ function ChunkyFace:new(faceValue, pointsValue)
     return self
 end
 
-FaceTypes.ChunkyFace = ChunkyFace
 
 function ChunkyFace:triggerEffect(round)
     --Complementary effect triggered by the face
     round.handScore = round.handScore + self.pointsValue
 end
+
+FaceTypes.ChunkyFace = ChunkyFace
+
 
 --==CHUNKY DICE==--
 local MassiveFace = setmetatable({}, { __index = FaceObject })
@@ -95,7 +100,7 @@ function MassiveFace:new(faceValue, pointsValue)
     self.tier = "Common"
     self.description = "Scoring : +50pts"
 
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Massive Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
@@ -114,13 +119,15 @@ function MassiveFace:new(faceValue, pointsValue)
     return self
 end
 
-FaceTypes.MassiveFace = MassiveFace
 
 function MassiveFace:triggerEffect(round)
     --Complementary effect triggered by the face
     round.handScore = round.handScore + self.pointsValue
     
 end
+
+FaceTypes.MassiveFace = MassiveFace
+
 
 --==BLUE FACE==--
 
