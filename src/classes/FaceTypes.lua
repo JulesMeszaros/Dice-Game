@@ -1,8 +1,9 @@
 local FaceObject = require("src.classes.FaceObject")
 local FaceTypes = {}
 
---==WHITE FACE==--
+--==COMMON==--
 
+--==WHITE FACE==--
 local WhiteFace = setmetatable({}, { __index = FaceObject })
 WhiteFace.__index = FaceObject
 
@@ -13,7 +14,7 @@ function WhiteFace:new(faceValue, pointsValue)
     self.name = "White Face"
     self.id = 1
     self.tier = "Common"
-    self.description = "When triggered, adds its points value to the hand's score"
+    self.description = "Scoring : +10pts"
 
     --Metadatas about the graphics of the WhiteFace
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
@@ -40,29 +41,24 @@ FaceTypes.WhiteFace = WhiteFace
 function WhiteFace:triggerEffect(round)
     --Complementary effect triggered by the face
     round.handScore = round.handScore + self.pointsValue
-    return
 end
 
---==RED FACE==--
+--==CHUNKY DICE==--
+local ChunkyFace = setmetatable({}, { __index = FaceObject })
+ChunkyFace.__index = ChunkyFace
 
-local RedFace = setmetatable({}, { __index = FaceObject })
-RedFace.__index = RedFace
+function ChunkyFace:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), ChunkyFace)
 
-function RedFace:new(faceValue, pointsValue)
-    local self = setmetatable(FaceObject:new(), RedFace)
-
-    --Metadatas about the WhiteFace
-    self.name = "Red Face"
-    self.tier = "Uncommon"
+    --Metadatas about the ChunkyFace
+    self.name = "Chunky Dice"
     self.id = 2
-    self.description = "When triggered, adds the double of its points value to the hand's score"
+    self.tier = "Common"
+    self.description = "Scoring : +20pts"
 
-    --Metadatas about the graphics of the WhiteFace
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Red Dice.png")
-    self.spriteSheet:setFilter("nearest", "nearest")
-
-    self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
-
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
         {0, 120}, -- 2
@@ -72,19 +68,59 @@ function RedFace:new(faceValue, pointsValue)
         {120, 360} -- 6
     }
     
-    --Round status
-    self.faceValue = faceValue --Le numéro de face que le dé représente
-    self.pointsValue = pointsValue --This is the points scored by the dice
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 20 --This is the points scored by the dice
     self.totalTriggered = 0
-
     return self
 end
 
-function RedFace:triggerEffect(round)
-    round.handScore = round.handScore + 2*self.pointsValue
+FaceTypes.ChunkyFace = ChunkyFace
+
+function ChunkyFace:triggerEffect(round)
+    --Complementary effect triggered by the face
+    round.handScore = round.handScore + self.pointsValue
 end
 
---FaceTypes.RedFace = RedFace
+--==CHUNKY DICE==--
+local MassiveFace = setmetatable({}, { __index = FaceObject })
+MassiveFace.__index = MassiveFace
+
+function MassiveFace:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), MassiveFace)
+
+    --Metadatas about the ChunkyFace
+    self.name = "Massive Dice"
+    self.id = 3
+    self.tier = "Common"
+    self.description = "Scoring : +50pts"
+
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 50 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+FaceTypes.MassiveFace = MassiveFace
+
+function MassiveFace:triggerEffect(round)
+    --Complementary effect triggered by the face
+    round.handScore = round.handScore + self.pointsValue
+    
+end
 
 --==BLUE FACE==--
 
