@@ -6,7 +6,8 @@ local Constants = {
     GAME_VERSION = "0.1.2",
     BASE_TURNS = 3,
     BASE_AVAILABLE_HANDS = 1,
-    DESKS_BY_FLOOR = 2
+    DESKS_BY_FLOOR = 2,
+    BASE_MAX_CIGGIES = 50
 }
 
 --Enums
@@ -40,7 +41,6 @@ Constants.FIGURES_COLORS = {
     {245/255, 110/255, 86/255},
     {232/255, 79/255, 79/255},
     {108/255, 86/255, 113/255}
-
 }
 
 Constants.PAGES = {

@@ -123,10 +123,14 @@ function DiceCustomization:updateCanvas(dt)
         ciggie:draw()
     end
 
+    
+
     --DnDropped object
     if(self.dragAndDroppedObject)then
         self.dragAndDroppedObject:draw()
     end 
+
+    self:drawCiggiesTrayFront()
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -218,13 +222,9 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
                 ciggie.isBeingDragged = true
                 self.dragAndDroppedObject = ciggie
                 ciggie.dragXspeed = dx
-                if(ciggie.targetX+dx<self.canvas:getWidth()-ciggie.width/2 and ciggie.targetX+dx>0+ciggie.width/2) then --Vérification qu'on ne dépasse par les limites horizontales
-                    ciggie.targetX = (ciggie.targetX + dx) 
-                end
-
-                if(ciggie.targetY+dy<self.canvas:getHeight()-ciggie.height/2 and ciggie.targetY+dy>0+ciggie.height/2) then --Vérification qu'on ne dépasse pas les limites verticales
-                    ciggie.targetY = (ciggie.targetY + dy) 
-                end
+                ciggie.targetX = (ciggie.targetX + dx) 
+                ciggie.targetY = (ciggie.targetY + dy)
+                break;
             end
         end
     end

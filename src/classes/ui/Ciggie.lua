@@ -130,6 +130,30 @@ function Ciggie:calculateAngleDrag()
 end
 
 --==INPUTS FUNCTIONS==--
+function Ciggie:isHovered()
+    if not self.isHoverable then return false end
+
+    local vx, vy = InputsUtils.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+
+    -- Décale les coordonnées souris par rapport au centre de rotation
+    local dx = vx - self.x
+    local dy = vy - self.y
+
+    -- Applique une rotation inverse (pour annuler la rotation de l'objet)
+    local angle = -self.baseRotation
+    local cosA = math.cos(angle)
+    local sinA = math.sin(angle)
+
+    local rx = dx * cosA - dy * sinA
+    local ry = dx * sinA + dy * cosA
+
+    -- Test dans l'espace local (non rotationné)
+    return (
+        rx > -self.width / 2 and rx < self.width / 2 and
+        ry > -self.height / 2 and ry < self.height / 2
+    )
+end
+
 function Ciggie:releaseEvent() --S'active lorsqu'un click est complété
     local wasReleased = false
     

@@ -89,6 +89,14 @@ function Shop:updateCanvas(dt)
 
     self:drawInventoryFaces(dt)
 
+    --Ciggies UI
+    for i, ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:update(dt)
+        ciggie:draw()
+    end
+
+    self:drawCiggiesTrayFront()
+
     --Shop faces UI
     for i,faceUI in next,self.availableFaceObjectsUI do
         faceUI:update(dt)
@@ -101,11 +109,7 @@ function Shop:updateCanvas(dt)
         ciggieUI:draw()
     end
 
-    --Ciggies UI
-    for i, ciggie in next,self.uiElements.ciggiesUI do
-        ciggie:update(dt)
-        ciggie:draw()
-    end
+    
 
     self:drawFacesPriceTags()
 
@@ -247,13 +251,8 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
                 ciggie.isBeingDragged = true
                 self.dragAndDroppedObject = ciggie
                 ciggie.dragXspeed = dx
-                if(ciggie.targetX+dx<self.canvas:getWidth()-ciggie.width/2 and ciggie.targetX+dx>0+ciggie.width/2) then --Vérification qu'on ne dépasse par les limites horizontales
-                    ciggie.targetX = (ciggie.targetX + dx) 
-                end
-
-                if(ciggie.targetY+dy<self.canvas:getHeight()-ciggie.height/2 and ciggie.targetY+dy>0+ciggie.height/2) then --Vérification qu'on ne dépasse pas les limites verticales
-                    ciggie.targetY = (ciggie.targetY + dy) 
-                end
+                ciggie.targetX = (ciggie.targetX + dx) 
+                ciggie.targetY = (ciggie.targetY + dy) 
                 break;
             end
         end
@@ -339,7 +338,7 @@ function Shop:buyDiceFace(face, faceUI, key)
 end
 
 function Shop:buyCiggie(ciggie, ciggieUI, key)
-    if(table.getn(self.run.ciggiesObjects)<2 and self.run.money>=5)then
+    if(table.getn(self.run.ciggiesObjects)<Constants.BASE_MAX_CIGGIES and self.run.money>=5)then
         self.run.money = self.run.money - 5
         --Add the ciggie to the inventory
         table.insert(self.run.ciggiesObjects, ciggie)

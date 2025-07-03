@@ -179,6 +179,10 @@ function Run:keypressed(key)
     elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
         self.customizationScreen:keypressed(key)
     end
+
+    if(key=="m") then
+        self.money = 20000
+    end
 end
 
 function Run:mousepressed(x, y, button, istouch, presses)

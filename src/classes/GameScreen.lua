@@ -57,7 +57,8 @@ function GameScreen:new(floor, run, screenType, round)
     self.moneyCanvas = love.graphics.newCanvas(290, 100)
     self.deckCanvas = love.graphics.newCanvas(140, 860)
     self.diceDetailsCanvas = love.graphics.newCanvas(420, 600)
-    self.ciggiesTray = love.graphics.newCanvas(420, 140)
+    self.ciggiesTray = love.graphics.newCanvas(420, 160)
+    self.ciggiesTrayFront = love.graphics.newCanvas(420, 160)
     self.playerInfos = love.graphics.newCanvas(650,260)
     self.enemyInfos = love.graphics.newCanvas(650,260)
     self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)
@@ -77,7 +78,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 30, 721, -730, 721
     self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, 190, self.canvas:getHeight()+400
     self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, 190, self.canvas:getHeight()+300
-    self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight()-30, self.canvas:getWidth()+450, self.canvas:getHeight()-30
+    self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight(), self.canvas:getWidth()+450, self.canvas:getHeight()
     self.deckTX, self.deckTY , self.deckX, self.deckY = 1300, 110, 1300, self.canvas:getHeight()+20
 
     self.customizationMatTX, self.customizationMatTY, self.customizationMatX, self.customizationMatY = 30, 30, 30, -700
@@ -319,10 +320,20 @@ function GameScreen:drawCiggiesTray()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.ciggiesTray)
 
-    love.graphics.draw(Sprites.CIGGIES_TRAY, 0, 0)
+    love.graphics.draw(Sprites.CIGGIES_TRAY_BACK, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
+end
+
+function GameScreen:drawCiggiesTrayFront()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.ciggiesTrayFront)
+
+    love.graphics.draw(Sprites.CIGGIES_TRAY_FRONT, 0, self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, Sprites.CIGGIES_TRAY_FRONT:getHeight())
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
 end
 
 function GameScreen:drawFigureGrid()
@@ -435,9 +446,14 @@ end
 function GameScreen:generateCiggiesUI()
     local apparitionDuration = 0.2
     self.uiElements.ciggiesUI = {}
+
+    --calculate the xPosistions
+    local xPos = self:getSpacedPositions(table.getn(self.run.ciggiesObjects), self.ciggiesTrayTX-self.ciggiesTray:getWidth(), self.ciggiesTrayTX)
+
     for i,ciggie in next,self.run.ciggiesObjects do
         
-        local c = Ciggie:new(ciggie, 1680, 949+((i-1)*60), true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+        local c = Ciggie:new(ciggie, xPos[i], self.canvas:getHeight()+30, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+        c.baseRotation, c.rotation = 1.57, 1.57
         self.uiElements.ciggiesUI[ciggie] = c
 
         c.animator:addGroup({
@@ -464,6 +480,25 @@ function GameScreen:getCenteredPositions(count, objectWidth, spacing, centerX)
     for i = 0, count - 1 do
         local x = startX + i * (objectWidth + spacing)
         table.insert(positions, x)
+    end
+
+    return positions
+end
+
+function GameScreen:getSpacedPositions(count, x1, x2)
+    local positions = {}
+
+    local totalWidth = x2 - x1
+
+    if count == 1 then
+        table.insert(positions, (x1 + x2) / 2)
+    else
+        local spacing = totalWidth / count
+
+        for i = 0, count - 1 do
+            local x = x1 + spacing / 2 + i * spacing
+            table.insert(positions, x)
+        end
     end
 
     return positions
