@@ -1,6 +1,9 @@
 local FaceObject = require("src.classes.FaceObject")
-local FaceTypes = {}
 local Constants = require("src.utils.Constants")
+local CiggieTypes = require("src.classes.CiggieTypes")
+local GenerateRandom = require("src.utils.scripts.GenerateRandom")
+
+local FaceTypes = {}
 
 --==COMMON==--
 
@@ -88,7 +91,7 @@ end
 FaceTypes.ChunkyFace = ChunkyFace
 
 
---==CHUNKY DICE==--
+--==MASSIVE DICE==--
 local MassiveFace = setmetatable({}, { __index = FaceObject })
 MassiveFace.__index = MassiveFace
 
@@ -179,7 +182,7 @@ end
 
 FaceTypes.BlueFace = BlueFace
 
---==STONE FACE==--
+--==GOLD FACE==--
 
 local GoldFace = setmetatable({}, { __index = FaceObject })
 GoldFace.__index = GoldFace
@@ -223,7 +226,7 @@ end
 
 FaceTypes.GoldFace = GoldFace
 
---==STATIC FACE==--
+--==DELUXE FACE==--
 
 local DeluxeFace = setmetatable({}, { __index = FaceObject })
 DeluxeFace.__index = DeluxeFace
@@ -254,7 +257,7 @@ function DeluxeFace:new(faceValue, pointsValue)
     
     --Round status
     self.faceValue = faceValue --Le numéro de face que le dé représente
-    self.pointsValue = pointsValue --This is the points scored by the dice
+    self.pointsValue = 10 --This is the points scored by the dice
     self.totalTriggered = 0
 
     return self
@@ -272,10 +275,61 @@ function DeluxeFace:triggerEffect(round)
         round.handScore = round.handScore + sumScore
     end
 
-    round.handScore = round.handScore + 10
+    round.handScore = round.handScore + self.pointsValue
 
 end
 
 FaceTypes.DeluxeFace = DeluxeFace
+
+--==STRIKE OF LUCK==--
+local StrikeOfLuck = setmetatable({}, { __index = FaceObject })
+StrikeOfLuck.__index = StrikeOfLuck
+
+function StrikeOfLuck:new(faceValue, pointsValue)
+    local self = setmetatable(WhiteFace:new(), StrikeOfLuck)
+
+    --Metadatas about the WhiteFace
+    self.name = "Strike Of Luck"
+    self.tier = "Common"
+    self.id = 5
+    self.description = "Scoring: Adds a random ciggie to the inventory. \n +10pts"
+
+    --Metadatas about the graphics of the WhiteFace
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Strike of Luck.png")
+    self.spriteSheet:setFilter("nearest", "nearest")
+
+    self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
+
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Round status
+    self.faceValue = faceValue --Le numéro de face que le dé représente
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+
+    return self
+end
+
+function StrikeOfLuck:triggerEffect(round)
+    
+    if(table.getn(round.run.ciggiesObjects)<Constants.BASE_MAX_CIGGIES)then
+        local c = GenerateRandom.CiggieObject()
+        table.insert(round.run.ciggiesObjects, c)
+        round.terrain:generateCiggiesUI()
+    end
+
+    round.handScore = round.handScore + self.pointsValue
+
+end
+
+FaceTypes.StrikeOfLuck = StrikeOfLuck
+
 
 return FaceTypes

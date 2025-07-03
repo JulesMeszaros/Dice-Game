@@ -207,8 +207,8 @@ function Round:mousemoved(x, y, dx, dy, isDragging)
                 ciggie.isBeingDragged = true
                 self.terrain.dragAndDroppedCiggie = ciggie
                 ciggie.dragXspeed = dx
-                ciggie.targetX = (ciggie.targetX + dx) 
-                ciggie.targetY = (ciggie.targetY + dy) 
+                ciggie.targetX = x
+                ciggie.targetY = y
                 break;
             end
         end

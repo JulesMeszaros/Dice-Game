@@ -288,7 +288,7 @@ function GameScreen:drawRoundDetails()
     love.graphics.clear()
     love.graphics.draw(Sprites.TURNS, 0, 0)
     love.graphics.setColor(245/255, 247/255, 228/255, 1)
-    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+35, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2+3)
+    love.graphics.draw(currentHands, self.handsCanvas:getWidth()/2, self.handsCanvas:getHeight()/2+27, 0, 1, 1, currentHands:getWidth()/2, currentHands:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
 
     --REROLLS
@@ -296,7 +296,7 @@ function GameScreen:drawRoundDetails()
     love.graphics.clear()
     love.graphics.draw(Sprites.REROLLS, 0, 0)
     love.graphics.setColor(245/255, 247/255, 228/255, 1)
-    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+35, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2+3)
+    love.graphics.draw(rerollText, self.rerollsCanvas:getWidth()/2, self.rerollsCanvas:getHeight()/2+27, 0, 1, 1, rerollText:getWidth()/2, rerollText:getHeight()/2+3)
     love.graphics.setColor(1, 1, 1, 1)
 
     --MONEY
@@ -304,7 +304,7 @@ function GameScreen:drawRoundDetails()
     love.graphics.clear()
     love.graphics.draw(Sprites.MONEY,0,0)
     love.graphics.setColor(1, 195/256, 132/256, 1)
-    love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
+    love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2-7, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
     love.graphics.setColor(1, 1, 1, 1)
 
 

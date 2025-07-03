@@ -7,7 +7,7 @@ local Constants = {
     BASE_TURNS = 3,
     BASE_AVAILABLE_HANDS = 1,
     DESKS_BY_FLOOR = 2,
-    BASE_MAX_CIGGIES = 50
+    BASE_MAX_CIGGIES = 5
 }
 
 --Enums

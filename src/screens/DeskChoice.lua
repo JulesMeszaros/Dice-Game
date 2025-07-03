@@ -278,8 +278,8 @@ function DeskChoice:mousemoved(x, y, dx, dy, isDragging)
                 ciggie.isBeingDragged = true
                 self.dragAndDroppedObject = ciggie
                 ciggie.dragXspeed = dx
-                ciggie.targetX = (ciggie.targetX + dx) 
-                ciggie.targetY = (ciggie.targetY + dy)
+                ciggie.targetX = x 
+                ciggie.targetY = y
                 break;
             end
         end

@@ -73,6 +73,13 @@ function Ciggie:update(dt)
     self.x, self.velx = AnimationUtils.springUpdate(self.x, self.targetX, self.velx, dt, 4, 0.8)
     self.y, self.vely = AnimationUtils.springUpdate(self.y, self.targetY, self.vely, dt, 4, 0.8)
 
+    --Update base angle based on its position onscreen
+    if(self.x > 1470 and self.y > 800)then
+        self.baseRotation = 1.57
+    else
+        self.baseRotation = 0
+    end
+
     self:calculateAngleDrag()
     self.targetedRotation = self.baseRotation + self.dragRotation
     self:updateAngle(dt)
