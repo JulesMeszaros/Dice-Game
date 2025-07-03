@@ -448,7 +448,7 @@ end
 function RoundScreen:playFigure(figure, params)
     local points, usedDices = params[1], params[2]
     if(self.round.run.availableFigures[figure]>=1 and table.getn(self.round.selectedDices)>=1)then
-        self.round:playFigure(points, usedDices)
+        self.round:playFigure(points, usedDices, figure)
         self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure]-1
     end
 end

@@ -1,5 +1,6 @@
 local FaceObject = require("src.classes.FaceObject")
 local FaceTypes = {}
+local Constants = require("src.utils.Constants")
 
 --==COMMON==--
 
@@ -234,7 +235,7 @@ function DeluxeFace:new(faceValue, pointsValue)
     self.name = "Deluxe Face"
     self.tier = "Common"
     self.id = 5
-    self.description = "When triggered, adds its total number of triggers to the score"
+    self.description = "Scoring: This Face adds the Point Value of every other scoring Face to the Total Score."
 
     --Metadatas about the graphics of the WhiteFace
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Deluxe Dice.png")
@@ -260,7 +261,19 @@ function DeluxeFace:new(faceValue, pointsValue)
 end
 
 function DeluxeFace:triggerEffect(round)
-    round.handScore = round.handScore + self.totalTriggered
+    print("------")
+    
+    if(round.playedFigure == Constants.FIGURES.DELUXE)then
+        local sumScore = 0
+        for i,k in next,round.usedDices do
+            sumScore = sumScore+k:getCurrentFaceObject().pointsValue
+        end
+
+        round.handScore = round.handScore + sumScore
+    end
+
+    round.handScore = round.handScore + 10
+
 end
 
 FaceTypes.DeluxeFace = DeluxeFace

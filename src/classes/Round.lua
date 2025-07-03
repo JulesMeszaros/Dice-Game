@@ -284,10 +284,12 @@ function Round:getDicesOrder(usedDices)
     return sortedDiceFaces, sortedDices
 end
 
-function Round:startTriggeringPhase(usedDices)
+function Round:startTriggeringPhase(usedDices, figure)
     self.phase = Constants.ROUND_STATES.TRIGGERING
     self.triggerDiceHistory = {}
     self.triggerFaceHistory = {}
+    self.usedDices = usedDices
+    self.playedFigure = figure
     --Creates the list of dices to trigger, sorted according to their position on the terrain
     local sortedDiceFaces, sortedDices = self:getDicesOrder(usedDices)
 
@@ -456,8 +458,8 @@ function Round:drawDices(dices)
 end
 
 --==FIGURE FUNCTIONS==--
-function Round:playFigure(points, usedDices) --Function that triggers the hand
-    self:startTriggeringPhase(usedDices)
+function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
+    self:startTriggeringPhase(usedDices, figure)
 
     self.handScore = self.handScore+points -- On ajoute les points au score
 end
