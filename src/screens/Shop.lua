@@ -49,6 +49,17 @@ end
 function Shop:update(dt)
     self.animator:update(dt)
 
+    --update all face objects
+    --Inventory
+    for i,face in next,self.run.facesInventory do
+        face:update(dt,self.run)
+    end
+
+    --Shop
+    for i,face in next,self.availableFaceObjects do
+        face:update(dt, self.run)
+    end
+
     self:getCurrentlyHoveredCiggie()
     self:getCurrentlyHoveredFace()
 

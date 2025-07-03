@@ -80,6 +80,19 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 end
 
 function Round:update(dt)
+    --update les objets de face (deck)
+    for i,dice in next,self.diceObjects do
+        for j,face in next,dice:getAllFaces() do
+            face:update(dt, self.run)
+        end
+    end
+
+    --update les objets de face (inventaire)
+    for i,face in next,self.run.facesInventory do
+        face:update(dt, self.run)
+    end
+
+    --update le terrain
     self.terrain:update(dt)
 end
 

@@ -39,6 +39,7 @@ end
 --==Trigger functions==--
 
 function FaceObject:update(dt, run)
+    --print(self.name)
 
 end
 

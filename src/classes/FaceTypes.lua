@@ -98,7 +98,7 @@ function BlueFace:new(faceValue, pointsValue)
     self.name = "Blue Face"
     self.tier = "Uncommon"
     self.id = 2
-    self.description = "Triggers the previously triggered dice again (doesn't work with other Blue Faces)"
+    self.description = "Scoring : Adds its points value. \n Passive : Adds 1 point per used rerolls this building to its points value (currently : 0)"
 
     --Metadatas about the graphics of the WhiteFace
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Blue Dice.png")
@@ -124,12 +124,12 @@ function BlueFace:new(faceValue, pointsValue)
 end
 
 function BlueFace:update(dt, run)
-    self.pointsValue = run.usedRerolls
+    self.pointsValue = 1+run.usedRerolls
+    self.description = "Scoring : Adds its points value. \n Passive : Adds 1 point per used rerolls this building to its points value (currently : "..tostring(run.usedRerolls)..')'
+
 end
 
 function BlueFace:triggerEffect(round)
-    --On rettriger le dé précédement trigger, s'il n'est pas un blue face
-    self.pointsValue = round.run.usedRerolls
     round.handScore = round.handScore + self.pointsValue
 end
 
