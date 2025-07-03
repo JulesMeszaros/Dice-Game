@@ -371,6 +371,8 @@ end
 --==REROLL FUNCTIONS==--
 function Round:rerollDices() --Triggers the makeRoll function after clicking the reroll button
     local dicesToReroll = {}
+    --Add 1 to the total rerolls used this run
+    self.run.usedRerolls = self.run.usedRerolls+1
     for k,d in next,self.diceObjects do
         if not self:containsDice(self.selectedDices, d) then
             table.insert(dicesToReroll, d)

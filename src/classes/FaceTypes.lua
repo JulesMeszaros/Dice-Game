@@ -37,14 +37,9 @@ end
 
 FaceTypes.WhiteFace = WhiteFace
 
-function WhiteFace:trigger(round)
-    round.handScore = round.handScore + self.pointsValue
-    self.totalTriggered = self.totalTriggered + 1
-    self:triggerEffect(round)    
-end
-
 function WhiteFace:triggerEffect(round)
     --Complementary effect triggered by the face
+    round.handScore = round.handScore + self.pointsValue
     return
 end
 
@@ -122,35 +117,37 @@ function BlueFace:new(faceValue, pointsValue)
     
     --Round status
     self.faceValue = faceValue --Le numéro de face que le dé représente
-    self.pointsValue = pointsValue --This is the points scored by the dice
+    self.pointsValue = 1 --This is the points scored by the dice
     self.totalTriggered = 0
 
     return self
 end
 
+function BlueFace:update(dt, run)
+    self.pointsValue = run.usedRerolls
+end
+
 function BlueFace:triggerEffect(round)
     --On rettriger le dé précédement trigger, s'il n'est pas un blue face
-    if(table.getn(round.triggerDiceHistory) > 1 and round.triggerDiceHistory[table.getn(round.triggerDiceHistory)-1].currentFaceObject.name ~= "Blue Face") then
-        table.insert(round.dicesTriggerQueue, 1, round.triggerDiceHistory[table.getn(round.triggerDiceHistory)-1])
-        table.insert(round.diceFacesTriggerQueue, 1, round.triggerFaceHistory[table.getn(round.triggerFaceHistory)-1])
-    end
+    self.pointsValue = round.run.usedRerolls
+    round.handScore = round.handScore + self.pointsValue
 end
 
 FaceTypes.BlueFace = BlueFace
 
 --==STONE FACE==--
 
-local StoneFace = setmetatable({}, { __index = FaceObject })
-StoneFace.__index = StoneFace
+local GoldFace = setmetatable({}, { __index = FaceObject })
+GoldFace.__index = GoldFace
 
-function StoneFace:new(faceValue, pointsValue)
-    local self = setmetatable(FaceObject:new(), StoneFace)
+function GoldFace:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), GoldFace)
 
     --Metadatas about the WhiteFace
     self.name = "Gold Face"
-    self.tier = "Uncommon"
+    self.tier = "Common"
     self.id = 2
-    self.description = "When triggered, adds 1€ to the balance"
+    self.description = "When triggered, adds 2€ to the balance"
 
     --Metadatas about the graphics of the WhiteFace
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Gold Dice.png")
@@ -175,20 +172,20 @@ function StoneFace:new(faceValue, pointsValue)
     return self
 end
 
-function StoneFace:triggerEffect(round)
+function GoldFace:triggerEffect(round)
     --Ajoute 1€ au solde banquaire
-    round.run.money = round.run.money + 1
+    round.run.money = round.run.money + 2
 end
 
-FaceTypes.StoneFace = StoneFace
+FaceTypes.GoldFace = GoldFace
 
 --==STATIC FACE==--
 
-local StaticFace = setmetatable({}, { __index = WhiteFace })
-StaticFace.__index = StaticFace
+local DeluxeFace = setmetatable({}, { __index = FaceObject })
+DeluxeFace.__index = DeluxeFace
 
-function StaticFace:new(faceValue, pointsValue)
-    local self = setmetatable(WhiteFace:new(), StaticFace)
+function DeluxeFace:new(faceValue, pointsValue)
+    local self = setmetatable(WhiteFace:new(), DeluxeFace)
 
     --Metadatas about the WhiteFace
     self.name = "Deluxe Face"
@@ -219,10 +216,10 @@ function StaticFace:new(faceValue, pointsValue)
     return self
 end
 
-function StaticFace:triggerEffect(round)
+function DeluxeFace:triggerEffect(round)
     round.handScore = round.handScore + self.totalTriggered
 end
 
-FaceTypes.StaticFace = StaticFace
+FaceTypes.DeluxeFace = DeluxeFace
 
 return FaceTypes

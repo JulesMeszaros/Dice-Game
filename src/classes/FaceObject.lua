@@ -17,7 +17,7 @@ function FaceObject:new()
     self.description = "???"
 
     --Metadatas about the graphics of the FaceObject
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice-demo.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the FaceObject in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
@@ -38,8 +38,11 @@ end
 
 --==Trigger functions==--
 
+function FaceObject:update(dt, run)
+
+end
+
 function FaceObject:trigger(round)
-    round.handScore = round.handScore + self.pointsValue
     self.totalTriggered = self.totalTriggered + 1
     self:triggerEffect(round)
 end
