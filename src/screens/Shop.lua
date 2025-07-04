@@ -84,8 +84,9 @@ function Shop:updateCanvas(dt)
     self:drawRoundDetails()
     self:drawDiceDetails(dt)
     self:drawCiggiesTray()
-    self:drawInventoryBackGround()
+    self:drawInventoryBackGroundSmall()
     self:drawShopBackground()
+    self:drawRewardsSmall()
 
     self:drawInventoryFaces(dt)
 
@@ -406,7 +407,7 @@ function Shop:generateNewShop()
             nil,
             f,
             180*i + self.shopBGTX - 60,
-            80+ self.shopBGTY + 60,
+            190,
             120,
             false,
             true,
@@ -415,7 +416,7 @@ function Shop:generateNewShop()
         )
         --Add them an anchor
         faceUI.anchorX = 180*i + self.shopBGTX - 60
-        faceUI.anchorY = 80+ self.shopBGTY + 60
+        faceUI.anchorY = 190
 
         --Add an animation for their apparition
         local apparitionDuration = 0.3
@@ -578,8 +579,8 @@ function Shop:createDeck()
 end 
 
 function Shop:createInventoryFaces()
-    local xPos = {160, 320, 480, 640, 160, 320, 480, 640}
-    local yPos = {160,160,160,160, 320, 320, 320, 320}
+    local xPos = {20, 150, 280, 410, 20, 150, 280, 410}
+    local yPos = {81, 81, 81, 81, 220, 220, 220, 220}
 
     for i,face in next,self.run.facesInventory do
         --Create the UIFaces
@@ -587,8 +588,8 @@ function Shop:createInventoryFaces()
         local faceUI = DiceFace:new(
                 nil,
                 face,
-                xPos[i] - 60 + self.inventoryTX,
-                yPos[i] + self.inventoryTY -10,
+                xPos[i] + 60+ self.inventorySMTX,
+                yPos[i] + self.inventorySMTY + 60,
                 120,
                 false,
                 true,
@@ -596,8 +597,8 @@ function Shop:createInventoryFaces()
                 nil
             )
 
-        faceUI.anchorX = xPos[i] - 60 + self.inventoryTX
-        faceUI.anchorY = yPos[i] + self.inventoryTY -10
+        faceUI.anchorX = xPos[i] + 60+ self.inventorySMTX
+        faceUI.anchorY = yPos[i] + self.inventorySMTY + 60
 
         local apparitionDuration = 0.3
         faceUI.animator:addGroup({
@@ -687,14 +688,14 @@ function Shop:drawInventoryFaces(dt)
 end
 
 function Shop:updateInventoryPositions()
-    local xPos = {160, 320, 480, 640, 160, 320, 480, 640}
-    local yPos = {160,160,160,160, 320, 320, 320, 320}
+    local xPos = {20, 150, 280, 410, 20, 150, 280, 410}
+    local yPos = {81, 81, 81, 81, 220, 220, 220, 220}
 
     for i,uiFace in next,self.inventoryFacesUI do
-        uiFace.anchorX = xPos[i] - 60 + self.inventoryTX
-        uiFace.anchorY = yPos[i] + self.inventoryTY -10
-        uiFace.targetX = xPos[i] - 60 + self.inventoryTX
-        uiFace.targetY = yPos[i] + self.inventoryTY -10
+        uiFace.anchorX = xPos[i] + 60+ self.inventorySMTX
+        uiFace.anchorY = yPos[i] + self.inventorySMTY + 60
+        uiFace.targetX = xPos[i] + 60+ self.inventorySMTX
+        uiFace.targetY = yPos[i] + self.inventorySMTY + 60
     end
 end
 
@@ -713,7 +714,7 @@ function Shop:drawFacesPriceTags()
         love.graphics.setColor(1, 1, 1, 1)
 
         love.graphics.setCanvas(currentCanvas)
-        love.graphics.draw(c, 180*i + self.shopBGTX - 60, self.shopBGTY+185, 0, 1, 1, c:getWidth()/2, 0)
+        love.graphics.draw(c, 180*i + self.shopBGTX - 60, self.shopBGTY+200, 0, 1, 1, c:getWidth()/2, 0)
     end
 
     for i,c in next,self.ciggiesPriceTags do

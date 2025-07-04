@@ -63,7 +63,10 @@ function GameScreen:new(floor, run, screenType, round)
     self.enemyInfos = love.graphics.newCanvas(650,260)
     self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)
     self.inventoryCanvas = love.graphics.newCanvas(680, 410)
-    self.shopCanvas = love.graphics.newCanvas(780, 510)
+    self.inventoryCanvasSmall = love.graphics.newCanvas(550, 360)
+    self.inventoryCanvasMedium = love.graphics.newCanvas(680, 410)
+    self.shopCanvas = love.graphics.newCanvas(780, 560)
+    self.rewardsSmallCanvas = love.graphics.newCanvas(210, 360)
 
     --Positions
     self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.canvas:getHeight()+1000
@@ -86,15 +89,17 @@ function GameScreen:new(floor, run, screenType, round)
 
     self.shopBGTX, self.shopBGTY, self.shopBGX, self.shopBGY = 500, 30, 500, -600
     self.inventoryTX, self.inventoryTY, self.inventoryX, self.inventoryY = 550, 640, 550, self.canvas:getHeight()+450
+    self.inventorySMTX, self.inventorySMTY, self.inventorySMX, self.inventorySMY = 730, 690, 730, self.canvas:getHeight()+600
 
+    self.rewardsSMTX, self.rewardsSMTY, self.rewardsSMX, self.rewardsSMY = 500, 690, 500, self.canvas:getHeight()+600
 
     --Btns positions
     self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
     self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 100, 1010, -150, 1010
     self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
     self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY = 255, 680, -255, 680
-    self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY = 510+(370/2), 590, -255, 590
-    self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY = 900+(370/2), 590, self.canvas:getWidth()+255, 590
+    self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY = 510+(370/2), 640, -255, 640
+    self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY = 900+(370/2), 640, self.canvas:getWidth()+255, 640
 
     --Entry animation
     self.animator:addDelay(0.2)
@@ -114,6 +119,8 @@ function GameScreen:new(floor, run, screenType, round)
         {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "shopBGY", from = self.shopBGY, targetValue = self.shopBGTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "inventoryY", from = self.inventoryY, targetValue = self.inventoryTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
+        {property = "inventorySMY", from = self.inventorySMY, targetValue = self.inventorySMTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
+        {property = "rewardsSMY", from = self.rewardsSMY, targetValue = self.rewardsSMTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
     })
     
     --Cas particulier de l'écran de round
@@ -402,6 +409,26 @@ end
 
 function GameScreen:drawInventoryBackGround()
     love.graphics.draw(Sprites.INVENTORY, self.inventoryX, self.inventoryY)
+end
+
+function GameScreen:drawInventoryBackGroundSmall()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.inventoryCanvasSmall)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.INVENTORY_SMALL, 0, 0)
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.inventoryCanvasSmall, self.inventorySMX, self.inventorySMY)
+end
+
+function GameScreen:drawRewardsSmall()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.rewardsSmallCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.REWARDS_SMALL, 0, 0)
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.rewardsSmallCanvas, self.rewardsSMX, self.rewardsSMY)
+
+    print(self.rewardsSMY)
 end
 
 --==Initialization functions==--

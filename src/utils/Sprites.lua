@@ -26,8 +26,13 @@ Sprites.CIGGIES_TRAY_FRONT = love.graphics.newImage("src/assets/sprites/ui/Ciggi
 Sprites.BADGE = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
 
 Sprites.SHOP_BG = love.graphics.newImage("src/assets/sprites/ui/Shop.png")
+
 Sprites.INVENTORY = love.graphics.newImage("src/assets/sprites/ui/Inventory.png")
+Sprites.INVENTORY_SMALL = love.graphics.newImage("src/assets/sprites/ui/Inventory Small.png")
+Sprites.INVENTORY_MEDIUM = love.graphics.newImage("src/assets/sprites/ui/Inventory Medium.png")
 Sprites.PRICE_TAG = love.graphics.newImage("src/assets/sprites/ui/PriceTag.png")
+
+Sprites.REWARDS_SMALL = love.graphics.newImage("src/assets/sprites/ui/Rewards Small.png")
 
 
 return Sprites
