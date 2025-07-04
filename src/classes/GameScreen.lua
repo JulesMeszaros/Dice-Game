@@ -67,6 +67,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.inventoryCanvasMedium = love.graphics.newCanvas(680, 410)
     self.shopCanvas = love.graphics.newCanvas(780, 560)
     self.rewardsSmallCanvas = love.graphics.newCanvas(210, 360)
+    self.rewardsMediumCanvas = love.graphics.newCanvas(240, 410)
 
     --Positions
     self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.canvas:getHeight()+1000
@@ -90,8 +91,10 @@ function GameScreen:new(floor, run, screenType, round)
     self.shopBGTX, self.shopBGTY, self.shopBGX, self.shopBGY = 500, 30, 500, -600
     self.inventoryTX, self.inventoryTY, self.inventoryX, self.inventoryY = 550, 640, 550, self.canvas:getHeight()+450
     self.inventorySMTX, self.inventorySMTY, self.inventorySMX, self.inventorySMY = 730, 690, 730, self.canvas:getHeight()+600
+    self.inventoryMDTX, self.inventoryMDTY, self.inventoryMDX, self.inventoryMDY = 770, 650, 770, self.canvas:getHeight()+700
 
     self.rewardsSMTX, self.rewardsSMTY, self.rewardsSMX, self.rewardsSMY = 500, 690, 500, self.canvas:getHeight()+600
+    self.rewardsMDTX, self.rewardsMDTY, self.rewardsMDX, self.rewardsMDY = 500, 650, 500, self.canvas:getHeight()+700
 
     --Btns positions
     self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
@@ -120,7 +123,9 @@ function GameScreen:new(floor, run, screenType, round)
         {property = "shopBGY", from = self.shopBGY, targetValue = self.shopBGTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "inventoryY", from = self.inventoryY, targetValue = self.inventoryTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "inventorySMY", from = self.inventorySMY, targetValue = self.inventorySMTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
+        {property = "inventoryMDY", from = self.inventoryMDY, targetValue = self.inventoryMDTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "rewardsSMY", from = self.rewardsSMY, targetValue = self.rewardsSMTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
+        {property = "rewardsMDY", from = self.rewardsMDY, targetValue = self.rewardsMDTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
     })
     
     --Cas particulier de l'écran de round
@@ -427,6 +432,24 @@ function GameScreen:drawRewardsSmall()
     love.graphics.draw(Sprites.REWARDS_SMALL, 0, 0)
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.rewardsSmallCanvas, self.rewardsSMX, self.rewardsSMY)
+end
+
+function GameScreen:drawInventoryBackGroundMedium()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.inventoryCanvasMedium)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.INVENTORY_MEDIUM, 0, 0)
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.inventoryCanvasMedium, self.inventoryMDX, self.inventoryMDY)
+end
+
+function GameScreen:drawRewardsMedium()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.rewardsMediumCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.REWARDS_MEDIUM, 0, 0)
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.rewardsMediumCanvas, self.rewardsMDX, self.rewardsMDY)
 end
 
 --==Initialization functions==--

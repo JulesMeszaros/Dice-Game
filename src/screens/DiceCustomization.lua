@@ -20,6 +20,7 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     --Table where we store the ui dice faces, grouped by dice
     self.uiDices = {}
     self.newUIFaces = {}
+    self.rewardsUIFaces = {}
     --On peuple notre table
     
     self.dragAndDroppedObject = nil
@@ -42,6 +43,7 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     self.uiElements.buttons["nextRound"].animator:add('x', self.nextRoundX, self.nextRoundTX, AnimationUtils.EntryDuration, AnimationUtils.Easing.inOutCubic)
 
     self:createNewFacesUI()
+    self:createRewardsUI()
 
     self.animator:addDelay(0.5, function()self:generateCiggiesUI()end)
 
@@ -72,6 +74,11 @@ function DiceCustomization:update(dt)
         uiFace:update(dt)
     end
 
+    --Rewards
+    for i,uiFace in next,self.rewardsUIFaces do
+        uiFace:update(dt)
+    end
+
     --Buttons
     for key,button in next,self.uiElements.buttons do
         button:update(dt)
@@ -91,7 +98,9 @@ function DiceCustomization:updateCanvas(dt)
     --Description
     self:drawDescription()
     --New Faces Canvas
-    self:drawNewFacesCanvas()
+    --self:drawNewFacesCanvas()
+    self:drawRewardsMedium()
+    self:drawInventoryBackGroundMedium()
     --Customization mat
     self:drawCustomizationMat()
     --Ciggies
@@ -110,6 +119,7 @@ function DiceCustomization:updateCanvas(dt)
     end
 
     self:drawNewFaces()
+    self:drawRewards()
 
      --Update the hover info
     if(self.currentlyHoveredFace)then
@@ -173,8 +183,8 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
             face.anchorX = closestFace[1]
             face.anchorY = closestFace[2]
         else
-            face.anchorX = self.xPositions[i]
-            face.anchorY = 880
+            face.anchorX = self.xPositions[i] + self.inventoryMDTX + 60
+            face.anchorY = self.yPositions[i] + self.inventoryMDTY + 60
         end
 
         if(face.anchorX)then
@@ -259,6 +269,14 @@ function DiceCustomization:drawNewFaces()
         face:draw()
     end
 end
+
+function DiceCustomization:drawRewards()
+    for i,face in next,self.rewardsUIFaces do
+        face:draw()
+    end
+end
+
+
 
 --==UTILS=--
 
@@ -377,7 +395,9 @@ function DiceCustomization:detectClosestFace(x, y)
 end
 
 function DiceCustomization:createNewFacesUI()
-    self.xPositions = self:getCenteredPositions(table.getn(self.newFaceObjects), 120, 20, self.canvas:getWidth()/2+60)
+    self.xPositions = {40, 200, 360, 520, 40, 200, 360, 520}
+    self.yPositions = {100, 100, 100, 100, 250, 250, 250, 250}
+
 
     local startY = self.canvas:getHeight()/2
     local startX = -120
@@ -388,7 +408,7 @@ function DiceCustomization:createNewFacesUI()
                                     startX,
                                     startY,
                                     120,
-                                    true,
+                                    false,
                                     true,
                                     function()return Inputs.getMouseInCanvas(0, 0)end,
                                     nil)
@@ -398,15 +418,53 @@ function DiceCustomization:createNewFacesUI()
         local randomAngle = math.random(-500, 500)/100
 
         diceFace.animator:addGroup({
-                {property = "x", from = startX, targetValue = self.xPositions[i], duration = duration,easing = AnimationUtils.Easing.outQuad},
-                {property = "targetX", from = startX, targetValue = self.xPositions[i], duration = duration, easing = AnimationUtils.Easing.outQuad},
-                {property = "y", from = startY, targetValue = 880, duration = duration, easing = AnimationUtils.Easing.outQuad},
-                {property = "targetY", from = startY, targetValue = 880, duration = duration, easing = AnimationUtils.Easing.outQuad},
+                {property = "x", from = startX, targetValue = self.xPositions[i] + self.inventoryMDTX + 60, duration = duration,easing = AnimationUtils.Easing.outQuad},
+                {property = "targetX", from = startX, targetValue = self.xPositions[i] + self.inventoryMDTX + 60, duration = duration, easing = AnimationUtils.Easing.outQuad},
+                {property = "y", from = startY, targetValue = self.yPositions[i] + self.inventoryMDTY + 60, duration = duration, easing = AnimationUtils.Easing.outQuad},
+                {property = "targetY", from = startY, targetValue = self.yPositions[i] + self.inventoryMDTY + 60, duration = duration, easing = AnimationUtils.Easing.outQuad},
                 {property = "rotation", from = randomAngle, targetValue = 0, duration = duration, easing = AnimationUtils.Easing.inCubic},
                 {property = "baseRotation", from = randomAngle, targetValue = 0, duration = duration, easing = AnimationUtils.Easing.inCubic},
             })
 
         table.insert(self.newUIFaces, diceFace)
+                                    
+    end
+end
+
+function DiceCustomization:createRewardsUI()
+    self.xPositionsRewards = {60, 60}
+    self.yPositionsRewards = {100, 250}
+
+
+    local startY = self.canvas:getHeight()/2
+    local startX = -120
+
+    for i,face in next,self.run.facesRewardsInventory do
+        local diceFace = DiceFace:new(nil,
+                                    face,
+                                    startX,
+                                    startY,
+                                    120,
+                                    false,
+                                    true,
+                                    function()return Inputs.getMouseInCanvas(0, 0)end,
+                                    nil)
+
+        diceFace.animator:addDelay(0.3)
+        local duration = math.random(2, 8)/10
+        
+        local randomAngle = math.random(-500, 500)/100
+
+        diceFace.animator:addGroup({
+                {property = "x", from = startX, targetValue = self.xPositionsRewards[i] + self.rewardsMDTX + 60, duration = duration,easing = AnimationUtils.Easing.outQuad},
+                {property = "targetX", from = startX, targetValue = self.xPositionsRewards[i] + self.rewardsMDTX + 60, duration = duration, easing = AnimationUtils.Easing.outQuad},
+                {property = "y", from = startY, targetValue = self.yPositionsRewards[i] + self.rewardsMDTY + 60, duration = duration, easing = AnimationUtils.Easing.outQuad},
+                {property = "targetY", from = startY, targetValue = self.yPositionsRewards[i] + self.rewardsMDTY + 60, duration = duration, easing = AnimationUtils.Easing.outQuad},
+                {property = "rotation", from = randomAngle, targetValue = 0, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "baseRotation", from = randomAngle, targetValue = 0, duration = duration, easing = AnimationUtils.Easing.inCubic},
+            })
+
+        table.insert(self.rewardsUIFaces, diceFace)
                                     
     end
 end
