@@ -159,6 +159,11 @@ function DiceCustomization:mousepressed(x, y, button, istouch, presses)
     for key,face in next,self.newUIFaces do
         face:clickEvent()
     end
+
+    --Rewards
+    for key,face in next,self.rewardsUIFaces do
+        face:clickEvent()
+    end
    
     --Buttons
     for key,button in next,self.uiElements.buttons do
@@ -174,6 +179,7 @@ end
 
 function DiceCustomization:mousereleased(x, y, button, istouch, presses)
     self.dragAndDroppedObject = nil
+    
     for i,face in next,self.newUIFaces do
         face:releaseEvent()
         
@@ -185,6 +191,36 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
         else
             face.anchorX = self.xPositions[i] + self.inventoryMDTX + 60
             face.anchorY = self.yPositions[i] + self.inventoryMDTY + 60
+        end
+
+        if(face.anchorX)then
+            face.targetX = face.anchorX
+        end
+        if(face.anchorY)then
+            face.targetY = face.anchorY
+        end
+
+        face.isBeingDragged = false
+
+    end
+
+    for i,face in next,self.rewardsUIFaces do
+        face:releaseEvent()
+        
+        local closestFace = self:detectClosestFace(face.x, face.y)
+
+        if(closestFace) then
+            face.anchorX = closestFace[1]
+            face.anchorY = closestFace[2]
+        elseif(
+            (face.targetX > self.inventoryMDTX and face.targetX < self.inventoryMDTX + self.inventoryCanvasMedium:getWidth()) and
+            (face.targetY > self.inventoryMDTY and face.targetY < self.inventoryMDTY + self.inventoryCanvasMedium:getHeight()) --[[ and
+            (table.getn(self.run.facesInventory)< 8) ]]
+        )then
+            self:addRewardToInventory(face, i)
+        else
+            face.anchorX = self.xPositionsRewards[i] + self.rewardsMDTX + 60
+            face.anchorY = self.yPositionsRewards[i] + self.rewardsMDTY + 60
         end
 
         if(face.anchorX)then
@@ -223,7 +259,18 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
                 diceui.dragXspeed = dx
                 diceui.targetX = (diceui.targetX + dx) 
                 diceui.targetY = (diceui.targetY + dy)
-                
+                break;
+            end
+        end
+
+        for key,diceui in next, self.rewardsUIFaces do
+            if(diceui.isDraggable and diceui.isBeingClicked) then
+                diceui.isBeingDragged = true
+                self.dragAndDroppedObject = diceui
+                diceui.dragXspeed = dx
+                diceui.targetX = (diceui.targetX + dx) 
+                diceui.targetY = (diceui.targetY + dy)
+                break;
             end
         end
 
@@ -569,6 +616,33 @@ function DiceCustomization:getCurrentlyHoveredObject()
     else object = nil end
     
     return object
+end
+
+function DiceCustomization:addRewardToInventory(face, key)
+    print("added", face.representedObject.name)
+
+    --Supprimer la face de la liste des rewards
+    table.remove(self.run.facesRewardsInventory, key)
+    --Ajouter la face à l'inventaire de jeu
+    table.insert(self.run.facesInventory, face.representedObject)
+    --Supprimer la face UI des rewards
+    table.remove(self.rewardsUIFaces, key)
+    --Ajouter la face UI à l'inventaire
+    table.insert(self.newUIFaces, face)
+    --Réorganiser les rewards
+    --self:updateRewardsPositions()
+
+    --Réorganiser l'inventaire
+    self:updateInventoryPositions()
+end
+
+function DiceCustomization:updateInventoryPositions()
+    for i,uiFace in next,self.newUIFaces do
+        uiFace.anchorX = self.xPositions[i] + 60+ self.inventoryMDTX
+        uiFace.anchorY = self.yPositions[i] + self.inventoryMDTY + 60
+        uiFace.targetX = self.xPositions[i] + 60+ self.inventoryMDTX
+        uiFace.targetY = self.yPositions[i] + self.inventoryMDTY + 60
+    end
 end
 
 return DiceCustomization
