@@ -18,6 +18,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     local self = setmetatable({}, Run)
 
     self.facesInventory = {}
+    self.facesRewardsInventory = {}
     
     --Ciggies
     self.ciggiesObjects = {
@@ -136,12 +137,19 @@ function Run:endRound()
             self:resetAvailableFigures()        
         end
 
-        --Adds the rewards to inventory, if there is the place to add them
+        --Adds the rewards to the rewards inventory
+        self.facesRewardsInventory = {} --On le vide par mesure de sécurité
         for i,face in next,self.currentRound.faceRewards do
-            if(table.getn(self.facesInventory)<8) then
-                table.insert(self.facesInventory, face)
-            end
+            table.insert(self.facesRewardsInventory, face)
         end
+
+        --==DEPRECATED==--
+        --Adds the rewards to inventory, if there is the place to add them
+        -- for i,face in next,self.currentRound.faceRewards do
+        --     if(table.getn(self.facesInventory)<8) then
+        --         table.insert(self.facesInventory, face)
+        --     end
+        -- end
 
         --GOTO Shop
         self.shop = Shop:new(self)

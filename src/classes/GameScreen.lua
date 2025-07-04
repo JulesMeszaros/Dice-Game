@@ -427,8 +427,6 @@ function GameScreen:drawRewardsSmall()
     love.graphics.draw(Sprites.REWARDS_SMALL, 0, 0)
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.rewardsSmallCanvas, self.rewardsSMX, self.rewardsSMY)
-
-    print(self.rewardsSMY)
 end
 
 --==Initialization functions==--

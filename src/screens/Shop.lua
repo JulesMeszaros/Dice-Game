@@ -40,9 +40,16 @@ function Shop:new(run)
 
     --Inventory faces
     self.inventoryFacesUI = {}
+    self.rewardsFacesUI = {}
 
     --Wait for all the animations to end, then show the inventory and the shop + ciggies UI
-    self.animator:addDelay(0.5, function()self:generateNewShop();self:createInventoryFaces();self:generateCiggiesUI()end)
+    self.animator:addDelay(0.5, 
+        function()
+            self:generateNewShop();
+            self:createInventoryFaces();
+            self:createRewardFaces();
+            self:generateCiggiesUI()
+        end)
     return self
 end
 
@@ -116,7 +123,6 @@ function Shop:updateCanvas(dt)
 
     --Draw the drag and dropped object on top of everything else
     if(self.dragAndDroppedObject) then
-        print("dnd")
         self.dragAndDroppedObject:draw()
     end
     
@@ -158,6 +164,10 @@ function Shop:mousepressed(x, y, button, istouch, presses)
 
     --Inventory
     for key,uiFace in next,self.inventoryFacesUI do
+        uiFace:clickEvent()
+    end
+    --Rewards
+    for key,uiFace in next,self.rewardsFacesUI do
         uiFace:clickEvent()
     end
 
@@ -214,6 +224,26 @@ function Shop:mousereleased(x, y, button, istouch, presses)
             self:sellDiceFace(face.representedObject, face, key)
         end
     end
+    --Rewards
+    for key,face in next,self.rewardsFacesUI do
+        local wasReleased = face:releaseEvent()
+        face.isBeingDragged = false
+
+        if(
+            (face.targetX > self.inventorySMTX and face.targetX < self.inventorySMTX + self.inventoryCanvasSmall:getWidth()) and
+            (face.targetY > self.inventorySMTY and face.targetY < self.inventorySMTY + self.inventoryCanvasSmall:getHeight()) and
+            (table.getn(self.run.facesInventory)< 8)
+        ) then
+            self:addRewardToInventory(face, key)
+        else
+            face.targetX = face.anchorX
+            face.targetY = face.anchorY
+        end
+
+        if(wasReleased) then
+            self:sellReward(face.representedObject, face, key)
+        end
+    end
 
     --Shop
     --Faces
@@ -262,6 +292,20 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
     --Inventory
     if(isDragging == true)then 
         for key,face in next, self.inventoryFacesUI do
+            if(face.isDraggable and face.isBeingClicked) then
+                face.isBeingDragged = true
+                self.dragAndDroppedObject = face
+                face.dragXspeed = dx
+                face.targetX = (face.targetX + dx)
+                face.targetY = (face.targetY + dy)
+                break;
+            end
+        end
+    end
+
+    --Rewards
+    if(isDragging == true)then 
+        for key,face in next, self.rewardsFacesUI do
             if(face.isDraggable and face.isBeingClicked) then
                 face.isBeingDragged = true
                 self.dragAndDroppedObject = face
@@ -369,6 +413,30 @@ function Shop:sellDiceFace(face, faceUI, key)
             {property = "scaleX", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
             {property = "scaleY", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
             {property = "targetedScale", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack, onComplete = function()table.remove(self.inventoryFacesUI, key);self:updateInventoryPositions()end},
+            
+        })
+    
+end
+
+function Shop:sellReward(face, faceUI, key)
+    --Add money to bank account
+    self.run.money = self.run.money + 3
+
+    --Remove dice face object from inventory
+
+    table.remove(self.run.facesRewardsInventory, key)
+    local apparitionDuration = 0.3
+
+    --Remove dice face from ui with animation
+    faceUI.animator:addGroup({
+            --Rotation
+            {property = "rotation", from = 0, targetValue = -2, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 0, targetValue = -2, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            --Scale
+            {property = "baseTargetedScale", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleX", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleY", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack, onComplete = function()table.remove(self.rewardsFacesUI, key);self:updateRewardsPositions()end},
             
         })
     
@@ -617,6 +685,45 @@ function Shop:createInventoryFaces()
     end
 end
 
+function Shop:createRewardFaces()
+    local xPos = {45, 45}
+    local yPos = {80, 220}
+
+    for i,face in next,self.run.facesRewardsInventory do
+        --Create the UIFaces
+
+        local faceUI = DiceFace:new(
+                nil,
+                face,
+                xPos[i] + 60+ self.rewardsSMTX,
+                yPos[i] + self.rewardsSMTY + 60,
+                120,
+                false,
+                true,
+                function()return Inputs.getMouseInCanvas(0, 0)end,
+                nil
+            )
+
+        faceUI.anchorX = xPos[i] + 60+ self.rewardsSMTX
+        faceUI.anchorY = yPos[i] + self.rewardsSMTY + 60
+
+        local apparitionDuration = 0.3
+        faceUI.animator:addGroup({
+            --Rotation
+            {property = "rotation", from = 3, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 3, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            --Scale
+            {property = "baseTargetedScale", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleX", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleY", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            
+        })
+
+        table.insert(self.rewardsFacesUI, faceUI)
+    end
+end
+
 function Shop:createFacesPriceTags()
     self.facesPriceTags = {}
     --Faces
@@ -685,17 +792,38 @@ function Shop:drawInventoryFaces(dt)
         uiFace:update(dt)
         uiFace:draw()
     end
+
+    for k,uiFace in next,self.rewardsFacesUI do
+        uiFace:update(dt)
+        uiFace:draw()
+    end
 end
+
+
 
 function Shop:updateInventoryPositions()
     local xPos = {20, 150, 280, 410, 20, 150, 280, 410}
     local yPos = {81, 81, 81, 81, 220, 220, 220, 220}
+
 
     for i,uiFace in next,self.inventoryFacesUI do
         uiFace.anchorX = xPos[i] + 60+ self.inventorySMTX
         uiFace.anchorY = yPos[i] + self.inventorySMTY + 60
         uiFace.targetX = xPos[i] + 60+ self.inventorySMTX
         uiFace.targetY = yPos[i] + self.inventorySMTY + 60
+    end
+end
+
+function Shop:updateRewardsPositions()
+    local xPos = {45, 45}
+    local yPos = {80, 220}
+
+
+    for i,uiFace in next,self.rewardsFacesUI do
+        uiFace.anchorX = xPos[i] + 60+ self.rewardsSMTX
+        uiFace.anchorY = yPos[i] + self.rewardsSMTY + 60
+        uiFace.targetX = xPos[i] + 60+ self.rewardsSMTX
+        uiFace.targetY = yPos[i] + self.rewardsSMTY + 60
     end
 end
 
@@ -735,6 +863,24 @@ function Shop:drawFacesPriceTags()
     end
 end
 
+function Shop:addRewardToInventory(face, key)
+    print("added", face.representedObject.name)
+
+    --Supprimer la face de la liste des rewards
+    table.remove(self.run.facesRewardsInventory, key)
+    --Ajouter la face à l'inventaire de jeu
+    table.insert(self.run.facesInventory, face.representedObject)
+    --Supprimer la face UI des rewards
+    table.remove(self.rewardsFacesUI, key)
+    --Ajouter la face UI à l'inventaire
+    table.insert(self.inventoryFacesUI, face)
+    --Réorganiser les rewards
+    self:updateRewardsPositions()
+
+    --Réorganiser l'inventaire
+    self:updateInventoryPositions()
+end
+
 
 --==Hover functions==--
 function Shop:getCurrentlyHoveredCiggie()
@@ -753,6 +899,16 @@ function Shop:getCurrentlyHoveredCiggie()
             break
         end
     end
+end
+
+function Shop:isInList(diceList, targetDice)
+    --Fonction pour vérifier qu'un élément est dans une liste
+  for _, dice in ipairs(diceList) do
+    if dice == targetDice then
+      return true
+    end
+  end
+  return false
 end
 
 return Shop
