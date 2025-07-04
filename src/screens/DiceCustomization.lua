@@ -374,8 +374,33 @@ function DiceCustomization:outAnimation()
         end
     end
 
-    --Reward Faces exit
+    --inventory Faces exit
     for i,face in next,self.newUIFaces do
+        local randomSide = math.random(0,1)
+        local exitX = -200
+        if(randomSide == 0)then
+            exitX = -200
+        else
+            exitX = self.canvas:getWidth()+200
+        end
+        local exitY = self.canvas:getHeight()/2
+        local duration = math.random(3, 5)/10
+
+        local randomAngle = math.random(-500, 500)/100
+
+
+        face.animator:addGroup({
+                {property = "x", from = face.x, targetValue = exitX, duration = duration,easing = AnimationUtils.Easing.inCubic},
+                {property = "targetX", from = face.targetX, targetValue = exitX, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "y", from = face.y, targetValue = exitY, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "rotation", from = face.rotation, targetValue = randomAngle, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "baseRotation", from = face.baseRotation, targetValue = randomAngle, duration = duration, easing = AnimationUtils.Easing.inCubic},
+                {property = "targetY", from = face.targetY, targetValue = exitY, duration = duration, easing = AnimationUtils.Easing.inCubic},
+            })
+    end
+
+    --Rewards
+    for i,face in next,self.rewardsUIFaces do
         local randomSide = math.random(0,1)
         local exitX = -200
         if(randomSide == 0)then
@@ -414,6 +439,14 @@ function DiceCustomization:switchFaces()
             for k,d in next,self.run.facesInventory do
                 if(d==face.representedObject) then table.remove(self.run.facesInventory, k) ; break end
             end
+        end
+    end
+
+    for i,face in next,self.rewardsUIFaces do
+        local closestFace = self:detectClosestFace(face.x, face.y)
+        if(closestFace) then
+            local diceObject = self.uiDices[closestFace[3]][closestFace[4]].diceObject
+            diceObject:setFace(face.representedObject, closestFace[4])
         end
     end
     self:outAnimation()
