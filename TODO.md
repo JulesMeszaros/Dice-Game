@@ -1,5 +1,7 @@
 # TO-DO LIST
 
+CF. le figma
+
 ## A implémenter
 
 ## Corrections mineures
