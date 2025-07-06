@@ -39,6 +39,10 @@ end
 
 --==Trigger functions==--
 
+function FaceObject:resetStats()
+    self.roundTriggered = 0
+end
+
 function FaceObject:update(dt, run)
     --print(self.name)
 
@@ -46,6 +50,7 @@ end
 
 function FaceObject:trigger(round)
     self.totalTriggered = self.totalTriggered + 1
+    self.roundTriggered = self.roundTriggered + 1
     self:triggerEffect(round)
     if(self.roundTriggered>1) then
         self:replayEffect(round)
