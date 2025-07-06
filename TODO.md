@@ -1,6 +1,6 @@
 # TO-DO LIST
 
-CF. le figma
+CF. le figma.
 
 ## A implémenter
 
