@@ -10,6 +10,7 @@ function love.load()
     for i=0,os.clock() * 1000000 do
         math.random()
     end
+
     love.graphics.setBackgroundColor(40/255, 40/255, 43/255)
 
     game = Game:start()
