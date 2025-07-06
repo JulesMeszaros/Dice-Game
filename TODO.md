@@ -18,4 +18,4 @@ CF. le figma.
 
 ## Shop
 
-- Ajouter un petit pop up temporaire sous la souris 'cliquer pour acheter/vendre'
+- Implementer un achat par glisser déposer

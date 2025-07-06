@@ -33,6 +33,7 @@ function FaceObject:new()
     self.faceValue = 1 --This is the face represented by the face (the number shown)
     self.pointsValue = 0 --This is the points scored by the dice
     self.totalTriggered = 0
+    self.roundTriggered = 0
     return self
 end
 
@@ -46,11 +47,28 @@ end
 function FaceObject:trigger(round)
     self.totalTriggered = self.totalTriggered + 1
     self:triggerEffect(round)
+    if(self.roundTriggered>1) then
+        self:replayEffect(round)
+    end
 end
+
+--Triggers effects
 
 function FaceObject:triggerEffect(round)
     --Complementary effect triggered by the face
     return
+end
+
+function FaceObject:backupEffect(round)
+    print("backup!")
+end
+
+function FaceObject:fullEffect(round)
+    print('full!')
+end
+
+function FaceObject:replayEffect(round)
+    print('replay')
 end
 
 function FaceObject:getSpriteSheet()
