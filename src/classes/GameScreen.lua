@@ -200,7 +200,7 @@ function GameScreen:new(floor, run, screenType, round)
         self.uiElements.buttons["rerollShopButton"].animator:add('x', self.rerollShopX, self.rerollShopTX, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.outCubic)
 
         self.uiElements.buttons["nextRoundSmallBtn"] = Button:new(
-            function()self.run:goToDiceCustomization()end, 
+            function()self:outAnimation()end, 
             "src/assets/sprites/ui/Next Round Small.png", 
             self.rerollShopX,
             self.rerollShopY,

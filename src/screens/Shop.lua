@@ -20,6 +20,8 @@ Shop.__index = Shop
 function Shop:new(run)
     local self = setmetatable(Screen:new(run.currentFloor, run, Constants.RUN_STATES.SHOP, run.currentRound), Shop)
 
+    self.priceTagsScale = 1
+
     self:createDiceNet()
     self:createDeck()
 
@@ -842,7 +844,7 @@ function Shop:drawFacesPriceTags()
         love.graphics.setColor(1, 1, 1, 1)
 
         love.graphics.setCanvas(currentCanvas)
-        love.graphics.draw(c, 180*i + self.shopBGTX - 60, self.shopBGTY+200, 0, 1, 1, c:getWidth()/2, 0)
+        love.graphics.draw(c, 180*i + self.shopBGTX - 60, self.shopBGTY+200, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth()/2, 0)
     end
 
     for i,c in next,self.ciggiesPriceTags do
@@ -854,11 +856,11 @@ function Shop:drawFacesPriceTags()
         local priceText = love.graphics.newText(Fonts.soraPrice, '5€')
 
         love.graphics.setColor(232/255, 79/255, 79/255, 1)
-        love.graphics.draw(priceText, c:getWidth()/2, c:getHeight()/2, 0, 1, 1, priceText:getWidth()/2, priceText:getHeight()/2)
+        love.graphics.draw(priceText, c:getWidth()/2, c:getHeight()/2, 0, 1,1, priceText:getWidth()/2, priceText:getHeight()/2)
         love.graphics.setColor(1, 1, 1, 1)
 
         love.graphics.setCanvas(currentCanvas)
-        love.graphics.draw(c, self.shopBGTX+(205+(1-i%2)*370), self.shopBGTY+(410+(math.floor(i/3))*60)-10, 0, 1, 1, c:getWidth()/2, 0)
+        love.graphics.draw(c, self.shopBGTX+(205+(1-i%2)*370), self.shopBGTY+(410+(math.floor(i/3))*60)-10, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth()/2, 0)
 
     end
 end
@@ -899,6 +901,94 @@ function Shop:getCurrentlyHoveredCiggie()
             break
         end
     end
+end
+
+function Shop:outAnimation()
+    local outDuration = 0.4
+
+    --Out animation for inventory faces
+    for i,face in next,self.inventoryFacesUI do
+        face.animator:addGroup({
+            {property="scaleX", from=face.scaleX, targetValue=0, duration = outDuration/2},
+            {property="scaleY", from=face.scaleY, targetValue=0, duration = outDuration/2},
+            {property = "baseTargetedScale", from = face.baseTargetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = face.targetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+
+            --Rotation
+            {property = "rotation", from = 0, targetValue = -1, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 0, targetValue = -1, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+        })
+    end
+
+    --Out animation for reward faces
+    for i,face in next,self.rewardsFacesUI do
+        face.animator:addGroup({
+            {property="scaleX", from=face.scaleX, targetValue=0, duration = outDuration/2},
+            {property="scaleY", from=face.scaleY, targetValue=0, duration = outDuration/2},
+            {property = "baseTargetedScale", from = face.baseTargetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = face.targetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+
+            --Rotation
+            {property = "rotation", from = 0, targetValue = -1, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 0, targetValue = -1, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+        })
+    end
+
+    --Out animation of shop faces
+    for i,face in next,self.availableFaceObjectsUI do
+        face.animator:addGroup({
+            {property="scaleX", from=face.scaleX, targetValue=0, duration = outDuration/2},
+            {property="scaleY", from=face.scaleY, targetValue=0, duration = outDuration/2},
+            {property = "baseTargetedScale", from = face.baseTargetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = face.targetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+
+            --Rotation
+            {property = "rotation", from = 0, targetValue = -1, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 0, targetValue = -1, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+        })
+    end
+
+    --Out animation for ciggies
+    for i,face in next,self.availableCiggieObjectsUI do
+        face.animator:addGroup({
+            {property="scaleX", from=face.scaleX, targetValue=0, duration = outDuration/2},
+            {property="scaleY", from=face.scaleY, targetValue=0, duration = outDuration/2},
+            {property = "baseTargetedScale", from = face.baseTargetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = face.targetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            })
+    end
+
+    self.animator:add("priceTagsScale", 1, 0, outDuration/4, AnimationUtils.Easing.easeOutBack)
+    self.animator:addDelay(outDuration/2)
+    
+    --Remove the elements from the UI
+    self.animator:addGroup({
+        {property = "gridY", from = self.gridY, targetValue = -820, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        
+        {property = "shopBGY", from = self.shopBGY, targetValue = -1000, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        
+        {property = "deckY", from = self.deckY, targetValue = self.canvas:getHeight()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        
+        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+
+        {property = "inventorySMY", from = self.inventorySMY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rewardsSMY", from = self.rewardsSMY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+
+    })
+    self.animator:addDelay(0.5, function()self.run:goToDiceCustomization()end)
+
+    --Buttons animation
+    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["nextRoundSmallBtn"].animator:add('x', self.uiElements.buttons["nextRoundSmallBtn"].x, self.canvas:getWidth()+400, outDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["rerollShopButton"].animator:add('x', self.uiElements.buttons["rerollShopButton"].x, -400, outDuration, AnimationUtils.Easing.inOutCubic)
+
 end
 
 function Shop:isInList(diceList, targetDice)
