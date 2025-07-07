@@ -73,12 +73,6 @@ function Run:update(dt)
     if(self.currentState==Constants.RUN_STATES.ROUND)then
         --update Round
         self.currentRound:update(dt)
-
-        --Update dices UI (a bouger)
-        for key,dice in next,self.currentRound.diceFaces do
-            dice:update(dt)
-        end
-
     elseif(self.currentState==Constants.RUN_STATES.SHOP)then
         --update shop
         self.shop:update(dt)

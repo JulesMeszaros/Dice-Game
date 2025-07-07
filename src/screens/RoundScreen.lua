@@ -7,6 +7,7 @@ local FaceHoverInfos = require("src.classes.ui.FaceHoverInfo")
 local AnimationUtils = require("src.utils.scripts.Animations")
 --UI
 local Sprites = require("src.utils.Sprites")
+local DiceFace = require("src.classes.ui.DiceFace")
 --Ciggies
 local Ciggie = require("src.classes.ui.Ciggie")
 --Dices
@@ -81,10 +82,35 @@ function RoundScreen:new(round)
     --Start the round with the first roll
     self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects);self:generateCiggiesUI()end)
 
+    self.diceFaces = {}
+    --On créé des objets pour les nouveaux diceFaces
+    for key,diceobject in next,self.round.diceObjects do
+
+        local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
+            diceobject, --Dice Object 
+            diceobject:getFace(1), --La face représentée
+            self.canvas:getWidth()/2, --X Position (centerd)
+            self.canvas:getHeight()+70, --Yposition (centerd)
+            120, --Width/Height
+            true, --is Selectable
+            true, --isHoverable,
+            function()return Inputs.getMouseInCanvas(510 , 320)end,
+            self.round
+        )
+
+        self.diceFaces[diceobject] = diceFaceUI
+    end
+
     return self
 end
 
 function RoundScreen:update(dt)
+
+    --Update dices UI
+    for key,dice in next,self.diceFaces do
+        dice:update(dt)
+    end
+
     --Reset Bouton de figure et Dé survolé
     self.currentlyHoveredFigure = nil
 
@@ -127,7 +153,7 @@ function RoundScreen:updateCanvas(dt)
     if(self.pointsDetailsCanvas) then
         self.pointsDetailsCanvas:update(dt)
     end
-    self:drawDiceTray(self.diceMatx, self.diceMaty, self.round.diceFaces)
+    self:drawDiceTray(self.diceMatx, self.diceMaty, self.diceFaces)
 
     --Figure Buttons
 
@@ -185,7 +211,7 @@ end
 function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
     --Drag and drop dice
     if(isDragging == true)then 
-        for key,diceui in next, self.round.diceFaces do
+        for key,diceui in next, self.diceFaces do
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
                 self.dragAndDroppedDice = diceui
@@ -218,7 +244,7 @@ end
 
 function RoundScreen:mousepressed(x, y, button, istouch, presses)
     --DiceFaces
-    for key,uiFace in next,self.round.diceFaces do
+    for key,uiFace in next,self.diceFaces do
         uiFace:clickEvent()
     end
 
@@ -242,7 +268,7 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
     self.dragAndDroppedCiggie = nil
     self.dragAndDroppedFace = nil
 
-    for key,diceface in next,self.round.diceFaces do
+    for key,diceface in next,self.diceFaces do
         local wasReleased = diceface:releaseEvent()
         if(wasReleased)then
             self.round:updateselectedDices(diceface)
@@ -278,8 +304,8 @@ end
 function RoundScreen:updateSelectedPosDices()
     local i = 1
     for k,d in next,self.round.selectedDices do
-        self.round.diceFaces[d].targetY = 70
-        self.round.diceFaces[d].targetX = 105 + (i-1)*(180)
+        self.diceFaces[d].targetY = 70
+        self.diceFaces[d].targetX = 105 + (i-1)*(180)
         i=i+1
     end
 end
@@ -439,7 +465,7 @@ function RoundScreen:getCurrentlyHoveredDice()
     self.hoveredFaceCanvas = nil
 
     --Dés dans le terrain de jeu
-    for key,diceface in next,self.round.diceFaces do
+    for key,diceface in next,self.diceFaces do
         if diceface:isHovered() then
             self.currentlyHoveredDice = diceface.diceObject
             self.currentlyHoveredFace = diceface
@@ -549,10 +575,10 @@ function RoundScreen:reorganiseDiceFaces(dices)
 end
 --Highlight the dices when hovering a figure
 function RoundScreen:highlightDices(usedDices)
-    for key,diceface in next,self.round.diceFaces do
+    for key,diceface in next,self.diceFaces do
         diceface:setHighlighted(false)
         for _, dice in next,usedDices do
-            if self.round.diceFaces[dice] == diceface then
+            if self.diceFaces[dice] == diceface then
                     diceface:setHighlighted(true)
                     break
             end

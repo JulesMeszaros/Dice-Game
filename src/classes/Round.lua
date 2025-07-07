@@ -58,29 +58,12 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 
     self.terrain = RoundScreen:new(self)
 
-    --On créé des objets pour les nouveaux diceFaces
-    for key,diceobject in next,self.diceObjects do
-
-        local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
-            diceobject, --Dice Object 
-            diceobject:getFace(1), --La face représentée
-            self.terrain.canvas:getWidth()/2, --X Position (centerd)
-            self.terrain.canvas:getHeight()+70, --Yposition (centerd)
-            120, --Width/Height
-            true, --is Selectable
-            true, --isHoverable,
-            function()return Inputs.getMouseInCanvas(510 , 320)end,
-            self
-        )
-
-        self.diceFaces[diceobject] = diceFaceUI
-    end
-
     return self
 end
 
 function Round:update(dt)
-    --update les objets de face (deck)
+
+        --update les objets de face (deck)
     for i,dice in next,self.diceObjects do
         for j,face in next,dice:getAllFaces() do
             face:update(dt, self.run)
@@ -94,6 +77,7 @@ function Round:update(dt)
 
     --update le terrain
     self.terrain:update(dt)
+
 end
 
 --==ROUND FUNCTION==--
@@ -141,7 +125,7 @@ function Round:getDicesOrder(usedDices)
     local dices = {}
 
     for i, dice in next,usedDices do
-        table.insert(diceFaces, self.diceFaces[dice])
+        table.insert(diceFaces, self.terrain.diceFaces[dice])
         table.insert(dices, dice)
     end
     
@@ -171,7 +155,7 @@ function Round:getDicesOrder(usedDices)
     -- Trie les DiceFaces à partir des dés triés
     local sortedDiceFaces = {}
     for k,d in next,sortedDices do
-        table.insert(sortedDiceFaces, self.diceFaces[d])
+        table.insert(sortedDiceFaces, self.terrain.diceFaces[d])
     end
 
     --Ajout aux attributs de classe
@@ -225,7 +209,7 @@ function Round:triggerNextDice()
     else --ends the trigger phase
         --Recall the dices
         local j = 0
-        for i,diceface in next,self.diceFaces do
+        for i,diceface in next,self.terrain.diceFaces do
             j = j+1
             if(j==5)then
                 diceface.animator:add("y", diceface.y, diceface.y-20, 0.1)
@@ -306,12 +290,12 @@ function Round:makeRoll(dices)
     local draw = self:drawDices(dices) --draw the dices
     for key,dice in next,self.diceObjects do
         dice:setCurrentFaceObject(self.drawedFaceObjects[dice])
-        self.diceFaces[dice]:setFaceObject(self.drawedFaceObjects[dice]) --update the ui
+        self.terrain.diceFaces[dice]:setFaceObject(self.drawedFaceObjects[dice]) --update the ui
     end
 
     local rerolledDiceFaces = {}
     for k,d in next,dices do
-        rerolledDiceFaces[d] = self.diceFaces[d]
+        rerolledDiceFaces[d] = self.terrain.diceFaces[d]
     end
 
     for key,dice in next,dices do --Creates the roll animation for the rerolled dices
@@ -323,14 +307,14 @@ function Round:makeRoll(dices)
         --Todo: remplacer le code suivant par une animation Animator
 
         --Set initial position (random X axis, under the terrain)
-        self.diceFaces[dice]:setX(self.terrain.dice_tray:getWidth()/2)
-        --self.diceFaces[dice].targetX = 2000
-        self.diceFaces[dice]:setY(self.terrain.dice_tray:getHeight()+100)
-        --self.diceFaces[dice].targetY = 2000
-        self.diceFaces[dice].rotation = 0
+        self.terrain.diceFaces[dice]:setX(self.terrain.dice_tray:getWidth()/2)
+        --self.terrain.diceFaces[dice].targetX = 2000
+        self.terrain.diceFaces[dice]:setY(self.terrain.dice_tray:getHeight()+100)
+        --self.terrain.diceFaces[dice].targetY = 2000
+        self.terrain.diceFaces[dice].rotation = 0
 
         --Add an animation to make them roll
-        self.diceFaces[dice].animator:addGroup({
+        self.terrain.diceFaces[dice].animator:addGroup({
             {property = "x", from=self.terrain.canvas:getWidth()/2, targetValue = randomXPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
             {property = "targetX", from=self.terrain.canvas:getWidth()/2, targetValue = randomXPos, duration = 0.5, onComplete=function()end},
             {property = "y", from=self.terrain.canvas:getHeight()+100, targetValue = randomYPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
@@ -340,7 +324,7 @@ function Round:makeRoll(dices)
 
         })
 
-        self.diceFaces[dice].animator:addDelay(0.4, function()self.terrain:reorganiseDiceFaces(rerolledDiceFaces)end)
+        self.terrain.diceFaces[dice].animator:addDelay(0.4, function()self.terrain:reorganiseDiceFaces(rerolledDiceFaces)end)
     end
 
 end 
@@ -375,7 +359,7 @@ function Round:getUnSelectedDices()
             if(d==dice)then selected = true end
         end
         if(selected==false)then
-            unSelectedDices[dice] = self.diceFaces[dice]
+            unSelectedDices[dice] = self.terrain.diceFaces[dice]
         end
     end 
     return unSelectedDices
@@ -387,7 +371,7 @@ end
 
 function Round:resetselectedDices()
     self.selectedDices = {} --remove the dices
-    for key,uiFace in next,self.diceFaces do --unselect the UI Faces
+    for key,uiFace in next,self.terrain.diceFaces do --unselect the UI Faces
         uiFace:setSelected(false)
     end
 end
