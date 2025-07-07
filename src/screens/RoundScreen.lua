@@ -181,6 +181,100 @@ function RoundScreen:updateCanvas(dt)
     love.graphics.setCanvas(currentCanvas)
 end
 
+--==INPUT FUNCTIONS==--
+function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
+    --Drag and drop dice
+    if(isDragging == true)then 
+        for key,diceui in next, self.round.diceFaces do
+            if(diceui.isDraggable and diceui.isBeingClicked) then
+                diceui.isBeingDragged = true
+                self.dragAndDroppedDice = diceui
+                diceui.dragXspeed = dx
+                if(diceui.targetX+dx<self.dice_tray:getWidth()-diceui.size/2 and diceui.targetX+dx>0+diceui.size/2) then --Vérification qu'on ne dépasse par les limites horizontales
+                    diceui.targetX = (diceui.targetX + dx) 
+                end
+
+                if(diceui.targetY+dy<self.dice_tray:getHeight()-diceui.size/2-85 and diceui.targetY+dy>165+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
+                    diceui.targetY = (diceui.targetY + dy) 
+                end
+                break;
+            end
+        end
+    end
+    --Drag and drop Ciggies
+    if(isDragging == true)then 
+        for key,ciggie in next, self.uiElements.ciggiesUI do
+            if(ciggie.isDraggable and ciggie.isBeingClicked) then
+                ciggie.isBeingDragged = true
+                self.dragAndDroppedCiggie = ciggie
+                ciggie.dragXspeed = dx
+                ciggie.targetX = x
+                ciggie.targetY = y
+                break;
+            end
+        end
+    end
+end
+
+function RoundScreen:mousepressed(x, y, button, istouch, presses)
+    --DiceFaces
+    for key,uiFace in next,self.round.diceFaces do
+        uiFace:clickEvent()
+    end
+
+    --Ciggies
+    for key,ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:clickEvent()
+    end
+
+    --Round Buttons
+    for key,button in next,self.uiElements.buttons do
+        button:clickEvent()
+    end
+
+    --Figure buttons
+    self.clickedFigure = self:getCurrentlyHoveredLine()
+end
+
+function RoundScreen:mousereleased(x, y, button, istouch, presses)
+    --release event for dice faces
+
+    self.dragAndDroppedCiggie = nil
+    self.dragAndDroppedFace = nil
+
+    for key,diceface in next,self.round.diceFaces do
+        local wasReleased = diceface:releaseEvent()
+        if(wasReleased)then
+            self.round:updateselectedDices(diceface)
+        end
+        diceface.isBeingDragged = false
+    end
+
+    --release event on UI elements (buttons)
+    for key,button in next,self.uiElements.buttons do
+        local wasReleased = button:releaseEvent()
+        if(wasReleased) then --Si le click a été complété
+            button:getCallback()()
+        end
+    end
+
+    --Figure buttons
+    if(self.clickedFigure)then
+        if(self.clickedFigure == self:getCurrentlyHoveredLine())then
+            self.calculatePointsFunctions[self.clickedFigure]()
+        end
+    end
+
+    --Ciggies
+    for key,ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:releaseEvent()
+        if(ciggie:detectBelowCanvas(self)==Constants.CANVAS.DICE_MAT)then
+            ciggie.representedObject:trigger(self.round)
+        end
+        ciggie.isBeingDragged = false
+    end
+end
+
 function RoundScreen:updateSelectedPosDices()
     local i = 1
     for k,d in next,self.round.selectedDices do

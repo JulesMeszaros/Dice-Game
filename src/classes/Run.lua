@@ -143,14 +143,6 @@ function Run:endRound()
             table.insert(self.facesRewardsInventory, face)
         end
 
-        --==DEPRECATED==--
-        --Adds the rewards to inventory, if there is the place to add them
-        -- for i,face in next,self.currentRound.faceRewards do
-        --     if(table.getn(self.facesInventory)<8) then
-        --         table.insert(self.facesInventory, face)
-        --     end
-        -- end
-
         --GOTO Shop
         self.shop = Shop:new(self)
         self.currentState = Constants.RUN_STATES.SHOP
@@ -198,7 +190,7 @@ function Run:mousepressed(x, y, button, istouch, presses)
     self.dragOriginX = x ; self.dragOriginY = y
 
     if(self.currentState == Constants.RUN_STATES.ROUND)then
-        self.currentRound:mousepressed(x, y, button, istouch, presses)
+        self.currentRound.terrain:mousepressed(x, y, button, istouch, presses)
     elseif(self.currentState==Constants.RUN_STATES.SHOP)then
         self.shop:mousepressed(x, y, button, istouch, presses)
     elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
@@ -212,7 +204,7 @@ end
 
 function Run:mousereleased(x, y, button, istouch, presses)
     if(self.currentState==Constants.RUN_STATES.ROUND)then
-        self.currentRound:mousereleased(x, y, button, istouch, presses)
+        self.currentRound.terrain:mousereleased(x, y, button, istouch, presses)
     elseif(self.currentState==Constants.RUN_STATES.SHOP)then
         self.shop:mousereleased(x, y, button, istouch, presses)
     elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
@@ -229,7 +221,7 @@ end
 
 function Run:mousemoved(x, y, dx, dy)
     if(self.currentState==Constants.RUN_STATES.ROUND)then
-        self.currentRound:mousemoved(x, y, dx, dy, self.isDragging)
+        self.currentRound.terrain:mousemoved(x, y, dx, dy, self.isDragging)
     elseif(self.currentState==Constants.RUN_STATES.SHOP)then
         self.shop:mousemoved(x, y, dx, dy, self.isDragging)
     elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then

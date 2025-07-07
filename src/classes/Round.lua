@@ -122,99 +122,6 @@ function Round:keypressed(key) --(Mainly for debug)
     end
 end
 
-function Round:mousepressed(x, y, button, istouch, presses)
-    --DiceFaces
-    for key,uiFace in next,self.diceFaces do
-        uiFace:clickEvent()
-    end
-
-    --Ciggies
-    for key,ciggie in next,self.terrain.uiElements.ciggiesUI do
-        ciggie:clickEvent()
-    end
-
-    --Round Buttons
-    for key,button in next,self.terrain.uiElements.buttons do
-        button:clickEvent()
-    end
-
-    --Figure buttons
-    self.terrain.clickedFigure = self.terrain:getCurrentlyHoveredLine()
-end
-
-function Round:mousereleased(x, y, button, istouch, presses)
-    --release event for dice faces
-
-    self.terrain.dragAndDroppedCiggie = nil
-    self.terrain.dragAndDroppedFace = nil
-
-    for key,diceface in next,self.diceFaces do
-        local wasReleased = diceface:releaseEvent()
-        if(wasReleased)then
-            self:updateselectedDices(diceface)
-        end
-        diceface.isBeingDragged = false
-    end
-
-    --release event on UI elements (buttons)
-    for key,button in next,self.terrain.uiElements.buttons do
-        local wasReleased = button:releaseEvent()
-        if(wasReleased) then --Si le click a été complété
-            button:getCallback()()
-        end
-    end
-
-    --Figure buttons
-    if(self.terrain.clickedFigure)then
-        if(self.terrain.clickedFigure == self.terrain:getCurrentlyHoveredLine())then
-            self.terrain.calculatePointsFunctions[self.terrain.clickedFigure]()
-        end
-    end
-
-    --Ciggies
-    for key,ciggie in next,self.terrain.uiElements.ciggiesUI do
-        ciggie:releaseEvent()
-        if(ciggie:detectBelowCanvas(self)==Constants.CANVAS.DICE_MAT)then
-            ciggie.representedObject:trigger(self)
-        end
-        ciggie.isBeingDragged = false
-    end
-end
-
-function Round:mousemoved(x, y, dx, dy, isDragging)
-    --Drag and drop dice
-    if(isDragging == true)then 
-        for key,diceui in next, self.diceFaces do
-            if(diceui.isDraggable and diceui.isBeingClicked) then
-                diceui.isBeingDragged = true
-                self.terrain.dragAndDroppedDice = diceui
-                diceui.dragXspeed = dx
-                if(diceui.targetX+dx<self.terrain.dice_tray:getWidth()-diceui.size/2 and diceui.targetX+dx>0+diceui.size/2) then --Vérification qu'on ne dépasse par les limites horizontales
-                    diceui.targetX = (diceui.targetX + dx) 
-                end
-
-                if(diceui.targetY+dy<self.terrain.dice_tray:getHeight()-diceui.size/2-85 and diceui.targetY+dy>165+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
-                    diceui.targetY = (diceui.targetY + dy) 
-                end
-                break;
-            end
-        end
-    end
-    --Drag and drop Ciggies
-    if(isDragging == true)then 
-        for key,ciggie in next, self.terrain.uiElements.ciggiesUI do
-            if(ciggie.isDraggable and ciggie.isBeingClicked) then
-                ciggie.isBeingDragged = true
-                self.terrain.dragAndDroppedCiggie = ciggie
-                ciggie.dragXspeed = dx
-                ciggie.targetX = x
-                ciggie.targetY = y
-                break;
-            end
-        end
-    end
-end
-
 --==TRIGGERING PHASE==--
 function Round:getDicesOrder(usedDices)
     --[[
@@ -323,7 +230,7 @@ function Round:triggerNextDice()
             if(j==5)then
                 diceface.animator:add("y", diceface.y, diceface.y-20, 0.1)
                 diceface.animator:add("y", diceface.y-20, 1000, 0.2)
-                diceface.animator:addDelay(0.2, function()self:endTriggeringPhase()end)
+                diceface.animator:addDelay(0.2, function()self:endTriggeringPhase()end) --On termine le round mais uniquement quand le dernier dé a terminé son animation
             else
                 diceface.animator:add("y", diceface.y, diceface.y-20, 0.1)
                 diceface.animator:add("y", diceface.y-20, 1000, 0.2)
