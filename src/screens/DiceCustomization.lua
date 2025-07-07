@@ -339,6 +339,9 @@ function DiceCustomization:outAnimation()
         {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        
+        {property = "inventoryMDY", from = self.inventoryMDY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rewardsMDY", from = self.rewardsMDY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
 
     --Buttons animation
