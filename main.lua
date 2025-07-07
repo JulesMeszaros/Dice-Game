@@ -4,6 +4,10 @@ local Game = require("src.classes.Game")
 
 local delta = 0
 
+local fpsLimit = nil -- nil = pas de limite
+local fpsOptions = { nil, 60, 30, 15 , 5}
+local currentFpsIndex = 1
+
 function love.load()
     --bien randomiser le jeu
     math.randomseed(os.clock() * 1000000)
@@ -20,6 +24,16 @@ function love.update(dt)
     game:update(dt)
     delta = love.timer.getFPS()
     
+    -- Simulation de FPS faible
+    if fpsLimit then
+        local desiredFrameTime = 1 / fpsLimit
+        local frameTime = love.timer.getDelta()
+        local sleepTime = desiredFrameTime - frameTime
+        if sleepTime > 0 then
+            love.timer.sleep(sleepTime)
+        end
+    end
+
 end
 
 function love.draw()
@@ -32,6 +46,16 @@ end
 
 function love.keypressed(key)
     game:keypressed(key)
+
+    if key == "f" then
+        currentFpsIndex = currentFpsIndex % #fpsOptions + 1
+        fpsLimit = fpsOptions[currentFpsIndex]
+        if fpsLimit then
+            print("FPS limité à " .. fpsLimit)
+        else
+            print("FPS illimité")
+        end
+    end
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
