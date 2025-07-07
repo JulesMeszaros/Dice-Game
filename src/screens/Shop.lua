@@ -728,7 +728,7 @@ function Shop:createFacesPriceTags()
     self.facesPriceTags = {}
     --Faces
     for i=1, 4 do
-        local c = love.graphics.newCanvas(95, 40)
+        local c = love.graphics.newCanvas(110, 40)
         love.graphics.setBlendMode( "alpha" )
 
         table.insert(self.facesPriceTags, c)
@@ -737,7 +737,7 @@ function Shop:createFacesPriceTags()
     --Ciggies
     self.ciggiesPriceTags = {}
     for i=1, 4 do
-        local c = love.graphics.newCanvas(95, 40)
+        local c = love.graphics.newCanvas(110, 40)
         love.graphics.setBlendMode( "alpha" )
 
         table.insert(self.ciggiesPriceTags, c)
@@ -858,7 +858,7 @@ function Shop:drawFacesPriceTags()
         love.graphics.setColor(1, 1, 1, 1)
 
         love.graphics.setCanvas(currentCanvas)
-        love.graphics.draw(c, self.shopBGTX+(205+(1-i%2)*370), self.shopBGTY+(410+(math.floor(i/3))*60)-15, 0, 1, 1, c:getWidth()/2, 0)
+        love.graphics.draw(c, self.shopBGTX+(205+(1-i%2)*370), self.shopBGTY+(410+(math.floor(i/3))*60)-10, 0, 1, 1, c:getWidth()/2, 0)
 
     end
 end
