@@ -565,7 +565,7 @@ function Shop:getCurrentlyHoveredFace()
     self.currentlyHoveredFace = nil
     --Dice Net
     for i,face in next,self.infoFaces do
-        if(face:isHovered()) then self.currentlyHoveredFace = face ; return end
+        if(face:isHovered() and self.currentlySelectedDice) then self.currentlyHoveredFace = face ; return end
     end
     --Shop faces
     for i,face in next,self.availableFaceObjectsUI do

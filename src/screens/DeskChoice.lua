@@ -347,7 +347,7 @@ function DeskChoice:getCurrentlyHoveredFace()
 
     --Pour les faces dans le patron à droite
     for i,face in next,self.infoFaces do
-        if face:isHovered() then 
+        if face:isHovered() and self.currentlySelectedDice then 
             self.currentlyHoveredFace = face
 
             if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then

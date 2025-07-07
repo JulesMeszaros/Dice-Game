@@ -473,9 +473,10 @@ function RoundScreen:getCurrentlyHoveredDice()
             break
         end
     end
+
     --Dés dans l'encart à droite
     for key,diceface in next,self.infoFaces do
-        if diceface:isHovered() then
+        if diceface:isHovered() and self.currentlyHoveredDice then
                 self.currentlyHoveredFace = diceface
                 self.hoveredFaceCanvas = 2
             break
