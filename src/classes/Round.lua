@@ -3,12 +3,15 @@ local DiceFace = require("src.classes.ui.DiceFace")
 local RoundScreen = require("src.screens.RoundScreen")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local Inputs = require("src.utils.scripts.Inputs")
+local Animator = require("src.utils.Animator")
 
 local Round = {}
 Round.__index = Round
 
 function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObjects, roundType, faceRewards)
     local self = setmetatable({}, Round)
+
+    self.animator = Animator:new(self)
 
     self.selectedDices = {}
     self.drawedFaceObjects = {}
@@ -62,6 +65,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 end
 
 function Round:update(dt)
+    self.animator:update(dt)
 
         --update les objets de face (deck)
     for i,dice in next,self.diceObjects do
@@ -267,6 +271,14 @@ function Round:updateselectedDices(uiFace)
     --Update the selected dices position
     self.terrain:updateSelectedPosDices()
     --Update the unselected dices position
+    self.terrain:reorganiseDiceFaces(self:getUnSelectedDices())
+
+    local us = self:getUnSelectedDices()
+
+    for i,k in next,us do
+        print(k.representedObject.name, k.representedObject.faceValue)
+    end
+
 end
 
 --==REROLL FUNCTIONS==--
@@ -303,8 +315,6 @@ function Round:makeRoll(dices)
         local randomXPos = math.random(80, self.terrain.dice_tray:getWidth()-80)
         local randomYPos = math.random(220, self.terrain.dice_tray:getHeight()-150)
         local randomR = ((math.random(0,1000)/1000)*5)-2.5 --(1001 angles possibles entre -2.5 et 5 radians)
-
-        --Todo: remplacer le code suivant par une animation Animator
 
         --Set initial position (random X axis, under the terrain)
         self.terrain.diceFaces[dice]:setX(self.terrain.dice_tray:getWidth()/2)
@@ -355,8 +365,8 @@ function Round:getUnSelectedDices()
     local unSelectedDices = {}
     for i,dice in next,self.diceObjects do
         local selected = false
-        for d,diceFace in next,self.selectedDices do
-            if(d==dice)then selected = true end
+        for d,selectedDices in next,self.selectedDices do
+            if(selectedDices==dice)then selected = true end
         end
         if(selected==false)then
             unSelectedDices[dice] = self.terrain.diceFaces[dice]
