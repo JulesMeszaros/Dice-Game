@@ -552,7 +552,7 @@ end
 function DiceCustomization:createDiceUI(diceObject, i)
     --This function creates every faces of a ui Dice and stores them in a table located in self.uiDices
     local diceUI = {}
-    local xOffset = 120+360*(i-1) - 60 -- the base position of the dice
+    local xOffset = 110+365*(i-1) - 60 -- the base position of the dice
     local yOffset = 180 - 60
     
     local relativeXPositions = { -- this table represents the position of the dice after applying the offset

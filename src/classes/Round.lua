@@ -181,7 +181,14 @@ function Round:startTriggeringPhase(usedDices, figure)
     self.usedDices = usedDices
     self.playedFigure = figure
     --Creates the list of dices to trigger, sorted according to their position on the terrain
-    local sortedDiceFaces, sortedDices = self:getDicesOrder(usedDices)
+
+    
+
+    local sortedDiceFaces = {}
+    for i,k in next,self.selectedDices do
+        table.insert(sortedDiceFaces, self.terrain.diceFaces[k])
+    end
+    local sortedDices = self.selectedDices
 
     --Create the dice face trigger queue
     for k,df in next,sortedDiceFaces do
