@@ -122,10 +122,10 @@ function DiceCustomization:updateCanvas(dt)
     self:drawRewards()
 
      --Update the hover info
-    if(self.currentlyHoveredFace)then
+    --[[ if(self.currentlyHoveredFace)then
         self.hoverInfosCanvas:update(dt)
         self.hoverInfosCanvas:draw()
-    end
+    end ]]
 
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do

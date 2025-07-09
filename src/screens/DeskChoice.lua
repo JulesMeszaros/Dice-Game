@@ -81,10 +81,10 @@ function DeskChoice:update(dt)
 
     self:drawCiggiesTrayFront()
 
-     if(self.hoverInfosCanvas and self.currentlyHoveredFace)then
+    --[[ if(self.hoverInfosCanvas and self.currentlyHoveredFace)then
         self.hoverInfosCanvas:update(dt)
         self.hoverInfosCanvas:draw()
-    end
+    end ]]
 
     love.graphics.setCanvas(currentCanvas)
 end

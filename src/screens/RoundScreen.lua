@@ -150,9 +150,10 @@ function RoundScreen:updateCanvas(dt)
     --PlayersInfos
     self:drawPlayersInfos()
     --Dice Tray
-    if(self.pointsDetailsCanvas) then
+    --[[ if(self.pointsDetailsCanvas) then
         self.pointsDetailsCanvas:update(dt)
-    end
+    end ]]
+
     self:drawDiceTray(self.diceMatx, self.diceMaty, self.diceFaces)
 
     --Figure Buttons
@@ -199,9 +200,9 @@ function RoundScreen:updateCanvas(dt)
 
 
     --On dessine la bulle des points
-    if(self.currentlyHoveredFace and self.pointsDetailsCanvas)then
+    --[[ if(self.currentlyHoveredFace and self.pointsDetailsCanvas)then
         self.pointsDetailsCanvas:draw()
-    end
+    end ]]
 
 
     love.graphics.setCanvas(currentCanvas)
