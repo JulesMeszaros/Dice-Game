@@ -137,13 +137,14 @@ function Run:endRound()
             table.insert(self.facesRewardsInventory, face)
         end
 
-        --GOTO Shop
-        self.shop = Shop:new(self)
-        self.currentState = Constants.RUN_STATES.SHOP
-
+        --GOTO Shop, seulement si on est à la fin d'un étage, ou que la fonction debug associée est activée
+        if(self.currentRound.roundType == Constants.ROUND_TYPES.BOSS) then
+            self.shop = Shop:new(self)
+            self.currentState = Constants.RUN_STATES.SHOP
+        else
         --GOTO dice customization
-        --[[ self.customizationScreen = DiceCustomization:new(self.currentRound, self.currentRound.faceRewards)
-        self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION ]]
+            self:goToDiceCustomization()
+        end
 
     else --gameover case
         local gameOver = GameOverScreen:new(self.gameCanvas, self)
