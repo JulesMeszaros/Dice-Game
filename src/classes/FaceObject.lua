@@ -10,6 +10,8 @@ FaceObject.__index = FaceObject
 function FaceObject:new()
     local self = setmetatable({}, FaceObject)
 
+    self.disabled = false
+
     --Metadatas about the FaceObject
     self.name = "FACE OBJECT"
     self.id = 0
