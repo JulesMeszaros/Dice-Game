@@ -8,7 +8,7 @@ local Constants = {
     BASE_AVAILABLE_HANDS = 1,
     DESKS_BY_FLOOR = 2,
     BASE_MAX_CIGGIES = 5,
-    SHOP_EVERY_DESK = true
+    SHOP_EVERY_DESK = false --Variable de debug : lance le shop après chaque round peu importe le type
 }
 
 --Enums

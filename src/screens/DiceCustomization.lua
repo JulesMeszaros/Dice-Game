@@ -477,9 +477,9 @@ function DiceCustomization:detectClosestFace(x, y)
     local basisY = 180
 
     for i=1,5 do --loop over dices
-        local basisX = 120+360*(i-1)        
+        local basisX = 110+365*(i-1)  
         for j=1,6 do --loop over faces 
-            if(math.abs((x+60)-(relativeXPositions[j]+basisX))<40 and math.abs((y+60)-(relativeYPositions[j]+basisY))<40) then
+            if(math.abs((x+60)-(relativeXPositions[j]+basisX))<60 and math.abs((y+60)-(relativeYPositions[j]+basisY))<60) then
                 return({relativeXPositions[j]+basisX-60, relativeYPositions[j]+basisY-60, i, j})
             end
         end

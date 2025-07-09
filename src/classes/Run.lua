@@ -138,7 +138,7 @@ function Run:endRound()
         end
 
         --GOTO Shop, seulement si on est à la fin d'un étage, ou que la fonction debug associée est activée
-        if(self.currentRound.roundType == Constants.ROUND_TYPES.BOSS) then
+        if(self.currentRound.roundType == Constants.ROUND_TYPES.BOSS or Constants.SHOP_EVERY_DESK==true) then
             self.shop = Shop:new(self)
             self.currentState = Constants.RUN_STATES.SHOP
         else
