@@ -3,11 +3,12 @@ local Constants = {
     VIRTUAL_GAME_HEIGHT = 1080,
     BASE_REROLLS = 2,
     BASE_TRIGGER_ANIMATION_TIME = 0.15,--secondes
-    GAME_VERSION = "0.1.2",
+    GAME_VERSION = "0.3.0",
     BASE_TURNS = 3,
     BASE_AVAILABLE_HANDS = 1,
     DESKS_BY_FLOOR = 2,
-    BASE_MAX_CIGGIES = 5
+    BASE_MAX_CIGGIES = 5,
+    SHOP_EVERY_DESK = true
 }
 
 --Enums

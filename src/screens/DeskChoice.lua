@@ -293,7 +293,7 @@ function DeskChoice:outAnimation(badge)
     local newBadgeY = {
         -1000, -1000, 3000, 3000
     }
-
+    --UI
     self.animator:addGroup({
         {property = "gridY", from = self.gridY, targetValue = -820, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
         {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
@@ -307,7 +307,7 @@ function DeskChoice:outAnimation(badge)
         {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
 
-
+    --Bages
     for i=1, table.getn(self.badges) do
         self.badges[i].animator:add("y", self.badges[i].y, newBadgeY[i], 0.4, AnimationUtils.Easing.inCubic)
     end
@@ -316,6 +316,15 @@ function DeskChoice:outAnimation(badge)
     self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)
     self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration)
 
+    --Ciggarettes
+    for i,c in next,self.uiElements.ciggiesUI do
+        c.animator:addGroup({
+            {property="scaleX", from=c.scaleX, targetValue=0, duration = outDuration/2},
+            {property="scaleY", from=c.scaleY, targetValue=0, duration = outDuration/2},
+            {property = "baseTargetedScale", from = c.baseTargetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = c.targetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+        })
+    end
     
     self.animator:addDelay(0.5, function()self.run:startNewRound(badge.round, badge.round.roundtype)end)
 end

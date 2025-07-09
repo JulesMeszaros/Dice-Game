@@ -344,6 +344,16 @@ function DiceCustomization:outAnimation()
         {property = "rewardsMDY", from = self.rewardsMDY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
 
+    --Ciggarettes
+    for i,c in next,self.uiElements.ciggiesUI do
+        c.animator:addGroup({
+            {property="scaleX", from=c.scaleX, targetValue=0, duration = outDuration/2},
+            {property="scaleY", from=c.scaleY, targetValue=0, duration = outDuration/2},
+            {property = "baseTargetedScale", from = c.baseTargetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = c.targetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+        })
+    end
+
     --Buttons animation
     self.uiElements.buttons["nextRound"].animator:add('x', self.nextRoundX, -500, outDuration)
     self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)

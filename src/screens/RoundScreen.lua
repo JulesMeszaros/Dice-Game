@@ -430,6 +430,17 @@ function RoundScreen:outAnimation()
         {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
+
+    --Ciggarettes
+    for i,c in next,self.uiElements.ciggiesUI do
+        c.animator:addGroup({
+            {property="scaleX", from=c.scaleX, targetValue=0, duration = outDuration/2},
+            {property="scaleY", from=c.scaleY, targetValue=0, duration = outDuration/2},
+            {property = "baseTargetedScale", from = c.baseTargetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = c.targetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+        })
+    end
+    
     self.animator:addDelay(0.2)
     self.animator:addGroup({
         {property = "playerX", from = self.playerX, targetValue = -800, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
