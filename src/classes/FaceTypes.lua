@@ -369,8 +369,6 @@ end
 
 function Copyprinter:triggerEffect(round)
     
-    print("COOKIIIIE")
-
     local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
 
     --Add to the
@@ -399,6 +397,55 @@ function Copyprinter:triggerEffect(round)
 end
 
 FaceTypes.Copyprinter = Copyprinter
+
+--==BasketOfEggs==--
+local BasketOfEggs = setmetatable({}, { __index = FaceObject })
+BasketOfEggs.__index = BasketOfEggs
+
+function BasketOfEggs:new(faceValue, pointsValue)
+    local self = setmetatable(WhiteFace:new(), BasketOfEggs)
+
+    --Metadatas about the WhiteFace
+    self.name = "Basket Of Eggs"
+    self.tier = "Uncommon"
+    self.id = 5
+    self.description = "Full Hand: Multiplies the total score by 1,5."
+
+    --Metadatas about the graphics of the WhiteFace
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Milk Dice.png")
+    self.spriteSheet:setFilter("nearest", "nearest")
+
+    self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
+
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    self.fullHand = true
+
+    --Round status
+    self.faceValue = faceValue --Le numéro de face que le dé représente
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+
+    return self
+end
+
+function BasketOfEggs:triggerEffect(round)
+    round.handScore = round.handScore + self.pointsValue
+    
+end
+
+function BasketOfEggs:fullHandEffect(round)
+    round.handScore = round.handScore * 1.5
+end
+
+FaceTypes.BasketOfEggs = BasketOfEggs
 
 
 return FaceTypes

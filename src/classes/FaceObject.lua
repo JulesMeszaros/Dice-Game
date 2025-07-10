@@ -37,7 +37,7 @@ function FaceObject:new()
     self.ghost = false
     self.replay = false
     self.blank = false
-    self.fullHand = true
+    self.fullHand = false
     self.fullDice = false
     self.first = false
 
@@ -73,14 +73,16 @@ function FaceObject:trigger(round)
     --Declanche l'effet fullHand si possible
     if(self.fullHand) then
         local fullHand = true
-        for i,dice in next,round.dicesOrder do
+        local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
+        for i,dice in next,dicesOrder do
+            print(dice:getCurrentFaceObject().name)
             if(dice:getCurrentFaceObject().name ~= self.name) then
                 fullHand = false
             end
         end
 
         if(fullHand == true) then
-            self:fullHandEffect()
+            self:fullHandEffect(round)
         end
     end
 
