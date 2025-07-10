@@ -10,7 +10,6 @@ FaceObject.__index = FaceObject
 function FaceObject:new()
     local self = setmetatable({}, FaceObject)
 
-    self.disabled = false
 
     --Metadatas about the FaceObject
     self.name = "FACE OBJECT"
@@ -31,6 +30,17 @@ function FaceObject:new()
         {120, 360} -- 6
     }
     
+    --Booleans status
+    self.disabled = false
+    --About the type of effects the dice has
+    self.backup = true
+    self.ghost = false
+    self.replay = false
+    self.blank = false
+    self.fullHand = false
+    self.fullDice = false
+    self.first = false
+
     --Numbered status
     self.faceValue = 1 --This is the face represented by the face (the number shown)
     self.pointsValue = 0 --This is the points scored by the dice
@@ -59,6 +69,13 @@ function FaceObject:trigger(round)
     end
 end
 
+function FaceObject:triggerBackup(round, uiFace)
+    -- Pour l'effet backup
+    self:backupEffect(round)
+    uiFace.animator:addDelay(0.0, function()uiFace.targetedScale = 1 ; uiFace.round:triggerNextBackupDice()end)
+
+end
+
 --Triggers effects
 
 function FaceObject:triggerEffect(round)
@@ -67,7 +84,7 @@ function FaceObject:triggerEffect(round)
 end
 
 function FaceObject:backupEffect(round)
-    print("backup!")
+    print("backup!", self.name, self.faceValue)
 end
 
 function FaceObject:fullEffect(round)

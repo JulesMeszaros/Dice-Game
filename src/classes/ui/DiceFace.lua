@@ -250,6 +250,23 @@ function DiceFace:trigger(round) --Lance le trigger du dé
     self.animator:addDelay(0.0, function()self.targetedScale = 1 ; self.round:triggerNextDice()end)
 end
 
+function DiceFace:triggerBackup(round)
+    self.animator:addDelay(0.3)
+
+    self.animator:addGroup({
+        {property="scaleX", from=1.6, targetValue=0.5, duration=0.05},
+        {property="scaleY", from=0.8, targetValue=1.7, duration=0.05}
+    })
+
+    self.animator:addDelay(0.1, function() self.representedObject:triggerBackup(round, self); round.terrain:animateHandScore() end) --On déclenche l'effet du dé ici
+
+    self.animator:addGroup({
+        {property="scaleX", from=0.5, targetValue=1, duration=0.1},
+        {property="scaleY", from=1.3, targetValue=1, duration=0.1}
+    })
+
+end
+
 --==GET/SET FUNCTIONS==--
 function DiceFace:resetBaseAngle()
     self.baseRotation = 0

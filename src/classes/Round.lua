@@ -29,6 +29,9 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.dicesOrder = {} --Same but for the dice objects
     self.diceFacesTriggerQueue = {} --Dice queue for the triggers. get modified during the trigger phase
     self.dicesTriggerQueue = {}  --Same but for the dices
+    self.diceFacesBackupQueue = {} --Dice queue for the triggers. get modified during the trigger phase
+    self.dicesBackupQueue = {}  --Same but for the dices
+    
     self.currentlyTriggeredDice = nil
     self.diceFaces = {}
     self.baseReward = baseReward
@@ -118,12 +121,6 @@ function Round:getDicesOrder(usedDices)
     L'ordre est le suivant : de gauche à droite et de bas en haut
     ]]
 
-    -- Reset les listes précédentes
-    self.diceFacesOrder = {} 
-    self.dicesOrder = {} 
-    self.diceFacesTriggerQueue = {}
-    self.dicesTriggerQueue = {}
-    
     --Créée deux listes
     local diceFaces = {}
     local dices = {}
@@ -160,15 +157,6 @@ function Round:getDicesOrder(usedDices)
     local sortedDiceFaces = {}
     for k,d in next,sortedDices do
         table.insert(sortedDiceFaces, self.terrain.diceFaces[d])
-    end
-
-    --Ajout aux attributs de classe
-    for i, diceFace in next,sortedDiceFaces do
-        table.insert(self.diceFacesOrder, diceFace)
-    end
-
-    for i, diceFace in next,sortedDices do
-        table.insert(self.dicesOrder, diceFace)
     end
 
     return sortedDiceFaces, sortedDices
@@ -214,7 +202,7 @@ function Round:startTriggeringPhase(usedDices, figure)
 end
 
 function Round:triggerNextDice()
-    if(table.getn(self.dicesTriggerQueue)>=1) then
+    if(table.getn(self.dicesTriggerQueue)>=1) then --S'il reste des dés dans la liste de triggers
         --On déclenche le dé
         self.diceFacesTriggerQueue[1]:trigger(self)
             
@@ -226,8 +214,60 @@ function Round:triggerNextDice()
         table.remove(self.diceFacesTriggerQueue, 1)
         table.remove(self.dicesTriggerQueue, 1) 
 
-    else --ends the trigger phase
-        --Recall the dices
+    else --ends the trigger phase, starts the backup triggers (TODO)
+        self:startBackupPhase()
+    end
+end
+
+function Round:startBackupPhase()
+    print("Backup phase starts now.")
+
+    self.backupDiceHistory = {}
+    self.backupFaceHistory = {}
+
+    --Get the list of dices to use
+    local unselectedDices = self:getUnSelectedDices()
+    local dices = {}
+
+    for i,b in next,unselectedDices do
+        table.insert(dices, i)
+    end
+
+    --On récupère l'ordre à la fois des objets UI et des dés associés
+    local facesOrder, dicesOrder = self:getDicesOrder(dices)
+
+    --On alimente la liste de dés à 
+    for i,f in next,facesOrder do
+        if(f.representedObject.backup == true) then
+            table.insert(self.diceFacesBackupQueue, f)
+        end
+    end
+
+    for i,d in next,dicesOrder do
+        if(d:getCurrentFaceObject().backup == true) then
+            table.insert(self.dicesBackupQueue, d)
+        end
+    end
+
+    --trigger the first backup dice
+    self:triggerNextBackupDice()
+
+end
+
+function Round:triggerNextBackupDice()
+    if(table.getn(self.dicesBackupQueue)>=1)then --Si il reste au moins un dé non à backup
+        self.diceFacesBackupQueue[1]:triggerBackup(self) --On trigger l'effer backup depuis l'objet UI
+
+        --On ajoute à l'historique des backup
+        table.insert(self.backupDiceHistory, self.dicesBackupQueue[1])
+        table.insert(self.backupFaceHistory, self.diceFacesBackupQueue[1])
+
+        --On retire de la file
+        table.remove(self.diceFacesBackupQueue, 1)
+        table.remove(self.dicesBackupQueue, 1) 
+
+    else
+        --On termine la phase de trigger
         local j = 0
         for i,diceface in next,self.terrain.diceFaces do
             j = j+1
@@ -240,7 +280,7 @@ function Round:triggerNextDice()
                 diceface.animator:add("y", diceface.y-20, 1000, 0.2)
                 diceface.animator:addDelay(0.2)
             end
-        end        
+        end
     end
 end
 
