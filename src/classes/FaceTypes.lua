@@ -371,12 +371,15 @@ function Copyprinter:triggerEffect(round)
     
     print("COOKIIIIE")
 
+    local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
+
     --Add to the
     local leftDice = nil
 
     --On parcoure un a un les dés, et on remplace au fur et a mesure leftDice, sauf si on atteint le dé concerné. 
-    for i,dice in next,round.selectedDices do
+    for i,dice in next,dicesOrder do
         --On vérifie si le dé actuel de la boucle n'est pas ce dé
+        print(dice:getCurrentFaceObject().name)
         if(dice:getCurrentFaceObject() == self) then
             --Si oui on arrete
             break;

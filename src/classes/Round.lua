@@ -121,6 +121,9 @@ function Round:getDicesOrder(usedDices)
     L'ordre est le suivant : de gauche à droite et de bas en haut
     ]]
 
+    self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
+    self.dicesOrder = {} --Same but for the dice objects
+
     --Créée deux listes
     local diceFaces = {}
     local dices = {}

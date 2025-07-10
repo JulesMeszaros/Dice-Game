@@ -37,7 +37,7 @@ function FaceObject:new()
     self.ghost = false
     self.replay = false
     self.blank = false
-    self.fullHand = false
+    self.fullHand = true
     self.fullDice = false
     self.first = false
 
@@ -64,12 +64,28 @@ function FaceObject:trigger(round)
     --Incrémente les variables numériques
     self.totalTriggered = self.totalTriggered + 1
     self.roundTriggered = self.roundTriggered + 1
-    --Déclenche l'effet de trigger
-    self:triggerEffect(round)
-    --Déclenche l'effet
+    
+    --Déclenche l'effet replay si possible
     if(self.roundTriggered>1 and self.replay==true) then
         self:replayEffect(round)
     end
+    
+    --Declanche l'effet fullHand si possible
+    if(self.fullHand) then
+        local fullHand = true
+        for i,dice in next,round.dicesOrder do
+            if(dice:getCurrentFaceObject().name ~= self.name) then
+                fullHand = false
+            end
+        end
+
+        if(fullHand == true) then
+            self:fullHandEffect()
+        end
+    end
+
+    --Déclenche l'effet de trigger
+    self:triggerEffect(round)
 end
 
 function FaceObject:triggerBackup(round, uiFace)
@@ -90,7 +106,7 @@ function FaceObject:backupEffect(round)
     print("backup!", self.name, self.faceValue)
 end
 
-function FaceObject:fullEffect(round)
+function FaceObject:fullHandEffect(round)
     print('full!')
 end
 
