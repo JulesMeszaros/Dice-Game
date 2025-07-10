@@ -178,6 +178,10 @@ function Run:keypressed(key)
     if(key=="m") then
         self.money = 20000
     end
+
+    if(key=="f") then
+        self:resetAvailableFigures()
+    end
 end
 
 function Run:mousepressed(x, y, button, istouch, presses)

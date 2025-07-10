@@ -331,5 +331,71 @@ end
 
 FaceTypes.StrikeOfLuck = StrikeOfLuck
 
+--==Copyprinter==--
+local Copyprinter = setmetatable({}, { __index = FaceObject })
+Copyprinter.__index = Copyprinter
+
+function Copyprinter:new(faceValue, pointsValue)
+    local self = setmetatable(WhiteFace:new(), Copyprinter)
+
+    --Metadatas about the WhiteFace
+    self.name = "Copyprinter"
+    self.tier = "Uncommon"
+    self.id = 5
+    self.description = "Scoring: Triggers the scoring dice to its left again."
+
+    --Metadatas about the graphics of the WhiteFace
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Copyprinter.png")
+    self.spriteSheet:setFilter("nearest", "nearest")
+
+    self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
+
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Round status
+    self.faceValue = faceValue --Le numéro de face que le dé représente
+    self.pointsValue = 0 --This is the points scored by the dice
+    self.totalTriggered = 0
+
+    return self
+end
+
+function Copyprinter:triggerEffect(round)
+    
+    print("COOKIIIIE")
+
+    --Add to the
+    local leftDice = nil
+
+    --On parcoure un a un les dés, et on remplace au fur et a mesure leftDice, sauf si on atteint le dé concerné. 
+    for i,dice in next,round.selectedDices do
+        --On vérifie si le dé actuel de la boucle n'est pas ce dé
+        if(dice:getCurrentFaceObject() == self) then
+            --Si oui on arrete
+            break;
+        end
+        --On ajoute le dé à leftDice
+        leftDice = dice
+    end
+
+    --S'il y a un dé à gauche, on l'ajoute au tout début de la queue de triggers
+    if(leftDice)then
+        table.insert(round.dicesTriggerQueue, 1, leftDice)
+        table.insert(round.diceFacesTriggerQueue, 1, round.terrain.diceFaces[leftDice])
+    end
+
+    --print(round.selectedDices[1]:getCurrentFaceObject().name, round.selectedDices[1]:getCurrentFaceObject().faceValue)
+
+end
+
+FaceTypes.Copyprinter = Copyprinter
+
 
 return FaceTypes

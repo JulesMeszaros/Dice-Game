@@ -33,7 +33,7 @@ function FaceObject:new()
     --Booleans status
     self.disabled = false
     --About the type of effects the dice has
-    self.backup = true
+    self.backup = false
     self.ghost = false
     self.replay = false
     self.blank = false
@@ -61,10 +61,13 @@ function FaceObject:update(dt, run)
 end
 
 function FaceObject:trigger(round)
+    --Incrémente les variables numériques
     self.totalTriggered = self.totalTriggered + 1
     self.roundTriggered = self.roundTriggered + 1
+    --Déclenche l'effet de trigger
     self:triggerEffect(round)
-    if(self.roundTriggered>1) then
+    --Déclenche l'effet
+    if(self.roundTriggered>1 and self.replay==true) then
         self:replayEffect(round)
     end
 end
