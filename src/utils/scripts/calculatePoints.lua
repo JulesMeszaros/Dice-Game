@@ -123,11 +123,15 @@ function CalculatePoints.pttSuiteBasePoints(dices)
     --Ajouter une condition pour ne pas compter deux fois un meme nombre
     if(suite)then
         score = 30
-        for i,j in next,suite do
-            for dice,f in next,dices do
-                if(f:getCurrentFaceObject().faceValue==j)then
-                    table.insert(usedDices, f)
+        for dice,f in next,dices do
+            if(f:getCurrentFaceObject().blank == false) then
+                for i,j in next,suite do
+                    if(f:getCurrentFaceObject().faceValue==j)then
+                        table.insert(usedDices, f)
+                    end
                 end
+            else
+                table.insert(usedDices, f)
             end
         end
     else 
