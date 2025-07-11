@@ -350,9 +350,17 @@ function Round:rerollDices() --Triggers the makeRoll function after clicking the
     local dicesToReroll = {}
     --Add 1 to the total rerolls used this run
     self.run.usedRerolls = self.run.usedRerolls+1
+    --On créée la liste des dés à reroll
     for k,d in next,self.diceObjects do
         if not self:containsDice(self.selectedDices, d) then
             table.insert(dicesToReroll, d)
+        end
+    end
+
+    --On désactive les dés ghost qui sont reroll
+    for k,d in next,dicesToReroll do
+        if(d:getCurrentFaceObject().ghost == true) then
+            self.terrain.diceFaces[d]:disable()
         end
     end
 
