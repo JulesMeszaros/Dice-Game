@@ -25,6 +25,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
         CiggieTypes.BaseCiggie:new(),
         CiggieTypes.GoldenCiggie:new()
     }
+    self.totalUsedCiggie = 0
 
     self.shop = nil
 

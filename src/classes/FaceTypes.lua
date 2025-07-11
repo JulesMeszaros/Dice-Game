@@ -543,7 +543,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), ClockWorkDice)
 
     --Metadatas about the ClockWorkDice
-    self.name = "Black Star"
+    self.name = "Clockwork Dice"
     self.id = 1
     self.tier = "Common"
     self.description = "Scoring : Adds 10pts multiplied by this face's number to the score. Decreases its number by one."
@@ -582,6 +582,47 @@ function ClockWorkDice:triggerEffect(round)
 end
 
 FaceTypes.ClockWorkDice = ClockWorkDice
+
+--==Ashtray Dice==--
+local AshtrayDice = setmetatable({}, { __index = FaceObject })
+AshtrayDice.__index = AshtrayDice
+
+function AshtrayDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), AshtrayDice)
+
+    --Metadatas about the AshtrayDice
+    self.name = "Ashtray Dice"
+    self.id = 1
+    self.tier = "Common"
+    self.description = "Scoring : Multiplies the total score by 1. This factor is upgraded by 0.1 each time a cigarette is smoked"
+
+    --Metadatas about the graphics of the AshtrayDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Marble Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the AshtrayDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function AshtrayDice:triggerEffect(round)
+    --Complementary effect triggered by the face
+    round.handScore = round.handScore * (1+(0.1)*round.run.totalUsedCiggie) 
+end
+
+FaceTypes.AshtrayDice = AshtrayDice
 
 
 return FaceTypes

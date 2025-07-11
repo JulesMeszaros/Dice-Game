@@ -11,6 +11,8 @@ function CiggieObject:new()
 end
 
 function CiggieObject:trigger(round)
+    round.run.totalUsedCiggie = round.run.totalUsedCiggie+1
+    print(round.run.totalUsedCiggie)
     self:effect(round)
     self:destruct(round)
 end
