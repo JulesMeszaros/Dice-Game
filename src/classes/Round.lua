@@ -89,6 +89,12 @@ end
 
 --==ROUND FUNCTION==--
 function Round:endRound()
+    for i,d in next,self.diceObjects do
+        for j,f in next,d:getAllFaces() do
+            f:resetStats()
+        end
+    end 
+
     self.terrain:outAnimation()
 end
 

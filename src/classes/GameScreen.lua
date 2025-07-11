@@ -187,7 +187,7 @@ function GameScreen:new(floor, run, screenType, round)
     if(self.screenType == Constants.RUN_STATES.SHOP) then
 
         self.uiElements.buttons["rerollShopButton"] = Button:new(
-            function()self:generateNewShop()end, 
+            function()self:rerollShop()end, 
             "src/assets/sprites/ui/Reroll Shop.png", 
             self.rerollShopX,
             self.rerollShopY,
@@ -315,7 +315,7 @@ function GameScreen:drawRoundDetails()
     love.graphics.setCanvas(self.moneyCanvas)
     love.graphics.clear()
     love.graphics.draw(Sprites.MONEY,0,0)
-    love.graphics.setColor(1, 195/256, 132/256, 1)
+    love.graphics.setColor(1, 178/255, 89/255, 1)
     love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2-7, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
     love.graphics.setColor(1, 1, 1, 1)
 

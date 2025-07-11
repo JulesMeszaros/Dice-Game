@@ -535,5 +535,53 @@ end
 
 FaceTypes.BlackStar = BlackStar
 
+--==Black Star==--
+local ClockWorkDice = setmetatable({}, { __index = FaceObject })
+ClockWorkDice.__index = ClockWorkDice
+
+function ClockWorkDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), ClockWorkDice)
+
+    --Metadatas about the ClockWorkDice
+    self.name = "Black Star"
+    self.id = 1
+    self.tier = "Common"
+    self.description = "Scoring : Adds 10pts multiplied by this face's number to the score. Decreases its number by one."
+
+    --Metadatas about the graphics of the ClockWorkDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Clockwork Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the ClockWorkDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function ClockWorkDice:triggerEffect(round)
+    --Complementary effect triggered by the face
+    round.handScore = round.handScore + (self.pointsValue * self.faceValue)
+
+    if(self.faceValue>1)then
+        --Decrease the face value by one
+        self.faceValue = self.faceValue - 1
+        --Update the sprite
+        round.terrain.diceFaces[self.diceObject]:updateSprite()
+    end
+end
+
+FaceTypes.ClockWorkDice = ClockWorkDice
+
 
 return FaceTypes
