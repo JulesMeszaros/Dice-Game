@@ -597,7 +597,7 @@ function AshtrayDice:new(faceValue, pointsValue)
     self.description = "Scoring : Multiplies the total score by 1. This factor is upgraded by 0.1 each time a cigarette is smoked"
 
     --Metadatas about the graphics of the AshtrayDice
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Marble Dice.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ashtray Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the AshtrayDice in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
