@@ -6,6 +6,7 @@ local InputsUtils = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
 local Shaders = require("src.utils.Shaders")
 local Animator = require("src.utils.Animator")
+local Sprites = require("src.utils.Sprites")
 
 local DiceFace = setmetatable({}, { __index = UIElement })
 
@@ -189,6 +190,11 @@ function DiceFace:updateCanvas(dt)
 
     love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
     
+    --If disabled, draw the red sign
+    if(self.representedObject.disabled==true) then
+        love.graphics.draw(Sprites.DISABLED, 0, 0, 0, 1, 1)
+    end
+
     love.graphics.setShader()
     love.graphics.setCanvas(currentCanvas)
 end
