@@ -206,16 +206,25 @@ end
 
 function Round:triggerNextDice()
     if(table.getn(self.dicesTriggerQueue)>=1) then --S'il reste des dés dans la liste de triggers
-        --On déclenche le dé
-        self.diceFacesTriggerQueue[1]:trigger(self)
-            
-        --On ajoute à l'historique (en dernière position)
-        table.insert(self.triggerDiceHistory, self.dicesTriggerQueue[1])
-        table.insert(self.triggerFaceHistory, self.diceFacesTriggerQueue[1])
+        if(self.diceFacesTriggerQueue[1].representedObject.disabled == false) then --On vérifie que la face n'est pas désactivée avant de la jouer
+            --On déclenche le dé
+            self.diceFacesTriggerQueue[1]:trigger(self)
+                
+            --On ajoute à l'historique (en dernière position)
+            table.insert(self.triggerDiceHistory, self.dicesTriggerQueue[1])
+            table.insert(self.triggerFaceHistory, self.diceFacesTriggerQueue[1])
 
-        --On retire de la file
-        table.remove(self.diceFacesTriggerQueue, 1)
-        table.remove(self.dicesTriggerQueue, 1) 
+            --On retire de la file
+            table.remove(self.diceFacesTriggerQueue, 1)
+            table.remove(self.dicesTriggerQueue, 1) 
+        else
+            --On retire de la file
+            table.remove(self.diceFacesTriggerQueue, 1)
+            table.remove(self.dicesTriggerQueue, 1) 
+
+            self:triggerNextDice()
+        end
+
 
     else --ends the trigger phase, starts the backup triggers (TODO)
         self:startBackupPhase()
@@ -334,10 +343,6 @@ function Round:updateselectedDices(uiFace)
 
     local us = self:getUnSelectedDices()
 
-    for i,k in next,us do
-        print(k.representedObject.name, k.representedObject.faceValue)
-    end
-
 end
 
 --==REROLL FUNCTIONS==--
@@ -414,8 +419,28 @@ end
 
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
-    self:startTriggeringPhase(usedDices, figure)
+    --Désactiver les dés ghosts qui ne sont pas utilisés dans la figure.
+    --Liste des dés non utilisés
+    local unusedDices = {}
+    print("---")
+    for i,d in next,self.diceObjects do
+        if(self:containsDice(usedDices, d)) then
 
+        else
+            table.insert(unusedDices, d)
+        end
+    end
+
+    --On désactive les dés ghosts qui ne sont pas utilisés
+    for i,d in next,unusedDices do
+        if(d:getCurrentFaceObject().ghost == true) then
+            self.terrain.diceFaces[d]:disable()
+        end
+    end
+
+    --Commencer la phase de déclenchement
+    self:startTriggeringPhase(usedDices, figure)
+    --Ajouter le score de base de la figure à la main
     self.handScore = self.handScore+points -- On ajoute les points au score
 end
 

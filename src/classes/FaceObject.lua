@@ -53,6 +53,7 @@ end
 
 function FaceObject:resetStats()
     self.roundTriggered = 0
+    self.disabled = false
 end
 
 function FaceObject:update(dt, run)
@@ -75,7 +76,6 @@ function FaceObject:trigger(round)
         local fullHand = true
         local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
         for i,dice in next,dicesOrder do
-            print(dice:getCurrentFaceObject().name)
             if(dice:getCurrentFaceObject().name ~= self.name) then
                 fullHand = false
             end

@@ -377,7 +377,6 @@ function Copyprinter:triggerEffect(round)
     --On parcoure un a un les dés, et on remplace au fur et a mesure leftDice, sauf si on atteint le dé concerné. 
     for i,dice in next,dicesOrder do
         --On vérifie si le dé actuel de la boucle n'est pas ce dé
-        print(dice:getCurrentFaceObject().name)
         if(dice:getCurrentFaceObject() == self) then
             --Si oui on arrete
             break;
@@ -446,6 +445,51 @@ function BasketOfEggs:fullHandEffect(round)
 end
 
 FaceTypes.BasketOfEggs = BasketOfEggs
+
+--==Apparition==--
+local Apparition = setmetatable({}, { __index = FaceObject })
+Apparition.__index = Apparition
+
+function Apparition:new(faceValue, pointsValue)
+    local self = setmetatable(WhiteFace:new(), Apparition)
+
+    --Metadatas about the WhiteFace
+    self.name = "Apparition"
+    self.tier = "Uncommon"
+    self.id = 5
+    self.description = "Scoring : Multiplies the hand score by 2. \n Ghost"
+
+    --Metadatas about the graphics of the WhiteFace
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ghost Dice.png")
+    self.spriteSheet:setFilter("nearest", "nearest")
+
+    self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
+
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    self.ghost = true
+
+    --Round status
+    self.faceValue = faceValue --Le numéro de face que le dé représente
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+
+    return self
+end
+
+function Apparition:triggerEffect(round)
+    round.handScore = round.handScore * 2
+    
+end
+
+FaceTypes.Apparition = Apparition
 
 
 return FaceTypes

@@ -301,6 +301,10 @@ end
 
 --==UTILS==--
 
+function DiceFace:disable()
+    self.representedObject.disabled = true
+end
+
 function DiceFace:calculateAngleDrag()
     --Function used to calculate the target angle of the dice base on the drag speed
     local maxRotation = 1
@@ -413,6 +417,27 @@ function DiceFace:flipChange(newFace)
         {property = "scaleX", from=1.2, targetValue=self.scaleX, duration=0.2},
         {property = "scaleY", from=1.2, targetValue=self.scaleY, duration=0.2}
     })
+end
+
+function DiceFace:shake(xintensity, yintensity, duration)
+    local shakeDuration = 0.01 --seconds
+    local nIterations = duration/shakeDuration
+
+    for i=1, nIterations do
+
+        local xShake = math.random(-1*xintensity, xintensity)
+        local yShake = math.random(-1*yintensity, yintensity)
+
+        self.animator:addGroup({
+            {property = "x", from=self.targetX, targetValue=xShake, duration=shakeDuration},
+            {property = "y", from=self.targetY, targetValue=yShake, duration=shakeDuration},
+        })
+    end
+    self.animator:addGroup({
+            {property = "x", from=self.x, targetValue=self.targetX, duration=shakeDuration},
+            {property = "y", from=self.y, targetValue=self.targetY, duration=shakeDuration},
+        })
+
 end
 
 return DiceFace
