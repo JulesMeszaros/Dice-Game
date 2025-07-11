@@ -268,15 +268,24 @@ end
 
 function Round:triggerNextBackupDice()
     if(table.getn(self.dicesBackupQueue)>=1)then --Si il reste au moins un dé non à backup
-        self.diceFacesBackupQueue[1]:triggerBackup(self) --On trigger l'effer backup depuis l'objet UI
+        if(self.diceFacesBackupQueue[1].representedObject.disabled == false) then
+            self.diceFacesBackupQueue[1]:triggerBackup(self) --On trigger l'effer backup depuis l'objet UI
 
-        --On ajoute à l'historique des backup
-        table.insert(self.backupDiceHistory, self.dicesBackupQueue[1])
-        table.insert(self.backupFaceHistory, self.diceFacesBackupQueue[1])
+            
+            --On ajoute à l'historique des backup
+            table.insert(self.backupDiceHistory, self.dicesBackupQueue[1])
+            table.insert(self.backupFaceHistory, self.diceFacesBackupQueue[1])
 
-        --On retire de la file
-        table.remove(self.diceFacesBackupQueue, 1)
-        table.remove(self.dicesBackupQueue, 1) 
+            --On retire de la file
+            table.remove(self.diceFacesBackupQueue, 1)
+            table.remove(self.dicesBackupQueue, 1)
+        else
+            --On retire de la file
+            table.remove(self.diceFacesBackupQueue, 1)
+            table.remove(self.dicesBackupQueue, 1)
+
+            self:triggerNextBackupDice()
+        end
 
     else
         --On termine la phase de trigger
