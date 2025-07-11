@@ -362,7 +362,7 @@ function Copyprinter:new(faceValue, pointsValue)
     self.blank = true
 
     --Round status
-    self.faceValue = 1 --Le numéro de face que le dé représente
+    self.faceValue = faceValue --Le numéro de face que le dé représente
     self.pointsValue = 0 --This is the points scored by the dice
     self.totalTriggered = 0
 
@@ -522,7 +522,7 @@ function BlackStar:new(faceValue, pointsValue)
     self.blank = true
 
     --Numbered status
-    self.faceValue = 1 --This is the face represented by the face (the number shown)
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
     self.pointsValue = 30 --This is the points scored by the dice
     self.totalTriggered = 0
     return self
