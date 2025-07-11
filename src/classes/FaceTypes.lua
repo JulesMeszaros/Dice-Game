@@ -171,7 +171,7 @@ function BlueFace:new(faceValue, pointsValue)
 end
 
 function BlueFace:update(dt, run)
-    self.pointsValue = 1+run.usedRerolls
+    self.pointsValue = 1+(2*run.usedRerolls)
     self.description = "Scoring : Adds its points value. \n Passive : Adds 1 point per used rerolls this building to its points value (currently : "..tostring(run.usedRerolls)..')'
 
 end
@@ -462,7 +462,7 @@ function Apparition:new(faceValue, pointsValue)
     self.description = "Scoring : Multiplies the hand score by 2. \n Ghost"
 
     --Metadatas about the graphics of the BlackStar
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ghost Dice.png")
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Apparition.png")
     self.spriteSheet:setFilter("nearest", "nearest")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
