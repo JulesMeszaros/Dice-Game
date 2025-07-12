@@ -632,10 +632,10 @@ function SteelDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), SteelDice)
 
     --Metadatas about the SteelDice
-    self.name = "Ashtray Dice"
+    self.name = "Steel Dice"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : Multiplies the total score by 1. This factor is upgraded by 0.1 each time a cigarette is smoked"
+    self.description = "Scoring : Adds 10 points per € under 10€"
 
     --Metadatas about the graphics of the SteelDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Steel Dice.png")
@@ -664,6 +664,108 @@ function SteelDice:triggerEffect(round)
 end
 
 FaceTypes.SteelDice = SteelDice
+
+--==Double Down==--
+local DoubleDown = setmetatable({}, { __index = FaceObject })
+DoubleDown.__index = DoubleDown
+
+function DoubleDown:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), DoubleDown)
+
+    --Metadatas about the DoubleDown
+    self.name = "Odd Job"
+    self.id = 1
+    self.tier = "Common"
+    self.description = "Scoring : Adds 10 points per even dices in scored hand"
+
+    --Metadatas about the graphics of the DoubleDown
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Double Down.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the DoubleDown in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function DoubleDown:triggerEffect(round)
+    --Complementary effect triggered by the face
+    local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
+
+    local n = 0
+
+    for i,dice in next,dicesOrder do
+        if(dice:getCurrentFaceObject().faceValue%2 == 0)then
+            n = n+1
+        end
+    end
+
+    round.handScore = round.handScore + n*10
+end
+
+FaceTypes.DoubleDown = DoubleDown
+
+--==Odd Job==--
+local OddJob = setmetatable({}, { __index = FaceObject })
+OddJob.__index = OddJob
+
+function OddJob:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), OddJob)
+
+    --Metadatas about the OddJob
+    self.name = "Odd Job"
+    self.id = 1
+    self.tier = "Common"
+    self.description = "Scoring : Adds 10 points per odd dices in scored hand"
+
+    --Metadatas about the graphics of the OddJob
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Odd Job.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the OddJob in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function OddJob:triggerEffect(round)
+    --Complementary effect triggered by the face
+    local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
+
+    local n = 0
+
+    for i,dice in next,dicesOrder do
+        if(dice:getCurrentFaceObject().faceValue%2 > 0)then
+            n = n+1
+        end
+    end
+
+    round.handScore = round.handScore + n*10
+end
+
+FaceTypes.OddJob = OddJob
 
 
 return FaceTypes
