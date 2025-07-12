@@ -624,5 +624,46 @@ end
 
 FaceTypes.AshtrayDice = AshtrayDice
 
+--==Steel Dice==--
+local SteelDice = setmetatable({}, { __index = FaceObject })
+SteelDice.__index = SteelDice
+
+function SteelDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), SteelDice)
+
+    --Metadatas about the SteelDice
+    self.name = "Ashtray Dice"
+    self.id = 1
+    self.tier = "Common"
+    self.description = "Scoring : Multiplies the total score by 1. This factor is upgraded by 0.1 each time a cigarette is smoked"
+
+    --Metadatas about the graphics of the SteelDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Steel Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the SteelDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function SteelDice:triggerEffect(round)
+    --Complementary effect triggered by the face
+    round.handScore = round.handScore + math.max(0, 10 - round.run.money)*10
+end
+
+FaceTypes.SteelDice = SteelDice
+
 
 return FaceTypes
