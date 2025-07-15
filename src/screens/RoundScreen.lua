@@ -239,23 +239,25 @@ function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
 end
 
 function RoundScreen:mousepressed(x, y, button, istouch, presses)
-    --DiceFaces
-    for key,uiFace in next,self.diceFaces do
-        uiFace:clickEvent()
-    end
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND) then
+        --DiceFaces
+        for key,uiFace in next,self.diceFaces do
+            uiFace:clickEvent()
+        end
 
-    --Ciggies
-    for key,ciggie in next,self.uiElements.ciggiesUI do
-        ciggie:clickEvent()
-    end
+        --Ciggies
+        for key,ciggie in next,self.uiElements.ciggiesUI do
+            ciggie:clickEvent()
+        end
 
-    --Round Buttons
-    for key,button in next,self.uiElements.buttons do
-        button:clickEvent()
-    end
+        --Round Buttons
+        for key,button in next,self.uiElements.buttons do
+            button:clickEvent()
+        end
 
-    --Figure buttons
-    self.clickedFigure = self:getCurrentlyHoveredLine()
+        --Figure buttons
+        self.clickedFigure = self:getCurrentlyHoveredLine()
+    end
 end
 
 function RoundScreen:mousereleased(x, y, button, istouch, presses)

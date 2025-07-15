@@ -45,7 +45,7 @@ function EndRound:new(run, round)
     self.contentTX, self.contentTY, self.contentX, self.contentY = 510, 320, 510, self.canvas:getHeight()+770
 
     --Animations
-    local inDuration = 0.15
+    local inDuration = 0.3
     self.animator:addGroup({
         {property = "backgroundOpacity", from=0, targetValue=0.7, duration=inDuration},
         {property = "contentY", from=self.contentY, targetValue=self.contentTY, duration=inDuration}
