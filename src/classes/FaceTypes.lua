@@ -369,8 +369,6 @@ end
 
 function Copyprinter:triggerEffect(round)
     
-    print("COOKIIIIE")
-
     local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
 
     --Add to the
