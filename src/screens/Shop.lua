@@ -44,6 +44,8 @@ function Shop:new(run)
     self.inventoryFacesUI = {}
     self.rewardsFacesUI = {}
 
+    self.rerollShopPrice = Constants.BASE_SHOP_REROLL_PRICE
+
     --Wait for all the animations to end, then show the inventory and the shop + ciggies UI
     self.animator:addDelay(0.5, 
         function()
@@ -460,6 +462,14 @@ function Shop:sellCiggie(ciggie, ciggieUI, key)
     
     self:generateCiggiesUI()
 
+end
+
+function Shop:rerollShop()
+    if(self.run.money>=self.rerollShopPrice) then
+        self.run.money = self.run.money-self.rerollShopPrice
+        self:generateNewShop()
+        self.rerollShopPrice = self.rerollShopPrice+Constants.BASE_SHOP_REROLL_PRINCE_INCREMENT
+    end
 end
 
 --==Shop generation==--

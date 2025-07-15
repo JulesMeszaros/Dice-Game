@@ -89,6 +89,12 @@ end
 
 --==ROUND FUNCTION==--
 function Round:endRound()
+    for i,d in next,self.diceObjects do
+        for j,f in next,d:getAllFaces() do
+            f:resetStats()
+        end
+    end 
+
     self.terrain:outAnimation()
 end
 
@@ -206,16 +212,25 @@ end
 
 function Round:triggerNextDice()
     if(table.getn(self.dicesTriggerQueue)>=1) then --S'il reste des dés dans la liste de triggers
-        --On déclenche le dé
-        self.diceFacesTriggerQueue[1]:trigger(self)
-            
-        --On ajoute à l'historique (en dernière position)
-        table.insert(self.triggerDiceHistory, self.dicesTriggerQueue[1])
-        table.insert(self.triggerFaceHistory, self.diceFacesTriggerQueue[1])
+        if(self.diceFacesTriggerQueue[1].representedObject.disabled == false) then --On vérifie que la face n'est pas désactivée avant de la jouer
+            --On déclenche le dé
+            self.diceFacesTriggerQueue[1]:trigger(self)
+                
+            --On ajoute à l'historique (en dernière position)
+            table.insert(self.triggerDiceHistory, self.dicesTriggerQueue[1])
+            table.insert(self.triggerFaceHistory, self.diceFacesTriggerQueue[1])
 
-        --On retire de la file
-        table.remove(self.diceFacesTriggerQueue, 1)
-        table.remove(self.dicesTriggerQueue, 1) 
+            --On retire de la file
+            table.remove(self.diceFacesTriggerQueue, 1)
+            table.remove(self.dicesTriggerQueue, 1) 
+        else
+            --On retire de la file
+            table.remove(self.diceFacesTriggerQueue, 1)
+            table.remove(self.dicesTriggerQueue, 1) 
+
+            self:triggerNextDice()
+        end
+
 
     else --ends the trigger phase, starts the backup triggers (TODO)
         self:startBackupPhase()
@@ -259,15 +274,24 @@ end
 
 function Round:triggerNextBackupDice()
     if(table.getn(self.dicesBackupQueue)>=1)then --Si il reste au moins un dé non à backup
-        self.diceFacesBackupQueue[1]:triggerBackup(self) --On trigger l'effer backup depuis l'objet UI
+        if(self.diceFacesBackupQueue[1].representedObject.disabled == false) then
+            self.diceFacesBackupQueue[1]:triggerBackup(self) --On trigger l'effer backup depuis l'objet UI
 
-        --On ajoute à l'historique des backup
-        table.insert(self.backupDiceHistory, self.dicesBackupQueue[1])
-        table.insert(self.backupFaceHistory, self.diceFacesBackupQueue[1])
+            
+            --On ajoute à l'historique des backup
+            table.insert(self.backupDiceHistory, self.dicesBackupQueue[1])
+            table.insert(self.backupFaceHistory, self.diceFacesBackupQueue[1])
 
-        --On retire de la file
-        table.remove(self.diceFacesBackupQueue, 1)
-        table.remove(self.dicesBackupQueue, 1) 
+            --On retire de la file
+            table.remove(self.diceFacesBackupQueue, 1)
+            table.remove(self.dicesBackupQueue, 1)
+        else
+            --On retire de la file
+            table.remove(self.diceFacesBackupQueue, 1)
+            table.remove(self.dicesBackupQueue, 1)
+
+            self:triggerNextBackupDice()
+        end
 
     else
         --On termine la phase de trigger
@@ -334,10 +358,6 @@ function Round:updateselectedDices(uiFace)
 
     local us = self:getUnSelectedDices()
 
-    for i,k in next,us do
-        print(k.representedObject.name, k.representedObject.faceValue)
-    end
-
 end
 
 --==REROLL FUNCTIONS==--
@@ -345,9 +365,17 @@ function Round:rerollDices() --Triggers the makeRoll function after clicking the
     local dicesToReroll = {}
     --Add 1 to the total rerolls used this run
     self.run.usedRerolls = self.run.usedRerolls+1
+    --On créée la liste des dés à reroll
     for k,d in next,self.diceObjects do
         if not self:containsDice(self.selectedDices, d) then
             table.insert(dicesToReroll, d)
+        end
+    end
+
+    --On désactive les dés ghost qui sont reroll
+    for k,d in next,dicesToReroll do
+        if(d:getCurrentFaceObject().ghost == true) then
+            self.terrain.diceFaces[d]:disable()
         end
     end
 
@@ -414,8 +442,28 @@ end
 
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
-    self:startTriggeringPhase(usedDices, figure)
+    --Désactiver les dés ghosts qui ne sont pas utilisés dans la figure.
+    --Liste des dés non utilisés
+    local unusedDices = {}
+    print("---")
+    for i,d in next,self.diceObjects do
+        if(self:containsDice(usedDices, d)) then
 
+        else
+            table.insert(unusedDices, d)
+        end
+    end
+
+    --On désactive les dés ghosts qui ne sont pas utilisés
+    for i,d in next,unusedDices do
+        if(d:getCurrentFaceObject().ghost == true) then
+            self.terrain.diceFaces[d]:disable()
+        end
+    end
+
+    --Commencer la phase de déclenchement
+    self:startTriggeringPhase(usedDices, figure)
+    --Ajouter le score de base de la figure à la main
     self.handScore = self.handScore+points -- On ajoute les points au score
 end
 

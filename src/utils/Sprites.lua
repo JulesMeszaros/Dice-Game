@@ -36,5 +36,5 @@ Sprites.PRICE_TAG = love.graphics.newImage("src/assets/sprites/ui/PriceTag.png")
 Sprites.REWARDS_SMALL = love.graphics.newImage("src/assets/sprites/ui/Rewards Small.png")
 Sprites.REWARDS_MEDIUM = love.graphics.newImage("src/assets/sprites/ui/Rewards Medium.png")
 
-
+Sprites.DISABLED = love.graphics.newImage("src/assets/sprites/ui/Disabled.png")
 return Sprites

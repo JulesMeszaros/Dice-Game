@@ -7,11 +7,15 @@ function CalculatePoints.numberBasePoints(number, dices)
     local usedDices = {}
 
     for k,d in next,dices do
-        if(d:getCurrentFaceObject().faceValue==number)then
-             -- incrementing the score
-            score = score + number
-            -- adding the dice to the table of dices used for this face
-            table.insert(usedDices, d) 
+        if(d:getCurrentFaceObject().blank == false) then
+            if(d:getCurrentFaceObject().faceValue==number)then
+                -- incrementing the score
+                score = score + number
+                -- adding the dice to the table of dices used for this face
+                table.insert(usedDices, d) 
+            end
+        else
+            table.insert(usedDices, d)
         end
     end
     return {score, usedDices}
@@ -36,8 +40,12 @@ function CalculatePoints.brelanBasePoints(dices)
 
     if(maxDistrib>=3)then --On vérifie que le numero le plus représenté est superieur ou égal à 3
         for k,d in next,dices do
-            if(d:getCurrentFaceObject().faceValue==maxDistribN)then
-                score = score + d:getCurrentFaceObject().faceValue
+            if(d:getCurrentFaceObject().blank==false)then
+                if(d:getCurrentFaceObject().faceValue==maxDistribN)then
+                    score = score + d:getCurrentFaceObject().faceValue
+                    table.insert(usedDices, d)
+                end
+            else
                 table.insert(usedDices, d)
             end
         end
@@ -84,8 +92,12 @@ function CalculatePoints.carreBasePoints(dices)
 
     if(maxDistrib>=4)then --On vérifie que le numero le plus représenté est superieur ou égal à 3
         for dice,d in next,dices do
-            if(d:getCurrentFaceObject().faceValue==maxDistribN)then
-                score = score + d:getCurrentFaceObject().faceValue
+            if(d:getCurrentFaceObject().blank==false)then
+                if(d:getCurrentFaceObject().faceValue==maxDistribN)then
+                    score = score + d:getCurrentFaceObject().faceValue
+                    table.insert(usedDices, d)
+                end
+            else
                 table.insert(usedDices, d)
             end
         end
@@ -102,18 +114,24 @@ function CalculatePoints.pttSuiteBasePoints(dices)
     local drawedNumbers = {}
 
     for f,n in next,dices do
-        table.insert(drawedNumbers, n:getCurrentFaceObject().faceValue)
+        if(n:getCurrentFaceObject().blank==false) then
+            table.insert(drawedNumbers, n:getCurrentFaceObject().faceValue)
+        end
     end
 
     local suite = getStraight(drawedNumbers, 4)
     --Ajouter une condition pour ne pas compter deux fois un meme nombre
     if(suite)then
         score = 30
-        for i,j in next,suite do
-            for dice,f in next,dices do
-                if(f:getCurrentFaceObject().faceValue==j)then
-                    table.insert(usedDices, f)
+        for dice,f in next,dices do
+            if(f:getCurrentFaceObject().blank == false) then
+                for i,j in next,suite do
+                    if(f:getCurrentFaceObject().faceValue==j)then
+                        table.insert(usedDices, f)
+                    end
                 end
+            else
+                table.insert(usedDices, f)
             end
         end
     else 
@@ -128,7 +146,9 @@ function CalculatePoints.gdSuiteBasePoints(dices)
     local drawedNumbers = {}
 
     for f,n in next,dices do
-        table.insert(drawedNumbers, n:getCurrentFaceObject().faceValue)
+        if(n:getCurrentFaceObject().blank==false) then
+            table.insert(drawedNumbers, n:getCurrentFaceObject().faceValue)
+        end
     end
 
     local suite = getStraight(drawedNumbers, 5)
@@ -149,8 +169,12 @@ function CalculatePoints.chanceBasePoints(dices)
     local usedDices = {}
 
     for k,d in next,dices do
-        score = score + d:getCurrentFaceObject().faceValue
-        table.insert(usedDices, d)
+        if(d:getCurrentFaceObject().blank==false)then
+            score = score + d:getCurrentFaceObject().faceValue
+            table.insert(usedDices, d)
+        else
+            table.insert(usedDices, d)
+        end
     end
     return {score, usedDices}
 end
@@ -189,7 +213,9 @@ function getValueDistribution(tbl)
     local distribution = {}
 
     for _, dice in pairs(tbl) do
-        distribution[dice:getCurrentFaceObject().faceValue] = (distribution[dice:getCurrentFaceObject().faceValue] or 0) + 1
+        if(dice:getCurrentFaceObject().blank==false)then
+            distribution[dice:getCurrentFaceObject().faceValue] = (distribution[dice:getCurrentFaceObject().faceValue] or 0) + 1
+        end
     end
 
     return distribution

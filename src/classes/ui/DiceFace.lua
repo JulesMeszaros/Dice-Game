@@ -6,6 +6,7 @@ local InputsUtils = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
 local Shaders = require("src.utils.Shaders")
 local Animator = require("src.utils.Animator")
+local Sprites = require("src.utils.Sprites")
 
 local DiceFace = setmetatable({}, { __index = UIElement })
 
@@ -189,6 +190,11 @@ function DiceFace:updateCanvas(dt)
 
     love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
     
+    --If disabled, draw the red sign
+    if(self.representedObject.disabled==true) then
+        love.graphics.draw(Sprites.DISABLED, 0, 0, 0, 1, 1)
+    end
+
     love.graphics.setShader()
     love.graphics.setCanvas(currentCanvas)
 end
@@ -294,6 +300,10 @@ function DiceFace:setFaceObject(faceObject)
 end
 
 --==UTILS==--
+
+function DiceFace:disable()
+    self.representedObject.disabled = true
+end
 
 function DiceFace:calculateAngleDrag()
     --Function used to calculate the target angle of the dice base on the drag speed
@@ -407,6 +417,27 @@ function DiceFace:flipChange(newFace)
         {property = "scaleX", from=1.2, targetValue=self.scaleX, duration=0.2},
         {property = "scaleY", from=1.2, targetValue=self.scaleY, duration=0.2}
     })
+end
+
+function DiceFace:shake(xintensity, yintensity, duration)
+    local shakeDuration = 0.01 --seconds
+    local nIterations = duration/shakeDuration
+
+    for i=1, nIterations do
+
+        local xShake = math.random(-1*xintensity, xintensity)
+        local yShake = math.random(-1*yintensity, yintensity)
+
+        self.animator:addGroup({
+            {property = "x", from=self.targetX, targetValue=xShake, duration=shakeDuration},
+            {property = "y", from=self.targetY, targetValue=yShake, duration=shakeDuration},
+        })
+    end
+    self.animator:addGroup({
+            {property = "x", from=self.x, targetValue=self.targetX, duration=shakeDuration},
+            {property = "y", from=self.y, targetValue=self.targetY, duration=shakeDuration},
+        })
+
 end
 
 return DiceFace

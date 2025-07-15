@@ -11,4 +11,4 @@ LE jeu de Yatzee, mais en beaucoup mieux.
 - Se placer dans le dossier téléchargé
 - Tapper `love ./`
 
-Et c'est gagné
+Et c'est gagné!!

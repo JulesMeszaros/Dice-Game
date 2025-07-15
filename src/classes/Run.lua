@@ -25,6 +25,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
         CiggieTypes.BaseCiggie:new(),
         CiggieTypes.GoldenCiggie:new()
     }
+    self.totalUsedCiggie = 0
 
     self.shop = nil
 
@@ -262,13 +263,7 @@ function Run:startNewRound(round, roundtype)
     self.roundNumber = self.roundNumber + 1
 
     self.currentRound = round
-    
-    --TODO: reset base stats of dices
-    for i,d in next,self.diceObjects do
-        for j,f in next,d:getAllFaces() do
-            f:resetStats()
-        end
-    end 
+
 
     --Changes the screen to the round screen
     self.currentState = Constants.RUN_STATES.ROUND
