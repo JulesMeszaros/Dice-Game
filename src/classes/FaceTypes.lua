@@ -546,7 +546,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
     self.name = "Clockwork Dice"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : Adds 10pts multiplied by this face's number to the score. Decreases its number by one."
+    self.description = "Scoring : Adds 10pts multiplied by this face's number to the score. Passive : decreases the face number by one the first time you score this Face in the Office."
 
     --Metadatas about the graphics of the ClockWorkDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Clockwork Dice.png")
@@ -564,7 +564,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
 
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
-    self.pointsValue = 10 --This is the points scored by the dice
+    self.pointsValue = 20 --This is the points scored by the dice
     self.totalTriggered = 0
     return self
 end
@@ -573,7 +573,7 @@ function ClockWorkDice:triggerEffect(round)
     --Complementary effect triggered by the face
     round.handScore = round.handScore + (self.pointsValue * self.faceValue)
 
-    if(self.faceValue>1)then
+    if(self.faceValue>1 and self.roundTriggered<=1)then
         --Decrease the face value by one
         self.faceValue = self.faceValue - 1
         --Update the sprite
@@ -766,6 +766,53 @@ function OddJob:triggerEffect(round)
 end
 
 FaceTypes.OddJob = OddJob
+
+--==Odd Job==--
+local MusicDice = setmetatable({}, { __index = FaceObject })
+MusicDice.__index = MusicDice
+
+function MusicDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), MusicDice)
+
+    --Metadatas about the MusicDice
+    self.name = "Music Dice"
+    self.id = 1
+    self.tier = "Common"
+    self.description = "Scoring : +10pts, multiplies the score by 2 if played hand contains exactly 4 dices"
+
+    --Metadatas about the graphics of the MusicDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Tempo Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the MusicDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function MusicDice:triggerEffect(round)
+    --Complementary effect triggered by the face
+    round.handScore = round.handScore + self.pointsValue
+
+    --Multiplie le score par deux si il y a exactement 4 dés sélectionnés
+    if(table.getn(round.selectedDices) == 4) then
+        round.handScore = round.handScore *2
+    end
+
+end
+
+FaceTypes.MusicDice = MusicDice
 
 
 return FaceTypes
