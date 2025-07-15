@@ -145,7 +145,7 @@ function BlueFace:new(faceValue, pointsValue)
     self.name = "Blue Face"
     self.tier = "Uncommon"
     self.id = 2
-    self.description = "Scoring : Adds its points value. \n Passive : Adds 1 point per used rerolls this building to its points value (currently : 0)"
+    self.description = "Scoring : +10pts. \n Passive : Adds 2 points per used rerolls this building to its points value (currently : 0)"
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Blue Dice.png")
@@ -172,7 +172,7 @@ end
 
 function BlueFace:update(dt, run)
     self.pointsValue = 1+(2*run.usedRerolls)
-    self.description = "Scoring : Adds its points value. \n Passive : Adds 1 point per used rerolls this building to its points value (currently : "..tostring(run.usedRerolls)..')'
+    self.description = "Scoring : +10pts. \n Passive : Adds 2 point per used rerolls this building to its points value (currently : "..tostring(2*run.usedRerolls)..')'
 
 end
 
@@ -194,7 +194,7 @@ function GoldFace:new(faceValue, pointsValue)
     self.name = "Gold Face"
     self.tier = "Common"
     self.id = 2
-    self.description = "When triggered, adds 2€ to the balance"
+    self.description = "+10pts. When triggered, adds 2€ to the balance"
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Gold Dice.png")
@@ -213,7 +213,7 @@ function GoldFace:new(faceValue, pointsValue)
     
     --Round status
     self.faceValue = faceValue --Le numéro de face que le dé représente
-    self.pointsValue = pointsValue --This is the points scored by the dice
+    self.pointsValue = 10 --This is the points scored by the dice
     self.totalTriggered = 0
 
     return self
@@ -222,6 +222,7 @@ end
 function GoldFace:triggerEffect(round)
     --Ajoute 1€ au solde banquaire
     round.run.money = round.run.money + 2
+    round.handScore = round.handScore + self.pointsValue
 end
 
 FaceTypes.GoldFace = GoldFace
@@ -392,8 +393,6 @@ function Copyprinter:triggerEffect(round)
         table.insert(round.dicesTriggerQueue, 1, leftDice)
         table.insert(round.diceFacesTriggerQueue, 1, round.terrain.diceFaces[leftDice])
     end
-
-    --print(round.selectedDices[1]:getCurrentFaceObject().name, round.selectedDices[1]:getCurrentFaceObject().faceValue)
 
 end
 
@@ -803,12 +802,13 @@ end
 
 function MusicDice:triggerEffect(round)
     --Complementary effect triggered by the face
-    round.handScore = round.handScore + self.pointsValue
 
     --Multiplie le score par deux si il y a exactement 4 dés sélectionnés
     if(table.getn(round.selectedDices) == 4) then
         round.handScore = round.handScore *2
     end
+
+    round.handScore = round.handScore + self.pointsValue
 
 end
 

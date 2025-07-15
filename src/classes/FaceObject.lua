@@ -40,6 +40,7 @@ function FaceObject:new()
     self.fullHand = false
     self.fullDice = false
     self.first = false
+    self.unique = false
 
     --Numbered status
     self.faceValue = 1 --This is the face represented by the face (the number shown)
@@ -86,6 +87,22 @@ function FaceObject:trigger(round)
         end
     end
 
+    --Declanche l'effet unique si possible
+    if(self.unique) then
+        local unique = true
+        local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
+        for i,dice in next,dicesOrder do
+            if(dice:getCurrentFaceObject()~=self and dice:getCurrentFaceObject().name==self.name)then
+                unique=false;                 
+                break
+            end
+        end
+
+        if(unique==true)then
+            self:uniqueEffect(round)
+        end
+    end
+
     --Déclenche l'effet de trigger
     self:triggerEffect(round)
 end
@@ -116,6 +133,12 @@ function FaceObject:replayEffect(round)
     print('replay')
 end
 
+function FaceObject:uniqueEffect(round)
+    --Effect that triggers only if the dice is the only dice this type in scored hand
+    print("unique")
+end
+
+--Sprite
 function FaceObject:getSpriteSheet()
     return self.spriteSheet
 end
