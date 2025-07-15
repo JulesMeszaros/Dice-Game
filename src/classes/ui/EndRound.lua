@@ -63,7 +63,7 @@ function EndRound:updateCanvas(dt)
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
 
-    love.graphics.setColor(0.1, 0.1, 0.1, self.backgroundOpacity)
+    love.graphics.setColor(0.1, 0.7, 0.1, self.backgroundOpacity)
     love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
     love.graphics.setColor(1, 1, 1, 1)
 
