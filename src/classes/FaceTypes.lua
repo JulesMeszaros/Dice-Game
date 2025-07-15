@@ -766,7 +766,7 @@ end
 
 FaceTypes.OddJob = OddJob
 
---==Odd Job==--
+--==Music Dice==--
 local MusicDice = setmetatable({}, { __index = FaceObject })
 MusicDice.__index = MusicDice
 
@@ -813,6 +813,54 @@ function MusicDice:triggerEffect(round)
 end
 
 FaceTypes.MusicDice = MusicDice
+
+--==Music Dice==--
+local Signature = setmetatable({}, { __index = FaceObject })
+Signature.__index = Signature
+
+function Signature:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), Signature)
+
+    --Metadatas about the Signature
+    self.name = "Signature"
+    self.id = 1
+    self.tier = "Common"
+    self.description = "Unique : Multiplies the hand score by 3. Scoring: +10pts."
+
+    --Metadatas about the graphics of the Signature
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Signature Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the Signature in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    self.unique=true
+
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function Signature:triggerEffect(round)
+    --Complementary effect triggered by the face
+
+    round.handScore = round.handScore + self.pointsValue
+
+end
+
+function Signature:uniqueEffect(round)
+    round.handScore = round.handScore*3
+end
+
+FaceTypes.Signature = Signature
 
 
 return FaceTypes

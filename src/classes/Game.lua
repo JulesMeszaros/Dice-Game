@@ -102,7 +102,7 @@ function Game:startNewRun()
     for i=1, 5 do 
         local fs = {}
         for j=1,6 do
-            local f = FaceTypes.ClockWorkDice:new(j, 10)
+            local f = FaceTypes.Signature:new(j, 10)
             table.insert(fs,f)
         end
         table.insert(diceObjects, DiceObject:new(fs))
