@@ -97,7 +97,7 @@ function Round:endRound()
     end
 
     --CREATE A END ROUND SCREEN
-    self.terrain.endRoundPopUp = EndRound:new(self, self.currentRound)
+    self.terrain.endRoundPopUp = EndRound:new(self.run, self)
     self.phase = Constants.ROUND_STATES.END_ROUND
 
     --self.terrain:outAnimation()

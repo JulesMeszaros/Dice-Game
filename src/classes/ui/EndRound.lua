@@ -31,7 +31,7 @@ function EndRound:new(run, round)
 
     --Button
     self.nextRoundButton = Button:new(
-        function()print("next round")end,
+        function()self:outAnimation()end,
         "src/assets/sprites/ui/Next Office.png",
         45 + 840/2,
         650 + 40,
@@ -47,8 +47,8 @@ function EndRound:new(run, round)
     --Animations
     local inDuration = 0.3
     self.animator:addGroup({
-        {property = "backgroundOpacity", from=0, targetValue=0.7, duration=inDuration},
-        {property = "contentY", from=self.contentY, targetValue=self.contentTY, duration=inDuration}
+        {property = "backgroundOpacity", from=0, targetValue=0.7, duration=inDuration, easing=AnimationUtils.Easing.outCubic},
+        {property = "contentY", from=self.contentY, targetValue=self.contentTY, duration=inDuration, easing=AnimationUtils.Easing.outCubic}
     })
 
     return self
@@ -63,7 +63,7 @@ function EndRound:updateCanvas(dt)
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
 
-    love.graphics.setColor(0.1, 0.7, 0.1, self.backgroundOpacity)
+    love.graphics.setColor(0.1, 0.1, 0.1, self.backgroundOpacity)
     love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
     love.graphics.setColor(1, 1, 1, 1)
 
@@ -135,6 +135,15 @@ end
 
 function EndRound:mousemoved(x, y, dx, dy, isDragging)
 
+end
+
+--==Animation==--
+function EndRound:outAnimation()
+    self.animator:addGroup({
+        {property = "backgroundOpacity", from=0.7, targetValue=0, duration=0.3},
+        {property = "contentY", from=self.contentY, targetValue=self.canvas:getHeight()+500, duration=0.3, easing=AnimationUtils.Easing.inCubic}
+    })
+    self.animator:addDelay(0.2, function()self.round.terrain:outAnimation()end)
 end
 
 return EndRound
