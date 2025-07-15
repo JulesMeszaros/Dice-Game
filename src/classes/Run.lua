@@ -3,11 +3,16 @@ local GameOverScreen = require("src.screens.GameOverScreen")
 local Shop = require("src.screens.Shop")
 local DeskChoice = require("src.screens.DeskChoice")
 local DiceCustomization = require("src.screens.DiceCustomization")
+local EndRound = require("src.classes.ui.EndRound")
+
 local Constants = require("src.utils.Constants")
 local Floor = require("src.classes.Floor")
+
 local CiggieObject = require("src.classes.CiggieObject")
 local CiggieTypes = require("src.classes.CiggieTypes")
+
 local FaceTypes = require("src.classes.FaceTypes")
+
 local Run = {}
 
 Run.__index = Run
@@ -115,7 +120,10 @@ function Run:endRound()
         local moneyEarned = self.currentRound.remainingHands + self.currentRound.baseReward
         self.money = self.money + moneyEarned
         
-        --Increments the desk, and goes to the next floor if the desk rank is > 3
+        --CREATE A END ROUND SCREEN
+        self.endRoundPopUp = EndRound:new(self, self.currentRound)
+
+        --[[ --Increments the desk, and goes to the next floor if the desk rank is > 3
         self.floorDeskNumber = self.floorDeskNumber + 1
         if(self.currentRound.roundType==Constants.ROUND_TYPES.BOSS)then--Si le rank de desktop est superieur à 4 (donc que le bosse vient d'etre battu) on créée un nouvel étage
             
@@ -145,7 +153,7 @@ function Run:endRound()
         else
         --GOTO dice customization
             self:goToDiceCustomization()
-        end
+        end ]]
 
     else --gameover case
         local gameOver = GameOverScreen:new(self.gameCanvas, self)

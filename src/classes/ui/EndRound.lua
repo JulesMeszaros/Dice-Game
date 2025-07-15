@@ -18,7 +18,7 @@ function EndRound:new(run, round)
 
     self.run = run
     self.round = round
-    self.canvas = love.graphics.canvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_WIDTH)
+    self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_WIDTH)
 
     return self
 end
