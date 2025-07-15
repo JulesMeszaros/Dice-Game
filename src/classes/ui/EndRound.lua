@@ -29,6 +29,18 @@ function EndRound:new(run, round)
     self.moneyRewardCanvas = love.graphics.newCanvas(410, 480)
     self.rewardsCanvas = love.graphics.newCanvas(410, 480)
 
+    --Button
+    self.nextRoundButton = Button:new(
+        function()print("next round")end,
+        "src/assets/sprites/ui/Next Office.png",
+        45 + 840/2,
+        650 + 40,
+        840,
+        80,
+        self.run.gameCanvas,
+        function()return Inputs.getMouseInCanvas(self.contentX, self.contentY)end
+    )
+
     --Positions
     self.contentTX, self.contentTY, self.contentX, self.contentY = 510, 320, 510, self.canvas:getHeight()+770
 
@@ -55,13 +67,13 @@ function EndRound:updateCanvas(dt)
     love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
     love.graphics.setColor(1, 1, 1, 1)
 
-    self:drawMainCanvas()
+    self:drawMainCanvas(dt)
 
     love.graphics.setCanvas(currentCanvas)
 end
 
 --update the different canvas
-function EndRound:drawMainCanvas()
+function EndRound:drawMainCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.contentCanvas)
     love.graphics.clear()
@@ -76,6 +88,9 @@ function EndRound:drawMainCanvas()
     --Dice rewards
     self:updateRewardsCanvas()
     love.graphics.draw(self.rewardsCanvas, 480, 140)
+    --Next Round button
+    self.nextRoundButton:update(dt)
+    self.nextRoundButton:draw()
 
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.contentCanvas, self.contentX, self.contentY)
