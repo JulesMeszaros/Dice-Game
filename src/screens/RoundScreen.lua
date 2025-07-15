@@ -24,6 +24,7 @@ function RoundScreen:new(round)
 
     self.gameCanvas = round.gameCanvas
     self.round = round
+    self.endRoundPopUp = nil
 
     --FIGURE BUTTONS
     self.clickedFigure = nil
@@ -150,10 +151,6 @@ function RoundScreen:updateCanvas(dt)
     --PlayersInfos
     self:drawPlayersInfos()
     --Dice Tray
-    --[[ if(self.pointsDetailsCanvas) then
-        self.pointsDetailsCanvas:update(dt)
-    end ]]
-
     self:drawDiceTray(self.diceMatx, self.diceMaty, self.diceFaces)
 
     --Figure Buttons
@@ -189,8 +186,6 @@ function RoundScreen:updateCanvas(dt)
         ciggie:draw()
     end
 
-    
-
     --On dessine l'objet drag and drop au dessus de tout le reste
     if(self.dragAndDroppedCiggie)then
         self.dragAndDroppedCiggie:draw()
@@ -198,12 +193,12 @@ function RoundScreen:updateCanvas(dt)
 
     self:drawCiggiesTrayFront()
 
-
-    --On dessine la bulle des points
-    --[[ if(self.currentlyHoveredFace and self.pointsDetailsCanvas)then
-        self.pointsDetailsCanvas:draw()
-    end ]]
-
+    --EndRoundScreen
+    if(self.endRoundPopUp)then
+        self.endRoundPopUp:update(dt)
+        self.endRoundPopUp:updateCanvas(dt)
+        self.endRoundPopUp:draw()
+    end
 
     love.graphics.setCanvas(currentCanvas)
 end

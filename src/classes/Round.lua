@@ -4,6 +4,7 @@ local RoundScreen = require("src.screens.RoundScreen")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local Inputs = require("src.utils.scripts.Inputs")
 local Animator = require("src.utils.Animator")
+local EndRound = require("src.classes.ui.EndRound")
 
 local Round = {}
 Round.__index = Round
@@ -93,9 +94,12 @@ function Round:endRound()
         for j,f in next,d:getAllFaces() do
             f:resetStats()
         end
-    end 
+    end
 
-    self.terrain:outAnimation()
+    --CREATE A END ROUND SCREEN
+    self.terrain.endRoundPopUp = EndRound:new(self, self.currentRound)
+
+    --self.terrain:outAnimation()
 end
 
 --==MOUSE/KEYBOARD FUNCTIONS==--
@@ -111,7 +115,7 @@ function Round:keypressed(key) --(Mainly for debug)
 
     if(key=='a')then --skip round
         self.roundScore = 10000000
-        self.terrain:outAnimation()
+        self:endRound()
     end
 
     if(key=="s")then
@@ -324,7 +328,7 @@ function Round:endTriggeringPhase()
         self.handScore = 0
     end
 
-    if(self.roundScore >= self.targetScore or self.remainingHands == 0) then
+    if(self.roundScore >= self.targetScore or self.remainingHands <= 0) then
         self:endRound()
     end
 end

@@ -16,20 +16,34 @@ EndRound.__index = EndRound
 function EndRound:new(run, round)
     local self = setmetatable({}, EndRound)
 
+    self.animator = Animator:new(self)
     self.run = run
     self.round = round
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_WIDTH)
 
+    --UI Elements
+    self.backgroundOpacity = 0
+    
+    --Animations
+    self.animator:addGroup({
+        {property = "backgroundOpacity", from=0, targetValue=0.7, duration=0.2}
+    })
+
     return self
 end
 
-function EndRound:update()
-
+function EndRound:update(dt)
+    self.animator:update(dt)
 end
 
-function EndRound:updateCanvas()
-    local currentCanvas = love.graphics.getCanvas
+function EndRound:updateCanvas(dt)
+    local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
+    love.graphics.clear()
+
+    love.graphics.setColor(0.1, 0.1, 0.1, self.backgroundOpacity)
+    love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
+    love.graphics.setColor(1, 1, 1, 1)
 
     love.graphics.setCanvas(currentCanvas)
 end
