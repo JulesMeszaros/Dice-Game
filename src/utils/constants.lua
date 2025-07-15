@@ -66,7 +66,8 @@ Constants.ROUND_STATES = {
     REROLLING = 1,
     PLAYING = 2,
     TRIGGERING_DICE = 3,
-    RECALLING = 4
+    RECALLING = 4,
+    END_ROUND = 5
 }
 
 Constants.ROUND_TYPES = {

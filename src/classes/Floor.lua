@@ -51,14 +51,14 @@ function Floor:generateBoss()
     return r
 end
 
-function Floor:generateReward(maxFaces)
+function Floor:generateReward()
     --Generate faceType reward
     local keys = {}
     for key, _ in pairs(FaceTypes) do
         table.insert(keys, key)
     end
     local faceRewards = {}
-    local nbrFace = math.random(1, maxFaces)
+    local nbrFace = 2 --Toujours deux faces.
     for i=1, nbrFace do
         local randomFaceKey = keys[math.random(#keys)]
         local randomFaceType = FaceTypes[randomFaceKey] --On récupère une face type au hasard
