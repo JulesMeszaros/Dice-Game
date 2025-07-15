@@ -37,4 +37,10 @@ Sprites.REWARDS_SMALL = love.graphics.newImage("src/assets/sprites/ui/Rewards Sm
 Sprites.REWARDS_MEDIUM = love.graphics.newImage("src/assets/sprites/ui/Rewards Medium.png")
 
 Sprites.DISABLED = love.graphics.newImage("src/assets/sprites/ui/Disabled.png")
+
+--End round
+Sprites.END_ROUND_BG = love.graphics.newImage("src/assets/sprites/ui/End Round BG.png")
+Sprites.CASH_REWARD = love.graphics.newImage("src/assets/sprites/ui/Cash Reward.png")
+Sprites.END_ROUND_REWARDS = love.graphics.newImage("src/assets/sprites/ui/End Round Rewards.png")
+
 return Sprites
