@@ -257,45 +257,53 @@ function RoundScreen:mousepressed(x, y, button, istouch, presses)
 
         --Figure buttons
         self.clickedFigure = self:getCurrentlyHoveredLine()
+    else
+        if(self.endRoundPopUp) then
+            self.endRoundPopUp:mousepressed(x, y, button, istouch, pressed)
+        end
     end
 end
 
 function RoundScreen:mousereleased(x, y, button, istouch, presses)
-    --release event for dice faces
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND)then
+        --release event for dice faces
 
-    self.dragAndDroppedCiggie = nil
-    self.dragAndDroppedFace = nil
+        self.dragAndDroppedCiggie = nil
+        self.dragAndDroppedFace = nil
 
-    for key,diceface in next,self.diceFaces do
-        local wasReleased = diceface:releaseEvent()
-        if(wasReleased)then
-            self.round:updateselectedDices(diceface)
+        for key,diceface in next,self.diceFaces do
+            local wasReleased = diceface:releaseEvent()
+            if(wasReleased)then
+                self.round:updateselectedDices(diceface)
+            end
+            diceface.isBeingDragged = false
         end
-        diceface.isBeingDragged = false
-    end
 
-    --release event on UI elements (buttons)
-    for key,button in next,self.uiElements.buttons do
-        local wasReleased = button:releaseEvent()
-        if(wasReleased) then --Si le click a été complété
-            button:getCallback()()
+        --release event on UI elements (buttons)
+        for key,button in next,self.uiElements.buttons do
+            local wasReleased = button:releaseEvent()
+            if(wasReleased) then --Si le click a été complété
+                button:getCallback()()
+            end
         end
-    end
 
-    --Figure buttons
-    if(self.clickedFigure)then
-        if(self.clickedFigure == self:getCurrentlyHoveredLine())then
-            self.calculatePointsFunctions[self.clickedFigure]()
+        --Figure buttons
+        if(self.clickedFigure)then
+            if(self.clickedFigure == self:getCurrentlyHoveredLine())then
+                self.calculatePointsFunctions[self.clickedFigure]()
+            end
         end
-    end
 
-    --Ciggies
-    for key,ciggie in next,self.uiElements.ciggiesUI do
-        ciggie:releaseEvent()
-        if(ciggie:detectBelowCanvas(self)==Constants.CANVAS.DICE_MAT)then
-            ciggie.representedObject:trigger(self.round)
+        --Ciggies
+        for key,ciggie in next,self.uiElements.ciggiesUI do
+            ciggie:releaseEvent()
+            if(ciggie:detectBelowCanvas(self)==Constants.CANVAS.DICE_MAT)then
+                ciggie.representedObject:trigger(self.round)
+            end
+            ciggie.isBeingDragged = false
         end
-        ciggie.isBeingDragged = false
+    elseif(self.endRoundPopUp)then
+        self.endRoundPopUp:mousereleased(x, y, button, istouch, presses)
     end
 end
 

@@ -120,4 +120,21 @@ function EndRound:draw()
     love.graphics.draw(self.canvas, 0, 0, 0, 1, 1)
 end
 
+--==Input functions==--
+function EndRound:mousepressed(x, y, button, istouch, presses)
+    self.nextRoundButton:clickEvent()
+end
+
+function EndRound:mousereleased(x, y, button, istouch, presses)
+    --release event on UI elements (buttons)
+    local wasReleased = self.nextRoundButton:releaseEvent()
+    if(wasReleased) then --Si le click a été complété
+        self.nextRoundButton:getCallback()()
+    end
+end
+
+function EndRound:mousemoved(x, y, dx, dy, isDragging)
+
+end
+
 return EndRound
