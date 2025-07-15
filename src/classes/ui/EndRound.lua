@@ -22,6 +22,7 @@ function EndRound:new(run, round)
 
     --UI Elements
     self.backgroundOpacity = 0
+    self.faceRewards = {}
 
     --Canvas
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_WIDTH)
@@ -50,6 +51,9 @@ function EndRound:new(run, round)
         {property = "backgroundOpacity", from=0, targetValue=0.7, duration=inDuration, easing=AnimationUtils.Easing.outCubic},
         {property = "contentY", from=self.contentY, targetValue=self.contentTY, duration=inDuration, easing=AnimationUtils.Easing.outCubic}
     })
+    self.animator:addDelay(0.1, function()self:generateFaceRewards()end)
+
+    
 
     return self
 end
@@ -67,7 +71,14 @@ function EndRound:updateCanvas(dt)
     love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
     love.graphics.setColor(1, 1, 1, 1)
 
+    --Pop up content
     self:drawMainCanvas(dt)
+
+    --UI faces
+    for i,uiFace in next,self.faceRewards do
+        uiFace:update(dt)
+        uiFace:draw()
+    end
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -135,6 +146,41 @@ end
 
 function EndRound:mousemoved(x, y, dx, dy, isDragging)
 
+end
+
+--UI creation
+function EndRound:generateFaceRewards()
+    local xPos = {145, 145}
+    local yPos = {79, 236}
+    local apparitionDuration = 0.3
+    
+    for i,face in next,self.round.faceRewards do
+        local uiFace = DiceFace:new(
+            nil,
+            face,
+            self.contentTX + 480 + 60 + xPos[i],
+            self.contentTY + 140 + 60 + yPos[i],
+            120,
+            false,
+            true,
+            function()return Inputs.getMouseInCanvas(0, 0)end,
+            nil
+        )
+        
+        uiFace.animator:addGroup({
+            --Rotation
+            {property = "rotation", from = 3, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 3, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            --Scale
+            {property = "baseTargetedScale", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleX", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleY", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = 0, targetValue = 1, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            
+        })
+
+        table.insert(self.faceRewards, uiFace)
+    end
 end
 
 --==Animation==--
