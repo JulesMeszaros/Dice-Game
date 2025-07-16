@@ -55,7 +55,9 @@ function Floor:generateReward()
     --Generate faceType reward
     local keys = {}
     for key, _ in pairs(FaceTypes) do
-        table.insert(keys, key)
+        if(key~="WhiteFace")then
+            table.insert(keys, key)
+        end
     end
     local faceRewards = {}
     local nbrFace = 2 --Toujours deux faces.

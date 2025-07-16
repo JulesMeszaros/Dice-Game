@@ -512,8 +512,6 @@ function Shop:generateNewShop()
             
         })
 
-        
-
         table.insert(self.availableFaceObjectsUI, faceUI)
     end
 
@@ -610,7 +608,9 @@ function Shop:getRandomFaceObject()
     --Get the list of keys
     local keys = {}
     for key, _ in pairs(FaceTypes) do
-        table.insert(keys, key)
+        if(key ~= "WhiteFace") then
+            table.insert(keys, key)
+        end
     end
 
     local randomFaceKey = keys[math.random(#keys)]
