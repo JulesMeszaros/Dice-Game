@@ -82,6 +82,9 @@ function Shop:updateCanvas(dt)
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
 
+    --Check if a ciggie is being dragged to the screen
+    self:checkForDraggedCiggie()
+
     --Buttons
     for key,button in next,self.uiElements.buttons do
         button:update(dt)
@@ -90,24 +93,13 @@ function Shop:updateCanvas(dt)
 
     --UI
     self:drawDeck(dt)
-    self:drawDescription()
     self:drawFigureGrid()
     self:drawRoundDetails()
     self:drawDiceDetails(dt)
-    self:drawCiggiesTray()
     self:drawInventoryBackGroundSmall()
     self:drawShopBackground()
     self:drawRewardsSmall()
-
     self:drawInventoryFaces(dt)
-
-    --Ciggies UI
-    for i, ciggie in next,self.uiElements.ciggiesUI do
-        ciggie:update(dt)
-        ciggie:draw()
-    end
-
-    self:drawCiggiesTrayFront()
 
     --Shop faces UI
     for i,faceUI in next,self.availableFaceObjectsUI do
@@ -121,9 +113,31 @@ function Shop:updateCanvas(dt)
         ciggieUI:draw()
     end
 
-    
-
     self:drawFacesPriceTags()
+
+    --Ciggie Popup
+    if(self.previousCiggieDraggedState ~= self.draggedCiggie) then
+        if(self.draggedCiggie)then
+            self:startCiggiePopUp()
+        else
+            self:endCiggiePopup()
+        end
+    end
+
+    if(self.showCiggiePopup) then
+        self:drawCiggiePopup()
+    end
+
+    self:drawDescription()
+    self:drawCiggiesTray()
+
+    --Ciggies UI
+    for i, ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:update(dt)
+        ciggie:draw()
+    end
+
+    self:drawCiggiesTrayFront()
 
     --Draw the drag and dropped object on top of everything else
     if(self.dragAndDroppedObject) then
@@ -210,10 +224,8 @@ function Shop:mousereleased(x, y, button, istouch, presses)
     for key,ciggie in next,self.uiElements.ciggiesUI do
         local wasReleased = ciggie:releaseEvent()
         ciggie.isBeingDragged = false
-
-        if(wasReleased) then
-            self:sellCiggie(ciggie.representedObject, ciggie, key)
-        end
+        self:ciggieReleaseAction(ciggie)
+        
     end
 
     --Inventory
