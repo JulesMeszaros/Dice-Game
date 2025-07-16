@@ -235,6 +235,17 @@ end
 
 --==Animation==--
 function EndRound:outAnimation()
+    --Dices
+    for i,uiFace in next,self.faceRewards do
+        uiFace.animator:addGroup({
+            --Scale
+            {property = "targetY", from = uiFace.targetY, targetValue = self.canvas:getHeight()+150, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
+            {property = "y", from = uiFace.y, targetValue = self.canvas:getHeight()+150, duration =0.3 , easing = AnimationUtils.Easing.inCubic},
+            
+        })
+    end
+    
+    --Popup
     self.animator:addGroup({
         {property = "backgroundOpacity", from=0.7, targetValue=0, duration=0.3},
         {property = "contentY", from=self.contentY, targetValue=self.canvas:getHeight()+500, duration=0.3, easing=AnimationUtils.Easing.inCubic}
