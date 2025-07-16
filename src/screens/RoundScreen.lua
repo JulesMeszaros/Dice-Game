@@ -205,36 +205,40 @@ end
 
 --==INPUT FUNCTIONS==--
 function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
-    --Drag and drop dice
-    if(isDragging == true)then 
-        for key,diceui in next, self.diceFaces do
-            if(diceui.isDraggable and diceui.isBeingClicked) then
-                diceui.isBeingDragged = true
-                self.dragAndDroppedDice = diceui
-                diceui.dragXspeed = dx
-                if(diceui.targetX+dx<self.dice_tray:getWidth()-diceui.size/2 and diceui.targetX+dx>0+diceui.size/2) then --Vérification qu'on ne dépasse par les limites horizontales
-                    diceui.targetX = (diceui.targetX + dx) 
-                end
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND) then
+        --Drag and drop dice
+        if(isDragging == true)then 
+            for key,diceui in next, self.diceFaces do
+                if(diceui.isDraggable and diceui.isBeingClicked) then
+                    diceui.isBeingDragged = true
+                    self.dragAndDroppedDice = diceui
+                    diceui.dragXspeed = dx
+                    if(diceui.targetX+dx<self.dice_tray:getWidth()-diceui.size/2 and diceui.targetX+dx>0+diceui.size/2) then --Vérification qu'on ne dépasse par les limites horizontales
+                        diceui.targetX = (diceui.targetX + dx) 
+                    end
 
-                if(diceui.targetY+dy<self.dice_tray:getHeight()-diceui.size/2-85 and diceui.targetY+dy>165+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
-                    diceui.targetY = (diceui.targetY + dy) 
+                    if(diceui.targetY+dy<self.dice_tray:getHeight()-diceui.size/2-85 and diceui.targetY+dy>165+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
+                        diceui.targetY = (diceui.targetY + dy) 
+                    end
+                    break;
                 end
-                break;
             end
         end
-    end
-    --Drag and drop Ciggies
-    if(isDragging == true)then 
-        for key,ciggie in next, self.uiElements.ciggiesUI do
-            if(ciggie.isDraggable and ciggie.isBeingClicked) then
-                ciggie.isBeingDragged = true
-                self.dragAndDroppedCiggie = ciggie
-                ciggie.dragXspeed = dx
-                ciggie.targetX = x
-                ciggie.targetY = y
-                break;
+        --Drag and drop Ciggies
+        if(isDragging == true)then 
+            for key,ciggie in next, self.uiElements.ciggiesUI do
+                if(ciggie.isDraggable and ciggie.isBeingClicked) then
+                    ciggie.isBeingDragged = true
+                    self.dragAndDroppedCiggie = ciggie
+                    ciggie.dragXspeed = dx
+                    ciggie.targetX = x
+                    ciggie.targetY = y
+                    break;
+                end
             end
         end
+    elseif(self.endRoundPopUp)then
+        self.endRoundPopUp:mousemoved(x, y, dx, dy, isDragging)
     end
 end
 

@@ -134,6 +134,11 @@ end
 --==Input functions==--
 function EndRound:mousepressed(x, y, button, istouch, presses)
     self.nextRoundButton:clickEvent()
+    
+    --DiceFaces
+    for key,uiFace in next,self.faceRewards do
+        uiFace:clickEvent()
+    end
 end
 
 function EndRound:mousereleased(x, y, button, istouch, presses)
@@ -142,10 +147,32 @@ function EndRound:mousereleased(x, y, button, istouch, presses)
     if(wasReleased) then --Si le click a été complété
         self.nextRoundButton:getCallback()()
     end
+
+    for key,diceface in next,self.faceRewards do
+        local wasReleased = diceface:releaseEvent()
+
+        diceface.isBeingDragged = false
+        diceface.targetX = diceface.anchorX
+        diceface.targetY = diceface.anchorY
+    end
+    
 end
 
 function EndRound:mousemoved(x, y, dx, dy, isDragging)
-
+    --DND dices
+    if(isDragging == true)then 
+        for key,diceui in next,self.faceRewards do
+            print(diceui.isBeingClicked)
+            if(diceui.isDraggable and diceui.isBeingClicked) then
+                diceui.isBeingDragged = true
+                self.dragAndDroppedDice = diceui
+                diceui.dragXspeed = dx
+                diceui.targetX = (diceui.targetX + dx) 
+                diceui.targetY = (diceui.targetY + dy) 
+                break;
+            end
+        end
+    end
 end
 
 --UI creation
@@ -166,6 +193,9 @@ function EndRound:generateFaceRewards()
             function()return Inputs.getMouseInCanvas(0, 0)end,
             nil
         )
+
+        uiFace.anchorX = self.contentTX + 480 + 60 + xPos[i]
+        uiFace.anchorY = self.contentTY + 140 + 60 + yPos[i]
         
         uiFace.animator:addGroup({
             --Rotation
