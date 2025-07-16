@@ -67,6 +67,14 @@ function FaceObject:trigger(round)
     self.totalTriggered = self.totalTriggered + 1
     self.roundTriggered = self.roundTriggered + 1
     
+    --Déclenche l'effet first si possible
+    if(self.first == true) then
+        local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
+        if(self == dicesOrder[1]:getCurrentFaceObject())then
+            self:firstEffect(round)
+        end
+    end
+
     --Déclenche l'effet replay si possible
     if(self.roundTriggered>1 and self.replay==true) then
         self:replayEffect(round)
@@ -136,6 +144,10 @@ end
 function FaceObject:uniqueEffect(round)
     --Effect that triggers only if the dice is the only dice this type in scored hand
     print("unique")
+end
+
+function FaceObject:firstEffect(round)
+    --Effet qui se trigger si le dé est le scoré le plus à gauche
 end
 
 --Sprite
