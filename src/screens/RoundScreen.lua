@@ -165,9 +165,6 @@ function RoundScreen:updateCanvas(dt)
         b:draw()
     end
 
-    --Face Details
-    self:drawDescription(self.descriptionX, self.descriptionY)
-
     --Dice Details
     self:updateDiceNet(dt)
     for k,df in next,self.infoFaces do --éventuellement à bouger dans la fonction drawDescription
@@ -193,6 +190,10 @@ function RoundScreen:updateCanvas(dt)
     if(self.showCiggiePopup) then
         self:drawCiggiePopup()
     end
+
+    --Face Details
+    self:drawDescription(self.descriptionX, self.descriptionY)
+
 
     --Ciggies Tray
     self:drawCiggiesTray()

@@ -91,12 +91,14 @@ function DiceCustomization:updateCanvas(dt)
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
 
+    --Check if a ciggie is being dragged to the screen
+    self:checkForDraggedCiggie()
+
     --UI
 
     --Run informations
     self:drawRoundDetails()
-    --Description
-    self:drawDescription()
+    
     --New Faces Canvas
     --self:drawNewFacesCanvas()
     self:drawRewardsMedium()
@@ -121,11 +123,22 @@ function DiceCustomization:updateCanvas(dt)
     self:drawNewFaces()
     self:drawRewards()
 
-     --Update the hover info
-    --[[ if(self.currentlyHoveredFace)then
-        self.hoverInfosCanvas:update(dt)
-        self.hoverInfosCanvas:draw()
-    end ]]
+    --Ciggie Popup
+
+    if(self.previousCiggieDraggedState ~= self.draggedCiggie) then
+        if(self.draggedCiggie)then
+            self:startCiggiePopUp()
+        else
+            self:endCiggiePopup()
+        end
+    end
+
+    if(self.showCiggiePopup) then
+        self:drawCiggiePopup()
+    end
+
+    --Description
+    self:drawDescription()
 
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
@@ -246,6 +259,7 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
     for key,ciggie in next,self.uiElements.ciggiesUI do
         ciggie:releaseEvent()
         ciggie.isBeingDragged = false
+        self:ciggieReleaseAction(ciggie)
     end
 
 end
