@@ -620,9 +620,6 @@ function GameScreen:endCiggiePopup()
 end
 
 function GameScreen:checkCiggiePosition(ciggie)
-    print(ciggie.x, ciggie.y)
-    print(self.screenType)
-
     if((ciggie.x > 500 and ciggie.x<1400) or (ciggie.y>0 and ciggie.y<850))then
         return 1
     elseif((ciggie.x > 0 and ciggie.x < 500) and (ciggie.y>850 and ciggie.y<self.canvas:getHeight())) then

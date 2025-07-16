@@ -395,7 +395,7 @@ end
 
 function Shop:buyCiggie(ciggie, ciggieUI, key)
     if(table.getn(self.run.ciggiesObjects)<Constants.BASE_MAX_CIGGIES and self.run.money>=5)then
-        self.run.money = self.run.money - 3
+        self.run.money = self.run.money - Constants.BASE_CIGGIE_PRICE
         --Add the ciggie to the inventory
         table.insert(self.run.ciggiesObjects, ciggie)
         --Remove the ciggie from the shop
@@ -875,7 +875,7 @@ function Shop:drawFacesPriceTags()
         --Background
         love.graphics.draw(Sprites.PRICE_TAG, 0, 0)
         --Text
-        local priceText = love.graphics.newText(Fonts.soraPrice, '3€')
+        local priceText = love.graphics.newText(Fonts.soraPrice, tostring(Constants.BASE_CIGGIE_PRICE)..'€')
 
         love.graphics.setColor(232/255, 79/255, 79/255, 1)
         love.graphics.draw(priceText, c:getWidth()/2, c:getHeight()/2, 0, 1,1, priceText:getWidth()/2, priceText:getHeight()/2)

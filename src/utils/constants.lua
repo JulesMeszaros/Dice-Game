@@ -8,6 +8,7 @@ local Constants = {
     BASE_AVAILABLE_HANDS = 1,
     DESKS_BY_FLOOR = 2,
     BASE_MAX_CIGGIES = 5,
+    BASE_CIGGIE_PRICE = 3,
     SHOP_EVERY_DESK = true, --Variable de debug : lance le shop après chaque round peu importe le type
     BASE_SHOP_REROLL_PRICE = 3,
     BASE_SHOP_REROLL_PRINCE_INCREMENT = 1
