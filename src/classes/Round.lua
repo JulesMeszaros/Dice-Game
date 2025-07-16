@@ -5,6 +5,7 @@ local AnimationUtils = require("src.utils.scripts.Animations")
 local Inputs = require("src.utils.scripts.Inputs")
 local Animator = require("src.utils.Animator")
 local EndRound = require("src.classes.ui.EndRound")
+local GameOverScreen = require("src.screens.GameOverScreen")
 
 local Round = {}
 Round.__index = Round
@@ -95,10 +96,17 @@ function Round:endRound()
             f:resetStats()
         end
     end
-
-    --CREATE A END ROUND SCREEN
-    self.terrain.endRoundPopUp = EndRound:new(self.run, self)
-    self.phase = Constants.ROUND_STATES.END_ROUND
+        
+    if(self.roundScore >= self.targetScore)then
+        --CREATE A END ROUND SCREEN
+        self.terrain.endRoundPopUp = EndRound:new(self.run, self)
+        
+        self.phase = Constants.ROUND_STATES.END_ROUND
+    else
+        local gameOver = GameOverScreen:new(self.run.gameCanvas, self.run)
+        self.run.gameOver = gameOver
+        self.run.currentState = Constants.RUN_STATES.GAME_OVER
+    end
 
     --self.terrain:outAnimation()
 end

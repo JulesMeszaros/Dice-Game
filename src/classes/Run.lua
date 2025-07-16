@@ -113,7 +113,7 @@ function Run:createNewFloor()
     return newFloor
 end
 
-function Run:endRound()
+function Run:goToNextRound()
     --checks if the goal was reached during round
     if(self.currentRound.roundScore >= self.currentRound.targetScore)then
         --Calculate the money earned, based on the number of hands remaining
@@ -151,11 +151,10 @@ function Run:endRound()
         --GOTO dice customization
             self:goToDiceCustomization()
         end
-
-    else --gameover case
+    --[[ else --gameover case
         local gameOver = GameOverScreen:new(self.gameCanvas, self)
         self.gameOver = gameOver
-        self.currentState = Constants.RUN_STATES.GAME_OVER
+        self.currentState = Constants.RUN_STATES.GAME_OVER ]]
     end
 end
 --==DRAW FUNCTIONS==--

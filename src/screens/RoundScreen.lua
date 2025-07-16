@@ -453,7 +453,7 @@ function RoundScreen:outAnimation()
     self.animator:addDelay(0.2)
     self.animator:addGroup({
         {property = "playerX", from = self.playerX, targetValue = -800, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "enemyX", from = self.enemyX, targetValue = self.canvas:getWidth()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic, onComplete=function()self.round.run:endRound()end},
+        {property = "enemyX", from = self.enemyX, targetValue = self.canvas:getWidth()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic, onComplete=function()self.round.run:goToNextRound()end},
     })
 
     --Buttons animation
