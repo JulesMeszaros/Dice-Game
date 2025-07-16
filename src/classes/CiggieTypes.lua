@@ -19,8 +19,8 @@ function BaseCiggie:new()
     return self
 end
 
-function BaseCiggie:effect(round)
-    round.availableRerolls = round.availableRerolls+1
+function BaseCiggie:effect(screen)
+    screen.round.availableRerolls = screen.round.availableRerolls+1
 end
 
 CiggieTypes.BaseCiggie = BaseCiggie

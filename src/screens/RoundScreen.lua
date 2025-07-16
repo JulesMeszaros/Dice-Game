@@ -147,6 +147,9 @@ function RoundScreen:updateCanvas(dt)
         love.graphics.clear(55/255, 96/255, 85/255)
     end
 
+    --Check if a ciggie is being dragged to the screen
+    self:checkForDraggedCiggie()
+
     --PlayersInfos
     self:drawPlayersInfos()
     --Dice Tray
@@ -176,6 +179,20 @@ function RoundScreen:updateCanvas(dt)
     
     --ROUND DETAILS
     self:drawRoundDetails()
+
+    --Ciggie Popup
+
+    if(self.previousCiggieDraggedState ~= self.draggedCiggie) then
+        if(self.draggedCiggie)then
+            self:startCiggiePopUp()
+        else
+            self:endCiggiePopup()
+        end
+    end
+
+    if(self.showCiggiePopup) then
+        self:drawCiggiePopup()
+    end
 
     --Ciggies Tray
     self:drawCiggiesTray()
@@ -300,7 +317,7 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
         --Ciggies
         for key,ciggie in next,self.uiElements.ciggiesUI do
             ciggie:releaseEvent()
-            
+            self:ciggieReleaseAction(ciggie)
             ciggie.isBeingDragged = false
         end
     elseif(self.endRoundPopUp)then
