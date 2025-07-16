@@ -149,7 +149,7 @@ function BlueFace:new(faceValue, pointsValue)
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Blue Dice.png")
-    self.spriteSheet:setFilter("nearest", "nearest")
+    self.spriteSheet:setFilter("linear", "linear")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -198,7 +198,7 @@ function GoldFace:new(faceValue, pointsValue)
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Gold Dice.png")
-    self.spriteSheet:setFilter("nearest", "nearest")
+    self.spriteSheet:setFilter("linear", "linear")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -243,7 +243,7 @@ function DeluxeFace:new(faceValue, pointsValue)
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Deluxe Dice.png")
-    self.spriteSheet:setFilter("nearest", "nearest")
+    self.spriteSheet:setFilter("linear", "linear")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -297,7 +297,7 @@ function StrikeOfLuck:new(faceValue, pointsValue)
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Strike of Luck.png")
-    self.spriteSheet:setFilter("nearest", "nearest")
+    self.spriteSheet:setFilter("linear", "linear")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -347,7 +347,7 @@ function Copyprinter:new(faceValue, pointsValue)
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Copyprinter.png")
-    self.spriteSheet:setFilter("nearest", "nearest")
+    self.spriteSheet:setFilter("linear", "linear")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -413,7 +413,7 @@ function BasketOfEggs:new(faceValue, pointsValue)
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Milk Dice.png")
-    self.spriteSheet:setFilter("nearest", "nearest")
+    self.spriteSheet:setFilter("linear", "linear")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -462,7 +462,7 @@ function Apparition:new(faceValue, pointsValue)
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Apparition.png")
-    self.spriteSheet:setFilter("nearest", "nearest")
+    self.spriteSheet:setFilter("linear", "linear")
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -928,7 +928,7 @@ function Spotlight:new(faceValue, pointsValue)
 
     --Metadatas about the graphics of the Spotlight
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Spotlight Dice.png")
-    self.spriteSheet:setFilter("nearest", "nearest")
+    self.spriteSheet:setFilter("linear", "linear")
     self.description = "First : Multiplies the hand score by 2. Scoring: +10pts"
     self.faceDimmension = 120 --sets the dimmensions for a face of the Spotlight in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet

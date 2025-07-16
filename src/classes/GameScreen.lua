@@ -42,6 +42,8 @@ function GameScreen:new(floor, run, screenType, round)
     self.run = run
     self.round = round
     self.diceObjects = run.diceObjects
+    self.draggedCiggie = false
+    self.showCiggiePopup = false
 
     self.animator = Animator:new(self)
 
@@ -68,6 +70,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.shopCanvas = love.graphics.newCanvas(780, 560)
     self.rewardsSmallCanvas = love.graphics.newCanvas(210, 360)
     self.rewardsMediumCanvas = love.graphics.newCanvas(240, 410)
+    self.ciggiePopupCanvas = love.graphics.newCanvas(self.canvas:getWidth(), self.canvas:getHeight())
 
     --Positions
     self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.canvas:getHeight()+1000
@@ -95,6 +98,11 @@ function GameScreen:new(floor, run, screenType, round)
 
     self.rewardsSMTX, self.rewardsSMTY, self.rewardsSMX, self.rewardsSMY = 500, 690, 500, self.canvas:getHeight()+600
     self.rewardsMDTX, self.rewardsMDTY, self.rewardsMDX, self.rewardsMDY = 500, 650, 500, self.canvas:getHeight()+700
+
+    self.lighterBaseX, self.lighterBaseY, self.lighterTargetX, self.lighterTargetY = self.canvas:getWidth()/2, self.canvas:getHeight()+500, self.canvas:getWidth()/2, 4*self.canvas:getHeight()/5
+    self.lighterX, self.lighterY = self.lighterBaseX, self.lighterBaseY
+    self.baseCiggiePopupAlpha, self.targetCiggiePopupAlpha, self.ciggiePopupAlpha = 0, 0.7, 0
+    
 
     --Btns positions
     self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
@@ -230,6 +238,34 @@ function GameScreen:draw()
 end
 
 --==UI Draw functions==--
+
+--CiggiePopuup
+function GameScreen:drawCiggiePopup()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.ciggiePopupCanvas)
+    love.graphics.clear()
+
+    --Background
+    love.graphics.setColor(0.2, 0.2, 0.2, self.ciggiePopupAlpha)
+    love.graphics.rectangle("fill", 0, 0, self.ciggiePopupCanvas:getWidth(), self.ciggiePopupCanvas:getHeight())
+    love.graphics.setColor(1, 1, 1, 1)
+
+    --Sell Rect
+    local a = self.ciggiePopupAlpha/self.targetCiggiePopupAlpha
+    love.graphics.setColor(1, 1, 1, a)
+    love.graphics.draw(Sprites.SELL_CIGGIE, 30, self.canvas:getHeight()-30, 0, 1, 1, 0, Sprites.SELL_CIGGIE:getHeight())
+    local sellText = love.graphics.newText(Fonts.soraBig, "Sell : 3$")
+    love.graphics.setColor(255/255, 178/255, 89/255, a)
+    love.graphics.draw(sellText, 250, 950, 0, 1, 1, sellText:getWidth()/2, sellText:getHeight()/2)
+    love.graphics.setColor(1, 1, 1, 1)
+
+    --Lighter
+    love.graphics.draw(Sprites.LIGHTER, self.lighterX, self.lighterY, 0, 1, 1, Sprites.LIGHTER:getWidth()/2, Sprites.LIGHTER:getHeight()/2)
+    
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.ciggiePopupCanvas, 0, 0, 0, 1, 1)
+end
 
 --Description
 function GameScreen:drawDescription()
@@ -550,6 +586,37 @@ function GameScreen:getSpacedPositions(count, x1, x2)
     end
 
     return positions
+end
+
+function GameScreen:checkForDraggedCiggie()
+    local draggedCiggie = false
+    self.previousCiggieDraggedState = self.draggedCiggie
+    
+    for i,ciggie in next,self.uiElements.ciggiesUI do
+        if(ciggie.x < 1470 or ciggie.y < 800)then
+            draggedCiggie = true
+            self.showCiggiePopup = true
+            break
+        end
+    end
+    
+    self.draggedCiggie = draggedCiggie
+end
+
+function GameScreen:startCiggiePopUp()
+    local d = 0.2
+    self.animator:addGroup({
+        {property = "ciggiePopupAlpha", from=self.baseCiggiePopupAlpha, targetValue=self.targetCiggiePopupAlpha, duration=d},
+        {property = "lighterY", from=self.lighterY, targetValue=self.lighterTargetY, duration=d, easing=AnimationUtils.Easing.outCubic},
+    })
+end
+
+function GameScreen:endCiggiePopup()
+    local d = 0.2
+    self.animator:addGroup({
+        {property = "ciggiePopupAlpha", from=self.ciggiePopupAlpha, targetValue=self.baseCiggiePopupAlpha, duration=d, onComplete=function()self.showCiggiePopup=false end},
+        {property = "lighterY", from=self.lighterY, targetValue=self.lighterBaseY, duration=d},
+    })
 end
 
 return GameScreen

@@ -48,6 +48,9 @@ function DeskChoice:update(dt)
 
     self.animator:update(dt)
 
+    --Check if a ciggie is being dragged to the screen
+    self:checkForDraggedCiggie()
+
     --hovered objects
     self:getCurrentlyHoveredFace()
     self:getCurrentlyHoveredCiggie()
@@ -59,11 +62,28 @@ function DeskChoice:update(dt)
 
     --UI
     self:drawDeck(dt)
-    self:drawDescription()
     self:drawFigureGrid()
     self:drawRoundDetails()
     self:drawDiceDetails(dt)
     self:updateChoiceCanvas(dt)
+    
+    --Ciggie Popup
+    
+    print(self.showCiggiePopup)
+
+    if(self.previousCiggieDraggedState ~= self.draggedCiggie) then
+        if(self.draggedCiggie)then
+            self:startCiggiePopUp()
+        else
+            self:endCiggiePopup()
+        end
+    end
+
+    if(self.showCiggiePopup) then
+        self:drawCiggiePopup()
+    end
+    
+    self:drawDescription()
     self:drawCiggiesTray()
 
      --Ciggies UI
@@ -71,20 +91,12 @@ function DeskChoice:update(dt)
         ciggie:update(dt)
         ciggie:draw()
     end
-
     
-   
-
     if(self.dragAndDroppedObject)then
         self.dragAndDroppedObject:draw()
     end
 
     self:drawCiggiesTrayFront()
-
-    --[[ if(self.hoverInfosCanvas and self.currentlyHoveredFace)then
-        self.hoverInfosCanvas:update(dt)
-        self.hoverInfosCanvas:draw()
-    end ]]
 
     love.graphics.setCanvas(currentCanvas)
 end

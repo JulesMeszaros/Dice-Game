@@ -132,7 +132,6 @@ function RoundScreen:update(dt)
     for i, ciggie in next,self.uiElements.ciggiesUI do
         ciggie:update(dt)
     end
-    self:getCanvasHoveredByCiggie()
 
     self:updateCanvas(dt)
 
@@ -301,9 +300,7 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
         --Ciggies
         for key,ciggie in next,self.uiElements.ciggiesUI do
             ciggie:releaseEvent()
-            if(ciggie:detectBelowCanvas(self)==Constants.CANVAS.DICE_MAT)then
-                ciggie.representedObject:trigger(self.round)
-            end
+            
             ciggie.isBeingDragged = false
         end
     elseif(self.endRoundPopUp)then
@@ -326,13 +323,9 @@ function RoundScreen:drawDiceTray(x, y, dices2)
     local targetCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.dice_tray)
     love.graphics.clear()
-    if(self.hoveredByCiggie == Constants.CANVAS.DICE_MAT) then
-        love.graphics.setColor(0, 0.8, 0, 1)
-    else
-        love.graphics.setColor(1, 1, 1, 1)
-    end
+    
     love.graphics.draw(Sprites.DICE_MAT, 0, 0, 0, 1, 1)
-    love.graphics.setColor(1, 1, 1, 1)
+    
     --On déssine les autres dés
     for key,uiFace in next,dices2 do
         uiFace:draw()
@@ -604,18 +597,6 @@ function RoundScreen:highlightDices(usedDices)
                     diceface:setHighlighted(true)
                     break
             end
-        end
-    end
-end
-
---Returns the current canvas hovered by a ciggie
-function RoundScreen:getCanvasHoveredByCiggie()
-    self.hoveredByCiggie = nil
-    for i, ciggie in next,self.uiElements.ciggiesUI do --get the current canvas hovered by a ciggie (if one is hovered)
-        local canvas = ciggie:detectBelowCanvas(self.round)
-        if(canvas)then
-            self.hoveredByCiggie = canvas
-            break
         end
     end
 end

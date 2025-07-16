@@ -87,7 +87,7 @@ function Game:draw()
     local offsetY = (screenHeight - scaledHeight) / 2
     
     if(applyCRT)then
-        love.graphics.setShader(Shaders.crt)
+        love.graphics.setShader(Shaders.aChrom)
     end
     love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
     love.graphics.setShader()

@@ -38,6 +38,22 @@ Shaders.rainbowShader = love.graphics.newShader([[
     }
 ]])
 
+Shaders.aChrom = love.graphics.newShader([[
+extern number amount = 1.0;
+
+vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+    // Décalages individuels des canaux RVB
+    float offset = amount / love_ScreenSize.x;
+
+    float r = Texel(texture, texture_coords + vec2(-offset, 0.0)).r;
+    float g = Texel(texture, texture_coords).g;
+    float b = Texel(texture, texture_coords + vec2(offset, 0.0)).b;
+    float a = Texel(texture, texture_coords).a;
+
+    return vec4(r, g, b, a) * color;
+}
+]])
+
 Shaders.grayRainbowShader = love.graphics.newShader([[
     extern number time;
     extern number frequency = 0.1;
