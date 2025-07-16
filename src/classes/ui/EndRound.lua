@@ -112,7 +112,27 @@ function EndRound:updateEarnedMoney()
     love.graphics.setCanvas(self.moneyRewardCanvas)
     love.graphics.clear()
 
+    --Text
+    local coworkerLabel  = love.graphics.newText(Fonts.soraReward, {{255/255, 247/255, 160/255}, "Coworker Reward : ", {255/255, 223/255, 120/255}, tostring(self.round.baseReward)})
+    local turnsLabel = love.graphics.newText(Fonts.soraReward, {{255/255, 247/255, 160/255}, "Turn Left : ", {255/255, 223/255, 120/255}, tostring(self.round.remainingHands)})
+
+    local coworkerDollars = love.graphics.newText(Fonts.soraReward, {{255/255, 178/255, 89/255}, string.rep("$", self.round.baseReward)})
+    local turnsDollars = love.graphics.newText(Fonts.soraReward, {{255/255, 178/255, 89/255}, string.rep("$", self.round.remainingHands)})
+
+    local totalReward = love.graphics.newText(
+        Fonts.soraRewardTotal, 
+        {{255/255, 247/255, 160/255}, "+", 
+        {255/255, 223/255, 120/255}, tostring(self.round.remainingHands + self.round.baseReward), 
+        {255/255, 178/255, 89/255}, "$"})
+
+
     love.graphics.draw(Sprites.CASH_REWARD, 0, 0)
+
+    love.graphics.draw(coworkerLabel, 20, 100)
+    love.graphics.draw(coworkerDollars, 20, 140)
+    love.graphics.draw(turnsLabel, 20, 180)
+    love.graphics.draw(turnsDollars, 20, 220)
+    love.graphics.draw(totalReward, self.moneyRewardCanvas:getWidth()/2, 367, 0, 1, 1, totalReward:getWidth()/2)
 
     love.graphics.setCanvas(currentCanvas)
 end
