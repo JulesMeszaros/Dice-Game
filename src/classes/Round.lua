@@ -251,8 +251,6 @@ function Round:triggerNextDice()
 end
 
 function Round:startBackupPhase()
-    print("Backup phase starts now.")
-
     self.backupDiceHistory = {}
     self.backupFaceHistory = {}
 
@@ -308,6 +306,25 @@ function Round:triggerNextBackupDice()
 
     else
         --On termine la phase de trigger
+
+        --Désactiver les dés ghosts qui ne sont pas utilisés dans la figure.
+        --Liste des dés non utilisés
+        local unusedDices = {}
+        for i,d in next,self.diceObjects do
+            if(self:containsDice(self.usedDices, d)) then
+
+            else
+                table.insert(unusedDices, d)
+            end
+        end
+
+        --On désactive les dés ghosts qui ne sont pas utilisés
+        for i,d in next,unusedDices do
+            if(d:getCurrentFaceObject().ghost == true) then
+                self.terrain.diceFaces[d]:disable()
+            end
+        end
+
         local j = 0
         for i,diceface in next,self.terrain.diceFaces do
             j = j+1
@@ -455,25 +472,6 @@ end
 
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
-    --Désactiver les dés ghosts qui ne sont pas utilisés dans la figure.
-    --Liste des dés non utilisés
-    local unusedDices = {}
-    print("---")
-    for i,d in next,self.diceObjects do
-        if(self:containsDice(usedDices, d)) then
-
-        else
-            table.insert(unusedDices, d)
-        end
-    end
-
-    --On désactive les dés ghosts qui ne sont pas utilisés
-    for i,d in next,unusedDices do
-        if(d:getCurrentFaceObject().ghost == true) then
-            self.terrain.diceFaces[d]:disable()
-        end
-    end
-
     --Commencer la phase de déclenchement
     self:startTriggeringPhase(usedDices, figure)
     --Ajouter le score de base de la figure à la main
