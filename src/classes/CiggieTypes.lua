@@ -9,10 +9,10 @@ BaseCiggie.__index = BaseCiggie
 function BaseCiggie:new()
     local self = setmetatable(CiggieObject.new(), BaseCiggie)
 
-    self.name="Base Ciggie"
+    self.name="Free Roller"
     self.description="Adds one additionnal reroll to the current hand"
 
-    self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/basicCiggie.png")
+    self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Free Roller Cigarette.png")
     return self
 end
 
@@ -22,27 +22,6 @@ end
 
 CiggieTypes.BaseCiggie = BaseCiggie
 
---Blue Ciggie--
-
-local BlueCiggie = setmetatable({}, {__index = CiggieObject})
-BlueCiggie.__index = BlueCiggie
-
-function BlueCiggie:new()
-    local self = setmetatable(CiggieObject.new(), BlueCiggie)
-
-    self.name="Blue Ciggie"
-    self.description="Adds two additionnal reroll to the current hand"
-
-    self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/blueCiggie.png")
-    return self
-end
-
-function BlueCiggie:effect(round)
-    round.availableRerolls = round.availableRerolls+2
-end
-
-CiggieTypes.BlueCiggie = BlueCiggie
-
 --Golden Ciggie--
 
 local GoldenCiggie = setmetatable({}, {__index = CiggieObject})
@@ -51,15 +30,15 @@ GoldenCiggie.__index = GoldenCiggie
 function GoldenCiggie:new()
     local self = setmetatable(CiggieObject.new(), GoldenCiggie)
 
-    self.name="Golden Ciggie"
-    self.description="Doubles your current balance"
+    self.name="Fortune"
+    self.description="Adds 5$ to the balance"
 
-    self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/goldenCiggie.png")
+    self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Fortune Cigarette.png")
     return self
 end
 
 function GoldenCiggie:effect(round)
-    round.run.money = round.run.money+round.run.money
+    round.run.money = round.run.money+5
 end
 
 CiggieTypes.GoldenCiggie = GoldenCiggie

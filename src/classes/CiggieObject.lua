@@ -5,7 +5,7 @@ function CiggieObject:new()
     local self = setmetatable({}, CiggieObject)
     self.name = "Cigarette"
     self.description = "Donne le cancer askiiiip"
-    self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/basicCiggie.png")
+    self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Channel Cigarette.png")
     self.tier = "Clope"
     return self
 end

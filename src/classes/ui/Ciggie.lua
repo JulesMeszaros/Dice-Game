@@ -38,7 +38,7 @@ function Ciggie:new(ciggieObject, x, y, isSelectable, isHoverable, mousePosition
     self.rotation = 0 --Angle the dice is actually showed at
 
     --Scale
-    self.width, self.height = 340, 40
+    self.width, self.height = 350, 50
     self.scaleX = 1
     self.scaleY = 1
     self.targetedScale = 1
@@ -75,7 +75,7 @@ function Ciggie:update(dt)
 
     --Update base angle based on its position onscreen
     if(self.x > 1470 and self.y > 800)then
-        self.baseRotation = 1.57
+        self.baseRotation = -1.57
     else
         self.baseRotation = 0
     end
