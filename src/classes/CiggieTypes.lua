@@ -1,3 +1,4 @@
+local Constants = require("src.utils.Constants")
 local CiggieObject = require("src.classes.CiggieObject")
 
 local CiggieTypes = {}
@@ -8,6 +9,8 @@ BaseCiggie.__index = BaseCiggie
 
 function BaseCiggie:new()
     local self = setmetatable(CiggieObject.new(), BaseCiggie)
+
+    self.usableIn = Constants.RUN_STATES.ROUND
 
     self.name="Free Roller"
     self.description="Adds one additionnal reroll to the current hand"
@@ -30,6 +33,8 @@ GoldenCiggie.__index = GoldenCiggie
 function GoldenCiggie:new()
     local self = setmetatable(CiggieObject.new(), GoldenCiggie)
 
+    self.usableIn = "any"
+
     self.name="Fortune"
     self.description="Adds 5$ to the balance"
 
@@ -37,8 +42,8 @@ function GoldenCiggie:new()
     return self
 end
 
-function GoldenCiggie:effect(round)
-    round.run.money = round.run.money+5
+function GoldenCiggie:effect(screen)
+    screen.run.money = screen.run.money+5
 end
 
 CiggieTypes.GoldenCiggie = GoldenCiggie

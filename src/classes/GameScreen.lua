@@ -635,7 +635,7 @@ function GameScreen:ciggieReleaseAction(ciggie)
 
     --Trigger effect
     if(position == 1) then
-        print("trigger")
+        ciggie.representedObject:trigger(self, self.screenType)
     elseif(position == 2) then
         self:sellCiggie(ciggie)
     end
