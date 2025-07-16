@@ -17,8 +17,8 @@ function love.load()
 
     love.graphics.setBackgroundColor(40/255, 40/255, 43/255)
 
-    cursor = love.mouse.newCursor("src/assets/sprites/ui/cursor.png", 0, 0)
-    love.mouse.setCursor(cursor)
+    --cursor = love.mouse.newCursor("src/assets/sprites/ui/cursor.png", 0, 0)
+    --love.mouse.setCursor(cursor)
 
     game = Game:start()
 end
@@ -45,6 +45,10 @@ function love.draw()
     game:draw()
     fpstext = love.graphics.newText(Fonts.soraSmall, "fps:"..delta)
     love.graphics.draw(fpstext, love.graphics.getWidth()-5, 5, 0, 1, 1, fpstext:getWidth(), 0)
+    
+    dimtext = love.graphics.newText(Fonts.soraSmall, tostring(love.graphics.getWidth()).."x"..tostring(love.graphics.getHeight()))
+    love.graphics.draw(dimtext, love.graphics.getWidth()-5, 30, 0, 1, 1, dimtext:getWidth(), 0)
+
 end
 
 function love.keypressed(key)

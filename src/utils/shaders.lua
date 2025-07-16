@@ -13,8 +13,8 @@ Shaders.grayscaleShader = love.graphics.newShader([[
 
 Shaders.rainbowShader = love.graphics.newShader([[
     extern number time;
-    extern number frequency = 0.1;
-    extern number intensity = 1.0; // 0 = pas d'effet, 1 = effet complet
+    extern number frequency;
+    extern number intensity; // 0 = pas d'effet, 1 = effet complet
 
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
         vec4 texColor = Texel(texture, texture_coords);
@@ -39,7 +39,7 @@ Shaders.rainbowShader = love.graphics.newShader([[
 ]])
 
 Shaders.aChrom = love.graphics.newShader([[
-extern number amount = 1.0;
+extern number amount;
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     // Décalages individuels des canaux RVB
@@ -56,8 +56,8 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
 
 Shaders.grayRainbowShader = love.graphics.newShader([[
     extern number time;
-    extern number frequency = 0.1;
-    extern number intensity = 1.0; // 0 = pas d'effet, 1 = effet complet
+    extern number frequency;
+    extern number intensity; // 0 = pas d'effet, 1 = effet complet
 
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
         vec4 texColor = Texel(texture, texture_coords);
@@ -88,8 +88,8 @@ Shaders.grayRainbowShader = love.graphics.newShader([[
 
 Shaders.crt = love.graphics.newShader([[
     extern vec2 iResolution;
-    extern number warp = 0.60;
-    extern number scan = 0.3;
+    extern number warp;
+    extern number scan;
 
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
         vec2 uv = texture_coords;
