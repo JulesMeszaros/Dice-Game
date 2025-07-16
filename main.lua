@@ -41,7 +41,7 @@ end
 
 function love.draw()
     love.graphics.setCanvas()
-    love.graphics.clear()
+    love.graphics.clear(40/255, 40/255, 43/255)
     game:draw()
     fpstext = love.graphics.newText(Fonts.soraSmall, "fps:"..delta)
     love.graphics.draw(fpstext, love.graphics.getWidth()-5, 5, 0, 1, 1, fpstext:getWidth(), 0)
