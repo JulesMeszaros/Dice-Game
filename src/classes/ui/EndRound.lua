@@ -182,7 +182,6 @@ function EndRound:mousemoved(x, y, dx, dy, isDragging)
     --DND dices
     if(isDragging == true)then 
         for key,diceui in next,self.faceRewards do
-            print(diceui.isBeingClicked)
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
                 self.dragAndDroppedDice = diceui

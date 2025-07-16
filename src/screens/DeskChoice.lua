@@ -68,8 +68,6 @@ function DeskChoice:update(dt)
     self:updateChoiceCanvas(dt)
     
     --Ciggie Popup
-    
-    print(self.showCiggiePopup)
 
     if(self.previousCiggieDraggedState ~= self.draggedCiggie) then
         if(self.draggedCiggie)then
@@ -279,6 +277,7 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
     for key,ciggie in next,self.uiElements.ciggiesUI do
         ciggie:releaseEvent()
         ciggie.isBeingDragged = false
+        self:ciggieReleaseAction(ciggie)
     end
 end
 

@@ -619,4 +619,38 @@ function GameScreen:endCiggiePopup()
     })
 end
 
+function GameScreen:checkCiggiePosition(ciggie)
+    print(ciggie.x, ciggie.y)
+    print(self.screenType)
+
+    if((ciggie.x > 500 and ciggie.x<1400) or (ciggie.y>0 and ciggie.y<850))then
+        return 1
+    elseif((ciggie.x > 0 and ciggie.x < 500) and (ciggie.y>850 and ciggie.y<self.canvas:getHeight())) then
+        return 2
+    end
+end
+
+function GameScreen:ciggieReleaseAction(ciggie)
+    local position = self:checkCiggiePosition(ciggie)
+
+    --Trigger effect
+    if(position == 1) then
+        print("trigger")
+    elseif(position == 2) then
+        self:sellCiggie(ciggie)
+    end
+end
+
+function GameScreen:sellCiggie(ciggie)
+    --Add money to bank account
+    self.run.money = self.run.money+3
+    
+    --On retire l'objet de l'inventaire
+    for j,c in next,self.run.ciggiesObjects do
+        if(c==ciggie.representedObject) then table.remove(self.run.ciggiesObjects, j)end
+    end
+    
+    self:generateCiggiesUI()
+end
+
 return GameScreen
