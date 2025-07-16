@@ -814,7 +814,7 @@ end
 
 FaceTypes.MusicDice = MusicDice
 
---==Music Dice==--
+--==Signature==--
 local Signature = setmetatable({}, { __index = FaceObject })
 Signature.__index = Signature
 
@@ -861,6 +861,60 @@ function Signature:uniqueEffect(round)
 end
 
 FaceTypes.Signature = Signature
+
+--==Sniper Dice==--
+local SniperDice = setmetatable({}, { __index = FaceObject })
+SniperDice.__index = SniperDice
+
+function SniperDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), SniperDice)
+
+    --Metadatas about the SniperDice
+    self.name = "SniperDice"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the SniperDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crosshairs Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the SniperDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    self.backup=true
+    self.backupScoreValue = 10
+    self.description = "Backup : Adds 10 points to the score. Value goes up by 5. Currently : "..tostring(self.backupScoreValue)..' pts'
+
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function SniperDice:update(dt, run)
+    self.description = "Backup : Adds 10 points to the score. Value goes up by 5. Currently : "..tostring(self.backupScoreValue)..' pts'
+end
+
+function SniperDice:triggerEffect(round)
+    --Complementary effect triggered by the face
+
+end
+
+function SniperDice:backupEffect(round)
+    round.handScore = round.handScore + self.backupScoreValue
+    self.backupScoreValue = self.backupScoreValue + 5
+end
+
+
+
+FaceTypes.SniperDice = SniperDice
 
 
 return FaceTypes
