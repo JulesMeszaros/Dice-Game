@@ -58,7 +58,6 @@ function FaceObject:resetStats()
 end
 
 function FaceObject:update(dt, run)
-    --print(self.name)
 
 end
 

@@ -42,7 +42,6 @@ end
 
 function WhiteFace:triggerEffect(round)
     --Complementary effect triggered by the face
-    print("test")
     round.handScore = round.handScore + self.pointsValue
 end
 
@@ -264,9 +263,7 @@ function DeluxeFace:new(faceValue, pointsValue)
     return self
 end
 
-function DeluxeFace:triggerEffect(round)
-    print("------")
-    
+function DeluxeFace:triggerEffect(round)    
     if(round.playedFigure == Constants.FIGURES.DELUXE)then
         local sumScore = 0
         for i,k in next,round.usedDices do
