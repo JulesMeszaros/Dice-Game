@@ -1,15 +1,25 @@
 local Constants = {
+    --Game metadatas
     VIRTUAL_GAME_WIDTH = 1920,
     VIRTUAL_GAME_HEIGHT = 1080,
+    GAME_VERSION = "0.4.0",
+
+    --Game base stats
     BASE_REROLLS = 2,
-    BASE_TRIGGER_ANIMATION_TIME = 0.15,--secondes
-    GAME_VERSION = "0.3.0",
+    DESKS_BY_FLOOR = 2,
+    FLOORS_BY_RUN = 8,
+    BASE_MAX_CIGGIES = 5,
     BASE_TURNS = 3,
     BASE_AVAILABLE_HANDS = 1,
-    DESKS_BY_FLOOR = 2,
-    BASE_MAX_CIGGIES = 5,
-    BASE_CIGGIE_PRICE = 3,
-    SHOP_EVERY_DESK = true, --Variable de debug : lance le shop après chaque round peu importe le type
+
+    --Animations
+    BASE_TRIGGER_ANIMATION_TIME = 0.15,--secondes
+    
+    --Debug
+    SHOP_EVERY_DESK = true,
+    
+    --Prices
+    BASE_CIGGIE_PRICE = 2,
     BASE_SHOP_REROLL_PRICE = 3,
     BASE_SHOP_REROLL_PRINCE_INCREMENT = 1
 }
@@ -94,10 +104,6 @@ Constants.EMPLOIS = {
     "Juriste",
     "Assistant admin.",
     "Responsable"
-}
-
-Constants.CANVAS = { --Used for the ciggies
-    DICE_MAT = 1,
 }
 
 return Constants
