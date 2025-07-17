@@ -3,12 +3,12 @@ local CiggieObject = require("src.classes.CiggieObject")
 
 local CiggieTypes = {}
 
---Base Ciggie--
-local BaseCiggie = setmetatable({}, {__index = CiggieObject})
-BaseCiggie.__index = BaseCiggie
+--Free Roller--
+local FreeRoller = setmetatable({}, {__index = CiggieObject})
+FreeRoller.__index = FreeRoller
 
-function BaseCiggie:new()
-    local self = setmetatable(CiggieObject.new(), BaseCiggie)
+function FreeRoller:new()
+    local self = setmetatable(CiggieObject.new(), FreeRoller)
 
     self.usableIn = Constants.RUN_STATES.ROUND
 
@@ -19,19 +19,19 @@ function BaseCiggie:new()
     return self
 end
 
-function BaseCiggie:effect(screen)
+function FreeRoller:effect(screen)
     screen.round.availableRerolls = screen.round.availableRerolls+1
 end
 
-CiggieTypes.BaseCiggie = BaseCiggie
+CiggieTypes.FreeRoller = FreeRoller
 
---Golden Ciggie--
+--Fortune--
 
-local GoldenCiggie = setmetatable({}, {__index = CiggieObject})
-GoldenCiggie.__index = GoldenCiggie
+local Fortune = setmetatable({}, {__index = CiggieObject})
+Fortune.__index = Fortune
 
-function GoldenCiggie:new()
-    local self = setmetatable(CiggieObject.new(), GoldenCiggie)
+function Fortune:new()
+    local self = setmetatable(CiggieObject.new(), Fortune)
 
     self.usableIn = "any"
 
@@ -42,10 +42,10 @@ function GoldenCiggie:new()
     return self
 end
 
-function GoldenCiggie:effect(screen)
+function Fortune:effect(screen)
     screen.run.money = screen.run.money+5
 end
 
-CiggieTypes.GoldenCiggie = GoldenCiggie
+CiggieTypes.Fortune = Fortune
 
 return CiggieTypes
