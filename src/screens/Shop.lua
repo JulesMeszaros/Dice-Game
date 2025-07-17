@@ -405,8 +405,6 @@ function Shop:buyCiggie(ciggie, ciggieUI, key)
 
         --Regenerate the ciggies inventory
         self:generateCiggiesUI()
-    else
-        print("too much ciggies")
     end
 end
 
@@ -463,9 +461,7 @@ function Shop:sellCiggie(ciggie, ciggieUI, key)
     self.run.money = self.run.money+3
     print("-------")
     print("ciggies list")
-    for k,m in next,self.run.ciggiesObjects do
-        print(m.name)
-    end
+    
     
     --On retire l'objet de l'inventaire
     for j,c in next,self.run.ciggiesObjects do
@@ -578,7 +574,6 @@ function Shop:generateAvailableCiggies()
     for i=1, 4 do
         local c = self:generateRandomCiggie()
         table.insert(self.availableCiggies, c)
-        print(c.name)
     end
 end
 
