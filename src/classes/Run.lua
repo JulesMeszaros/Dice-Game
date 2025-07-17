@@ -65,6 +65,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     --Floor variables
     --Create the first floor of the game
     self.currentFloor = Floor:new(1, self)
+    
     self.floorNumber = 1 --Représente l'étage (augmente de 1 après un boss)
     self.floorDeskNumber = 1 --Représente le numéro de bureau dans l'étage actuel (retourne à 1 après un boss)
     self:goToRoundSelection()
@@ -114,47 +115,41 @@ function Run:createNewFloor()
 end
 
 function Run:goToNextRound()
-    --checks if the goal was reached during round
-    if(self.currentRound.roundScore >= self.currentRound.targetScore)then
-        --Calculate the money earned, based on the number of hands remaining
-        local moneyEarned = self.currentRound.remainingHands + self.currentRound.baseReward
-        self.money = self.money + moneyEarned
+    --Calculate the money earned, based on the number of hands remaining
+    local moneyEarned = self.currentRound.remainingHands + self.currentRound.baseReward
+    self.money = self.money + moneyEarned
 
-        --Increments the desk, and goes to the next floor if the desk rank is > 3
-        self.floorDeskNumber = self.floorDeskNumber + 1
-        if(self.currentRound.roundType==Constants.ROUND_TYPES.BOSS)then--Si le rank de desktop est superieur à 4 (donc que le bosse vient d'etre battu) on créée un nouvel étage
-            
-            --On vérifie que la run soit terminée (étage 5 atteint)
-            if(self.currentFloor.floorNumber == 5)then
-                self.game.currentScreen = Constants.PAGES.MAIN_MENU
-                return
-            end
-            
-            self.currentFloor = self:createNewFloor()
-            self.floorDeskNumber = 1
-            
-            --Resets the available hands
-            self:resetAvailableFigures()        
+    --Increments the desk, and goes to the next floor if the desk rank is > 3
+    self.floorDeskNumber = self.floorDeskNumber + 1
+    
+    if(self.currentRound.roundType==Constants.ROUND_TYPES.BOSS)then--Si le rank de desktop est superieur à 4 (donc que le bosse vient d'etre battu) on créée un nouvel étage
+        
+        --On vérifie que la run soit terminée (étage 5 atteint)
+        if(self.currentFloor.floorNumber == Constants.FLOORS_BY_RUN)then
+            self.game.currentScreen = Constants.PAGES.MAIN_MENU
+            return
         end
+        
+        self.currentFloor = self:createNewFloor()
+        self.floorDeskNumber = 1
+        
+        --Resets the available hands
+        self:resetAvailableFigures()        
+    end
 
-        --Adds the rewards to the rewards inventory
-        self.facesRewardsInventory = {} --On le vide par mesure de sécurité
-        for i,face in next,self.currentRound.faceRewards do
-            table.insert(self.facesRewardsInventory, face)
-        end
+    --Adds the rewards to the rewards inventory
+    self.facesRewardsInventory = {} --On le vide par mesure de sécurité
+    for i,face in next,self.currentRound.faceRewards do
+        table.insert(self.facesRewardsInventory, face)
+    end
 
-        --GOTO Shop, seulement si on est à la fin d'un étage, ou que la fonction debug associée est activée
-        if(self.currentRound.roundType == Constants.ROUND_TYPES.BOSS or Constants.SHOP_EVERY_DESK==true) then
-            self.shop = Shop:new(self)
-            self.currentState = Constants.RUN_STATES.SHOP
-        else
-        --GOTO dice customization
-            self:goToDiceCustomization()
-        end
-    --[[ else --gameover case
-        local gameOver = GameOverScreen:new(self.gameCanvas, self)
-        self.gameOver = gameOver
-        self.currentState = Constants.RUN_STATES.GAME_OVER ]]
+    --GOTO Shop, seulement si on est à la fin d'un étage, ou que la fonction debug associée est activée
+    if(self.currentRound.roundType == Constants.ROUND_TYPES.BOSS or Constants.SHOP_EVERY_DESK==true) then
+        self.shop = Shop:new(self)
+        self.currentState = Constants.RUN_STATES.SHOP
+    else
+    --GOTO dice customization
+        self:goToDiceCustomization()
     end
 end
 --==DRAW FUNCTIONS==--
