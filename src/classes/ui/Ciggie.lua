@@ -92,7 +92,7 @@ function Ciggie:draw()
 end
 
 function Ciggie:createCanvas()
-    local canvas = love.graphics.newCanvas(340, 40)
+    local canvas = love.graphics.newCanvas(self.width, self.height)
 
     love.graphics.setBlendMode("alpha")
 
