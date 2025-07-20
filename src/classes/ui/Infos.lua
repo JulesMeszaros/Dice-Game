@@ -64,7 +64,7 @@ function Infos:new(run)
     )
 
     self.uiElements.buttons["planButton"] = Button:new(
-        function()self.run:toggleInfoScreen()end,
+        function()self:fadeOut()end,
         "src/assets/sprites/ui/Plan.png",
         self.planBtnX,
         self.planBtnY,
@@ -83,10 +83,11 @@ function Infos:new(run)
 end
 
 function Infos:update(dt)
-    self.animator:update(dt)
+    
 end
 
 function Infos:updateCanvas(dt)
+    self.animator:update(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -312,6 +313,10 @@ function Infos:drawCiggiesTrayFront()
 
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
+end
+
+function Infos:fadeOut()
+    self.animator:add('opacity', self.opacity, self.baseOpacity, 0.1, nil, function()self.run:toggleInfoScreen()end)
 end
 
 return Infos
