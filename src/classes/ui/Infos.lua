@@ -27,6 +27,10 @@ function Infos:new(run)
     self.moneyCanvas = love.graphics.newCanvas(290, 100)
     self.rerollsCanvas = love.graphics.newCanvas(220, 120)
     self.handsCanvas = love.graphics.newCanvas(220, 120)
+    self.descriptionCanvas = love.graphics.newCanvas(420, 240)
+    self.ciggiesTray = love.graphics.newCanvas(420, 160)
+    self.ciggiesTrayFront = love.graphics.newCanvas(420, 160)
+
 
     --UI Positions
     self.gridLX, self.gridLY = 30, 30
@@ -41,6 +45,9 @@ function Infos:new(run)
     self.turnsX, self.turnsY = 30, 721
     self.moneyX, self.moneyY = 190, 860
     self.floorX, self.floorY = 190, 970
+    self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, 650
+
+    self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight()
 
     --Buttons
     self.uiElements = {buttons = {}}
@@ -84,7 +91,7 @@ function Infos:updateCanvas(dt)
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
 
-    love.graphics.setColor(0.1, 0.1, 0.1, 0.9)
+    love.graphics.setColor(0.1, 0.1, 0.1, 1)
     love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
     love.graphics.setColor(1, 1, 1, 1)
 
@@ -100,6 +107,9 @@ function Infos:updateCanvas(dt)
     self:drawPlayerBadge()
     self:drawProgression()
     self:drawRoundDetails()
+    self:drawDescription()
+    self:drawCiggiesTray()
+    self:drawCiggiesTrayFront()
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -242,6 +252,66 @@ function Infos:drawRoundDetails()
     love.graphics.draw(self.handsCanvas, self.turnsX, self.turnsY)
     love.graphics.draw(self.rerollsCanvas, self.rerollsX, self.rerollsY)
     love.graphics.draw(self.moneyCanvas, self.moneyX, self.moneyY)
+end
+
+function Infos:drawDescription()
+    --local hoveredObject = self:getCurrentlyHoveredObject()
+
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.descriptionCanvas)
+    love.graphics.clear()
+    --Draw Sprite
+    love.graphics.draw(Sprites.DESCRIPTION, 0, 0)
+
+
+    --[[ if(hoveredObject) then
+
+        --Name
+        local objectName = hoveredObject.name
+        local nameText = love.graphics.newText(Fonts.sora30, objectName)
+
+        --Face tier
+        local tierText = love.graphics.newText(
+            Fonts.soraSmall,
+            hoveredObject.tier
+        )
+
+        --Description
+        local faceDescription = hoveredObject.description
+        local descWidth, descWrappedtext = Fonts.soraDesc:getWrap(faceDescription, self.descriptionCanvas:getWidth()-18 )
+        local descText = love.graphics.newText(Fonts.soraDesc, table.concat(descWrappedtext, "\n"))
+        
+        love.graphics.setColor(0, 0, 0, 1)
+        love.graphics.draw(nameText, self.descriptionCanvas:getWidth()/2, 65, 0, 1, 1, nameText:getWidth()/2, 0)
+        love.graphics.draw(tierText, self.descriptionCanvas:getWidth()/2, 105, 0, 1, 1, tierText:getWidth()/2, 0)
+        love.graphics.draw(descText, self.descriptionCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
+        love.graphics.setColor(1, 1, 1, 1)
+
+    end ]]
+
+    love.graphics.setCanvas(currentCanvas)
+
+    love.graphics.draw(self.descriptionCanvas, self.descriptionX, self.descriptionY, 0, 1, 1, self.descriptionCanvas:getWidth(), 0)
+end
+
+function Infos:drawCiggiesTray()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.ciggiesTray)
+
+    love.graphics.draw(Sprites.CIGGIES_TRAY_BACK, 0, 0)
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
+end
+
+function Infos:drawCiggiesTrayFront()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.ciggiesTrayFront)
+
+    love.graphics.draw(Sprites.CIGGIES_TRAY_FRONT, 0, self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, Sprites.CIGGIES_TRAY_FRONT:getHeight())
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
 end
 
 return Infos
