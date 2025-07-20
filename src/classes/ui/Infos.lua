@@ -1,6 +1,8 @@
 local Sprites = require("src/utils/Sprites")
 local Constants = require("src/utils/Constants")
 local Animator = require("src/utils/Animator")
+local Button = require("src/classes/ui/Button")
+local Inputs = require("src/utils/scripts/Inputs")
 
 local Infos = {}
 Infos.__index = Infos
@@ -25,17 +27,44 @@ function Infos:new(run)
     self.descriptionsX, self.descriptionsY = 1470, 30
     self.playerBadgeX, self.playerBadgeY = 770, 30
     self.progressionX, self.progressionY = 1290, 52
+    self.planBtnX, self.planBtnY = 100, 910 
+    self.menuBtnX, self.menuBtnY = 100, 1010
+
+    --Buttons
+    self.uiElements = {buttons = {}}
+
+    self.uiElements.buttons["menuButton"] = Button:new(
+        function()print("menu")end,
+        "src/assets/sprites/ui/Menu.png",
+        self.menuBtnX,
+        self.menuBtnY,
+        140,
+        80,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
+
+    self.uiElements.buttons["planButton"] = Button:new(
+        function()self.run:toggleInfoScreen()end,
+        "src/assets/sprites/ui/Plan.png",
+        self.planBtnX,
+        self.planBtnY,
+        140,
+        100,
+        self.gameCanvas,
+        function()return Inputs.getMouseInCanvas(0, 0)end
+    )
 
     --Start animations
 
     return self
 end
 
-function Infos:update()
+function Infos:update(dt)
 
 end
 
-function Infos:updateCanvas()
+function Infos:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -44,17 +73,45 @@ function Infos:updateCanvas()
     love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
     love.graphics.setColor(1, 1, 1, 1)
 
+    --Buttons
+    for i,button in next,self.uiElements.buttons do
+        button:update(dt)
+        button:draw()
+    end
+
     self:drawGridLarge()
     self:drawInventoryLarge()
     self:drawDescriptions()
     self:drawPlayerBadge()
     self:drawProgression()
-    
+
     love.graphics.setCanvas(currentCanvas)
 end
 
 function Infos:draw()
     love.graphics.draw(self.canvas, 0, 0, 0, 1, 1)
+end
+
+--==INPUTS FUNCTIONS==--
+function Infos:mousemoved(x, y, dx, dy, isDragging)
+    
+end
+
+function Infos:mousepressed(x, y, button, istouch, presses)
+    --Round Buttons
+    for key,button in next,self.uiElements.buttons do
+        button:clickEvent()
+    end
+end
+
+function Infos:mousereleased(x, y, button, istouch, presses)
+    --release event on UI elements (buttons)
+    for key,button in next,self.uiElements.buttons do
+        local wasReleased = button:releaseEvent()
+        if(wasReleased) then --Si le click a été complété
+            button:getCallback()()
+        end
+    end
 end
 
 --UI functions

@@ -91,6 +91,9 @@ function Run:update(dt)
         elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
             self.customizationScreen:update(dt)
         end
+    else
+        self.infoScreen:update(dt)
+        self.infoScreen:updateCanvas(dt)
     end
 end
 
@@ -109,8 +112,6 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
 
     --Info screen
     if(self.runPaused == true and self.infoScreen) then
-        self.infoScreen:update()
-        self.infoScreen:updateCanvas()
         self.infoScreen:draw()
     end
 end
@@ -179,7 +180,6 @@ function Run:toggleInfoScreen()
     else
         self:startInfoScreen()
     end
-    print(self.infoScreen)
 end
 
 --==DRAW FUNCTIONS==--
@@ -218,30 +218,38 @@ function Run:mousepressed(x, y, button, istouch, presses)
     --Met les coordonnées de drag à 0
     self.dragOriginX = x ; self.dragOriginY = y
 
-    if(self.currentState == Constants.RUN_STATES.ROUND)then
-        self.currentRound.terrain:mousepressed(x, y, button, istouch, presses)
-    elseif(self.currentState==Constants.RUN_STATES.SHOP)then
-        self.shop:mousepressed(x, y, button, istouch, presses)
-    elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
-        self.deskChoice:mousepressed(x, y, button, istouch, presses)
-    elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
-        self.gameOver:mousepressed(x, y, button, istouch, presses)
-    elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
-        self.customizationScreen:mousepressed(x, y, button, istouch, presses)
+    if(self.runPaused==false)then
+        if(self.currentState == Constants.RUN_STATES.ROUND)then
+            self.currentRound.terrain:mousepressed(x, y, button, istouch, presses)
+        elseif(self.currentState==Constants.RUN_STATES.SHOP)then
+            self.shop:mousepressed(x, y, button, istouch, presses)
+        elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
+            self.deskChoice:mousepressed(x, y, button, istouch, presses)
+        elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
+            self.gameOver:mousepressed(x, y, button, istouch, presses)
+        elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
+            self.customizationScreen:mousepressed(x, y, button, istouch, presses)
+        end
+    else
+        self.infoScreen:mousepressed(x, y, button, istouch, presses)
     end
 end
 
 function Run:mousereleased(x, y, button, istouch, presses)
-    if(self.currentState==Constants.RUN_STATES.ROUND)then
-        self.currentRound.terrain:mousereleased(x, y, button, istouch, presses)
-    elseif(self.currentState==Constants.RUN_STATES.SHOP)then
-        self.shop:mousereleased(x, y, button, istouch, presses)
-    elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
-        self.deskChoice:mousereleased(x, y, button, istouch, presses)
-    elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
-        self.gameOver:mousereleased(x, y, button, istouch, presses)
-    elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
-        self.customizationScreen:mousereleased(x, y, button, istouch, presses)
+    if(self.runPaused==false)then
+        if(self.currentState==Constants.RUN_STATES.ROUND)then
+            self.currentRound.terrain:mousereleased(x, y, button, istouch, presses)
+        elseif(self.currentState==Constants.RUN_STATES.SHOP)then
+            self.shop:mousereleased(x, y, button, istouch, presses)
+        elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
+            self.deskChoice:mousereleased(x, y, button, istouch, presses)
+        elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
+            self.gameOver:mousereleased(x, y, button, istouch, presses)
+        elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
+            self.customizationScreen:mousereleased(x, y, button, istouch, presses)
+        end
+    else
+        self.infoScreen:mousereleased(x, y, button, istouch, presses)
     end
 
     --Deactivate dragging
@@ -249,16 +257,20 @@ function Run:mousereleased(x, y, button, istouch, presses)
 end
 
 function Run:mousemoved(x, y, dx, dy)
-    if(self.currentState==Constants.RUN_STATES.ROUND)then
-        self.currentRound.terrain:mousemoved(x, y, dx, dy, self.isDragging)
-    elseif(self.currentState==Constants.RUN_STATES.SHOP)then
-        self.shop:mousemoved(x, y, dx, dy, self.isDragging)
-    elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
-        self.deskChoice:mousemoved(x, y, dx, dy, self.isDragging)
-    elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
-        self.gameOver:mousemoved(x, y, dx, dy, self.isDragging)
-    elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
-        self.customizationScreen:mousemoved(x, y, dx, dy, self.isDragging)
+    if(self.runPaused==false)then
+        if(self.currentState==Constants.RUN_STATES.ROUND)then
+            self.currentRound.terrain:mousemoved(x, y, dx, dy, self.isDragging)
+        elseif(self.currentState==Constants.RUN_STATES.SHOP)then
+            self.shop:mousemoved(x, y, dx, dy, self.isDragging)
+        elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
+            self.deskChoice:mousemoved(x, y, dx, dy, self.isDragging)
+        elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
+            self.gameOver:mousemoved(x, y, dx, dy, self.isDragging)
+        elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
+            self.customizationScreen:mousemoved(x, y, dx, dy, self.isDragging)
+        end
+    else
+        self.infoScreen:mousemoved(x, y, dx, dy, self.isDragging)
     end
     --x et y sont la position, dx et dy sont la vitesse.
 
