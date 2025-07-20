@@ -185,7 +185,26 @@ function Infos:drawGridLarge()
     love.graphics.setCanvas(self.gridLarge)
     love.graphics.clear()
 
+    --Background
     love.graphics.draw(Sprites.GRID_LARGE, 0, 0)
+
+    --Lines content
+    love.graphics.setColor(108/255, 86/255,113/255, 1)
+    for figure, i in next,Constants.FIGURES do
+        --Playcount
+        local playcountText = love.graphics.newText(Fonts.soraGridL, "Played : "..tostring(self.run.figuresInfos[i].playcount))
+        love.graphics.draw(playcountText,360, 34+(i-1)*50, 0, 1, 1, playcountText:getWidth()/2, playcountText:getHeight()/2)
+        --Level
+        local levelText = love.graphics.newText(Fonts.soraGridL, "Level : "..tostring(self.run.figuresInfos[i].level))
+        love.graphics.draw(levelText,500, 34+(i-1)*50, 0, 1, 1, levelText:getWidth()/2, levelText:getHeight()/2)
+
+        --Base points
+        local basePoints = love.graphics.newText(Fonts.soraGridL, " - ")
+        love.graphics.draw(basePoints,640, 34+(i-1)*50, 0, 1, 1, basePoints:getWidth()/2, basePoints:getHeight()/2)
+
+    end
+    love.graphics.setColor(1,1,1,1)
+
 
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.gridLarge, self.gridLX, self.gridLY)

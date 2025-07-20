@@ -54,6 +54,12 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     --Money
     self.money = 5
 
+    --Figures playcount and level
+    self.figuresInfos = {}
+    for k,f in next, Constants.FIGURES do
+        self.figuresInfos[f] = {level=1, playcount=0}
+    end
+
     --The canvas the game is rendered on.
     self.gameCanvas = gameCanvas
     self.game = game
