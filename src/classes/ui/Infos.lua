@@ -156,6 +156,20 @@ function Infos:mousemoved(x, y, dx, dy, isDragging)
             end
         end
     end
+
+    --Inventory
+    if(isDragging == true)then 
+        for key,face in next, self.uiElements.inventoryFaces do
+            if(face.isDraggable and face.isBeingClicked) then
+                face.isBeingDragged = true
+                self.dragAndDroppedObject = face
+                face.dragXspeed = dx
+                face.targetX = (face.targetX + dx)
+                face.targetY = (face.targetY + dy)
+                break;
+            end
+        end
+    end
 end
 
 function Infos:mousepressed(x, y, button, istouch, presses)
@@ -168,6 +182,11 @@ function Infos:mousepressed(x, y, button, istouch, presses)
     for key,ciggie in next,self.uiElements.ciggiesUI do
         ciggie:clickEvent()
     end
+
+    --Inventory
+    for key,uiFace in next,self.uiElements.inventoryFaces do
+        uiFace:clickEvent()
+    end
 end
 
 function Infos:mousereleased(x, y, button, istouch, presses)
@@ -176,6 +195,19 @@ function Infos:mousereleased(x, y, button, istouch, presses)
         local wasReleased = button:releaseEvent()
         if(wasReleased) then --Si le click a été complété
             button:getCallback()()
+        end
+    end
+
+    --Inventory
+    for key,face in next,self.uiElements.inventoryFaces do
+        local wasReleased = face:releaseEvent()
+        face.isBeingDragged = false
+
+        face.targetX = face.anchorX
+        face.targetY = face.anchorY
+
+        if(wasReleased) then
+            self:sellDiceFace(face.representedObject, face, key)
         end
     end
 
@@ -412,6 +444,9 @@ function Infos:createInventory()
                 function()return Inputs.getMouseInCanvas(0, 0)end,
                 nil
             )
+
+        faceUI.anchorX = xPos[i] + 60+ self.inventoryLX
+        faceUI.anchorY = yPos[i] + 60+ self.inventoryLY
 
         table.insert(self.uiElements.inventoryFaces, faceUI)
     end
