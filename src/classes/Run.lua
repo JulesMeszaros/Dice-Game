@@ -4,6 +4,7 @@ local Shop = require("src.screens.Shop")
 local DeskChoice = require("src.screens.DeskChoice")
 local DiceCustomization = require("src.screens.DiceCustomization")
 local EndRound = require("src.classes.ui.EndRound")
+local Infos = require("src.classes.ui.Infos")
 
 local Constants = require("src.utils.Constants")
 local Floor = require("src.classes.Floor")
@@ -48,6 +49,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.roundNumber = 0 --Représente le numéro de round total
     --Run state
     self.currentState = Constants.RUN_STATES.ROUND
+    self.runPaused = false
 
     --Money
     self.money = 5
@@ -69,27 +71,26 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.floorNumber = 1 --Représente l'étage (augmente de 1 après un boss)
     self.floorDeskNumber = 1 --Représente le numéro de bureau dans l'étage actuel (retourne à 1 après un boss)
     self:goToRoundSelection()
-
     
-    
-
     return self
 end
 
 function Run:update(dt)
-    if(self.currentState==Constants.RUN_STATES.ROUND)then
-        --update Round
-        self.currentRound:update(dt)
-    elseif(self.currentState==Constants.RUN_STATES.SHOP)then
-        --update shop
-        self.shop:update(dt)
-    elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
-        --update shop
-        self.deskChoice:update(dt)
-    elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
-        self.gameOver:update(dt)
-    elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
-        self.customizationScreen:update(dt)
+    if(self.runPaused~=true) then
+        if(self.currentState==Constants.RUN_STATES.ROUND)then
+            --update Round
+            self.currentRound:update(dt)
+        elseif(self.currentState==Constants.RUN_STATES.SHOP)then
+            --update shop
+            self.shop:update(dt)
+        elseif(self.currentState==Constants.RUN_STATES.ROUND_CHOICE)then
+            --update shop
+            self.deskChoice:update(dt)
+        elseif(self.currentState==Constants.RUN_STATES.GAME_OVER)then
+            self.gameOver:update(dt)
+        elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
+            self.customizationScreen:update(dt)
+        end
     end
 end
 
@@ -104,6 +105,13 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
         self.gameOver:draw()
     elseif(self.currentState==Constants.RUN_STATES.DICE_CUSTOMIZATION)then
         self.customizationScreen:draw()
+    end
+
+    --Info screen
+    if(self.runPaused == true and self.infoScreen) then
+        self.infoScreen:update()
+        self.infoScreen:updateCanvas()
+        self.infoScreen:draw()
     end
 end
 
@@ -149,9 +157,31 @@ function Run:goToNextRound()
         self.currentState = Constants.RUN_STATES.SHOP
     else
     --GOTO dice customization
-        self:goToDiceCustomization()
+   
+    self:goToDiceCustomization()
     end
 end
+
+--==INFO MENU FUNCTION==--
+function Run:startInfoScreen()
+    self.runPaused = true
+    self.infoScreen = Infos:new(self)
+end
+
+function Run:endInfoScreen()
+    self.runPaused = false
+    self.infoScreen = nil
+end
+
+function Run:toggleInfoScreen()
+    if(self.runPaused == true) then
+        self:endInfoScreen()
+    else
+        self:startInfoScreen()
+    end
+    print(self.infoScreen)
+end
+
 --==DRAW FUNCTIONS==--
 
 function Run:drawRound()

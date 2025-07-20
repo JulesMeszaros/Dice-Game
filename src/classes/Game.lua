@@ -40,7 +40,6 @@ function Game:start()
     self.diceObjects = diceObjects
 
     self.currentScreen = Constants.PAGES.GAME
-    self.gamePaused = false
     self.run = nil
 
     self.gameCanvas = gameCanvas

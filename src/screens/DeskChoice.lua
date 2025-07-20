@@ -256,11 +256,19 @@ end
 function DeskChoice:mousereleased(x, y, button, istouch, presses)
     self.dragAndDroppedObject = nil
 
-    --release event on UI elements (buttons)
+    --release event on UI elements (badges)
     for key,badge in next,self.badges do
         local wasReleased = badge:releaseEvent()
         if(wasReleased) then --Si le click a été complété
             self:outAnimation(badge)
+        end
+    end
+
+    --release event on UI elements (buttons)
+    for key,button in next,self.uiElements.buttons do
+        local wasReleased = button:releaseEvent()
+        if(wasReleased) then --Si le click a été complété
+            button:getCallback()()
         end
     end
 

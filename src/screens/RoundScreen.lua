@@ -222,7 +222,7 @@ end
 
 --==INPUT FUNCTIONS==--
 function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
-    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND) then
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.run.runPaused == false) then
         --Drag and drop dice
         if(isDragging == true)then 
             for key,diceui in next, self.diceFaces do

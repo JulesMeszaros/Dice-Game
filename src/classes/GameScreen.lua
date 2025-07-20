@@ -160,7 +160,7 @@ function GameScreen:new(floor, run, screenType, round)
     )
 
     self.uiElements.buttons["planButton"] = Button:new(
-        function()print("plan")end,
+        function()self.run:toggleInfoScreen()end,
         "src/assets/sprites/ui/Plan.png",
         self.planBtnX,
         self.planBtnY,

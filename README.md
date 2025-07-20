@@ -13,4 +13,10 @@ LE jeu de Yatzee, mais en beaucoup mieux.
 - Se placer dans le dossier téléchargé
 - Tapper `love ./`
 
+### A partir du fichier .love
+- Installer le moteur Love2D
+- Telecharger la release souhaitée
+- Double clicker le fichier pour l'ouvrir
+- C'est parti!
+
 Et c'est gagné!!!
