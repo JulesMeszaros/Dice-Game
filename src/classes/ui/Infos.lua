@@ -5,6 +5,7 @@ local Constants = require("src/utils/Constants")
 local Animator = require("src/utils/Animator")
 local Button = require("src/classes/ui/Button")
 local Inputs = require("src/utils/scripts/Inputs")
+local DiceFace = require("src/classes/ui/DiceFace")
 
 local Infos = {}
 Infos.__index = Infos
@@ -75,15 +76,16 @@ function Infos:new(run)
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
+    --
+
     --Start animations
     self.baseOpacity, self.targetOpacity = 0, 1
     self.opacity = self.baseOpacity
     
+    self:createInventory()
     self:generateCiggiesUI()
 
     self.animator:add('opacity', self.baseOpacity, self.targetOpacity, 0.1)
-
-
 
     return self
 end
@@ -116,6 +118,11 @@ function Infos:updateCanvas(dt)
     self:drawRoundDetails()
     self:drawDescription()
 
+    --faces UI
+    for i,faceUI in next,self.uiElements.inventoryFaces do
+        faceUI:update(dt)
+        faceUI:draw()
+    end
 
     --Ciggies UI
     self:drawCiggiesTray()
@@ -386,9 +393,35 @@ function Infos:generateCiggiesUI()
     end
 end
 
+function Infos:createInventory()
+    local xPos = {70, 240, 410, 580, 70, 240, 410, 580}
+    local yPos = {70, 70, 70, 70, 200, 200, 200, 200}
+
+    for i,face in next,self.run.facesInventory do
+        --Create the UIFaces
+
+
+        local faceUI = DiceFace:new(
+                nil,
+                face,
+                xPos[i] + 60+ self.inventoryLX,
+                yPos[i] + self.inventoryLY + 60,
+                120,
+                false,
+                true,
+                function()return Inputs.getMouseInCanvas(0, 0)end,
+                nil
+            )
+
+        table.insert(self.uiElements.inventoryFaces, faceUI)
+    end
+end
+
 function Infos:fadeOut()
     self.animator:add('opacity', self.opacity, self.baseOpacity, 0.1, nil, function()self.run:toggleInfoScreen()end)
 end
+
+--UTILS
 
 function Infos:getSpacedPositions(count, x1, x2)
     local positions = {}
