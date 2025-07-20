@@ -1,3 +1,4 @@
+local Ciggie = require("src/classes/ui/Ciggie")
 local Fonts = require("src/utils/Fonts")
 local Sprites = require("src/utils/Sprites")
 local Constants = require("src/utils/Constants")
@@ -50,7 +51,7 @@ function Infos:new(run)
     self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight()
 
     --Buttons
-    self.uiElements = {buttons = {}}
+    self.uiElements = {buttons = {}, ciggiesUI={}, inventoryFaces={}, rewardFaces={}}
 
     self.uiElements.buttons["menuButton"] = Button:new(
         function()print("menu")end,
@@ -77,7 +78,12 @@ function Infos:new(run)
     --Start animations
     self.baseOpacity, self.targetOpacity = 0, 1
     self.opacity = self.baseOpacity
+    
+    self:generateCiggiesUI()
+
     self.animator:add('opacity', self.baseOpacity, self.targetOpacity, 0.1)
+
+
 
     return self
 end
@@ -109,7 +115,14 @@ function Infos:updateCanvas(dt)
     self:drawProgression()
     self:drawRoundDetails()
     self:drawDescription()
+
+
+    --Ciggies UI
     self:drawCiggiesTray()
+    for i, ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:update(dt)
+        ciggie:draw()
+    end
     self:drawCiggiesTrayFront()
 
     love.graphics.setCanvas(currentCanvas)
@@ -123,13 +136,30 @@ end
 
 --==INPUTS FUNCTIONS==--
 function Infos:mousemoved(x, y, dx, dy, isDragging)
-    
+    --Drag and drop Ciggies
+    if(isDragging == true)then 
+        for key,ciggie in next, self.uiElements.ciggiesUI do
+            if(ciggie.isDraggable and ciggie.isBeingClicked) then
+                ciggie.isBeingDragged = true
+                self.dragAndDroppedCiggie = ciggie
+                ciggie.dragXspeed = dx
+                ciggie.targetX = x
+                ciggie.targetY = y
+                break;
+            end
+        end
+    end
 end
 
 function Infos:mousepressed(x, y, button, istouch, presses)
     --Round Buttons
     for key,button in next,self.uiElements.buttons do
         button:clickEvent()
+    end
+
+    --Ciggies
+    for key,ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:clickEvent()
     end
 end
 
@@ -140,6 +170,12 @@ function Infos:mousereleased(x, y, button, istouch, presses)
         if(wasReleased) then --Si le click a été complété
             button:getCallback()()
         end
+    end
+
+    --Ciggies
+    for key,ciggie in next,self.uiElements.ciggiesUI do
+        ciggie:releaseEvent()
+        ciggie.isBeingDragged = false
     end
 end
 
@@ -315,8 +351,43 @@ function Infos:drawCiggiesTrayFront()
     love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
 end
 
+--Start/END
+
+function Infos:generateCiggiesUI()
+    self.uiElements.ciggiesUI = {}
+
+    --calculate the xPosistions
+    local xPos = self:getSpacedPositions(table.getn(self.run.ciggiesObjects), self.ciggiesTrayX-self.ciggiesTray:getWidth(), self.ciggiesTrayX)
+
+    for i,ciggie in next,self.run.ciggiesObjects do
+        
+        local c = Ciggie:new(ciggie, xPos[i], self.canvas:getHeight()+30, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+        c.baseRotation, c.rotation, c.targetedRotation = 1.57, 1.57, 1.57
+        self.uiElements.ciggiesUI[ciggie] = c
+    end
+end
+
 function Infos:fadeOut()
     self.animator:add('opacity', self.opacity, self.baseOpacity, 0.1, nil, function()self.run:toggleInfoScreen()end)
+end
+
+function Infos:getSpacedPositions(count, x1, x2)
+    local positions = {}
+
+    local totalWidth = x2 - x1
+
+    if count == 1 then
+        table.insert(positions, (x1 + x2) / 2)
+    else
+        local spacing = totalWidth / count
+
+        for i = 0, count - 1 do
+            local x = x1 + spacing / 2 + i * spacing
+            table.insert(positions, x)
+        end
+    end
+
+    return positions
 end
 
 return Infos
