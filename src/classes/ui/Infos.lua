@@ -302,6 +302,14 @@ function Infos:drawDescriptions()
     --Office description
     if(self.run.currentState == Constants.RUN_STATES.ROUND) then
         love.graphics.draw(Sprites.OFFICE_DESCRIPTION, 0, 0)
+
+        --Texts
+        local jobDeskText = love.graphics.newText(Fonts.soraLightMini, 'Office '..tostring(self.run.currentRound.deskNumber).." - "..tostring(self.run.currentRound.enemyJob))
+        local targetText = love.graphics.newText(Fonts.soraReward, 'Target : '..tostring(self.run.currentRound.targetScore).."pts")
+        
+        love.graphics.draw(jobDeskText, 210 ,145, 0, 1, 1, jobDeskText:getWidth()/2, jobDeskText:getHeight()/2)
+        love.graphics.draw(targetText, 210 ,190, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
+
     else
         love.graphics.draw(Sprites.OFFICE_DESCRIPTION_EMPTY, 0, 0)
     end

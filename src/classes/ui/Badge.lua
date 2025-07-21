@@ -117,12 +117,6 @@ function Badge:updateCanvas(dt)
 
     self:updateFaceCanvas(dt)
 
-    --Hover infos
-    --[[ if(self.currentlyHoveredFace)then
-        self.hoverInfosCanvas:update(dt)
-        self.hoverInfosCanvas:draw("above")
-    end ]]
-
     love.graphics.setCanvas(currentCanvas)
 end
 
