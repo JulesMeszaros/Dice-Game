@@ -1,6 +1,7 @@
 local Fonts = require("src.utils.Fonts")
 local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
+local Sprites = require("src.utils.Sprites")
 
 local Button = require("src.classes.ui.Button")
 
@@ -25,11 +26,11 @@ function MainMenu:new(gameCanvas, game)
 
     self.uiElements.buttons["newRun"] = Button:new(
         function()self.game:startNewRun()end,
-        "src/assets/sprites/ui/new_run.png",
-        self.gameCanvas:getWidth()/2,
-        self.gameCanvas:getHeight()/2,
-        400,
-        167,
+        "src/assets/sprites/ui/New Run.png",
+        618+678/2,
+        730+180/2,
+        678,
+        180,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
@@ -54,9 +55,8 @@ function MainMenu:updateCanvas(dt)
 
     --==Animation Dices==--
 
-    local textTitle = love.graphics.newText(Fonts.soraBig, "DICE GAME")
     --Main title
-    love.graphics.draw(textTitle, self.mainMenuCanvas:getWidth()/2, 100, 0, 1, 1, textTitle:getWidth()/2, textTitle:getHeight()/2)
+    love.graphics.draw(Sprites.MAIN_LOGO, self.mainMenuCanvas:getWidth()/2, 75, 0, 1, 1, Sprites.MAIN_LOGO:getWidth()/2, 0)
 
     --Version
     local versionText = love.graphics.newText(Fonts.soraSmall, "AEROSOL DELUXE GAMES — "..Constants.GAME_VERSION)

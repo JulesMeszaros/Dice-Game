@@ -1,6 +1,8 @@
 --Enum used to store all the sprites paths
 local Sprites = {}
 
+Sprites.MAIN_LOGO = love.graphics.newImage("src/assets/sprites/ui/Main Logo.png")
+
 Sprites.DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Description.png")
 Sprites.DICE_INFOS = love.graphics.newImage("src/assets/sprites/ui/DiceComposition.png")
 Sprites.DECK = love.graphics.newImage("src/assets/sprites/ui/Deck.png")
