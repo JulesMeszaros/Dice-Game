@@ -52,6 +52,7 @@ Sprites.SELL_CIGGIE = love.graphics.newImage("src/assets/sprites/ui/Sell Ciggie.
 Sprites.PLAYER_BADGE = love.graphics.newImage("src/assets/sprites/ui/Player Badge.png")
 Sprites.GRID_LARGE = love.graphics.newImage("src/assets/sprites/ui/Grid Large.png")
 Sprites.OFFICE_DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Office Description.png")
+Sprites.OFFICE_DESCRIPTION_EMPTY = love.graphics.newImage("src/assets/sprites/ui/Office Description Empty.png")
 Sprites.FLOOR_DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Floor Description.png")
 Sprites.PROGRESSION = love.graphics.newImage("src/assets/sprites/ui/Progression.png")
 

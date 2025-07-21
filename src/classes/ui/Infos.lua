@@ -85,6 +85,10 @@ function Infos:new(run)
     self:createInventory()
     self:generateCiggiesUI()
 
+    if(self.run.currentState == Constants.RUN_STATES.ROUND) then
+        self:createRewards()
+    end
+
     self.animator:add('opacity', self.baseOpacity, self.targetOpacity, 0.1)
 
     return self
@@ -100,7 +104,7 @@ function Infos:updateCanvas(dt)
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
 
-    love.graphics.setColor(0.1, 0.1, 0.1, 1)
+    love.graphics.setColor(40/255, 40/255, 43/255, 1)
     love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
     love.graphics.setColor(1, 1, 1, 1)
 
@@ -120,6 +124,13 @@ function Infos:updateCanvas(dt)
 
     --faces UI
     for i,faceUI in next,self.uiElements.inventoryFaces do
+        faceUI:update(dt)
+        faceUI:draw()
+    end
+
+    --rewards UI
+    for i,faceUI in next,self.uiElements.rewardFaces do
+
         faceUI:update(dt)
         faceUI:draw()
     end
@@ -170,6 +181,20 @@ function Infos:mousemoved(x, y, dx, dy, isDragging)
             end
         end
     end
+
+    --Inventory
+    if(isDragging == true)then 
+        for key,face in next, self.uiElements.rewardFaces do
+            if(face.isDraggable and face.isBeingClicked) then
+                face.isBeingDragged = true
+                self.dragAndDroppedObject = face
+                face.dragXspeed = dx
+                face.targetX = (face.targetX + dx)
+                face.targetY = (face.targetY + dy)
+                break;
+            end
+        end
+    end
 end
 
 function Infos:mousepressed(x, y, button, istouch, presses)
@@ -185,6 +210,11 @@ function Infos:mousepressed(x, y, button, istouch, presses)
 
     --Inventory
     for key,uiFace in next,self.uiElements.inventoryFaces do
+        uiFace:clickEvent()
+    end
+
+    --Rewards
+    for key,uiFace in next,self.uiElements.rewardFaces do
         uiFace:clickEvent()
     end
 end
@@ -205,10 +235,15 @@ function Infos:mousereleased(x, y, button, istouch, presses)
 
         face.targetX = face.anchorX
         face.targetY = face.anchorY
+    end
 
-        if(wasReleased) then
-            self:sellDiceFace(face.representedObject, face, key)
-        end
+    --Inventory
+    for key,face in next,self.uiElements.rewardFaces do
+        local wasReleased = face:releaseEvent()
+        face.isBeingDragged = false
+
+        face.targetX = face.anchorX
+        face.targetY = face.anchorY
     end
 
     --Ciggies
@@ -264,8 +299,14 @@ function Infos:drawDescriptions()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.descriptions)
     love.graphics.clear()
-
-    love.graphics.draw(Sprites.OFFICE_DESCRIPTION, 0, 0)
+    --Office description
+    if(self.run.currentState == Constants.RUN_STATES.ROUND) then
+        love.graphics.draw(Sprites.OFFICE_DESCRIPTION, 0, 0)
+    else
+        love.graphics.draw(Sprites.OFFICE_DESCRIPTION_EMPTY, 0, 0)
+    end
+    
+    
     love.graphics.draw(Sprites.FLOOR_DESCRIPTION, 0, 407)
 
     love.graphics.setCanvas(currentCanvas)
@@ -449,6 +490,32 @@ function Infos:createInventory()
         faceUI.anchorY = yPos[i] + 60+ self.inventoryLY
 
         table.insert(self.uiElements.inventoryFaces, faceUI)
+    end
+end
+
+function Infos:createRewards()
+local xPos = {60, 240}
+    local yPos = {220, 220}
+
+    for i,face in next,self.run.currentRound.faceRewards do
+        --Create the UIFaces
+
+        local faceUI = DiceFace:new(
+                nil,
+                face,
+                xPos[i] + 60+ self.descriptionsX,
+                yPos[i] + 60+ self.descriptionsY,
+                120,
+                false,
+                true,
+                function()return Inputs.getMouseInCanvas(0, 0)end,
+                nil
+            )
+
+        faceUI.anchorX = xPos[i] + 60+ self.descriptionsX
+        faceUI.anchorY = yPos[i] + 60+ self.descriptionsY
+
+        table.insert(self.uiElements.rewardFaces, faceUI)
     end
 end
 
