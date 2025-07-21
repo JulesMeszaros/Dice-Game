@@ -388,8 +388,6 @@ function Shop:buyDiceFace(face, faceUI, key)
 
         --Update the positions of the dices
         self:updateInventoryPositions()
-    else
-        print("no more space in iventory")
     end
 end
 
@@ -883,7 +881,6 @@ function Shop:drawFacesPriceTags()
 end
 
 function Shop:addRewardToInventory(face, key)
-    print("added", face.representedObject.name)
 
     --Supprimer la face de la liste des rewards
     table.remove(self.run.facesRewardsInventory, key)

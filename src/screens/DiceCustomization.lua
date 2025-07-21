@@ -679,7 +679,6 @@ function DiceCustomization:getCurrentlyHoveredObject()
 end
 
 function DiceCustomization:addRewardToInventory(face, key)
-    print("added", face.representedObject.name)
 
     --Supprimer la face de la liste des rewards
     table.remove(self.run.facesRewardsInventory, key)
