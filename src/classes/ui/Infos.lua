@@ -399,7 +399,7 @@ function Infos:drawRoundDetails()
 end
 
 function Infos:drawDescription()
-    --local hoveredObject = self:getCurrentlyHoveredObject()
+    local hoveredObject = self:getCurrentlyHoveredObject()
 
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.descriptionCanvas)
@@ -408,7 +408,7 @@ function Infos:drawDescription()
     love.graphics.draw(Sprites.DESCRIPTION, 0, 0)
 
 
-    --[[ if(hoveredObject) then
+    if(hoveredObject) then
 
         --Name
         local objectName = hoveredObject.name
@@ -431,7 +431,7 @@ function Infos:drawDescription()
         love.graphics.draw(descText, self.descriptionCanvas:getWidth()/2, 140, 0, 1, 1, descText:getWidth()/2, 0)
         love.graphics.setColor(1, 1, 1, 1)
 
-    end ]]
+    end
 
     love.graphics.setCanvas(currentCanvas)
 
@@ -457,6 +457,46 @@ function Infos:drawCiggiesTrayFront()
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
 end
+
+--Hovered objects
+function Infos:getCurrentlyHoveredFace()
+    self.currentlyHoveredFace = nil
+    --Reward faces
+    for i,face in next,self.uiElements.rewardFaces do
+        if(face:isHovered()) then self.currentlyHoveredFace = face ; return end
+    end
+    --Inventory Faces
+    for i,face in next,self.uiElements.inventoryFaces do
+        if(face:isHovered()) then self.currentlyHoveredFace = face ; return end
+    end
+end
+
+--==Hover functions==--
+function Infos:getCurrentlyHoveredCiggie()
+    self.currentlyHoveredCiggie = nil
+    --Inventaire
+    for i,ciggie in next,self.uiElements.ciggiesUI do
+        if(ciggie:isHovered())then
+            self.currentlyHoveredCiggie = ciggie
+            break
+        end
+    end
+end
+
+function Infos:getCurrentlyHoveredObject()
+    self:getCurrentlyHoveredCiggie()
+    self:getCurrentlyHoveredFace()
+
+    if(self.currentlyHoveredFace) then
+        return self.currentlyHoveredFace.representedObject
+    elseif(self.currentlyHoveredCiggie)then
+        return self.currentlyHoveredCiggie.representedObject
+    else
+        return nil
+    end
+end
+
+
 
 --Start/END
 
