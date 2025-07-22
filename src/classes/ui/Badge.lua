@@ -99,6 +99,11 @@ function Badge:updateCanvas(dt)
     Shaders.grayRainbowShader:send("frequency", 0.3)
     Shaders.grayRainbowShader:send("intensity", 0.3)
     love.graphics.draw(self.sprite, 0, 0) -- add the background
+
+    --Lion
+    self.round.enemyCharacter:update(dt)
+    self.round.enemyCharacter:draw(185, 191, 200, 200)
+
     love.graphics.setShader()
 
     
@@ -114,6 +119,8 @@ function Badge:updateCanvas(dt)
     love.graphics.draw(targetText, self.uiCanvas:getWidth()/2, 322, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
 
     love.graphics.setColor(1, 1, 1, 1)
+
+    
 
     self:updateFaceCanvas(dt)
 

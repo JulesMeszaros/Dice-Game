@@ -410,6 +410,10 @@ function RoundScreen:drawPlayersInfos()
     love.graphics.draw(targetScoreText, 20, 210)
     love.graphics.setColor(1, 1, 1, 1)
 
+    --Lion
+    self.round.enemyCharacter:update()
+    self.round.enemyCharacter:draw(390+130, 125, 250, 250)
+
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.playerInfos, self.playerX, self.playerY)
     love.graphics.draw(self.enemyInfos, self.enemyX, self.enemyY)

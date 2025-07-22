@@ -4,7 +4,7 @@ Lion.__index = Lion
 function Lion:new()
     local self = setmetatable({}, Lion)
 
-    self.canvas = love.graphics.newCanvas(500, 500)
+    self.canvas = love.graphics.newCanvas(300, 300)
 
     --Default indexes for the different parts of the body
     self.backgroundIndex = 1
@@ -20,15 +20,14 @@ function Lion:new()
     return self
 end
 
-function Lion:update(dt)
+function Lion:update()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
 
-    love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
 
     --drawing the images one by one
-    love.graphics.draw(self.backgroundImage, self.canvas:getWidth()/2, self.canvas:getHeight()/2, 0, 1, 1, self.backgroundImage:getWidth()/2, self.backgroundImage:getHeight()/2)
+    --love.graphics.draw(self.backgroundImage, self.canvas:getWidth()/2, self.canvas:getHeight()/2, 0, 1, 1, self.backgroundImage:getWidth()/2, self.backgroundImage:getHeight()/2)
     love.graphics.draw(self.shouldersImage, self.canvas:getWidth()/2, self.canvas:getHeight()/2, 0, 1, 1, self.shouldersImage:getWidth()/2, self.shouldersImage:getHeight()/2)
     love.graphics.draw(self.crownOneImage, self.canvas:getWidth()/2, self.canvas:getHeight()/2, 0, 1, 1, self.crownOneImage:getWidth()/2, self.crownOneImage:getHeight()/2)
     love.graphics.draw(self.crownTwoImage, self.canvas:getWidth()/2, self.canvas:getHeight()/2, 0, 1, 1, self.crownTwoImage:getWidth()/2, self.crownTwoImage:getHeight()/2)
@@ -40,8 +39,8 @@ function Lion:update(dt)
     love.graphics.setCanvas(currentCanvas)
 end
 
-function Lion:draw(x, y)
-    love.graphics.draw(self.canvas, x, y, 0, 1/4, 1/4, self.canvas:getWidth()/2, self.canvas:getHeight()/2)
+function Lion:draw(x, y, width, height)
+    love.graphics.draw(self.canvas, x, y, 0, width/self.canvas:getWidth(), height/self.canvas:getHeight(), self.canvas:getWidth()/2, self.canvas:getHeight()/2)
 end
 
 function Lion:generateRandomLion()
@@ -56,7 +55,7 @@ function Lion:generateRandomLion()
     self.noseIndex = math.random(1, countFilesInFolder("src/assets/lion/nose/"))
     self.shouldersIndex = math.random(1, countFilesInFolder("src/assets/lion/shoulders/"))
     --Importing the images
-    self.backgroundImage = love.graphics.newImage("src/assets/lion/background/background"..tostring(self.backgroundIndex)..".png")
+    --self.backgroundImage = love.graphics.newImage("src/assets/lion/background/background"..tostring(self.backgroundIndex)..".png")
     self.crownOneImage = love.graphics.newImage("src/assets/lion/crownone/crownone"..tostring(self.crownOneIndex)..".png")
     self.crownTwoImage = love.graphics.newImage("src/assets/lion/crowntwo/crowntwo"..tostring(self.crownTwoIndex)..".png")
     self.eyesImage = love.graphics.newImage("src/assets/lion/eyes/eyes"..tostring(self.eyesIndex)..".png")
