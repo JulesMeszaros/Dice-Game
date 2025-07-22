@@ -91,8 +91,11 @@ function Rockmans:new()
     return self
 end
 
+function Rockmans:usageCondition(screen)
+    if table.getn(screen.run.ciggiesObjects)>1 then return true else return false end
+end
+
 function Rockmans:effect(screen)
-    print("test")
     local randomCiggie = getRandomExcluding(screen.run.ciggiesObjects, self)
     
     table.insert(screen.run.ciggiesObjects, getmetatable(randomCiggie):new())

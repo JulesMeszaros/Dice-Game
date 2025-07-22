@@ -12,7 +12,7 @@ function CiggieObject:new()
 end
 
 function CiggieObject:trigger(screen, screenType)
-    if(screenType == self.usableIn or self.usableIn == "any") then
+    if((screenType == self.usableIn or self.usableIn == "any") and self:usageCondition(screen)==true) then
         screen.run.totalUsedCiggie = screen.run.totalUsedCiggie+1
         self:effect(screen)
         self:destruct(screen)
@@ -20,6 +20,10 @@ function CiggieObject:trigger(screen, screenType)
     else
         print("not usable here", screenType)
     end
+end
+
+function CiggieObject:usageCondition(round)
+    return true
 end
 
 function CiggieObject:effect(round)
