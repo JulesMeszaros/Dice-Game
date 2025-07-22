@@ -647,11 +647,8 @@ function DiceCustomization:getCurrentlyHoveredFace()
         if face:isHovered() then self.currentlyHoveredFace = face ; break end
     end
 
-    --Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
-    if(self.currentlyHoveredFace ~= self.previouslyHoveredFace) then
-        if (self.currentlyHoveredFace) then
-            self.hoverInfosCanvas = FaceHoverInfo:new(self.currentlyHoveredFace, "points", 0, 0)
-        end
+    for i,face in next,self.rewardsUIFaces do
+        if face:isHovered() then self.currentlyHoveredFace = face ; break end
     end
 
 end

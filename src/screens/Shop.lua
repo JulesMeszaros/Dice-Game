@@ -590,6 +590,10 @@ function Shop:getCurrentlyHoveredFace()
     for i,face in next,self.inventoryFacesUI do
         if(face:isHovered()) then self.currentlyHoveredFace = face ; return end
     end
+    --Rewards
+    for i,face in next,self.rewardsFacesUI do
+        if(face:isHovered()) then self.currentlyHoveredFace = face ; return end
+    end
 end
 
 function Shop:getCurrentlyHoveredObject()

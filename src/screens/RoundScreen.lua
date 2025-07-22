@@ -191,8 +191,6 @@ function RoundScreen:updateCanvas(dt)
         self:drawCiggiePopup()
     end
 
-    --Face Details
-    self:drawDescription(self.descriptionX, self.descriptionY)
 
 
     --Ciggies Tray
@@ -203,10 +201,7 @@ function RoundScreen:updateCanvas(dt)
         ciggie:draw()
     end
 
-    --On dessine l'objet drag and drop au dessus de tout le reste
-    if(self.dragAndDroppedCiggie)then
-        self.dragAndDroppedCiggie:draw()
-    end
+    
 
     self:drawCiggiesTrayFront()
 
@@ -215,6 +210,14 @@ function RoundScreen:updateCanvas(dt)
         self.endRoundPopUp:update(dt)
         self.endRoundPopUp:updateCanvas(dt)
         self.endRoundPopUp:draw()
+    end
+
+    --Face Details
+    self:drawDescription(self.descriptionX, self.descriptionY)
+
+    --On dessine l'objet drag and drop au dessus de tout le reste
+    if(self.dragAndDroppedCiggie)then
+        self.dragAndDroppedCiggie:draw()
     end
 
     love.graphics.setCanvas(currentCanvas)
@@ -548,8 +551,9 @@ end
 function RoundScreen:getCurrentlyHoveredObject()
     local object = nil
 
-    if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie.representedObject
-    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedObject
+    if(self.currentlyHoveredCiggie and not self.endRoundPopUp)then object = self.currentlyHoveredCiggie.representedObject
+    elseif(self.currentlyHoveredFace and not self.endRoundPopUp)then object = self.currentlyHoveredFace.representedObject
+    elseif(self.endRoundPopUp and self.endRoundPopUp.currentlyHoveredFace) then object = self.endRoundPopUp.currentlyHoveredFace.representedObject
     else object = nil end
 
     return object

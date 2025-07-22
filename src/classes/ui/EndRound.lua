@@ -60,6 +60,7 @@ end
 
 function EndRound:update(dt)
     self.animator:update(dt)
+    self:getCurrentlyHoveredFace()
 end
 
 function EndRound:updateCanvas(dt)
@@ -229,6 +230,14 @@ function EndRound:generateFaceRewards()
         })
 
         table.insert(self.faceRewards, uiFace)
+    end
+end
+
+--==Hovered Object==--
+function EndRound:getCurrentlyHoveredFace()
+    self.currentlyHoveredFace = nil
+    for i,face in next,self.faceRewards do
+        if(face:isHovered()) then self.currentlyHoveredFace = face ; return end
     end
 end
 
