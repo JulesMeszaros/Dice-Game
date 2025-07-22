@@ -474,6 +474,11 @@ end
 function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
     --Commencer la phase de déclenchement
     self:startTriggeringPhase(usedDices, figure)
+
+    --Add one to the playcount
+    self.run.figuresInfos[figure].playcount = self.run.figuresInfos[figure].playcount+1
+
+    print(figure)
     --Ajouter le score de base de la figure à la main
     self.handScore = self.handScore+points -- On ajoute les points au score
 end
