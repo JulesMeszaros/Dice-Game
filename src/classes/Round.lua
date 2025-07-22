@@ -6,6 +6,8 @@ local Inputs = require("src.utils.scripts.Inputs")
 local Animator = require("src.utils.Animator")
 local EndRound = require("src.classes.ui.EndRound")
 local GameOverScreen = require("src.screens.GameOverScreen")
+local Lion = require("src.classes.ui.Lion")
+
 
 local Round = {}
 Round.__index = Round
@@ -51,6 +53,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.availableRerolls = Constants.BASE_REROLLS
 
     --Ennemy metadata
+    self.enemyCharacter = Lion:new()
     if(self.roundType == Constants.ROUND_TYPES.BASE) then
         self.enemyJob = Constants.EMPLOIS[math.random(#Constants.EMPLOIS)]
     else
