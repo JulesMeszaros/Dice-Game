@@ -10,19 +10,22 @@ function PopUpText:new(text, screen)
 
     self.animator = Animator:new(self)
 
-    self.rotations, self.scaleX, self.scaleY, self.opacity = math.random(-0.5, 0.5), 1, 1, 1
+    self.rotations, self.scaleX, self.scaleY, self.opacity = math.random(-100, 100)/200, 1, 1, 1
 
-    self.text = love.graphics.newText(Fonts.soraBig, text)
+    self.text = love.graphics.newText(Fonts.soraMedium, text)
 
     --Random position
     self.x = math.random(Constants.VIRTUAL_GAME_WIDTH/3, 2*Constants.VIRTUAL_GAME_WIDTH/3)
     self.y = math.random(Constants.VIRTUAL_GAME_HEIGHT/3, 2*Constants.VIRTUAL_GAME_HEIGHT/3)
 
-    self.color = {1, 0, 0}
+    self.color = {255/255, 104/255, 157/255}
 
     self.canvas = love.graphics.newCanvas(1000, 500)
     print("terrain", screen)
-    self.animator:add("opacity", 1, 0, 0.3, nil, function()self:destruct(screen)end)
+    self.animator:addGroup({
+        {property="opacity", from=3, targetValue=0, duration=0.6, ease=nil, onComplete=function()self:destruct(screen)end},
+        {property="y", from=self.y, targetValue=self.y-30, duration=0.6, ease=nil, onComplete=function()self:destruct(screen)end}
+    })
 
     return self
 end
