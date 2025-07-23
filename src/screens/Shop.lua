@@ -392,7 +392,7 @@ function Shop:buyDiceFace(face, faceUI, key)
 end
 
 function Shop:buyCiggie(ciggie, ciggieUI, key)
-    if(table.getn(self.run.ciggiesObjects)<Constants.BASE_MAX_CIGGIES and self.run.money>=5)then
+    if(table.getn(self.run.ciggiesObjects)<Constants.BASE_MAX_CIGGIES and self.run.money>=Constants.BASE_CIGGIE_PRICE)then
         self.run.money = self.run.money - Constants.BASE_CIGGIE_PRICE
         --Add the ciggie to the inventory
         table.insert(self.run.ciggiesObjects, ciggie)
