@@ -6,6 +6,7 @@ local Constants = require("src.utils.Constants")
 local FaceHoverInfos = require("src.classes.ui.FaceHoverInfo")
 local AnimationUtils = require("src.utils.scripts.Animations")
 --UI
+local PopUpText = require("src.classes.ui.PopUpText")
 local Sprites = require("src.utils.Sprites")
 local DiceFace = require("src.classes.ui.DiceFace")
 --Ciggies
@@ -16,15 +17,13 @@ local Screen = require("src.classes.GameScreen")
 local RoundScreen = setmetatable({}, { __index = Screen })
 RoundScreen.__index = RoundScreen
 
-local font = Fonts.soraSmall
-local font30 = Fonts.soraMedium
-
 function RoundScreen:new(round)
     local self = setmetatable(Screen:new(round.run.currentFloor, round.run, Constants.RUN_STATES.ROUND, round), RoundScreen)
 
-    self.gameCanvas = round.gameCanvas
     self.round = round
     self.endRoundPopUp = nil
+
+    self.popupTexts = {}
 
     --FIGURE BUTTONS
     self.clickedFigure = nil
@@ -204,6 +203,12 @@ function RoundScreen:updateCanvas(dt)
     
 
     self:drawCiggiesTrayFront()
+
+    --PopUpTexts
+    for i, pp in next,self.popupTexts do
+        pp:update(dt)
+        pp:draw()
+    end
 
     --EndRoundScreen
     if(self.endRoundPopUp)then
@@ -396,7 +401,7 @@ function RoundScreen:drawPlayersInfos()
     love.graphics.setCanvas(self.playerInfos)
     love.graphics.clear()
     love.graphics.draw(Sprites.PLAYER_INFOS, 0, 0)
-    local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.round.roundScore))
+    local scoreText = love.graphics.newText(Fonts.soraSmall, 'Score : ' ..tostring(self.round.roundScore))
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(scoreText, self.playerInfos:getWidth()-20, 72, 0, 1, 1, scoreText:getWidth(), 0)
     love.graphics.setColor(1, 1, 1, 1)
@@ -405,7 +410,7 @@ function RoundScreen:drawPlayersInfos()
     love.graphics.setCanvas(self.enemyInfos)
     love.graphics.clear()
     love.graphics.draw(Sprites.ENEMY_INFOS, 0, 0)
-    local targetScoreText = love.graphics.newText(font, 'Target : '..tostring(self.round.targetScore))
+    local targetScoreText = love.graphics.newText(Fonts.soraSmall, 'Target : '..tostring(self.round.targetScore))
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(targetScoreText, 20, 210)
     love.graphics.setColor(1, 1, 1, 1)

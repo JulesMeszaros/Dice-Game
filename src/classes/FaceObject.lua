@@ -4,6 +4,8 @@
     from this one.
 ]]
 
+local PopUpText = require("src.classes.ui.PopUpText")
+
 local FaceObject = {}
 FaceObject.__index = FaceObject
 
@@ -66,6 +68,8 @@ function FaceObject:trigger(round)
     self.totalTriggered = self.totalTriggered + 1
     self.roundTriggered = self.roundTriggered + 1
     
+    table.insert(round.terrain.popupTexts, PopUpText:new("Points", round.terrain))
+
     --Déclenche l'effet first si possible
     if(self.first == true) then
         local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
