@@ -669,7 +669,7 @@ function DoubleDown:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), DoubleDown)
 
     --Metadatas about the DoubleDown
-    self.name = "Odd Job"
+    self.name = "Double Down"
     self.id = 1
     self.tier = "Common"
     self.description = "Scoring : Adds 10 points per even dices in scored hand"
