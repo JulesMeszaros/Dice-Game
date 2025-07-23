@@ -254,7 +254,7 @@ function GameScreen:drawCiggiePopup()
     local a = self.ciggiePopupAlpha/self.targetCiggiePopupAlpha
     love.graphics.setColor(1, 1, 1, a)
     love.graphics.draw(Sprites.SELL_CIGGIE, 30, self.canvas:getHeight()-30, 0, 1, 1, 0, Sprites.SELL_CIGGIE:getHeight())
-    local sellText = love.graphics.newText(Fonts.soraBig, "Sell : 3$")
+    local sellText = love.graphics.newText(Fonts.soraBig, "Sell : 1$")
     love.graphics.setColor(255/255, 178/255, 89/255, a)
     love.graphics.draw(sellText, 250, 950, 0, 1, 1, sellText:getWidth()/2, sellText:getHeight()/2)
     love.graphics.setColor(1, 1, 1, 1)
@@ -640,7 +640,7 @@ end
 
 function GameScreen:sellCiggie(ciggie)
     --Add money to bank account
-    self.run.money = self.run.money+3
+    self.run.money = self.run.money+1
     
     --On retire l'objet de l'inventaire
     for j,c in next,self.run.ciggiesObjects do

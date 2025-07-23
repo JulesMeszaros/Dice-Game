@@ -454,22 +454,6 @@ function Shop:sellReward(face, faceUI, key)
     
 end
 
-function Shop:sellCiggie(ciggie, ciggieUI, key)
-    --Add money to bank account
-    self.run.money = self.run.money+3
-    print("-------")
-    print("ciggies list")
-    
-    
-    --On retire l'objet de l'inventaire
-    for j,c in next,self.run.ciggiesObjects do
-        if(c==ciggie) then table.remove(self.run.ciggiesObjects, j)end
-    end
-    
-    self:generateCiggiesUI()
-
-end
-
 function Shop:rerollShop()
     if(self.run.money>=self.rerollShopPrice) then
         self.run.money = self.run.money-self.rerollShopPrice
