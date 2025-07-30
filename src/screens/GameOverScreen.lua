@@ -21,7 +21,7 @@ function GameOverScreen:new(gameCanvas, run)
     --Buttons
     self.uiElements.buttons["newRun"] = Button:new(
         function()self.run.game:startNewRun()end,
-        "src/assets/sprites/ui/new_run.png",
+        "src/assets/sprites/ui/New Run.png",
         self.gameoverCanvas:getWidth()/2,
         self.gameoverCanvas:getHeight()/2,
         400,
