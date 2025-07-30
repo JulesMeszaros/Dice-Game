@@ -4,14 +4,18 @@ local CalculateTarget = {}
 local firstTarget = 80 --target de base du premier bureau du premier étage
 local secondOfficeFactor = 1.3 --facteur multipliant du score du premier bureau de l'étage pour obtenir le deuxieme bureau
 local managerFactor = 1.7 --Facteur multipliant pour obtenir le score du manager par rapport au premier bureau de l'étage
-local factorPerThreeFlorrs = 0.3 --Tout les trois étages, le score du premier bureau est multiplié par ce facteur
+local factorPerThreeFloors = 0.3 --Tout les trois étages, le score du premier bureau est multiplié par ce facteur
 local baseFloorMultiplier = 1.5
 
 function firstOffice(floor)
-    local floorMultiplier = baseFloorMultiplier * (floor-1)
-    local target = firstTarget * (1+floorMultiplier)
+    if(floor==1) then
+        return 80
+    else
+        local floorMultiplier = baseFloorMultiplier + (math.floor(floor/3)*factorPerThreeFloors)
+        local target = firstOffice(floor-1) * floorMultiplier
 
-    return math.floor(target / 10) * 10
+        return math.floor(target / 10) * 10
+    end
 end
 
 CalculateTarget.firstOffice = firstOffice
