@@ -1,6 +1,7 @@
 local Constants = require("src.utils.Constants")
 local FaceTypes = require("src.classes.FaceTypes")
 local Round = require("src.classes.Round")
+local CalculateTargets = require("src.utils.scripts.CalculateTargets")
 
 local Floor = {}
 Floor.__index = Floor
@@ -30,9 +31,16 @@ function Floor:generateDesks(deskRank)
     --Generate money reward
     local baseReward = 3
     --Generate target score
-    local targetScore = deskRank*5 + 20*self.floorNumber + (math.random(0, 3) * 10)
+    local targetScore = 0
     --Generate desk number
     local deskNumber = self.floorNumber*100+deskRank*10+math.random(0,9)
+
+    --Generate target
+    if(deskRank == 1) then
+        targetScore = CalculateTargets.firstOffice(self.floorNumber)
+    elseif (deskRank==2) then
+        targetScore = CalculateTargets.secondOffice(self.floorNumber)
+    end
 
     local r = Round:new(1, self.floorNumber, deskNumber, self.run.gameCanvas, self.run, baseReward, targetScore, self.run.diceObjects, Constants.ROUND_TYPES.BASE, self:generateReward(2))
     r.roundType = Constants.ROUND_TYPES.BASE
@@ -41,7 +49,7 @@ end
 
 function Floor:generateBoss()
     local baseReward = 10 + math.random(0, 3)
-    local targetScore = 50 + 20*self.floorNumber + (math.random(0, 3) * 10)
+    local targetScore = CalculateTargets.manager(self.floorNumber)
 
     local deskNumber = self.floorNumber*100+99
 
