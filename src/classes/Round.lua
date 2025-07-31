@@ -16,7 +16,6 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     local self = setmetatable({}, Round)
 
     self.animator = Animator:new(self)
-
     self.selectedDices = {}
     self.drawedFaceObjects = {}
 
@@ -46,6 +45,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.gameCanvas = gameCanvas
 
     --Current Round Parameters
+    self.firstRoll = false
     self.nround = n
     self.floorNumber = floor
     self.deskNumber = desk
@@ -395,6 +395,13 @@ end
 
 --==REROLL FUNCTIONS==--
 function Round:rerollDices() --Triggers the makeRoll function after clicking the reroll button
+    
+    if(self.firstRoll == false) then
+        self:makeRoll(self.diceObjects);
+        self.firstRoll = true
+        return
+    end
+
     local dicesToReroll = {}
     --Add 1 to the total rerolls used this run
     self.run.usedRerolls = self.run.usedRerolls+1

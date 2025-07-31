@@ -28,8 +28,8 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     
     --Ciggies
     self.ciggiesObjects = {
-        CiggieTypes.Fortune:new(),
-        CiggieTypes.Rockmans:new()
+        --CiggieTypes.Fortune:new(),
+        --CiggieTypes.Rockmans:new()
     }
     self.totalUsedCiggie = 0
 

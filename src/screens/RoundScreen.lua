@@ -5,6 +5,7 @@ local Fonts = require("src.utils.Fonts")
 local Constants = require("src.utils.Constants")
 local FaceHoverInfos = require("src.classes.ui.FaceHoverInfo")
 local AnimationUtils = require("src.utils.scripts.Animations")
+local UI = require("src.utils.scripts.UI")
 --UI
 local Sprites = require("src.utils.Sprites")
 local DiceFace = require("src.classes.ui.DiceFace")
@@ -25,6 +26,8 @@ function RoundScreen:new(round)
     self.gameCanvas = round.gameCanvas
     self.round = round
     self.endRoundPopUp = nil
+
+    self.time = 0
 
     --FIGURE BUTTONS
     self.clickedFigure = nil
@@ -81,7 +84,7 @@ function RoundScreen:new(round)
     self.handScoreRot = 0
 
     --Start the round with the first roll
-    self.animator:addDelay(0.5, function()self.round:makeRoll(self.round.diceObjects);self:generateCiggiesUI()end)
+    self.animator:addDelay(0.5, function()self.time=0;self.showFirstRollText=true;self:generateCiggiesUI()end)
 
     self.diceFaces = {}
     --On créé des objets pour les nouveaux diceFaces
@@ -106,7 +109,7 @@ function RoundScreen:new(round)
 end
 
 function RoundScreen:update(dt)
-
+    self.time = self.time+dt
     --Update dices UI
     for key,dice in next,self.diceFaces do
         dice:update(dt)
@@ -201,9 +204,9 @@ function RoundScreen:updateCanvas(dt)
         ciggie:draw()
     end
 
-    
-
     self:drawCiggiesTrayFront()
+
+    
 
     --EndRoundScreen
     if(self.endRoundPopUp)then
@@ -218,6 +221,22 @@ function RoundScreen:updateCanvas(dt)
     --On dessine l'objet drag and drop au dessus de tout le reste
     if(self.dragAndDroppedCiggie)then
         self.dragAndDroppedCiggie:draw()
+    end
+
+    --First round text
+    if(self.showFirstRollText==true and self.round.firstRoll==false) then
+        UI.Text.drawWavyText(
+                            "Make your first Roll!", 
+                            self.canvas:getWidth()/2, 
+                            self.canvas:getHeight()/2+50,
+                            {
+                                font = Fonts.soraFirstRoll,
+                                time = self.time,
+                                centered=true,
+                                speed=2,
+                                revealSpeed = 60, -- lettres/seconde
+                                color = {176/255, 169/255, 228/255, 1}
+                        })
     end
 
     love.graphics.setCanvas(currentCanvas)
@@ -501,14 +520,12 @@ function RoundScreen:getCurrentlyHoveredDice()
     self.previouslyHoveredFace = self.currentlyHoveredFace
     self.currentlyHoveredFace = nil
 
-    self.hoveredFaceCanvas = nil
 
     --Dés dans le terrain de jeu
     for key,diceface in next,self.diceFaces do
         if diceface:isHovered() then
             self.currentlyHoveredDice = diceface.diceObject
             self.currentlyHoveredFace = diceface
-            self.hoveredFaceCanvas = 1
             break
         end
     end
@@ -517,27 +534,9 @@ function RoundScreen:getCurrentlyHoveredDice()
     for key,diceface in next,self.infoFaces do
         if diceface:isHovered() and self.currentlyHoveredDice then
                 self.currentlyHoveredFace = diceface
-                self.hoveredFaceCanvas = 2
             break
         end
     end
-
-    if(self.previouslyHoveredFace ~= self.currentlyHoveredFace and self.currentlyHoveredFace~= nil)then
-        if(self.hoveredFaceCanvas==1) then
-            self.pointsDetailsCanvas = FaceHoverInfos:new(
-                self.currentlyHoveredFace, 
-                "points", 
-                self.diceMatx, 
-                self.diceMaty)
-        elseif(self.hoveredFaceCanvas==2) then
-            self.pointsDetailsCanvas = FaceHoverInfos:new(
-                self.currentlyHoveredFace, 
-                "points", 
-                self.diceDetailsX - self.diceDetailsCanvas:getWidth(), 
-                30)
-        end
-    end
-
 end
 
 function RoundScreen:getCurrentlyHoveredCiggie()
