@@ -458,7 +458,7 @@ function Shop:rerollShop()
     if(self.run.money>=self.rerollShopPrice) then
         self.run.money = self.run.money-self.rerollShopPrice
         self:generateNewShop()
-        self.rerollShopPrice = self.rerollShopPrice+Constants.BASE_SHOP_REROLL_PRINCE_INCREMENT
+        self.rerollShopPrice = self.rerollShopPrice--+Constants.BASE_SHOP_REROLL_PRINCE_INCREMENT
     end
 end
 
@@ -509,18 +509,22 @@ function Shop:generateNewShop()
     --Ciggies
     --Create the UI
     for i,c in next,self.availableCiggies do
+
+        local x = self.shopBGTX+(205+(1-i%2)*370)
+        local y = self.shopBGTY+(450+(math.floor(i/3))*60)
+
         local ciggieUI = Ciggie:new(
             c,
-            self.shopBGTX+(205+(1-i%2)*370),
-            self.shopBGTY+(410+(math.floor(i/3))*60),
+            x,
+            y,
             false,
             true,
             function()return Inputs.getMouseInCanvas(0, 0)end,
             nil
         )
         --Set an anchor
-        ciggieUI.anchorX = self.shopBGTX+(205+(1-i%2)*370)
-        ciggieUI.anchorY = self.shopBGTY+(410+(math.floor(i/3))*60)
+        ciggieUI.anchorX = x
+        ciggieUI.anchorY = y
         --Insert in the table
         table.insert(self.availableCiggieObjectsUI, ciggieUI)
         
@@ -850,6 +854,7 @@ function Shop:drawFacesPriceTags()
         love.graphics.draw(c, 180*i + self.shopBGTX - 60, self.shopBGTY+200, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth()/2, 0)
     end
 
+    --Ciggies
     for i,c in next,self.ciggiesPriceTags do
         love.graphics.setCanvas(c)
         love.graphics.clear()
@@ -863,7 +868,7 @@ function Shop:drawFacesPriceTags()
         love.graphics.setColor(1, 1, 1, 1)
 
         love.graphics.setCanvas(currentCanvas)
-        love.graphics.draw(c, self.shopBGTX+(205+(1-i%2)*370), self.shopBGTY+(410+(math.floor(i/3))*60)-10, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth()/2, 0)
+        love.graphics.draw(c, self.shopBGTX+(205+(1-i%2)*370), self.shopBGTY+(455+(math.floor(i/3))*60)-10, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth()/2, 0)
 
     end
 end
