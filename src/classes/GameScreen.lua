@@ -396,7 +396,7 @@ function GameScreen:drawFigureGrid()
         love.graphics.setColor(249/255, 130/255, 132/255)
 
         for i=1, 13 do
-            local calcScore = love.graphics.newText(Fonts.soraSmall, self.round.run.figuresInfos[i].level * self.calcBasePoints[i]()[1]) --TODO: changer ca avec une fonction qui généralise le calcul des points avec les niveaux
+            local calcScore = love.graphics.newText(Fonts.soraSmall, self.calcBasePoints[i]()[1])
             love.graphics.draw(calcScore, 225, 50*(i-1)+38, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
         end
     end

@@ -30,35 +30,35 @@ function RoundScreen:new(round)
     self.clickedFigure = nil
     --Calculate points functions
     self.calcBasePoints = {
-        function()return CalculatePoints.numberBasePoints(1, self.round.selectedDices)end,
-        function()return CalculatePoints.numberBasePoints(2, self.round.selectedDices)end,
-        function()return CalculatePoints.numberBasePoints(3, self.round.selectedDices)end,
-        function()return CalculatePoints.numberBasePoints(4, self.round.selectedDices)end,
-        function()return CalculatePoints.numberBasePoints(5, self.round.selectedDices)end,
-        function()return CalculatePoints.numberBasePoints(6, self.round.selectedDices)end,
-        function()return CalculatePoints.chanceBasePoints(self.round.selectedDices)end,
-        function()return CalculatePoints.brelanBasePoints(self.round.selectedDices)end,
-        function()return CalculatePoints.carreBasePoints(self.round.selectedDices)end,
-        function()return CalculatePoints.fullBasePoints(self.round.selectedDices)end,
-        function()return CalculatePoints.pttSuiteBasePoints(self.round.selectedDices)end,
-        function()return CalculatePoints.gdSuiteBasePoints(self.round.selectedDices)end,
-        function()return CalculatePoints.yatzeeBasePoints(self.round.selectedDices)end
+        function()return CalculatePoints.numberBasePoints(1, self.round.selectedDices, self.round.run.figuresInfos[1].level)end,
+        function()return CalculatePoints.numberBasePoints(2, self.round.selectedDices, self.round.run.figuresInfos[2].level)end,
+        function()return CalculatePoints.numberBasePoints(3, self.round.selectedDices, self.round.run.figuresInfos[3].level)end,
+        function()return CalculatePoints.numberBasePoints(4, self.round.selectedDices, self.round.run.figuresInfos[4].level)end,
+        function()return CalculatePoints.numberBasePoints(5, self.round.selectedDices, self.round.run.figuresInfos[5].level)end,
+        function()return CalculatePoints.numberBasePoints(6, self.round.selectedDices, self.round.run.figuresInfos[6].level)end,
+        function()return CalculatePoints.chanceBasePoints(self.round.selectedDices, self.round.run.figuresInfos[7].level)end,
+        function()return CalculatePoints.brelanBasePoints(self.round.selectedDices, self.round.run.figuresInfos[8].level)end,
+        function()return CalculatePoints.carreBasePoints(self.round.selectedDices, self.round.run.figuresInfos[9].level)end,
+        function()return CalculatePoints.fullBasePoints(self.round.selectedDices, self.round.run.figuresInfos[10].level)end,
+        function()return CalculatePoints.pttSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[11].level)end,
+        function()return CalculatePoints.gdSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[12].level)end,
+        function()return CalculatePoints.yatzeeBasePoints(self.round.selectedDices, self.round.run.figuresInfos[13].level)end
     }
 
     self.calculatePointsFunctions = {
-        function()self:playFigure(Constants.FIGURES.ONES, CalculatePoints.numberBasePoints(1, self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.TWOS, CalculatePoints.numberBasePoints(2, self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.THREES, CalculatePoints.numberBasePoints(3, self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.FOURS, CalculatePoints.numberBasePoints(4, self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.FIVES, CalculatePoints.numberBasePoints(5, self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.SIXS, CalculatePoints.numberBasePoints(6, self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.CHANCE, CalculatePoints.chanceBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.THREE_OAK, CalculatePoints.brelanBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.FOUR_OAK,CalculatePoints.carreBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.FULL_HOUSE,CalculatePoints.fullBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.SMALL_SUITE,CalculatePoints.pttSuiteBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.LARGE_SUITE,CalculatePoints.gdSuiteBasePoints(self.round.selectedDices))end,
-        function()self:playFigure(Constants.FIGURES.DELUXE,CalculatePoints.yatzeeBasePoints(self.round.selectedDices))end,
+        function()self:playFigure(Constants.FIGURES.ONES, CalculatePoints.numberBasePoints(1, self.round.selectedDices, self.round.run.figuresInfos[1].level))end,
+        function()self:playFigure(Constants.FIGURES.TWOS, CalculatePoints.numberBasePoints(2, self.round.selectedDices, self.round.run.figuresInfos[2].level))end,
+        function()self:playFigure(Constants.FIGURES.THREES, CalculatePoints.numberBasePoints(3, self.round.selectedDices, self.round.run.figuresInfos[3].level))end,
+        function()self:playFigure(Constants.FIGURES.FOURS, CalculatePoints.numberBasePoints(4, self.round.selectedDices, self.round.run.figuresInfos[4].level))end,
+        function()self:playFigure(Constants.FIGURES.FIVES, CalculatePoints.numberBasePoints(5, self.round.selectedDices, self.round.run.figuresInfos[5].level))end,
+        function()self:playFigure(Constants.FIGURES.SIXS, CalculatePoints.numberBasePoints(6, self.round.selectedDices, self.round.run.figuresInfos[6].level))end,
+        function()self:playFigure(Constants.FIGURES.CHANCE, CalculatePoints.chanceBasePoints(self.round.selectedDices, self.round.run.figuresInfos[7].level))end,
+        function()self:playFigure(Constants.FIGURES.THREE_OAK, CalculatePoints.brelanBasePoints(self.round.selectedDices, self.round.run.figuresInfos[8].level))end,
+        function()self:playFigure(Constants.FIGURES.FOUR_OAK,CalculatePoints.carreBasePoints(self.round.selectedDices, self.round.run.figuresInfos[9].level))end,
+        function()self:playFigure(Constants.FIGURES.FULL_HOUSE,CalculatePoints.fullBasePoints(self.round.selectedDices, self.round.run.figuresInfos[10].level))end,
+        function()self:playFigure(Constants.FIGURES.SMALL_SUITE,CalculatePoints.pttSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[11].level))end,
+        function()self:playFigure(Constants.FIGURES.LARGE_SUITE,CalculatePoints.gdSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[12].level))end,
+        function()self:playFigure(Constants.FIGURES.DELUXE,CalculatePoints.yatzeeBasePoints(self.round.selectedDices, self.round.run.figuresInfos[13].level))end,
     }
     
     self.dragAndDroppedCiggie = nil
@@ -583,7 +583,6 @@ end
 
 function RoundScreen:playFigure(figure, params)
     local points, usedDices = params[1], params[2]
-    points = self.run.figuresInfos[figure].level * points --TODO: changer ca pour généraliser le calcul des points....
     if(self.round.run.availableFigures[figure]>=1 and table.getn(self.round.selectedDices)>=1)then
 
         print(self.round.run.figuresInfos[figure].level)

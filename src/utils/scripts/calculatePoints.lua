@@ -1,6 +1,6 @@
 local CalculatePoints = {}
 
-function CalculatePoints.numberBasePoints(number, dices)
+function CalculatePoints.numberBasePoints(number, dices, level)
     --Calcul Pour les nombres simples
     
     local score = 0
@@ -18,10 +18,13 @@ function CalculatePoints.numberBasePoints(number, dices)
             table.insert(usedDices, d)
         end
     end
+
+    score = level*score
+
     return {score, usedDices}
 end
 
-function CalculatePoints.brelanBasePoints(dices)
+function CalculatePoints.brelanBasePoints(dices, level)
     --Calcul pour le Brelan (3 faces similaires)
     local score = 0
     local usedDices = {}
@@ -52,10 +55,13 @@ function CalculatePoints.brelanBasePoints(dices)
     else
         score = 0
     end
+
+    score = level*score
+
     return {score, usedDices}
 end
 
-function CalculatePoints.fullBasePoints(dices)
+function CalculatePoints.fullBasePoints(dices, level)
     local score = 0
     local usedDices = {}
 
@@ -71,10 +77,13 @@ function CalculatePoints.fullBasePoints(dices)
             table.insert(usedDices, f)
         end
     end
+
+    score = level*score
+
     return {score, usedDices}
 end
 
-function CalculatePoints.carreBasePoints(dices)
+function CalculatePoints.carreBasePoints(dices, level)
     local score = 0
     local usedDices = {}
 
@@ -105,10 +114,13 @@ function CalculatePoints.carreBasePoints(dices)
         score = 0
 
     end
+
+    score = level*score
+
     return {score, usedDices}
 end
 
-function CalculatePoints.pttSuiteBasePoints(dices)
+function CalculatePoints.pttSuiteBasePoints(dices, level)
     local score = 0
     local usedDices = {}
     local drawedNumbers = {}
@@ -137,10 +149,13 @@ function CalculatePoints.pttSuiteBasePoints(dices)
     else 
         score = 0
     end
+
+    score = level*score
+
     return {score, usedDices}
 end
 
-function CalculatePoints.gdSuiteBasePoints(dices)
+function CalculatePoints.gdSuiteBasePoints(dices, level)
     local score = 0
     local usedDices = {}
     local drawedNumbers = {}
@@ -161,10 +176,13 @@ function CalculatePoints.gdSuiteBasePoints(dices)
     else 
         score = 0
     end
+
+    score = level*score
+
     return {score, usedDices}
 end
 
-function CalculatePoints.chanceBasePoints(dices)
+function CalculatePoints.chanceBasePoints(dices, level)
     local score = 0
     local usedDices = {}
 
@@ -176,10 +194,13 @@ function CalculatePoints.chanceBasePoints(dices)
             table.insert(usedDices, d)
         end
     end
+
+    score = level*score
+
     return {score, usedDices}
 end
 
-function CalculatePoints.yatzeeBasePoints(dices)
+function CalculatePoints.yatzeeBasePoints(dices, level)
     local score = 0
     local usedDices = {}
 
@@ -204,6 +225,9 @@ function CalculatePoints.yatzeeBasePoints(dices)
         score = 0
 
     end
+    
+    score = level*score
+
     return {score, usedDices}
 end
 
