@@ -13,6 +13,7 @@ local FaceTypes = require("src.classes.FaceTypes")
 local Fonts = require("src.utils.Fonts")
 local CiggieTypes = require("src.classes.CiggieTypes")
 local CiggieObject = require("src.classes.CiggieObject")
+local Button = require("src.classes.ui.Button")
 
 local Shop = setmetatable({}, {__index = Screen})
 Shop.__index = Shop
@@ -107,6 +108,11 @@ function Shop:updateCanvas(dt)
         faceUI:draw()
     end
 
+    --Coffee UI
+    for i,coffee in next,self.availableCoffeesUI do
+        coffee:update(dt)
+    end
+
     --Shop Ciggie UI
     for i,ciggieUI in next,self.availableCiggieObjectsUI do
         ciggieUI:update(dt)
@@ -189,6 +195,11 @@ function Shop:mousepressed(x, y, button, istouch, presses)
         uiFace:clickEvent()
     end
 
+    --Coffe buttons
+    for key, coffeeBtn in next,self.availableCoffeesUI do
+        coffeeBtn:clickEvent()
+    end
+
     --Shop elements
     --Faces
     for key,uiFace in next,self.availableFaceObjectsUI do
@@ -205,6 +216,13 @@ function Shop:mousereleased(x, y, button, istouch, presses)
     self.dragAndDroppedObject = nil
     --release event on UI elements (buttons)
     for key,button in next,self.uiElements.buttons do
+        local wasReleased = button:releaseEvent()
+        if(wasReleased) then --Si le click a été complété
+            button:getCallback()()
+        end
+    end
+
+    for key,button in next,self.availableCoffeesUI do
         local wasReleased = button:releaseEvent()
         if(wasReleased) then --Si le click a été complété
             button:getCallback()()
@@ -406,6 +424,19 @@ function Shop:buyCiggie(ciggie, ciggieUI, key)
     end
 end
 
+function Shop:buyCoffee(coffeeUI, figureIndex)
+    if(self.run.money >= Constants.BASE_COFFEE_PRICE) then
+        --Retirer l'argent
+        self.run.money = self.run.money - Constants.BASE_COFFEE_PRICE
+
+        --Level Up la figure
+        self.run:levelUpFigure(figureIndex)
+
+        --Desactiver le bouton
+        coffeeUI:setActivated(false)
+    end
+end
+
 function Shop:sellDiceFace(face, faceUI, key)
     --Add money to bank account
     self.run.money = self.run.money + 3
@@ -544,8 +575,17 @@ function Shop:generateNewShop()
     end
 
 
+    --Coffee
+    self.availableCoffeesUI = {}
+
+    for i=1, 4 do
+        self:generateRandomCoffee(i)
+    end
+
+    --Generate the price tags
     self:createFacesPriceTags()
 end
+
 
 function Shop:generateAvailableFaces()
     self.availableFaceObjects = {}
@@ -561,6 +601,31 @@ function Shop:generateAvailableCiggies()
         local c = self:generateRandomCiggie()
         table.insert(self.availableCiggies, c)
     end
+end
+
+--Coffee
+function Shop:generateRandomCoffee(i)
+    local randomFigureIndex = math.random(1,13)
+    local spritePath = Constants.COFFEE_PATHS[randomFigureIndex]
+
+    local x = (205+(1-i%2)*370)
+    local y = (300+(math.floor(i/3))*70)
+
+    --Creation du bouton
+    local coffeeButton = Button:new(
+        nil,
+        spritePath,
+        x,
+        y,
+        350,
+        60,
+        nil,
+        function()return Inputs.getMouseInCanvas(self.shopBGX, self.shopBGY)end
+    )
+    coffeeButton.callbackFunction = function()self:buyCoffee(coffeeButton, randomFigureIndex)end
+
+    table.insert(self.availableCoffeesUI, coffeeButton)
+
 end
 
 --==UTILS==--

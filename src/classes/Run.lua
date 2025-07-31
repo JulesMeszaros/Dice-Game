@@ -290,10 +290,19 @@ function Run:mousemoved(x, y, dx, dy)
     end
 end
 
+--Run functions
+
 function Run:resetAvailableFigures()
     self.availableFigures = {}
     for k,f in next, Constants.FIGURES do
         self.availableFigures[f] = Constants.BASE_AVAILABLE_HANDS
+    end
+end
+
+function Run:levelUpFigure(index)
+    if(index>=1 and index <=13) then
+        print('level up figure : '..tostring(index), self.figuresInfos[index].level, self.figuresInfos[index].level+1)
+        self.figuresInfos[index].level = self.figuresInfos[index].level+1
     end
 end
 

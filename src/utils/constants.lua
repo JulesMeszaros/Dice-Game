@@ -1,3 +1,5 @@
+local Sprites = require("src.utils.Sprites")
+
 local Constants = {
     --Game metadatas
     VIRTUAL_GAME_WIDTH = 1920,
@@ -19,9 +21,10 @@ local Constants = {
     SHOP_EVERY_DESK = true,
     
     --Prices
+    BASE_COFFEE_PRICE = 5,
     BASE_CIGGIE_PRICE = 2,
     BASE_SHOP_REROLL_PRICE = 3,
-    BASE_SHOP_REROLL_PRINCE_INCREMENT = 1
+    BASE_SHOP_REROLL_PRINCE_INCREMENT = 1 --Supprimé pour le moment
 }
 
 --Enums
@@ -39,6 +42,38 @@ Constants.FIGURES = {
     SMALL_SUITE = 11,
     LARGE_SUITE = 12,
     DELUXE = 13
+}
+
+Constants.FIGURES_COFFES = {
+    Sprites.COFFE_ONES,
+    Sprites.COFFE_TWOS,
+    Sprites.COFFE_THREES,
+    Sprites.COFFE_FOUR,
+    Sprites.COFFE_FIVES,
+    Sprites.COFFE_SIXES,
+    Sprites.COFFE_CHANCE,
+    Sprites.COFFE_THREE_OAK,
+    Sprites.COFFE_FOUR_OAK,
+    Sprites.COFFE_FULL_HOUSE,
+    Sprites.COFFE_SML_SUITE,
+    Sprites.COFFE_LRG_SUITE,
+    Sprites.COFFE_DELUXE
+}
+
+Constants.COFFEE_PATHS = {
+    "src/assets/sprites/coffee/Ristretto.png",
+    "src/assets/sprites/coffee/Piccolo.png",
+    "src/assets/sprites/coffee/Espresso.png",
+    "src/assets/sprites/coffee/Doppio.png",
+    "src/assets/sprites/coffee/Lungo.png",
+    "src/assets/sprites/coffee/Americano.png",
+    "src/assets/sprites/coffee/Rapido Y Sucio.png",
+    "src/assets/sprites/coffee/Macchiato.png",
+    "src/assets/sprites/coffee/Capuccino.png",
+    "src/assets/sprites/coffee/Mocaccino.png",
+    "src/assets/sprites/coffee/Corretto.png",
+    "src/assets/sprites/coffee/Mazagran.png",
+    "src/assets/sprites/coffee/Coffee Deluxe.png"
 }
 
 Constants.FIGURES_COLORS = {

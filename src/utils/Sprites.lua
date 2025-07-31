@@ -58,4 +58,19 @@ Sprites.OFFICE_DESCRIPTION_EMPTY = love.graphics.newImage("src/assets/sprites/ui
 Sprites.FLOOR_DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Floor Description.png")
 Sprites.PROGRESSION = love.graphics.newImage("src/assets/sprites/ui/Progression.png")
 
+--COFFE
+Sprites.COFFE_ONES = love.graphics.newImage("src/assets/sprites/coffee/Ristretto.png")
+Sprites.COFFE_TWOS = love.graphics.newImage("src/assets/sprites/coffee/Piccolo.png")
+Sprites.COFFE_THREES = love.graphics.newImage("src/assets/sprites/coffee/Espresso.png")
+Sprites.COFFE_FOUR = love.graphics.newImage("src/assets/sprites/coffee/Doppio.png")
+Sprites.COFFE_FIVES = love.graphics.newImage("src/assets/sprites/coffee/Lungo.png")
+Sprites.COFFE_SIXES = love.graphics.newImage("src/assets/sprites/coffee/Americano.png")
+Sprites.COFFE_CHANCE = love.graphics.newImage("src/assets/sprites/coffee/Rapido Y Sucio.png")
+Sprites.COFFE_THREE_OAK = love.graphics.newImage("src/assets/sprites/coffee/Macchiato.png")
+Sprites.COFFE_FOUR_OAK = love.graphics.newImage("src/assets/sprites/coffee/Capuccino.png")
+Sprites.COFFE_FULL_HOUSE = love.graphics.newImage("src/assets/sprites/coffee/Mocaccino.png")
+Sprites.COFFE_SML_SUITE = love.graphics.newImage("src/assets/sprites/coffee/Corretto.png")
+Sprites.COFFE_LRG_SUITE = love.graphics.newImage("src/assets/sprites/coffee/Mazagran.png")
+Sprites.COFFE_DELUXE = love.graphics.newImage("src/assets/sprites/coffee/Coffee Deluxe.png")
+
 return Sprites

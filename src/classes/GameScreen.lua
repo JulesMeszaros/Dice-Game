@@ -444,6 +444,13 @@ function GameScreen:drawShopBackground()
     love.graphics.clear()
     love.graphics.draw(Sprites.SHOP_BG, 0, 0)
 
+    --Draw the coffee buttons
+    if(self.availableCoffeesUI) then
+        for i, btn in next,self.availableCoffeesUI do
+            btn:draw()
+        end
+    end
+
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.shopCanvas, self.shopBGX, self.shopBGY)
 end
