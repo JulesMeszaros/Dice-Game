@@ -228,14 +228,15 @@ function RoundScreen:updateCanvas(dt)
         UI.Text.drawWavyText(
                             "Make your first Roll!", 
                             self.canvas:getWidth()/2, 
-                            self.canvas:getHeight()/2+50,
+                            (self.canvas:getHeight()/2)+120,
                             {
                                 font = Fonts.soraFirstRoll,
                                 time = self.time,
                                 centered=true,
                                 speed=2,
-                                revealSpeed = 60, -- lettres/seconde
-                                color = {176/255, 169/255, 228/255, 1}
+                                revealSpeed = 120, -- lettres/seconde
+                                colorStart = {176/255, 169/255, 228/255, 1},
+                                colorEnd = {221/255, 76/255, 173/255, 1}
                         })
     end
 
