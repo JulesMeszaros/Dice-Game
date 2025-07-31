@@ -180,8 +180,24 @@ function RoundScreen:updateCanvas(dt)
     --ROUND DETAILS
     self:drawRoundDetails()
 
-    --Ciggie Popup
+     --First round text
+    if(self.showFirstRollText==true and self.round.firstRoll==false) then
+        UI.Text.drawWavyText(
+                            "Make your first Roll!", 
+                            self.canvas:getWidth()/2, 
+                            (self.canvas:getHeight()/2)+120,
+                            {
+                                font = Fonts.soraFirstRoll,
+                                time = self.time,
+                                centered=true,
+                                speed=2,
+                                revealSpeed = 120, -- lettres/seconde
+                                colorStart = {176/255, 169/255, 228/255, 1},
+                                colorEnd = {221/255, 76/255, 173/255, 1}
+                        })
+    end
 
+    --Ciggie Popup
     if(self.previousCiggieDraggedState ~= self.draggedCiggie) then
         if(self.draggedCiggie)then
             self:startCiggiePopUp()
@@ -194,8 +210,6 @@ function RoundScreen:updateCanvas(dt)
         self:drawCiggiePopup()
     end
 
-
-
     --Ciggies Tray
     self:drawCiggiesTray()
 
@@ -204,9 +218,7 @@ function RoundScreen:updateCanvas(dt)
         ciggie:draw()
     end
 
-    self:drawCiggiesTrayFront()
-
-    
+    self:drawCiggiesTrayFront()    
 
     --EndRoundScreen
     if(self.endRoundPopUp)then
@@ -223,22 +235,7 @@ function RoundScreen:updateCanvas(dt)
         self.dragAndDroppedCiggie:draw()
     end
 
-    --First round text
-    if(self.showFirstRollText==true and self.round.firstRoll==false) then
-        UI.Text.drawWavyText(
-                            "Make your first Roll!", 
-                            self.canvas:getWidth()/2, 
-                            (self.canvas:getHeight()/2)+120,
-                            {
-                                font = Fonts.soraFirstRoll,
-                                time = self.time,
-                                centered=true,
-                                speed=2,
-                                revealSpeed = 120, -- lettres/seconde
-                                colorStart = {176/255, 169/255, 228/255, 1},
-                                colorEnd = {221/255, 76/255, 173/255, 1}
-                        })
-    end
+   
 
     love.graphics.setCanvas(currentCanvas)
 end

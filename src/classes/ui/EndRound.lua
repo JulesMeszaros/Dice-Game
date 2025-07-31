@@ -24,6 +24,7 @@ function EndRound:new(run, round)
     self.backgroundOpacity = 0
     self.faceRewards = {}
 
+
     --Canvas
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_WIDTH)
     self.contentCanvas = love.graphics.newCanvas(930,760)
@@ -51,7 +52,7 @@ function EndRound:new(run, round)
         {property = "backgroundOpacity", from=0, targetValue=0.7, duration=inDuration, easing=AnimationUtils.Easing.outCubic},
         {property = "contentY", from=self.contentY, targetValue=self.contentTY, duration=inDuration, easing=AnimationUtils.Easing.outCubic}
     })
-    self.animator:addDelay(0.1, function()self:generateFaceRewards()end)
+    self.animator:addDelay(0.1, function()self:generateRewards()end)
 
     
 
@@ -79,6 +80,11 @@ function EndRound:updateCanvas(dt)
     for i,uiFace in next,self.faceRewards do
         uiFace:update(dt)
         uiFace:draw()
+    end
+
+    if(self.ciggieReward)then
+        self.ciggieReward:update(dt)
+        self.ciggieReward:draw()
     end
 
     love.graphics.setCanvas(currentCanvas)
@@ -160,6 +166,9 @@ function EndRound:mousepressed(x, y, button, istouch, presses)
     for key,uiFace in next,self.faceRewards do
         uiFace:clickEvent()
     end
+
+    --Ciggie
+    self.ciggieReward:clickEvent()
 end
 
 function EndRound:mousereleased(x, y, button, istouch, presses)
@@ -176,6 +185,9 @@ function EndRound:mousereleased(x, y, button, istouch, presses)
         diceface.targetX = diceface.anchorX
         diceface.targetY = diceface.anchorY
     end
+
+    self.ciggieReward:releaseEvent()
+    self.ciggieReward.isBeingDragged = false
     
 end
 
@@ -192,11 +204,21 @@ function EndRound:mousemoved(x, y, dx, dy, isDragging)
                 break;
             end
         end
+
+        if(self.ciggieReward.isDraggable and self.ciggieReward.isBeingClicked) then
+            self.ciggieReward.isBeingDragged = true
+            self.dragAndDroppedDice = self.ciggieReward
+            self.ciggieReward.dragXspeed = dx
+            self.ciggieReward.targetX = (self.ciggieReward.targetX + dx) 
+            self.ciggieReward.targetY = (self.ciggieReward.targetY + dy) 
+        end
+
     end
 end
 
 --UI creation
-function EndRound:generateFaceRewards()
+function EndRound:generateRewards()
+    --Faces
     local xPos = {145, 145}
     local yPos = {79, 236}
     local apparitionDuration = 0.3
@@ -231,18 +253,42 @@ function EndRound:generateFaceRewards()
 
         table.insert(self.faceRewards, uiFace)
     end
+
+    --Ciggie
+    local c = Ciggie:new(
+        self.round.ciggieReward,
+        1200,
+        880,
+        false,
+        true,
+        function()return Inputs.getMouseInCanvas(0, 0)end,
+        nil
+    )
+
+    self.ciggieReward = c
+
 end
 
 --==Hovered Object==--
 function EndRound:getCurrentlyHoveredFace()
     self.currentlyHoveredFace = nil
+    --Face rewards
     for i,face in next,self.faceRewards do
         if(face:isHovered()) then self.currentlyHoveredFace = face ; return end
     end
+
+    --Ciggie
+    if(self.ciggieReward and self.ciggieReward:isHovered()) then self.currentlyHoveredFace = self.ciggieReward ; return end
 end
 
 --==Animation==--
 function EndRound:outAnimation()
+
+    --Ajoute la cigarette gagnée à l'inventaire si possible
+    if(table.getn(self.round.run.ciggiesObjects)<Constants.BASE_MAX_CIGGIES) then
+        table.insert(self.round.run.ciggiesObjects, self.round.ciggieReward)
+    end
+
     --Dices
     for i,uiFace in next,self.faceRewards do
         uiFace.animator:addGroup({
@@ -252,7 +298,15 @@ function EndRound:outAnimation()
             
         })
     end
-    
+
+    --Ciggie
+    self.ciggieReward.animator:addGroup({
+            --Scale
+            {property = "targetY", from = self.ciggieReward.targetY, targetValue = self.canvas:getHeight()+150, duration = 0.3, easing = AnimationUtils.Easing.inCubic},
+            {property = "y", from = self.ciggieReward.y, targetValue = self.canvas:getHeight()+150, duration =0.3 , easing = AnimationUtils.Easing.inCubic},
+            
+        })
+
     --Popup
     self.animator:addGroup({
         {property = "backgroundOpacity", from=0.7, targetValue=0, duration=0.3},

@@ -7,6 +7,7 @@ local Animator = require("src.utils.Animator")
 local EndRound = require("src.classes.ui.EndRound")
 local GameOverScreen = require("src.screens.GameOverScreen")
 local Lion = require("src.classes.ui.Lion")
+local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 
 
 local Round = {}
@@ -38,6 +39,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.currentlyTriggeredDice = nil
     self.diceFaces = {}
     self.baseReward = baseReward
+    self.ciggieReward = GenerateRandom.CiggieObject()
     self.triggerDiceHistory = {}
     self.triggerFaceHistory = {}
 
