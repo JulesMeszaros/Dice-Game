@@ -71,7 +71,7 @@ function Badge:update(dt)
     end
 
     local speed = 30
-    self.scale = self.scale + (self.targetedScale - self.scale)*speed*dt
+    self.scale = self:dampLerp(self.scale, self.targetedScale, speed, dt)
 
     --update the Badge canvas
     self:updateCanvas(dt)

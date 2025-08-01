@@ -207,4 +207,8 @@ function UIElement:setActivated(state)
     end
 end
 
+function UIElement:dampLerp(current, target, speed, dt)
+    return current + (target - current) * (1 - math.exp(-speed * dt))
+end
+
 return UIElement

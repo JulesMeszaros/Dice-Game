@@ -14,6 +14,7 @@ local Fonts = require("src.utils.Fonts")
 local CiggieTypes = require("src.classes.CiggieTypes")
 local CiggieObject = require("src.classes.CiggieObject")
 local Button = require("src.classes.ui.Button")
+local CoffeeButton = require("src.classes.ui.CoffeeButton")
 
 local Shop = setmetatable({}, {__index = Screen})
 Shop.__index = Shop
@@ -224,9 +225,6 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 
     for key,button in next,self.availableCoffeesUI do
         local wasReleased = button:releaseEvent()
-        if(wasReleased) then --Si le click a été complété
-            button:getCallback()()
-        end
     end
 
     for key,face in next,self.deckFaces do
@@ -612,17 +610,14 @@ function Shop:generateRandomCoffee(i)
     local y = (300+(math.floor(i/3))*70)
 
     --Creation du bouton
-    local coffeeButton = Button:new(
-        nil,
-        spritePath,
+    local coffeeButton = CoffeeButton:new(
         x,
         y,
-        350,
-        60,
-        nil,
-        function()return Inputs.getMouseInCanvas(self.shopBGX, self.shopBGY)end
+        function()return Inputs.getMouseInCanvas(self.shopBGX, self.shopBGY)end,
+        randomFigureIndex,
+        self.run
     )
-    coffeeButton.callbackFunction = function()self:buyCoffee(coffeeButton, randomFigureIndex)end
+    --coffeeButton.callbackFunction = function()self:buyCoffee(coffeeButton, randomFigureIndex)end
 
     table.insert(self.availableCoffeesUI, coffeeButton)
 

@@ -62,7 +62,7 @@ function Button:update(dt)
     end
 
     local speed = 30
-    self.scale = self.scale + (self.targetedScale - self.scale)*speed*dt
+    self.scale = self:dampLerp(self.scale, self.targetedScale, speed, dt)
 
     --update the button canvas
     self:updateCanvas()
@@ -85,12 +85,14 @@ function Button:updateCanvas()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.uiCanvas)
     love.graphics.clear()
+    
     --If desactivated : grey the button
     if self.isActivated==false then
         love.graphics.setShader(Shaders.grayscaleShader)
     else
         love.graphics.setShader()
     end
+    
     --Draw the UI into the canvas
     local widthRatio = self.width/self.sprite:getWidth()
     local heightRatio = self.height/self.sprite:getHeight()
@@ -123,6 +125,10 @@ function Button:isHovered() --Check if mouse is above the face
         and
         vy > (self.y-(self.height/2)) and vy < (self.y+(self.height/2))
         )
+end
+
+function Button:dampLerp(current, target, speed, dt)
+    return current + (target - current) * (1 - math.exp(-speed * dt))
 end
 
 return Button
