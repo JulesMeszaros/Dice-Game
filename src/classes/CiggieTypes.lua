@@ -91,9 +91,6 @@ function Rockmans:new()
     return self
 end
 
-function Rockmans:usageCondition(screen)
-    if table.getn(screen.run.ciggiesObjects)>1 then return true else return false end
-end
 
 function Rockmans:effect(screen)
     local randomCiggie = getRandomExcluding(screen.run.ciggiesObjects, self)
@@ -103,6 +100,29 @@ function Rockmans:effect(screen)
 end
 
 CiggieTypes.Rockmans = Rockmans
+
+--Time--
+
+local Time = setmetatable({}, {__index = CiggieObject})
+Time.__index = Time
+
+function Time:new()
+    local self = setmetatable(CiggieObject.new(), Time)
+
+    self.usableIn = Constants.RUN_STATES.ROUND
+
+    self.name="Time"
+    self.description="Lets you add one additionnal hand per round to a choosen figure"
+
+    self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Time Cigarette.png")
+    return self
+end
+
+function Time:effect(screen)
+    screen.addingAvailableHand = true
+end
+
+CiggieTypes.Time = Time
 
 --UTILS--
 function getRandomExcluding(list, excluded)

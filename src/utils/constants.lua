@@ -69,6 +69,8 @@ Constants.COFFEE_NAMES = {
     'Americano',
     'Rapido Y Sucio',
     'Macchiato',
+    'Capuccino',
+    'Mocaccino',
     'Corretto',
     'Mazagran',
     'Cafe Deluxe'

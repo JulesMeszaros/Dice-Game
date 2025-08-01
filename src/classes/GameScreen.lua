@@ -226,6 +226,10 @@ function GameScreen:new(floor, run, screenType, round)
 
     end
 
+    --Timers
+    self.upgradeHandPopupTimer = 0
+    self.firstRollTextTimer = 0
+
     return self
 end
 
