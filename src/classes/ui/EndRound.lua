@@ -266,7 +266,6 @@ function EndRound:generateRewards()
     )
 
     self.ciggieReward = c
-
 end
 
 --==Hovered Object==--

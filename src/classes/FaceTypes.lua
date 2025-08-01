@@ -42,7 +42,7 @@ end
 
 function WhiteFace:triggerEffect(round)
     --Complementary effect triggered by the face
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
 end
 
 FaceTypes.WhiteFace = WhiteFace
@@ -84,7 +84,7 @@ end
 
 function ChunkyFace:triggerEffect(round)
     --Complementary effect triggered by the face
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
 end
 
 FaceTypes.ChunkyFace = ChunkyFace
@@ -125,7 +125,7 @@ end
 
 function MassiveFace:triggerEffect(round)
     --Complementary effect triggered by the face
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
     
 end
 
@@ -176,7 +176,7 @@ function BlueFace:update(dt, run)
 end
 
 function BlueFace:triggerEffect(round)
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
 end
 
 FaceTypes.BlueFace = BlueFace
@@ -221,7 +221,7 @@ end
 function GoldFace:triggerEffect(round)
     --Ajoute 1€ au solde banquaire
     round.run.money = round.run.money + 2
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
 end
 
 FaceTypes.GoldFace = GoldFace
@@ -270,10 +270,11 @@ function DeluxeFace:triggerEffect(round)
             sumScore = sumScore+k:getCurrentFaceObject().pointsValue
         end
 
-        round.handScore = round.handScore + sumScore
+        addScore(round, sumScore)
+
     end
 
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
 
 end
 
@@ -323,7 +324,7 @@ function StrikeOfLuck:triggerEffect(round)
         round.terrain:generateCiggiesUI()
     end
 
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
 
 end
 
@@ -434,12 +435,12 @@ function BasketOfEggs:new(faceValue, pointsValue)
 end
 
 function BasketOfEggs:triggerEffect(round)
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
     
 end
 
 function BasketOfEggs:fullHandEffect(round)
-    round.handScore = round.handScore * 1.5
+    multiplyScore(round, 1.5)
 end
 
 FaceTypes.BasketOfEggs = BasketOfEggs
@@ -483,8 +484,7 @@ function Apparition:new(faceValue, pointsValue)
 end
 
 function Apparition:triggerEffect(round)
-    round.handScore = round.handScore * 2
-    
+    multiplyScore(round, 2)
 end
 
 FaceTypes.Apparition = Apparition
@@ -526,7 +526,7 @@ end
 
 function BlackStar:triggerEffect(round)
     --Complementary effect triggered by the face
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
 end
 
 FaceTypes.BlackStar = BlackStar
@@ -567,7 +567,7 @@ end
 
 function ClockWorkDice:triggerEffect(round)
     --Complementary effect triggered by the face
-    round.handScore = round.handScore + (self.pointsValue * self.faceValue)
+    addScore(round, self.pointsValue * self.faceValue)
 
     if(self.faceValue>1 and self.roundTriggered<=1)then
         --Decrease the face value by one
@@ -615,7 +615,7 @@ end
 
 function AshtrayDice:triggerEffect(round)
     --Complementary effect triggered by the face
-    round.handScore = round.handScore * (1+(0.1)*round.run.totalUsedCiggie) 
+    multiplyScore(round, (1+(0.1)*round.run.totalUsedCiggie))
 end
 
 FaceTypes.AshtrayDice = AshtrayDice
@@ -656,7 +656,7 @@ end
 
 function SteelDice:triggerEffect(round)
     --Complementary effect triggered by the face
-    round.handScore = round.handScore + math.max(0, 10 - round.run.money)*10
+    addScore(round, math.max(0, 10 - round.run.money)*10)
 end
 
 FaceTypes.SteelDice = SteelDice
@@ -707,7 +707,7 @@ function DoubleDown:triggerEffect(round)
         end
     end
 
-    round.handScore = round.handScore + n*10
+    addScore(round, n*10)
 end
 
 FaceTypes.DoubleDown = DoubleDown
@@ -758,7 +758,8 @@ function OddJob:triggerEffect(round)
         end
     end
 
-    round.handScore = round.handScore + n*10
+    addScore(round, n*10)
+
 end
 
 FaceTypes.OddJob = OddJob
@@ -802,10 +803,10 @@ function MusicDice:triggerEffect(round)
 
     --Multiplie le score par deux si il y a exactement 4 dés sélectionnés
     if(table.getn(round.selectedDices) == 4) then
-        round.handScore = round.handScore *2
+        multiplyScore(round, 2)
     end
 
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
 
 end
 
@@ -849,12 +850,12 @@ end
 function Signature:triggerEffect(round)
     --Complementary effect triggered by the face
 
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
 
 end
 
 function Signature:uniqueEffect(round)
-    round.handScore = round.handScore*3
+    multiplyScore(round, 3)
 end
 
 FaceTypes.Signature = Signature
@@ -905,7 +906,7 @@ function SniperDice:triggerEffect(round)
 end
 
 function SniperDice:backupEffect(round)
-    round.handScore = round.handScore + self.backupScoreValue
+    addScore(round, self.backupScoreValue)
     self.backupScoreValue = self.backupScoreValue + 5
 end
 
@@ -948,14 +949,22 @@ end
 
 function Spotlight:triggerEffect(round)
     --Complementary effect triggered by the face
-    round.handScore = round.handScore + self.pointsValue
+    addScore(round, self.pointsValue)
 end
 
 function Spotlight:firstEffect(round)
-    round.handScore = round.handScore * 2
+    multiplyScore(round, 2)
 end
 
 FaceTypes.Spotlight = Spotlight
 
+--UTILS--
+function multiplyScore(round, f)
+    round.handScore = round.handScore * f
+end
+
+function addScore(round, f)
+    round.handScore = round.handScore + f
+end
 
 return FaceTypes
