@@ -78,7 +78,7 @@ function DeskChoice:update(dt)
     end
 
     if(self.showCiggiePopup) then
-        self:drawCiggiePopup()
+        self:drawCiggiePopup(dt)
     end
     
     self:drawDescription()

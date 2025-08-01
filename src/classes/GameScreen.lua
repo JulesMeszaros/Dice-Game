@@ -250,7 +250,10 @@ end
 --==UI Draw functions==--
 
 --CiggiePopuup
-function GameScreen:drawCiggiePopup()
+function GameScreen:drawCiggiePopup(dt)
+    --Update le timer pour le texte
+    if(self.ciggiePopupTimer) then self.ciggiePopupTimer = self.ciggiePopupTimer+dt end
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.ciggiePopupCanvas)
     love.graphics.clear()
@@ -259,6 +262,39 @@ function GameScreen:drawCiggiePopup()
     love.graphics.setColor(0.2, 0.2, 0.2, self.ciggiePopupAlpha)
     love.graphics.rectangle("fill", 0, 0, self.ciggiePopupCanvas:getWidth(), self.ciggiePopupCanvas:getHeight())
     love.graphics.setColor(1, 1, 1, 1)
+
+    --Texts
+    UI.Text.drawWavyText(
+        "Use Ciggie?",
+        self.canvas:getWidth()/2,
+        100,
+        {
+            centered = true,
+            time = self.ciggiePopupTimer,
+            font = Fonts.soraBig,
+            revealSpeed = 40,
+            amplitude = 3,
+            speed = 3,
+            colorStart = {255/255, 178/255, 89/255},
+            colorEnd = {255/255, 178/255, 89/255},
+        }
+    )
+
+    UI.Text.drawWavyText(
+        self.currentlyDraggedCiggie.representedObject.name,
+        self.canvas:getWidth()/2,
+        220,
+        {
+            centered = true,
+            time = self.ciggiePopupTimer,
+            font = Fonts.soraFirstRoll,
+            revealSpeed = 40,
+            amplitude = 3,
+            speed = 3,
+            colorStart = {255/255, 178/255, 89/255},
+            colorEnd = {249/255, 130/255, 132/255}
+        }
+    )
 
     --Sell Rect
     local a = self.ciggiePopupAlpha/self.targetCiggiePopupAlpha
@@ -615,6 +651,7 @@ function GameScreen:checkForDraggedCiggie()
         if(ciggie.x < 1470 or ciggie.y < 800)then
             draggedCiggie = true
             self.showCiggiePopup = true
+            self.currentlyDraggedCiggie = ciggie
             break
         end
     end
@@ -624,6 +661,8 @@ end
 
 function GameScreen:startCiggiePopUp()
     local d = 0.2
+    self.ciggiePopupTimer = 0
+
     self.animator:addGroup({
         {property = "ciggiePopupAlpha", from=self.baseCiggiePopupAlpha, targetValue=self.targetCiggiePopupAlpha, duration=d},
         {property = "lighterY", from=self.lighterY, targetValue=self.lighterTargetY, duration=d, easing=AnimationUtils.Easing.outCubic},

@@ -29,7 +29,7 @@ end
 
 function Floor:generateDesks(deskRank)
     --Generate money reward
-    local baseReward = 1 + deskrank * 2
+    local baseReward = 1 + deskRank * 2
     --Generate target score
     local targetScore = 0
     --Generate desk number

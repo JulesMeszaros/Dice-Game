@@ -202,7 +202,7 @@ function RoundScreen:updateCanvas(dt)
     end
 
     if(self.showCiggiePopup) then
-        self:drawCiggiePopup()
+        self:drawCiggiePopup(dt)
     end
 
     --Upgrading figure popup
