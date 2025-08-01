@@ -607,7 +607,19 @@ end
 --==Input Functions==--
 
 --==Hovered Elements==--
-
+function GameScreen:getCurrentlyHoveredLine()
+    local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
+    local i = math.floor((mv.y-10)/50)+1
+    if(i>0 and i<=13)then
+        if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
+            self:highlightDices(self.calcBasePoints[i]()[2])
+            return i
+        end
+    else
+        self:highlightDices({})
+        return nil
+    end 
+end
 --==Utils==--
 function GameScreen:getCenteredPositions(count, objectWidth, spacing, centerX)
     local totalWidth = count * objectWidth + (count - 1) * spacing

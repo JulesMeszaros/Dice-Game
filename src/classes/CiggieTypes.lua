@@ -109,7 +109,7 @@ Time.__index = Time
 function Time:new()
     local self = setmetatable(CiggieObject.new(), Time)
 
-    self.usableIn = Constants.RUN_STATES.ROUND
+    self.usableIn = {Constants.RUN_STATES.ROUND, Constants.RUN_STATES.SHOP, Constants.RUN_STATES.ROUND_CHOICE}
 
     self.name="Time"
     self.description="Lets you add one additionnal hand per round to a choosen figure"

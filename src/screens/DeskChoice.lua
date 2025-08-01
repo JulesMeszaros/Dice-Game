@@ -62,11 +62,17 @@ function DeskChoice:update(dt)
 
     --UI
     self:drawDeck(dt)
-    self:drawFigureGrid()
     self:drawRoundDetails()
     self:drawDiceDetails(dt)
     self:updateChoiceCanvas(dt)
     
+    --Upgrading figure popup
+    if(self.addingAvailableHand == true) then
+        self:drawUpgradingFigurePopup(dt)
+    end
+
+    self:drawFigureGrid()
+
     --Ciggie Popup
 
     if(self.previousCiggieDraggedState ~= self.draggedCiggie) then
@@ -80,6 +86,8 @@ function DeskChoice:update(dt)
     if(self.showCiggiePopup) then
         self:drawCiggiePopup(dt)
     end
+
+    
     
     self:drawDescription()
     self:drawCiggiesTray()
@@ -251,6 +259,9 @@ function DeskChoice:mousepressed(x, y, button, istouch, presses)
         ciggie:clickEvent()
     end
 
+    --Figure buttons
+    self.clickedFigure = self:getCurrentlyHoveredLine()
+
 end
 
 function DeskChoice:mousereleased(x, y, button, istouch, presses)
@@ -286,6 +297,16 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
         ciggie:releaseEvent()
         ciggie.isBeingDragged = false
         self:ciggieReleaseAction(ciggie)
+    end
+
+    --Figure buttons
+    if(self.clickedFigure)then
+        if(self.clickedFigure == self:getCurrentlyHoveredLine())then
+            if(self.addingAvailableHand==true) then
+                self:addAvailableHand(self.clickedFigure)
+                self.addingAvailableHand = false
+            end
+        end
     end
 end
 
@@ -407,6 +428,18 @@ function DeskChoice:getCurrentlyHoveredObject()
     else object = nil end
 
     return object
+end
+
+function DeskChoice:getCurrentlyHoveredLine()
+    local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
+    local i = math.floor((mv.y-10)/50)+1
+    if(i>0 and i<=13)then
+        if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
+            return i
+        end
+    else
+        return nil
+    end 
 end
 
 return DeskChoice

@@ -12,7 +12,7 @@ function CiggieObject:new()
 end
 
 function CiggieObject:trigger(screen, screenType)
-    if((screenType == self.usableIn or self.usableIn == "any") and self:usageCondition(screen)==true) then
+    if((screenType == self.usableIn or isInList(self.usableIn, screenType) or self.usableIn == "any") and self:usageCondition(screen)==true) then
         screen.run.totalUsedCiggie = screen.run.totalUsedCiggie+1
         self:effect(screen)
         self:destruct(screen)
@@ -37,6 +37,16 @@ function CiggieObject:destruct(screen)
             screen.uiElements.ciggiesUI[v] = nil
         end
     end
+end
+
+function isInList(diceList, targetDice)
+    --Fonction pour vérifier qu'un élément est dans une liste
+  for _, dice in ipairs(diceList) do
+    if dice == targetDice then
+      return true
+    end
+  end
+  return false
 end
 
 return CiggieObject
