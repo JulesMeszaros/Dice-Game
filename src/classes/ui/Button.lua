@@ -127,8 +127,4 @@ function Button:isHovered() --Check if mouse is above the face
         )
 end
 
-function Button:dampLerp(current, target, speed, dt)
-    return current + (target - current) * (1 - math.exp(-speed * dt))
-end
-
 return Button
