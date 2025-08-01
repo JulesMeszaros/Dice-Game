@@ -96,7 +96,6 @@ function Shop:updateCanvas(dt)
 
     --UI
     self:drawDeck(dt)
-    self:drawFigureGrid()
     self:drawRoundDetails()
     self:drawDiceDetails(dt)
     self:drawInventoryBackGroundSmall()
@@ -122,6 +121,13 @@ function Shop:updateCanvas(dt)
     end
 
     self:drawFacesPriceTags()
+
+    --Upgrade hand popup
+    if(self.addingAvailableHand == true) then
+        self:drawUpgradingFigurePopup(dt)
+    end
+
+    self:drawFigureGrid()
 
     --Ciggie Popup
     if(self.previousCiggieDraggedState ~= self.draggedCiggie) then
@@ -212,6 +218,9 @@ function Shop:mousepressed(x, y, button, istouch, presses)
     for key,ciggie in next,self.availableCiggieObjectsUI do
         ciggie:clickEvent()
     end
+
+    --Figure buttons
+    self.clickedFigure = self:getCurrentlyHoveredLine()
 end
 
 function Shop:mousereleased(x, y, button, istouch, presses)
@@ -302,6 +311,16 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 
         if(wasReleased)then
             self:buyCiggie(ciggie.representedObject, ciggie, key)
+        end
+    end
+
+    --Figure buttons
+    if(self.clickedFigure)then
+        if(self.clickedFigure == self:getCurrentlyHoveredLine())then
+            if(self.addingAvailableHand==true) then
+                self:addAvailableHand(self.clickedFigure)
+                self.addingAvailableHand = false
+            end
         end
     end
 end
@@ -1086,6 +1105,18 @@ function Shop:isInList(diceList, targetDice)
     end
   end
   return false
+end
+
+function Shop:getCurrentlyHoveredLine()
+    local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
+    local i = math.floor((mv.y-10)/50)+1
+    if(i>0 and i<=13)then
+        if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
+            return i
+        end
+    else
+        return nil
+    end 
 end
 
 return Shop
