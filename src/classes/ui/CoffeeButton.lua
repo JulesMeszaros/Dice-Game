@@ -47,9 +47,10 @@ end
 function CoffeeButton:update(dt)
     self.animator:update(dt)
     
-    if(self:isHovered())then
+    if(self:isHovered() and self.used==false and self.isActivated==true)then
+        self.targetedScale = 1.05
         if(love.mouse.isDown(1) and self.isActivated) then
-            self.targetedScale = 0.90
+            self.targetedScale = 0.95
         end
     else
         self.targetedScale = 1
@@ -70,6 +71,10 @@ function CoffeeButton:updateCanvas()
     --If desactivated : grey the button
     if self.used==true then
         love.graphics.setShader(Shaders.grayscaleShader)
+    elseif self:isHovered() then
+        love.graphics.setShader(Shaders.glowShader)
+        Shaders.glowShader:send("glow_strength", 0.4)
+        Shaders.glowShader:send("glow_color", Constants.FIGURES_COLORS[self.figureIndex]) -- un jaune doré
     else
         love.graphics.setShader()
     end

@@ -53,9 +53,9 @@ end
 function Button:update(dt)
     self.animator:update(dt)
     if(self:isHovered())then
-        self.targetedScale = 0.95
+        self.targetedScale = 1.05
         if(love.mouse.isDown(1) and self.isActivated) then
-            self.targetedScale = 0.90
+            self.targetedScale = 0.95
         end
     else
         self.targetedScale = 1

@@ -176,4 +176,22 @@ vec4 effect(vec4 color, Image texture, vec2 uv, vec2 screen_coords) {
     return vec4(finalColor, texColor.a);
 }]])
 
+Shaders.glowShader = love.graphics.newShader([[
+    extern float glow_strength; // Intensité du glow
+    extern vec3 glow_color;     // Couleur du glow
+
+    vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+        vec4 texColor = Texel(texture, texture_coords);
+        float brightness = dot(texColor.rgb, vec3(0.299, 0.587, 0.114)); // Luminance perceptive
+
+        // Calcul du "glow" basé sur la luminance (les zones claires brillent plus)
+        float glow = brightness * glow_strength;
+
+        // Mélange entre la couleur d’origine et la lumière colorée
+        vec3 finalColor = mix(texColor.rgb, glow_color, glow);
+
+        return vec4(finalColor, texColor.a) * color;
+    }
+]])
+
 return Shaders
