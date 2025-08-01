@@ -497,6 +497,7 @@ function Round:playFigure(points, usedDices, figure) --Function that triggers th
 
     --Ajouter le score de base de la figure à la main
     self.handScore = self.handScore+points -- On ajoute les points au score
+    self.terrain.handScoreDisplay = self.handScore
 end
 
 --==UTILS==--

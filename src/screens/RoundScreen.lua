@@ -452,6 +452,7 @@ function RoundScreen:animateHandScore()
     local randomDir = math.random(0, 1) == 0 and -1 or 1
     self.animator:addGroup({
         {property="handScoreRX", from=1.4, targetValue=1, duration = 0.2}, --Makes it instantly bigger and animate it to its base size
+        {property="handScoreDisplay", from=self.handScoreDisplay, targetValue=self.round.handScore, duration = 0.2, easing=AnimationUtils.Easing.outCubic}, --Continuously increase the displayed score
         {property="handScoreRot", from=randomAngle*randomDir, targetValue=0, duration = 0.2}, --Makes it instantly bigger and animate it to its base size
     })
 end
@@ -461,7 +462,7 @@ function RoundScreen:drawHandScore()
     love.graphics.setCanvas(self.handScoreCanvas)
     love.graphics.clear()
 
-    local scoreText = love.graphics.newText(Fonts.soraBig, self.round.handScore)
+    local scoreText = love.graphics.newText(Fonts.soraBig, math.floor(self.handScoreDisplay))
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.draw(scoreText, self.handScoreCanvas:getWidth()/2, self.handScoreCanvas:getHeight()/2, self.handScoreRot, self.handScoreRX, self.handScoreRY, scoreText:getWidth()/2-10, scoreText:getHeight()/2-10)
     love.graphics.setColor(1, 1, 1, 1)
