@@ -29,7 +29,7 @@ end
 
 function Floor:generateDesks(deskRank)
     --Generate money reward
-    local baseReward = 3
+    local baseReward = 1 + deskrank * 2
     --Generate target score
     local targetScore = 0
     --Generate desk number
@@ -48,7 +48,7 @@ function Floor:generateDesks(deskRank)
 end
 
 function Floor:generateBoss()
-    local baseReward = 10 + math.random(0, 3)
+    local baseReward = 7
     local targetScore = CalculateTargets.manager(self.floorNumber)
 
     local deskNumber = self.floorNumber*100+99

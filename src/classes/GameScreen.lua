@@ -685,7 +685,8 @@ function GameScreen:drawUpgradingFigurePopup(dt)
     love.graphics.setCanvas(self.upgradingFigureCanvas)
     love.graphics.clear()
 
-    love.graphics.setColor(0.3, 0.3, 0.3, 0.9)
+    --Background
+    love.graphics.setColor(0.2, 0.2, 0.2, 0.9)
     love.graphics.rectangle("fill", 0, 0, self.upgradingFigureCanvas:getWidth(), self.upgradingFigureCanvas:getHeight())
     love.graphics.setColor(1, 1, 1, 1)
 
