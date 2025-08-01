@@ -9,6 +9,8 @@ local DiceObject = require("src.classes.DiceObject")
 local Button = require("src.classes.ui.Button")
 local DiceFace = require("src.classes.ui.DiceFace")
 local Ciggie = require("src.classes.ui.Ciggie")
+local UI = require("src.utils.scripts.UI")
+
 
 local GameScreen = {}
 GameScreen.__index = GameScreen
@@ -668,7 +670,17 @@ function GameScreen:sellCiggie(ciggie)
 end
 
 --UPGRADING FIGURE HANDS POPUP--
-function GameScreen:drawUpgradingFigurePopup()
+function GameScreen:startUpgradingFigurePopup()
+    self.upgradeHandPopupTimer = 0
+end
+
+function GameScreen:endUpgradingFigurePopup()
+
+end
+
+function GameScreen:drawUpgradingFigurePopup(dt)
+    self.upgradeHandPopupTimer = self.upgradeHandPopupTimer+dt
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.upgradingFigureCanvas)
     love.graphics.clear()
@@ -676,6 +688,71 @@ function GameScreen:drawUpgradingFigurePopup()
     love.graphics.setColor(0.3, 0.3, 0.3, 0.9)
     love.graphics.rectangle("fill", 0, 0, self.upgradingFigureCanvas:getWidth(), self.upgradingFigureCanvas:getHeight())
     love.graphics.setColor(1, 1, 1, 1)
+
+    UI.Text.drawWavyText(
+                            "Choose a figure", 
+                            self.canvas:getWidth()/2, 
+                            250,
+                            {
+                                font = Fonts.soraBig,
+                                time = self.upgradeHandPopupTimer,
+                                centered=true,
+                                speed=1.5,
+                                spacing=0.5,
+                                amplitude=2,
+                                revealSpeed = 50, -- lettres/seconde
+                                colorStart = {255/255, 178/255, 89/255, 1},
+                                colorEnd = {221/255, 76/255, 173/255, 1}
+                        })
+    UI.Text.drawWavyText(
+        "to upgrade!", 
+        self.canvas:getWidth()/2, 
+        330,
+        {
+            font = Fonts.soraBig,
+            time = self.upgradeHandPopupTimer,
+            centered=true,
+            speed=1.5,
+            amplitude=2,
+            spacing = 0.5,
+            revealSpeed = 50, -- lettres/seconde
+            colorStart = {255/255, 178/255, 89/255, 1},
+            colorEnd = {221/255, 76/255, 173/255, 1}
+    })
+
+    local hoveredFigureLabel = Constants.FIGURES_LABELS[self:getCurrentlyHoveredLine()]
+    
+    if(hoveredFigureLabel) then
+        UI.Text.drawWavyText(
+            hoveredFigureLabel, 
+            self.canvas:getWidth()/2, 
+            550,
+            {
+                font = Fonts.soraRewardTotal,
+                time = self.upgradeHandPopupTimer,
+                centered=true,
+                speed=3,
+                amplitude=2,
+                revealSpeed = 50, -- lettres/seconde
+                colorStart = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()],
+                colorEnd = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()]
+        })
+
+        UI.Text.drawWavyText(
+            tostring(self.run.baseAvailableHands[self:getCurrentlyHoveredLine()]).." -> "..tostring(self.run.baseAvailableHands[self:getCurrentlyHoveredLine()]+1), 
+            self.canvas:getWidth()/2, 
+            600,
+            {
+                font = Fonts.soraMedium,
+                time = self.upgradeHandPopupTimer,
+                centered=true,
+                speed=3,
+                amplitude=2,
+                revealSpeed = 50, -- lettres/seconde
+                colorStart = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()],
+                colorEnd = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()]
+        })
+    end
 
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.upgradingFigureCanvas, 0, 0)

@@ -207,7 +207,7 @@ function RoundScreen:updateCanvas(dt)
 
     --Upgrading figure popup
     if(self.addingAvailableHand == true) then
-        self:drawUpgradingFigurePopup()
+        self:drawUpgradingFigurePopup(dt)
     end
 
     --Ciggies Tray

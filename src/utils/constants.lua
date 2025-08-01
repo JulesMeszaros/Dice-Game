@@ -55,8 +55,8 @@ Constants.FIGURES_LABELS = {
     'Three Of A Kind',
     'Four Of A Kind',
     'Full House',
-    'Small Suite',
-    'Large Suite',
+    'Small Straight',
+    'Large Straight',
     'Deluxe'
 }
 
