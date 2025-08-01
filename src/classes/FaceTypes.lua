@@ -220,7 +220,7 @@ end
 
 function GoldFace:triggerEffect(round)
     --Ajoute 1€ au solde banquaire
-    round.run.money = round.run.money + 2
+    addMoney(round, 2)
     addScore(round, self.pointsValue)
 end
 
@@ -965,6 +965,10 @@ end
 
 function addScore(round, f)
     round.handScore = round.handScore + f
+end
+
+function addMoney(round, m)
+    round.run.money = round.run.money + m
 end
 
 return FaceTypes
