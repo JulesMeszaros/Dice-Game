@@ -44,6 +44,36 @@ Constants.FIGURES = {
     DELUXE = 13
 }
 
+Constants.FIGURES_LABELS = {
+    'Ones',
+    'Twos',
+    'Threes',
+    'Fours',
+    'Fives',
+    'Sixes',
+    'Chance',
+    'Three Of A Kind',
+    'Four Of A Kind',
+    'Full House',
+    'Small Suite',
+    'Large Suite',
+    'Deluxe'
+}
+
+Constants.COFFEE_NAMES = {
+    'Ristretto',
+    'Piccolo',
+    'Espresso',
+    'Doppio',
+    'Lungo',
+    'Americano',
+    'Rapido Y Sucio',
+    'Macchiato',
+    'Corretto',
+    'Mazagran',
+    'Cafe Deluxe'
+}
+
 Constants.FIGURES_COFFES = {
     Sprites.COFFE_ONES,
     Sprites.COFFE_TWOS,

@@ -33,6 +33,12 @@ function CoffeeButton:new(
     self.figureIndex = figureIndex
     self.sprite = Sprites.COFFEE_SPRITES[self.figureIndex]
     self.run = run
+
+    self.representedObject = {
+        name = Constants.COFFEE_NAMES[self.figureIndex],
+        tier = 'Coffee',
+        description = "Upgrades the figure "..Constants.FIGURES_LABELS[self.figureIndex]..' of one level (lvl.'..tostring(self.run.figuresInfos[self.figureIndex].level)..' -> lvl.'..tostring(self.run.figuresInfos[self.figureIndex].level+1)..')',
+    }
     
     return self
 

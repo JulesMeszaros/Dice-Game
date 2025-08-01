@@ -75,6 +75,7 @@ function Shop:update(dt)
 
     self:getCurrentlyHoveredCiggie()
     self:getCurrentlyHoveredFace()
+    self:getCurrentlyHoveredCoffeeButton()
 
     self:updateCanvas(dt)
 end
@@ -644,11 +645,20 @@ function Shop:getCurrentlyHoveredFace()
     end
 end
 
+function Shop:getCurrentlyHoveredCoffeeButton()
+    self.currentlyHoveredCoffeeButton = nil
+    for i,btn in next,self.availableCoffeesUI do
+        if(btn:isHovered()) then self.currentlyHoveredCoffeeButton = btn; break end
+    end
+end
+
 function Shop:getCurrentlyHoveredObject()
     if(self.currentlyHoveredFace) then
         return self.currentlyHoveredFace.representedObject
     elseif(self.currentlyHoveredCiggie)then
         return self.currentlyHoveredCiggie.representedObject
+    elseif(self.currentlyHoveredCoffeeButton) then
+        return self.currentlyHoveredCoffeeButton.representedObject
     else
         return nil
     end
