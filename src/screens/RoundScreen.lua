@@ -158,11 +158,6 @@ function RoundScreen:updateCanvas(dt)
     --Dice Tray
     self:drawDiceTray(self.diceMatx, self.diceMaty, self.diceFaces)
 
-    --Figure Buttons
-
-    self:drawFigureGrid(self.gridX, self.gridY)
-    self:getCurrentlyHoveredLine() --La figure survolée
-
     --Bouttouns de round
     for k,b in next,self.uiElements.buttons do
         b:draw()
@@ -210,6 +205,11 @@ function RoundScreen:updateCanvas(dt)
         self:drawCiggiePopup()
     end
 
+    --Upgrading figure popup
+    if(self.addingAvailableHand == true) then
+        self:drawUpgradingFigurePopup()
+    end
+
     --Ciggies Tray
     self:drawCiggiesTray()
 
@@ -218,7 +218,11 @@ function RoundScreen:updateCanvas(dt)
         ciggie:draw()
     end
 
-    self:drawCiggiesTrayFront()    
+    self:drawCiggiesTrayFront()
+    
+    --Figure Buttons
+    self:drawFigureGrid(self.gridX, self.gridY)
+    self:getCurrentlyHoveredLine() --La figure survolée
 
     --EndRoundScreen
     if(self.endRoundPopUp)then
@@ -331,7 +335,12 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
         --Figure buttons
         if(self.clickedFigure)then
             if(self.clickedFigure == self:getCurrentlyHoveredLine())then
-                self.calculatePointsFunctions[self.clickedFigure]()
+                if(self.addingAvailableHand==false) then
+                    self.calculatePointsFunctions[self.clickedFigure]()
+                else
+                    self:addAvailableHand(self.clickedFigure)
+                    self.addingAvailableHand = false
+                end
             end
         end
 

@@ -135,6 +135,11 @@ function Round:keypressed(key) --(Mainly for debug)
     if(key=="s")then
         AnimationUtils.shake(self.terrain, 30, 3, 0.2)
     end
+
+    if(key=="u")then
+        self.terrain.addingAvailableHand = not self.terrain.addingAvailableHand
+        print(self.terrain.addingAvailableHand)
+    end
 end
 
 --==TRIGGERING PHASE==--

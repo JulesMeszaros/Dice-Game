@@ -25,6 +25,9 @@ function GameScreen:new(floor, run, screenType, round)
     self.currentlySelectedDice = nil
     self.currentlyHoveredFigure = nil 
     self.currentlyHoveredCiggie = nil
+    
+    --Events
+    self.addingAvailableHand = false
 
     --Canvas
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
@@ -48,6 +51,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.animator = Animator:new(self)
 
     --UI Canvas
+    self.upgradingFigureCanvas = love.graphics.newCanvas(self.canvas:getWidth(), self.canvas:getHeight())
     self.customizationMat = love.graphics.newCanvas(1860, 600)
     self.newFacesCanvas = love.graphics.newCanvas(950, 400)
     self.dice_tray = love.graphics.newCanvas(930, 630)
@@ -595,6 +599,8 @@ function GameScreen:getSpacedPositions(count, x1, x2)
     return positions
 end
 
+--CIGGIE POPUP--
+
 function GameScreen:checkForDraggedCiggie()
     local draggedCiggie = false
     self.previousCiggieDraggedState = self.draggedCiggie
@@ -655,6 +661,25 @@ function GameScreen:sellCiggie(ciggie)
     end
     
     self:generateCiggiesUI()
+end
+
+--UPGRADING FIGURE HANDS POPUP--
+function GameScreen:drawUpgradingFigurePopup()
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.upgradingFigureCanvas)
+    love.graphics.clear()
+
+    love.graphics.setColor(0.3, 0.3, 0.3, 0.9)
+    love.graphics.rectangle("fill", 0, 0, self.upgradingFigureCanvas:getWidth(), self.upgradingFigureCanvas:getHeight())
+    love.graphics.setColor(1, 1, 1, 1)
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.upgradingFigureCanvas, 0, 0)
+end
+
+function GameScreen:addAvailableHand(i)
+    self.run.baseAvailableHands[i] = self.run.baseAvailableHands[i]+1
+    self.run.availableFigures[i] = self.run.availableFigures[i]+1
 end
 
 return GameScreen

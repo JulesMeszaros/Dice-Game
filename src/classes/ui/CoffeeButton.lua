@@ -48,9 +48,9 @@ function CoffeeButton:update(dt)
     self.animator:update(dt)
     
     if(self:isHovered() and self.used==false and self.isActivated==true)then
-        self.targetedScale = 1.05
+        self.targetedScale = 1.03
         if(love.mouse.isDown(1) and self.isActivated) then
-            self.targetedScale = 0.95
+            self.targetedScale = 0.97
         end
     else
         self.targetedScale = 1

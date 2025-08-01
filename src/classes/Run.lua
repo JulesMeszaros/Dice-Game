@@ -68,6 +68,13 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.diceObjects = diceObjects
 
     --Sets the number of time we can play a figure
+
+
+    self.baseAvailableHands = {}
+    for i=1,13 do
+        table.insert(self.baseAvailableHands, Constants.BASE_AVAILABLE_HANDS)
+    end
+
     self:resetAvailableFigures()
 
     --Floor variables
@@ -294,8 +301,8 @@ end
 
 function Run:resetAvailableFigures()
     self.availableFigures = {}
-    for k,f in next, Constants.FIGURES do
-        self.availableFigures[f] = Constants.BASE_AVAILABLE_HANDS
+    for k,f in next, self.baseAvailableHands do
+        self.availableFigures[k] = self.baseAvailableHands[k]
     end
 end
 
