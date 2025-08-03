@@ -1039,7 +1039,6 @@ function CryptoDice:triggerEffect(round)
         setMoney(round, 0)
     end
     addScore(round, self.pointsValue)
-
 end
 
 FaceTypes.CryptoDice = CryptoDice

@@ -12,7 +12,7 @@ function CiggieObject:new()
 end
 
 function CiggieObject:trigger(screen, screenType)
-    if((screenType == self.usableIn or isInList(self.usableIn, screenType) or self.usableIn == "any") and self:usageCondition(screen)==true) then
+    if((self.usableIn == "any" or screenType == self.usableIn or isInList(self.usableIn, screenType)) and self:usageCondition(screen)==true) then
         screen.run.totalUsedCiggie = screen.run.totalUsedCiggie+1
         self:effect(screen)
         self:destruct(screen)
