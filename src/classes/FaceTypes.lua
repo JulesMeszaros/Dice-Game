@@ -958,6 +958,51 @@ end
 
 FaceTypes.Spotlight = Spotlight
 
+--==RiskyBusiness==--
+local RiskyBusiness = setmetatable({}, { __index = FaceObject })
+RiskyBusiness.__index = RiskyBusiness
+
+function RiskyBusiness:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), RiskyBusiness)
+
+    --Metadatas about the RiskyBusiness
+    self.name = "Risky Business"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the RiskyBusiness
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Risky Business.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Scoring : +100pts, -10$."
+    self.faceDimmension = 120 --sets the dimmensions for a face of the RiskyBusiness in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 100 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function RiskyBusiness:triggerEffect(round)
+    --Complementary effect triggered by the face
+    addScore(round, self.pointsValue)
+    removeMoney(round, 10)
+end
+
+function RiskyBusiness:firstEffect(round)
+    multiplyScore(round, 2)
+end
+
+FaceTypes.RiskyBusiness = RiskyBusiness
+
 --UTILS--
 function multiplyScore(round, f)
     round.handScore = round.handScore * f
@@ -969,6 +1014,10 @@ end
 
 function addMoney(round, m)
     round.run.money = round.run.money + m
+end
+
+function removeMoney(round, m)
+    round.run.money = round.run.money - m
 end
 
 return FaceTypes
