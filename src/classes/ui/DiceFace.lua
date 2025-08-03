@@ -55,6 +55,7 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
     self.baseTargetedScale = 1
     self.selectionScale = 0
     self.hoverScale = 0
+    self.reduceOnHover = true
 
     --Animations variables
     self.velx = 0
@@ -210,28 +211,6 @@ function DiceFace:setRepresentedFace(face)
     self:updateSprite()
 end
 
-function DiceFace:calculateScale()
-    --Calculate scale
-    if(self:isHovered())then
-        self.hoverScale = -0.1 --Si hovered
-        if(love.mouse.isDown(1)) then
-            self.hoverScale = -0.15 --Si clicked
-        end
-    else
-        self.hoverScale = 0
-    end
-
-	if(self.isHighlighted==true)then
-		self.highlightScale = AnimationUtils.osccilate(self.time, 5, 0.15)
-	else
-		self.highlightScale = 0
-	end
-
-    --Update targeted scale, rotation and position
-    self.targetedScale = self.baseTargetedScale + self.hoverScale + self.highlightScale
-    
-end
-
 --==TRIGGER FUNCTIONS==--
 function DiceFace:trigger(round) --Lance le trigger du dé
     self.animator:addDelay(0.3)
@@ -343,9 +322,18 @@ end
 function DiceFace:calculateScale()
     --Calculate scale
     if(self:isHovered())then
-        self.hoverScale = -0.1 --Si hovered
-        if(love.mouse.isDown(1)) then
-            self.hoverScale = -0.15 --Si clicked
+        if(self.reduceOnHover == true)then
+            self.hoverScale = -0.1 --Si hovered
+            if(love.mouse.isDown(1)) then
+                self.hoverScale = -0.15 --Si clicked
+            end
+        elseif(self.reduceOnHover==false) then
+            self.hoverScale = 0.1 --Si hovered
+            if(love.mouse.isDown(1)) then
+                self.hoverScale = 0.15 --Si clicked
+            end
+        else
+            
         end
     else
         self.hoverScale = 0

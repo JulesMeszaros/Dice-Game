@@ -102,6 +102,8 @@ function RoundScreen:new(round)
             self.round
         )
 
+        diceFaceUI.reduceOnHover = false --Aggrandis quand on hover
+
         self.diceFaces[diceobject] = diceFaceUI
     end
 

@@ -295,16 +295,13 @@ function Shop:mousereleased(x, y, button, istouch, presses)
         face.targetX = face.anchorX
         face.targetY = face.anchorY
 
-        --On check que le dé est laché dans la zone d'inventaire
+        --On check que le dé est laché dans la zone d'inventaire pour l'acheter
         if(
             face.x > self.inventorySMTX and face.x < self.inventorySMTX + self.inventoryCanvasSmall:getWidth()
             and face.y > self.inventorySMTY and face.y < self.inventorySMTY + self.inventoryCanvasSmall:getHeight()
         ) then
             self:buyDiceFace(face.representedObject, face, key)
         end
-        --[[ if(wasReleased)then
-            self:buyDiceFace(face.representedObject, face, key)
-        end ]]
     end
 
     --Ciggies
@@ -315,7 +312,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
         ciggie.targetX = ciggie.anchorX
         ciggie.targetY = ciggie.anchorY
 
-        if(wasReleased)then
+        if(ciggie.x > 1470 and ciggie.y > 800 ) then
             self:buyCiggie(ciggie.representedObject, ciggie, key)
         end
     end

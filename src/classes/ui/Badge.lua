@@ -26,8 +26,10 @@ function Badge:new(
     self:setX(x)
     self:setY(originalY)
 
-    self.sprite = badgeSprite
+    self.oscillatingTime = math.random(0, 200)
+    self.oscillatingY = 0
 
+    self.sprite = badgeSprite
 
     self.height = height
     self.width = width
@@ -60,6 +62,9 @@ end
 function Badge:update(dt)
     self.animator:update(dt)
     self:getCurrentlyHoveredFace()
+
+    self.oscillatingTime = self.oscillatingTime+dt
+    self.oscillatingY = AnimationUtils.osccilate(self.oscillatingTime, 8, 10)
 
     if(self:isHovered())then
         self.targetedScale = 0.95
@@ -129,7 +134,7 @@ end
 
 function Badge:draw()
     
-    love.graphics.draw(self.uiCanvas, self.x+self.uiCanvas:getWidth()/2, self.y+self.uiCanvas:getHeight()/2, 0, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
+    love.graphics.draw(self.uiCanvas, self.x+self.uiCanvas:getWidth()/2, self.y+self.oscillatingY+self.uiCanvas:getHeight()/2, 0, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
 end
 
 function Badge:isHovered() --Check if mouse is above the face
@@ -157,6 +162,7 @@ function Badge:createFaceRewards()
                                     true,
                                     function()return Inputs.getMouseInCanvas(self.x, self.y)end,
                                     nil)
+        diceFace.reduceOnHover = nil --On désactive la modif de taille au hover
         table.insert(self.faceRewards, diceFace)
     end
 end
