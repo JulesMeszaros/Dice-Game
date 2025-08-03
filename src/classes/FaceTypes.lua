@@ -997,11 +997,52 @@ function RiskyBusiness:triggerEffect(round)
     removeMoney(round, 10)
 end
 
-function RiskyBusiness:firstEffect(round)
-    multiplyScore(round, 2)
+FaceTypes.RiskyBusiness = RiskyBusiness
+
+--==CryptoDice==--
+local CryptoDice = setmetatable({}, { __index = FaceObject })
+CryptoDice.__index = CryptoDice
+
+function CryptoDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), CryptoDice)
+
+    --Metadatas about the CryptoDice
+    self.name = "Risky Business"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the CryptoDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crypto Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Scoring : +100pts, -10$."
+    self.faceDimmension = 120 --sets the dimmensions for a face of the CryptoDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
 end
 
-FaceTypes.RiskyBusiness = RiskyBusiness
+function CryptoDice:triggerEffect(round)
+    --Complementary effect triggered by the face
+    multiplyScore(round, 2)
+    if(round.run.money > 0)then
+        setMoney(round, 0)
+    end
+    addScore(round, self.pointsValue)
+
+end
+
+FaceTypes.CryptoDice = CryptoDice
 
 --UTILS--
 function multiplyScore(round, f)
@@ -1018,6 +1059,10 @@ end
 
 function removeMoney(round, m)
     round.run.money = round.run.money - m
+end
+
+function setMoney(round, m)
+    round.run.money = 0
 end
 
 return FaceTypes
