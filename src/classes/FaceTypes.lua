@@ -1014,7 +1014,7 @@ function CryptoDice:new(faceValue, pointsValue)
     --Metadatas about the graphics of the CryptoDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crypto Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Scoring : +100pts, -10$."
+    self.description = "Scoring : Multiplies the hand score by 2, lowers the money to 0"
     self.faceDimmension = 120 --sets the dimmensions for a face of the CryptoDice in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -1038,7 +1038,6 @@ function CryptoDice:triggerEffect(round)
     if(round.run.money > 0)then
         setMoney(round, 0)
     end
-    addScore(round, self.pointsValue)
 end
 
 FaceTypes.CryptoDice = CryptoDice
