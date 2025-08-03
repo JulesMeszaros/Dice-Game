@@ -27,7 +27,7 @@ function RoundScreen:new(round)
     self.round = round
     self.endRoundPopUp = nil
 
-    self.time = 0
+    self.firstRerollTime = 0
 
     --FIGURE BUTTONS
     self.clickedFigure = nil
@@ -84,7 +84,7 @@ function RoundScreen:new(round)
     self.handScoreRot = 0
 
     --Start the round with the first roll
-    self.animator:addDelay(0.5, function()self.time=0;self.showFirstRollText=true;self:generateCiggiesUI()end)
+    self.animator:addDelay(0.5, function()self.firstRerollTime=0;self.showFirstRollText=true;self:generateCiggiesUI()end)
 
     self.diceFaces = {}
     --On créé des objets pour les nouveaux diceFaces
@@ -109,7 +109,7 @@ function RoundScreen:new(round)
 end
 
 function RoundScreen:update(dt)
-    self.time = self.time+dt
+    self.firstRerollTime = self.firstRerollTime+dt
     --Update dices UI
     for key,dice in next,self.diceFaces do
         dice:update(dt)
@@ -183,7 +183,7 @@ function RoundScreen:updateCanvas(dt)
                             (self.canvas:getHeight()/2)+120,
                             {
                                 font = Fonts.soraFirstRoll,
-                                time = self.time,
+                                time = self.firstRerollTime,
                                 centered=true,
                                 speed=2,
                                 revealSpeed = 120, -- lettres/seconde
