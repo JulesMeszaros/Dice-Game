@@ -286,6 +286,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
     end
 
     --Shop
+
     --Faces
     for key,face in next,self.availableFaceObjectsUI do
         local wasReleased = face:releaseEvent()
@@ -294,9 +295,16 @@ function Shop:mousereleased(x, y, button, istouch, presses)
         face.targetX = face.anchorX
         face.targetY = face.anchorY
 
-        if(wasReleased)then
+        --On check que le dé est laché dans la zone d'inventaire
+        if(
+            face.x > self.inventorySMTX and face.x < self.inventorySMTX + self.inventoryCanvasSmall:getWidth()
+            and face.y > self.inventorySMTY and face.y < self.inventorySMTY + self.inventoryCanvasSmall:getHeight()
+        ) then
             self:buyDiceFace(face.representedObject, face, key)
         end
+        --[[ if(wasReleased)then
+            self:buyDiceFace(face.representedObject, face, key)
+        end ]]
     end
 
     --Ciggies
