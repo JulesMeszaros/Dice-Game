@@ -1007,7 +1007,7 @@ function CryptoDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), CryptoDice)
 
     --Metadatas about the CryptoDice
-    self.name = "Risky Business"
+    self.name = "Crypto Dice"
     self.id = 1
     self.tier = "Common"
 
@@ -1042,6 +1042,47 @@ end
 
 FaceTypes.CryptoDice = CryptoDice
 
+--==Patience==--
+local Patience = setmetatable({}, { __index = FaceObject })
+Patience.__index = Patience
+
+function Patience:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), Patience)
+
+    --Metadatas about the Patience
+    self.name = "Patience"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the Patience
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Patience.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Scoring : +10pts, increase this value by 5"
+    self.faceDimmension = 120 --sets the dimmensions for a face of the Patience in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function Patience:triggerEffect(round)
+    --Complementary effect triggered by the face
+    addScore(round, self.pointsValue)
+    upgradeStat(self, 'pointsValue', 5)
+end
+
+FaceTypes.Patience = Patience
+
 --UTILS--
 function multiplyScore(round, f)
     round.handScore = round.handScore * f
@@ -1061,6 +1102,11 @@ end
 
 function setMoney(round, m)
     round.run.money = 0
+end
+
+function upgradeStat(object, stat, v)
+    object[stat] = object[stat] + v
+    print(object[stat])
 end
 
 return FaceTypes

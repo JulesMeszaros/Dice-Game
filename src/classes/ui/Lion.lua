@@ -27,7 +27,6 @@ function Lion:update()
 
 
     --drawing the images one by one
-    --love.graphics.draw(self.backgroundImage, self.canvas:getWidth()/2, self.canvas:getHeight()/2, 0, 1, 1, self.backgroundImage:getWidth()/2, self.backgroundImage:getHeight()/2)
     love.graphics.draw(self.shouldersImage, self.canvas:getWidth()/2, self.canvas:getHeight()/2, 0, 1, 1, self.shouldersImage:getWidth()/2, self.shouldersImage:getHeight()/2)
     love.graphics.draw(self.crownOneImage, self.canvas:getWidth()/2, self.canvas:getHeight()/2, 0, 1, 1, self.crownOneImage:getWidth()/2, self.crownOneImage:getHeight()/2)
     love.graphics.draw(self.crownTwoImage, self.canvas:getWidth()/2, self.canvas:getHeight()/2, 0, 1, 1, self.crownTwoImage:getWidth()/2, self.crownTwoImage:getHeight()/2)
@@ -55,7 +54,6 @@ function Lion:generateRandomLion()
     self.noseIndex = math.random(1, countFilesInFolder("src/assets/lion/nose/"))
     self.shouldersIndex = math.random(1, countFilesInFolder("src/assets/lion/shoulders/"))
     --Importing the images
-    --self.backgroundImage = love.graphics.newImage("src/assets/lion/background/background"..tostring(self.backgroundIndex)..".png")
     self.crownOneImage = love.graphics.newImage("src/assets/lion/crownone/crownone"..tostring(self.crownOneIndex)..".png")
     self.crownTwoImage = love.graphics.newImage("src/assets/lion/crowntwo/crowntwo"..tostring(self.crownTwoIndex)..".png")
     self.eyesImage = love.graphics.newImage("src/assets/lion/eyes/eyes"..tostring(self.eyesIndex)..".png")
