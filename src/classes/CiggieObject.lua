@@ -40,6 +40,9 @@ function CiggieObject:destruct(screen)
 end
 
 function isInList(diceList, targetDice)
+    if(not isList(diceList))then
+        return false
+    end
     --Fonction pour vérifier qu'un élément est dans une liste
   for _, dice in ipairs(diceList) do
     if dice == targetDice then
@@ -47,6 +50,26 @@ function isInList(diceList, targetDice)
     end
   end
   return false
+end
+
+function isList(t)
+    if type(t) ~= "table" then return false end
+
+    local count = 0
+    for k, _ in pairs(t) do
+        if type(k) ~= "number" or k < 1 or math.floor(k) ~= k then
+            return false -- contient une clé non-numérique ou invalide
+        end
+        count = count + 1
+    end
+
+    for i = 1, count do
+        if t[i] == nil then
+            return false -- trou détecté
+        end
+    end
+
+    return true
 end
 
 return CiggieObject
