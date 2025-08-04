@@ -8,6 +8,7 @@ local AnimationUtils = require("src.utils.scripts.Animations")
 local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 local Screen = require("src.classes.GameScreen")
 local Fonts = require("src.utils.Fonts")
+local UI = require("src.utils.scripts.UI")
 --===========--
 
 local DiceCustomization = setmetatable({}, { __index = Screen })
@@ -42,6 +43,18 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     )
 
     self.uiElements.buttons["nextRound"].animator:add('x', self.nextRoundX, self.nextRoundTX, AnimationUtils.EntryDuration, AnimationUtils.Easing.inOutCubic)
+
+    self.addRewardText = UI.Text.TextWavy:new(
+        "Add to inventory?",
+        self.inventoryMDTX + self.inventoryCanvasMedium:getWidth()/2,
+        self.inventoryMDTY + self.inventoryCanvasMedium:getHeight()/2,
+        {
+            font = Fonts.soraRewardTotal,
+            centered = true,
+            amplitude = 5,
+            speed = 2
+        }
+    )
 
     self:createNewFacesUI()
     self:createRewardsUI()
@@ -112,6 +125,15 @@ function DiceCustomization:updateCanvas(dt)
     --Buttons
     for key,button in next,self.uiElements.buttons do
         button:draw()
+    end
+
+    --Popup d'ajout à l'inventaire
+    if(self.dragAndDroppedReward)then
+        love.graphics.draw(Sprites.ADD_TO_INVENTORY_L, self.inventoryMDTX, self.inventoryMDTY, 0, 1, 1)
+        self.addRewardText:update(dt)
+        self.addRewardText:draw()
+    else
+        self.addRewardText:reset()
     end
 
      --Popup de vente de face de dé
