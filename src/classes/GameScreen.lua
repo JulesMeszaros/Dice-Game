@@ -89,6 +89,20 @@ function GameScreen:new(floor, run, screenType, round)
 
     })
 
+    --Wavy Texts
+    self.sellCiggieText = UI.Text.TextWavy:new(
+        "Sell ("..tostring(Constants.BASE_CIGGIE_SELL_PRICE).."$)",
+        250, 950,
+        {
+            font = Fonts.soraBig,
+            centered = true,
+            amplitude = 5,
+            speed = 2,
+            colorStart = {255/255, 178/255, 89/255},
+            colorEnd = {255/255, 178/255, 89/255}
+        }
+    )
+
     --Positions
     self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.canvas:getHeight()+1000
     self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.canvas:getWidth()+20, 30
@@ -311,10 +325,9 @@ function GameScreen:drawCiggiePopup(dt)
     local a = self.ciggiePopupAlpha/self.targetCiggiePopupAlpha
     love.graphics.setColor(1, 1, 1, a)
     love.graphics.draw(Sprites.SELL_CIGGIE, 30, self.canvas:getHeight()-30, 0, 1, 1, 0, Sprites.SELL_CIGGIE:getHeight())
-    local sellText = love.graphics.newText(Fonts.soraBig, "Sell : 1$")
-    love.graphics.setColor(255/255, 178/255, 89/255, a)
-    love.graphics.draw(sellText, 250, 950, 0, 1, 1, sellText:getWidth()/2, sellText:getHeight()/2)
-    love.graphics.setColor(1, 1, 1, 1)
+    
+    self.sellCiggieText:update(dt)
+    self.sellCiggieText:draw()
 
     --Lighter
     love.graphics.draw(Sprites.LIGHTER, self.lighterX, self.lighterY, 0, 1, 1, Sprites.LIGHTER:getWidth()/2, Sprites.LIGHTER:getHeight()/2)
@@ -680,6 +693,8 @@ end
 function GameScreen:startCiggiePopUp()
     local d = 0.2
     self.ciggiePopupTimer = 0
+
+    self.sellCiggieText:reset()
 
     self.animator:addGroup({
         {property = "ciggiePopupAlpha", from=self.baseCiggiePopupAlpha, targetValue=self.targetCiggiePopupAlpha, duration=d},

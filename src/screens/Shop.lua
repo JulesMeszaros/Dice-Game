@@ -30,7 +30,7 @@ function Shop:new(run)
 
     --Wavy Texts
     self.sellText = UI.Text.TextWavy:new(
-        "Sell : 3$",
+        "Sell (3$)",
         250, 950,
         {
             font = Fonts.SoraBig,
@@ -42,8 +42,21 @@ function Shop:new(run)
         }
     )
 
+    self.buyCiggieText = UI.Text.TextWavy:new(
+        "Buy ("..tostring(Constants.BASE_CIGGIE_PRICE).."$)",
+        1690, 1000,
+        {
+            font = Fonts.SoraBig,
+            centered = true,
+            amplitude = 5,
+            speed = 2,
+            colorStart = {1, 1, 1},
+            colorEnd = {1, 1, 1}
+        }
+    )
+
     self.buyText = UI.Text.TextWavy:new(
-        "Buy face?",
+        "Buy face (5$)",
         self.inventorySMTX + self.inventoryCanvasSmall:getWidth()/2,
         self.inventorySMTY + self.inventoryCanvasSmall:getHeight()/2,
         {
@@ -218,6 +231,15 @@ function Shop:updateCanvas(dt)
 
     self:drawCiggiesTrayFront()
 
+    --Buy CiggiePopup
+    if(self.dragAndDroppedShopCiggie)then
+        love.graphics.draw(Sprites.BUY_CIGGIE, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, Sprites.BUY_CIGGIE:getWidth(), Sprites.BUY_CIGGIE:getHeight())
+        self.buyCiggieText:update(dt)
+        self.buyCiggieText:draw()
+    else
+        self.buyCiggieText:reset()
+    end
+
     --Draw the drag and dropped object on top of everything else
     if(self.dragAndDroppedObject) then
         self.dragAndDroppedObject:draw()
@@ -293,6 +315,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
     self.dragAndDroppedShopDice = nil
     self.dragAndDroppedReward = nil
     self.dragAndDroppedInventory = nil
+    self.dragAndDroppedShopCiggie = nil
 
     --release event on UI elements (buttons)
     for key,button in next,self.uiElements.buttons do
@@ -466,6 +489,7 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
             if(ciggie.isDraggable and ciggie.isBeingClicked) then
                 ciggie.isBeingDragged = true
                 self.dragAndDroppedObject = ciggie
+                self.dragAndDroppedShopCiggie = ciggie
                 ciggie.dragXspeed = dx
                 ciggie.targetX = x 
                 ciggie.targetY = y
