@@ -29,6 +29,19 @@ function Shop:new(run)
     self.dragAndDroppedObject = nil
 
     --Wavy Texts
+    self.sellText = UI.Text.TextWavy:new(
+        "Sell : 3$",
+        250, 950,
+        {
+            font = Fonts.SoraBig,
+            centered = true,
+            amplitude = 5,
+            speed = 2,
+            colorStart = {255/255, 178/255, 89/255},
+            colorEnd = {255/255, 178/255, 89/255}
+        }
+    )
+
     self.buyText = UI.Text.TextWavy:new(
         "Buy face?",
         self.inventorySMTX + self.inventoryCanvasSmall:getWidth()/2,
@@ -147,13 +160,13 @@ function Shop:updateCanvas(dt)
 
     --Popup de vente de face de dé
     if(self.dragAndDroppedReward or self.dragAndDroppedInventory)then
-        love.graphics.setColor(1, 1, 1, a)
-        love.graphics.draw(Sprites.SELL_CIGGIE, 30, self.canvas:getHeight()-30, 0, 1, 1, 0, Sprites.SELL_CIGGIE:getHeight())
-        local sellText = love.graphics.newText(Fonts.soraBig, "Sell : 3$")
-        love.graphics.setColor(255/255, 178/255, 89/255, a)
-        love.graphics.draw(sellText, 250, 950, 0, 1, 1, sellText:getWidth()/2, sellText:getHeight()/2)
-    end
         love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.draw(Sprites.SELL_CIGGIE, 30, self.canvas:getHeight()-30, 0, 1, 1, 0, Sprites.SELL_CIGGIE:getHeight())
+        self.sellText:update(dt)
+        self.sellText:draw()
+    else
+        self.sellText:reset()
+    end
 
     --Shop faces UI
     for i,faceUI in next,self.availableFaceObjectsUI do
