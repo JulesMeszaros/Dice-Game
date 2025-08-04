@@ -358,9 +358,6 @@ function Round:endTriggeringPhase()
     if(self.remainingHands>=1)then
         self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
         self:resetselectedDices()
-        --self:makeRoll(self.diceObjects) -- On effectue un reroll
-        self.firstRoll = false
-        self.terrain.firstRerollTime = 0
         self.availableRerolls = Constants.BASE_REROLLS
         self.roundScore = self.roundScore + self.handScore
         self.handScore = 0
@@ -368,6 +365,9 @@ function Round:endTriggeringPhase()
 
     if(self.roundScore >= self.targetScore or self.remainingHands <= 0) then
         self:endRound()
+    else
+        self.firstRoll = false
+        self.terrain.timers.firstRerollTime = 0
     end
 end
 
