@@ -80,10 +80,33 @@ function GameScreen:new(floor, run, screenType, round)
 
     --Wavy Texts
     self.moneyWavyText = UI.Text.TextWavy:new("5$", 50, 50, {
-        amplitude=3,
+        amplitude=2.5,
         speed=2,
         font = Fonts.soraBig,
-        centered=true
+        centered=true,
+        colorStart={255/255, 178/255, 89/255},
+        colorEnd={255/255, 178/255, 89/255}
+
+    })
+
+    self.playerScoreWavyText = UI.Text.TextWavy:new("0", 390, 72, {
+        amplitude=2,
+        speed=1.5,
+        font = Fonts.soraSmall,
+        centered=false,
+        colorStart={0, 0, 0},
+        colorEnd={0, 0, 0}
+
+    })
+
+    self.enemyScoreWavyText = UI.Text.TextWavy:new("0", 20, 210, {
+        amplitude=2.5,
+        speed=2,
+        font = Fonts.soraBig,
+        centered=true,
+        colorStart={255/255, 178/255, 89/255},
+        colorEnd={255/255, 178/255, 89/255}
+
     })
 
     --Positions
@@ -376,7 +399,7 @@ function GameScreen:drawRoundDetails(dt)
         rerollText = love.graphics.newText(Fonts.soraBig, tostring(self.round.availableRerolls))
         currentHands = love.graphics.newText(Fonts.soraBig, tostring(self.round.remainingHands))
         currentRoundText = love.graphics.newText(Fonts.soraSmall, 'Floor '..tostring(self.round.floorNumber)..'\nDesk : '..tostring(self.round.deskNumber))
-        moneyText = love.graphics.newText(Fonts.soraBig, tostring(self.round.run.money).."€")
+        moneyText = tostring(self.round.run.money).."$"
     end
 
     --ROUND
@@ -409,7 +432,7 @@ function GameScreen:drawRoundDetails(dt)
 
     self.moneyWavyText.x = self.moneyCanvas:getWidth()/2
     self.moneyWavyText.y = self.moneyCanvas:getHeight()/2
-    self.moneyWavyText.text = tostring(self.run.money).."$"
+    self.moneyWavyText.text = moneyText
 
     self.moneyWavyText:update(dt)
     self.moneyWavyText:draw()

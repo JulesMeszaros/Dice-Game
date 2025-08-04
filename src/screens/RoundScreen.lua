@@ -34,6 +34,26 @@ function RoundScreen:new(round)
         oscillationTimeEnemy = math.random(0, 100)
     }
 
+    self.playerScoreWavyText = UI.Text.TextWavy:new("0", 390, 72, {
+        amplitude=1,
+        speed=1.5,
+        font = Fonts.soraSmall,
+        centered=false,
+        colorStart={0, 0, 0},
+        colorEnd={0, 0, 0}
+
+    })
+
+    self.enemyScoreWavyText = UI.Text.TextWavy:new(tostring(self.round.targetScore), 20, 215, {
+        amplitude=1,
+        speed=1.5,
+        font = Fonts.soraSmall,
+        centered=false,
+        colorStart={0, 0, 0},
+        colorEnd={0, 0, 0}
+
+    })
+
     --FIGURE BUTTONS
     self.clickedFigure = nil
     --Calculate points functions
@@ -165,7 +185,7 @@ function RoundScreen:updateCanvas(dt)
     self:checkForDraggedCiggie()
 
     --PlayersInfos
-    self:drawPlayersInfos()
+    self:drawPlayersInfos(dt)
     --Dice Tray
     self:drawDiceTray(self.diceMatx, self.diceMaty, self.diceFaces)
 
@@ -334,9 +354,13 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
             end
             diceface.isBeingDragged = false
 
+            
+        end
+
+        for key,diceface in next,self.diceFaces do
             if(diceface.anchorX and diceface.anchorY) then
-                diceface.targetX = diceface.anchorX
-                diceface.targetY = diceface.anchorY
+                    diceface.targetX = diceface.anchorX
+                    diceface.targetY = diceface.anchorY
             end
         end
 
@@ -436,27 +460,29 @@ function RoundScreen:drawDiceDetails(x, y)
     love.graphics.draw(self.diceDetailsCanvas, x, y, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
 end
 
-function RoundScreen:drawPlayersInfos()
+function RoundScreen:drawPlayersInfos(dt)
     local currentCanvas = love.graphics.getCanvas()
     --Player
     local playerYOffset = AnimationUtils.osccilate(self.timers.oscillationTimePlayer, 20, 8)
     love.graphics.setCanvas(self.playerInfos)
     love.graphics.clear()
     love.graphics.draw(Sprites.PLAYER_INFOS, 0, 0)
-    local scoreText = love.graphics.newText(font, 'Score : ' ..tostring(self.round.roundScore))
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(scoreText, self.playerInfos:getWidth()-20, 72, 0, 1, 1, scoreText:getWidth(), 0)
-    love.graphics.setColor(1, 1, 1, 1)
+    local scoreText = love.graphics.newText(font, tostring(self.round.roundScore))
+    
+    self.playerScoreWavyText.text = tostring(self.round.roundScore)
+    self.playerScoreWavyText:update(dt)
+    self.playerScoreWavyText:draw(dt)
+    
 
     --Ennemy
-    local enemyYOffset = AnimationUtils.osccilate(self.timers.oscillationTimeEnemy, 20, 8)
+    local enemyYOffset = 0--AnimationUtils.osccilate(self.timers.oscillationTimeEnemy, 20, 8)
     love.graphics.setCanvas(self.enemyInfos)
     love.graphics.clear()
     love.graphics.draw(Sprites.ENEMY_INFOS, 0, 0)
     local targetScoreText = love.graphics.newText(font, 'Target : '..tostring(self.round.targetScore))
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(targetScoreText, 20, 210)
-    love.graphics.setColor(1, 1, 1, 1)
+    
+    self.enemyScoreWavyText:update(dt)
+    self.enemyScoreWavyText:draw(dt)
 
     --Lion
     self.round.enemyCharacter:update()
