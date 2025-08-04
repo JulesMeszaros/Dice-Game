@@ -333,6 +333,11 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
                 self.round:updateselectedDices(diceface)
             end
             diceface.isBeingDragged = false
+
+            if(diceface.anchorX and diceface.anchorY) then
+                diceface.targetX = diceface.anchorX
+                diceface.targetY = diceface.anchorY
+            end
         end
 
         --release event on UI elements (buttons)
@@ -369,8 +374,12 @@ end
 function RoundScreen:updateSelectedPosDices()
     local i = 1
     for k,d in next,self.round.selectedDices do
-        self.diceFaces[d].targetY = 70
-        self.diceFaces[d].targetX = 105 + (i-1)*(180)
+        --self.diceFaces[d].targetY = 70
+        --self.diceFaces[d].targetX = 105 + (i-1)*(180)
+
+        self.diceFaces[d].anchorY = 70
+        self.diceFaces[d].anchorX = 105 + (i-1)*(180)
+        
         i=i+1
     end
 end
@@ -633,6 +642,10 @@ function RoundScreen:reorganiseDiceFaces(dices)
     for key,uiFace in next,reorganisedDices do
         uiFace.targetX = (i)*(((self.dice_tray:getWidth()-100)/(table.getn(reorganisedDices)+1)))+50
         uiFace.targetY = (self.dice_tray:getHeight()/2+140)
+
+        uiFace.anchorX = nil
+        uiFace.anchorY = nil
+
         uiFace.baseRotation = 0
         i = i+1
     end    

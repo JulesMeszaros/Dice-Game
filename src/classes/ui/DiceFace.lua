@@ -93,11 +93,11 @@ function DiceFace:update(dt)
     self.animator:update(dt)
 
     --Selection state--
-    if(self.isSelected)then
+    --[[ if(self.isSelected)then
         self.isDraggable = false
     else
         self.isDraggable = true
-    end
+    end ]]
 
     if(self.isTriggering)then
         self.isHoverable = false
