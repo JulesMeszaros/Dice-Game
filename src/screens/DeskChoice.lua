@@ -62,7 +62,7 @@ function DeskChoice:update(dt)
 
     --UI
     self:drawDeck(dt)
-    self:drawRoundDetails()
+    self:drawRoundDetails(dt)
     self:drawDiceDetails(dt)
     self:updateChoiceCanvas(dt)
     

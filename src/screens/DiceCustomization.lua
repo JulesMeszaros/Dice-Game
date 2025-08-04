@@ -97,7 +97,7 @@ function DiceCustomization:updateCanvas(dt)
     --UI
 
     --Run informations
-    self:drawRoundDetails()
+    self:drawRoundDetails(dt)
     
     --New Faces Canvas
     --self:drawNewFacesCanvas()

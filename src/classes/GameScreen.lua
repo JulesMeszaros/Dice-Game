@@ -78,6 +78,14 @@ function GameScreen:new(floor, run, screenType, round)
     self.rewardsMediumCanvas = love.graphics.newCanvas(240, 410)
     self.ciggiePopupCanvas = love.graphics.newCanvas(self.canvas:getWidth(), self.canvas:getHeight())
 
+    --Wavy Texts
+    self.moneyWavyText = UI.Text.TextWavy:new("5$", 50, 50, {
+        amplitude=3,
+        speed=2,
+        font = Fonts.soraBig,
+        centered=true
+    })
+
     --Positions
     self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.canvas:getHeight()+1000
     self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.canvas:getWidth()+20, 30
@@ -355,13 +363,14 @@ function GameScreen:drawDescription()
 end
 
 --Round details canvas
-function GameScreen:drawRoundDetails()
+function GameScreen:drawRoundDetails(dt)
     local currentCanvas = love.graphics.getCanvas()
     --Create the texts
     local rerollText = love.graphics.newText(Fonts.soraBig, '-')
     local currentHands = love.graphics.newText(Fonts.soraBig, '-')
     local currentRoundText = love.graphics.newText(Fonts.soraSmall, 'Floor '..tostring(self.run.floorNumber)..'\nDesk : '..tostring("-"))
     local moneyText = love.graphics.newText(Fonts.soraBig, tostring(self.run.money).."€")
+    local moneyText = tostring(self.run.money).."$"
 
     if(self.round) then
         rerollText = love.graphics.newText(Fonts.soraBig, tostring(self.round.availableRerolls))
@@ -397,9 +406,15 @@ function GameScreen:drawRoundDetails()
     love.graphics.setCanvas(self.moneyCanvas)
     love.graphics.clear()
     love.graphics.draw(Sprites.MONEY,0,0)
-    love.graphics.setColor(1, 178/255, 89/255, 1)
-    love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2-7, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
-    love.graphics.setColor(1, 1, 1, 1)
+
+    self.moneyWavyText.x = self.moneyCanvas:getWidth()/2
+    self.moneyWavyText.y = self.moneyCanvas:getHeight()/2
+    self.moneyWavyText.text = tostring(self.run.money).."$"
+
+    self.moneyWavyText:update(dt)
+    self.moneyWavyText:draw()
+
+    --love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2-7, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
 
 
     --DRAW ALL THE CANVAS

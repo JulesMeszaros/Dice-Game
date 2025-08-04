@@ -94,7 +94,7 @@ function Shop:updateCanvas(dt)
 
     --UI
     self:drawDeck(dt)
-    self:drawRoundDetails()
+    self:drawRoundDetails(dt)
     self:drawDiceDetails(dt)
     self:drawInventoryBackGroundSmall()
     self:drawShopBackground()

@@ -119,7 +119,7 @@ function Infos:updateCanvas(dt)
     self:drawDescriptions()
     self:drawPlayerBadge()
     self:drawProgression()
-    self:drawRoundDetails()
+    self:drawRoundDetails(dt)
     self:drawDescription()
 
     --faces UI
@@ -343,7 +343,7 @@ function Infos:drawProgression()
     love.graphics.draw(self.progression, self.progressionX, self.progressionY)
 end
 
-function Infos:drawRoundDetails()
+function Infos:drawRoundDetails(dt)
     local currentCanvas = love.graphics.getCanvas()
     --Create the texts
     local rerollText = love.graphics.newText(Fonts.soraBig, '-')

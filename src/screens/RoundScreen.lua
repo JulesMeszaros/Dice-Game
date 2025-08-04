@@ -184,7 +184,7 @@ function RoundScreen:updateCanvas(dt)
     self:drawDiceDetails(self.diceDetailsX, self.diceDetailsY)
     
     --ROUND DETAILS
-    self:drawRoundDetails()
+    self:drawRoundDetails(dt)
 
      --First round text
     if(self.showFirstRollText==true and self.round.firstRoll==false) then
