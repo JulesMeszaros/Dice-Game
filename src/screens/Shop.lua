@@ -13,6 +13,7 @@ local CiggieTypes = require("src.classes.CiggieTypes")
 local CiggieObject = require("src.classes.CiggieObject")
 local Button = require("src.classes.ui.Button")
 local CoffeeButton = require("src.classes.ui.CoffeeButton")
+local UI = require("src.utils.scripts.UI")
 
 local Shop = setmetatable({}, {__index = Screen})
 Shop.__index = Shop
@@ -26,6 +27,31 @@ function Shop:new(run)
     self:createDeck()
 
     self.dragAndDroppedObject = nil
+
+    --Wavy Texts
+    self.buyText = UI.Text.TextWavy:new(
+        "Buy face?",
+        self.inventorySMTX + self.inventoryCanvasSmall:getWidth()/2,
+        self.inventorySMTY + self.inventoryCanvasSmall:getHeight()/2,
+        {
+            font = Fonts.SoraBig,
+            centered = true,
+            amplitude = 5,
+            speed = 2
+        }
+    )
+
+    self.addRewardText = UI.Text.TextWavy:new(
+        "Add to inventory?",
+        self.inventorySMTX + self.inventoryCanvasSmall:getWidth()/2,
+        self.inventorySMTY + self.inventoryCanvasSmall:getHeight()/2,
+        {
+            font = Fonts.soraRewardTotal,
+            centered = true,
+            amplitude = 5,
+            speed = 2
+        }
+    )
 
     --Shop Objects
     self.availableFaceObjects = {}
@@ -100,6 +126,24 @@ function Shop:updateCanvas(dt)
     self:drawShopBackground()
     self:drawRewardsSmall()
     self:drawInventoryFaces(dt)
+
+    --Popup d'achat de face de dé
+    if(self.dragAndDroppedShopDice) then
+        love.graphics.draw(Sprites.BUY_POPUP, self.inventorySMTX, self.inventorySMTY, 0, 1, 1)
+        self.buyText:update(dt)
+        self.buyText:draw()
+    else
+        self.buyText:reset()
+    end
+
+    --Popup d'ajout de face de dé reward
+    if(self.dragAndDroppedReward) then
+        love.graphics.draw(Sprites.ADD_TO_INVENTORY, self.inventorySMTX, self.inventorySMTY, 0, 1, 1)
+        self.addRewardText:update(dt)
+        self.addRewardText:draw()
+    else
+        self.addRewardText:reset()
+    end
 
     --Shop faces UI
     for i,faceUI in next,self.availableFaceObjectsUI do
@@ -223,6 +267,9 @@ end
 
 function Shop:mousereleased(x, y, button, istouch, presses)
     self.dragAndDroppedObject = nil
+    self.dragAndDroppedShopDice = nil
+    self.dragAndDroppedReward = nil
+
     --release event on UI elements (buttons)
     for key,button in next,self.uiElements.buttons do
         local wasReleased = button:releaseEvent()
@@ -364,6 +411,7 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
             if(face.isDraggable and face.isBeingClicked) then
                 face.isBeingDragged = true
                 self.dragAndDroppedObject = face
+                self.dragAndDroppedReward = face
                 face.dragXspeed = dx
                 face.targetX = (face.targetX + dx)
                 face.targetY = (face.targetY + dy)
@@ -378,6 +426,7 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
         for key,face in next, self.availableFaceObjectsUI do
             if(face.isDraggable and face.isBeingClicked) then
                 face.isBeingDragged = true
+                self.dragAndDroppedShopDice = face
                 self.dragAndDroppedObject = face
                 face.dragXspeed = dx
                 face.targetX = (face.targetX + dx) 

@@ -565,6 +565,9 @@ function RoundScreen:getCurrentlyHoveredLine()
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             self:highlightDices(self.calcBasePoints[i]()[2])
             return i
+        else
+            self:highlightDices({})
+            return nil
         end
     else
         self:highlightDices({})
