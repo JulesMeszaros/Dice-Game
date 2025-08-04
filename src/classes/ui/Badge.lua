@@ -28,6 +28,7 @@ function Badge:new(
 
     self.oscillatingTime = math.random(0, 200)
     self.oscillatingY = 0
+    self.oscillatingR = 0
 
     self.sprite = badgeSprite
 
@@ -48,6 +49,7 @@ function Badge:new(
 
     --Create the canvas ONCE
     self.uiCanvas = self:createCanvas()
+    self.uiCanvas:setFilter("linear", "linear")
 
     self:createFaceRewards()
 
@@ -65,6 +67,7 @@ function Badge:update(dt)
 
     self.oscillatingTime = self.oscillatingTime+dt
     self.oscillatingY = AnimationUtils.osccilate(self.oscillatingTime, 8, 10)
+    self.oscillatingR = 0--AnimationUtils.osccilate(self.oscillatingTime, 10, 0.02)
 
     if(self:isHovered())then
         self.targetedScale = 0.95
@@ -124,8 +127,8 @@ function Badge:updateCanvas(dt)
 end
 
 function Badge:draw()
-    
-    love.graphics.draw(self.uiCanvas, self.x+self.uiCanvas:getWidth()/2, self.y+self.oscillatingY+self.uiCanvas:getHeight()/2, 0, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
+
+    love.graphics.draw(self.uiCanvas, self.x+self.uiCanvas:getWidth()/2, self.y+self.oscillatingY+self.uiCanvas:getHeight()/2, self.oscillatingR, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
 end
 
 function Badge:isHovered() --Check if mouse is above the face
