@@ -89,26 +89,6 @@ function GameScreen:new(floor, run, screenType, round)
 
     })
 
-    self.playerScoreWavyText = UI.Text.TextWavy:new("0", 390, 72, {
-        amplitude=2,
-        speed=1.5,
-        font = Fonts.soraSmall,
-        centered=false,
-        colorStart={0, 0, 0},
-        colorEnd={0, 0, 0}
-
-    })
-
-    self.enemyScoreWavyText = UI.Text.TextWavy:new("0", 20, 210, {
-        amplitude=2.5,
-        speed=2,
-        font = Fonts.soraBig,
-        centered=true,
-        colorStart={255/255, 178/255, 89/255},
-        colorEnd={255/255, 178/255, 89/255}
-
-    })
-
     --Positions
     self.diceMatTX, self.diceMatTY, self.diceMatx, self.diceMaty = 510 , 320, 510, self.canvas:getHeight()+1000
     self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.canvas:getWidth()+20, 30
