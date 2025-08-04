@@ -145,6 +145,16 @@ function Shop:updateCanvas(dt)
         self.addRewardText:reset()
     end
 
+    --Popup de vente de face de dé
+    if(self.dragAndDroppedReward or self.dragAndDroppedInventory)then
+        love.graphics.setColor(1, 1, 1, a)
+        love.graphics.draw(Sprites.SELL_CIGGIE, 30, self.canvas:getHeight()-30, 0, 1, 1, 0, Sprites.SELL_CIGGIE:getHeight())
+        local sellText = love.graphics.newText(Fonts.soraBig, "Sell : 3$")
+        love.graphics.setColor(255/255, 178/255, 89/255, a)
+        love.graphics.draw(sellText, 250, 950, 0, 1, 1, sellText:getWidth()/2, sellText:getHeight()/2)
+    end
+        love.graphics.setColor(1, 1, 1, 1)
+
     --Shop faces UI
     for i,faceUI in next,self.availableFaceObjectsUI do
         faceUI:update(dt)
@@ -269,6 +279,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
     self.dragAndDroppedObject = nil
     self.dragAndDroppedShopDice = nil
     self.dragAndDroppedReward = nil
+    self.dragAndDroppedInventory = nil
 
     --release event on UI elements (buttons)
     for key,button in next,self.uiElements.buttons do
@@ -307,7 +318,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
         face.targetX = face.anchorX
         face.targetY = face.anchorY
 
-        if(wasReleased) then
+        if(face.x > 0 and face.x < 500) and (face.y>850 and face.y<self.canvas:getHeight()) then
             self:sellDiceFace(face.representedObject, face, key)
         end
     end
@@ -327,7 +338,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
             face.targetY = face.anchorY
         end
 
-        if(wasReleased) then
+        if(face.x > 0 and face.x < 500) and (face.y>850 and face.y<self.canvas:getHeight()) then
             self:sellReward(face.representedObject, face, key)
         end
     end
@@ -397,6 +408,7 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
             if(face.isDraggable and face.isBeingClicked) then
                 face.isBeingDragged = true
                 self.dragAndDroppedObject = face
+                self.dragAndDroppedInventory = face
                 face.dragXspeed = dx
                 face.targetX = (face.targetX + dx)
                 face.targetY = (face.targetY + dy)
