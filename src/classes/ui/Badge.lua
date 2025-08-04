@@ -107,25 +107,16 @@ function Badge:updateCanvas(dt)
 
     --Lion
     self.round.enemyCharacter:update(dt)
-    self.round.enemyCharacter:draw(185, 191, 200, 200)
+    self.round.enemyCharacter:draw(120, 195, 200, 200)
 
     love.graphics.setShader()
 
-    
-
     --Texts
-    local nameText = love.graphics.newText(Fonts.soraDesc, "Jean Michel Lionnel.le")
     local jobDeskText = love.graphics.newText(Fonts.soraLightMini, 'Office '..tostring(self.round.deskNumber).." - "..tostring(self.round.enemyJob))
-    local targetText = love.graphics.newText(Fonts.soraLightMini, 'Target Score : '..tostring(self.round.targetScore))
+    local targetText = love.graphics.newText(Fonts.soraLightMini, 'Target : '..tostring(self.round.targetScore))
     
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(nameText, self.uiCanvas:getWidth()/2, 25, 0, 1, 1, nameText:getWidth()/2, 0)
-    love.graphics.draw(jobDeskText, self.uiCanvas:getWidth()/2, 60, 0, 1, 1, jobDeskText:getWidth()/2, 0)
-    love.graphics.draw(targetText, self.uiCanvas:getWidth()/2, 322, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
-
-    love.graphics.setColor(1, 1, 1, 1)
-
-    
+    love.graphics.draw(jobDeskText, self.uiCanvas:getWidth()/2, 59, 0, 1, 1, jobDeskText:getWidth()/2, 0)
+    love.graphics.draw(targetText, 120, 330, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
 
     self:updateFaceCanvas(dt)
 
@@ -150,14 +141,15 @@ function Badge:isHovered() --Check if mouse is above the face
 end
 
 function Badge:createFaceRewards()
-    local xPos = self:getCenteredPositions(table.getn(self.round.faceRewards), 120, 20, self.uiCanvas:getWidth()/2+60)
+    local xPos = {290, 290}
+    local yPos = {160, 290}
     self.faceRewards = {}
     for i,faceReward in next,self.round.faceRewards do
         local diceFace = DiceFace:new(nil,
                                     faceReward,
                                     xPos[i],
-                                    408,
-                                    100,
+                                    yPos[i],
+                                    120,
                                     false,
                                     true,
                                     function()return Inputs.getMouseInCanvas(self.x, self.y)end,

@@ -373,6 +373,7 @@ end
 
 --==DICE FUNCTIONS==--
 
+--TODO: à bouger dans roundscreen
 function Round:updateselectedDices(uiFace)
     --si le dé donné en paramètre est sélectionné et pas encore dans la liste, on l'ajoute à la fin de la liste.
     --si il est sélectionné mais pas dans la liste, on le laisse

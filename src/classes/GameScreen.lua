@@ -94,14 +94,14 @@ function GameScreen:new(floor, run, screenType, round)
     self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.canvas:getWidth()+20, 30
     self.playerTX, self.playerTY, self.playerX, self.playerY = 510, 30, -800, 30
     
-    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 30, -900
+    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, -900, 30
     self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.canvas:getWidth()-30, 30, self.canvas:getWidth()+600, 30
     self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, 650, self.canvas:getWidth()+600, 650
 
     self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 260, 721, -500, 721
     self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 30, 721, -730, 721
-    self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, 190, self.canvas:getHeight()+400
-    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, 190, self.canvas:getHeight()+300
+    self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, -730, 970
+    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, -500, 860
     self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight(), self.canvas:getWidth()+450, self.canvas:getHeight()
     self.deckTX, self.deckTY , self.deckX, self.deckY = 1300, 110, 1300, self.canvas:getHeight()+20
 
@@ -122,8 +122,8 @@ function GameScreen:new(floor, run, screenType, round)
     
 
     --Btns positions
-    self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -150, 910
-    self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 100, 1010, -150, 1010
+    self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -730, 910
+    self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 100, 1010, -730, 1010
     self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
     self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY = 255, 680, -255, 680
     self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY = 510+(370/2), 640, -255, 640
@@ -135,16 +135,16 @@ function GameScreen:new(floor, run, screenType, round)
     self.animator:addGroup({
         {property = "customizationMatY", from = self.customizationMatY, targetValue = self.customizationMatTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "newFacesY", from = self.newFacesY, targetValue = self.newFacesTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
-        {property = "gridY", from = self.gridY, targetValue = self.gridTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
+        {property = "gridX", from = self.gridX, targetValue = self.gridTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "diceMaty", from = self.diceMaty, targetValue = self.diceMatTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "deckY", from = self.deckY, targetValue = self.deckTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
-        {property = "moneyY", from = self.moneyY, targetValue = self.moneyTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyX", from = self.moneyX, targetValue = self.moneyTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.ciggiesTrayTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.floorTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
+        {property = "floorX", from = self.floorX, targetValue = self.floorTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "shopBGY", from = self.shopBGY, targetValue = self.shopBGTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "inventoryY", from = self.inventoryY, targetValue = self.inventoryTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "inventorySMY", from = self.inventorySMY, targetValue = self.inventorySMTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
@@ -188,8 +188,8 @@ function GameScreen:new(floor, run, screenType, round)
     )
     
     --Buttons animation
-    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.outCubic)
-    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.outCubic)
+    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, AnimationUtils.EntryDuration*3, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, self.planBtnTX, AnimationUtils.EntryDuration*3, AnimationUtils.Easing.inOutCubic)
     
     --Cas particulier de l'écran de round
     if(self.screenType == Constants.RUN_STATES.ROUND) then

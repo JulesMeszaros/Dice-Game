@@ -9,7 +9,7 @@ local DiceObject = require("src.classes.DiceObject")
 local Button = require("src.classes.ui.Button")
 local DiceFace = require("src.classes.ui.DiceFace")
 local Ciggie = require("src.classes.ui.Ciggie")
-
+local UI = require("src.utils.scripts.UI")
 local EndRound = {}
 EndRound.__index = EndRound
 
@@ -24,12 +24,24 @@ function EndRound:new(run, round)
     self.backgroundOpacity = 0
     self.faceRewards = {}
 
-
     --Canvas
     self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_WIDTH)
     self.contentCanvas = love.graphics.newCanvas(930,760)
     self.moneyRewardCanvas = love.graphics.newCanvas(410, 480)
     self.rewardsCanvas = love.graphics.newCanvas(410, 480)
+
+    --You Won Text
+    self.youWon = UI.Text.TextWavy:new(
+        'You Won!',
+        self.contentCanvas:getWidth()/2, 70,
+        {
+            centered=true,
+            font = Fonts.soraYouWon,
+            colorStart = {40/255, 40/255, 46/255},
+            amplitude = 4,
+            speed=2
+        }        
+    )
 
     --Button
     self.nextRoundButton = Button:new(
@@ -98,7 +110,10 @@ function EndRound:drawMainCanvas(dt)
 
     --Background
     love.graphics.draw(Sprites.END_ROUND_BG, 0, 0)
-    love.graphics.draw(Sprites.YOU_WON, 180, 30)
+
+    self.youWon:update(dt)
+    self.youWon:draw()
+
 
     --Money earned
     self:updateEarnedMoney()
