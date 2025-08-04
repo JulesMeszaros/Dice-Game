@@ -56,6 +56,7 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
     self.selectionScale = 0
     self.hoverScale = 0
     self.reduceOnHover = true
+    self.shadowOnDrag = false
 
     --Animations variables
     self.velx = 0
@@ -113,6 +114,17 @@ function DiceFace:update(dt)
 end
 
 function DiceFace:draw()
+    --Si activé : ombre au drag and drop
+    --[[ love.graphics.setShader(Shaders.black)
+
+    love.graphics.setColor(1, 1, 1, 0.7)
+    
+    love.graphics.draw(self.diceCanvas, self.x-self.hoverScale*100, self.y+self.hoverScale*100, self.rotation, self.scaleX, self.scaleY, self.diceCanvas:getWidth()/2, self.diceCanvas:getHeight()/2)
+    
+    love.graphics.setShader()
+    love.graphics.setColor(1, 1, 1, 1) ]]
+
+    --Dé
     love.graphics.draw(self.diceCanvas, self.x, self.y, self.rotation, self.scaleX, self.scaleY, self.diceCanvas:getWidth()/2, self.diceCanvas:getHeight()/2)
 end
 
