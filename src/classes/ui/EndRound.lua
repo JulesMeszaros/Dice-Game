@@ -183,7 +183,9 @@ function EndRound:mousepressed(x, y, button, istouch, presses)
     end
 
     --Ciggie
-    self.ciggieReward:clickEvent()
+    if(self.ciggieReward)then
+        self.ciggieReward:clickEvent()
+    end
 end
 
 function EndRound:mousereleased(x, y, button, istouch, presses)

@@ -214,6 +214,9 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
         if(closestFace) then
             face.anchorX = closestFace[1]
             face.anchorY = closestFace[2]
+        elseif(face.x > 0 and face.x < 500) and (face.y>850 and face.y<self.canvas:getHeight()) then
+            self:sellDiceFace(face.representedObject, face, i)
+
         else
             face.anchorX = self.xPositions[i] + self.inventoryMDTX + 60
             face.anchorY = self.yPositions[i] + self.inventoryMDTY + 60
@@ -244,6 +247,8 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
             (table.getn(self.run.facesInventory)< 8) ]]
         )then
             self:addRewardToInventory(face, i)
+        elseif(face.x > 0 and face.x < 500) and (face.y>850 and face.y<self.canvas:getHeight())then
+            self:sellReward(face.representedObject, face, i)
         else
             face.anchorX = self.xPositionsRewards[i] + self.rewardsMDTX + 60
             face.anchorY = self.yPositionsRewards[i] + self.rewardsMDTY + 60
@@ -255,7 +260,7 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
         if(face.anchorY)then
             face.targetY = face.anchorY
         end
-
+        
         face.isBeingDragged = false
 
     end
@@ -700,11 +705,57 @@ function DiceCustomization:addRewardToInventory(face, key)
     table.remove(self.rewardsUIFaces, key)
     --Ajouter la face UI à l'inventaire
     table.insert(self.newUIFaces, face)
-    --Réorganiser les rewards
-    --self:updateRewardsPositions()
 
     --Réorganiser l'inventaire
     self:updateInventoryPositions()
+end
+
+function DiceCustomization:sellReward(face, faceUI, key)
+    --Add money to bank account
+    self.run.money = self.run.money + 3
+
+    --Remove dice face object from inventory
+
+    table.remove(self.run.facesRewardsInventory, key)
+    local apparitionDuration = 0.3
+
+    --Remove dice face from ui with animation
+    faceUI.animator:addGroup({
+            --Rotation
+            {property = "rotation", from = 0, targetValue = -2, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 0, targetValue = -2, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            --Scale
+            {property = "baseTargetedScale", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleX", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleY", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack, onComplete = function()table.remove(self.rewardsUIFaces, key)end},
+            
+        })
+    
+end
+
+function DiceCustomization:sellDiceFace(face, faceUI, key)
+    --Add money to bank account
+    self.run.money = self.run.money + 3
+
+    --Remove dice face object from inventory
+
+    table.remove(self.run.facesInventory, key)
+    local apparitionDuration = 0.3
+
+    --Remove dice face from ui with animation
+    faceUI.animator:addGroup({
+            --Rotation
+            {property = "rotation", from = 0, targetValue = -2, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "baseRotation", from = 0, targetValue = -2, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            --Scale
+            {property = "baseTargetedScale", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleX", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "scaleY", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "targetedScale", from = 1, targetValue = 0, duration = apparitionDuration, easing = AnimationUtils.Easing.easeOutBack, onComplete = function()table.remove(self.newUIFaces, key);self:updateInventoryPositions()end},
+            
+        })
+    
 end
 
 function DiceCustomization:updateInventoryPositions()
