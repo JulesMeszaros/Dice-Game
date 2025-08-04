@@ -7,6 +7,7 @@ local Button = require("src.classes.ui.Button")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 local Screen = require("src.classes.GameScreen")
+local Fonts = require("src.utils.Fonts")
 --===========--
 
 local DiceCustomization = setmetatable({}, { __index = Screen })
@@ -113,6 +114,16 @@ function DiceCustomization:updateCanvas(dt)
         button:draw()
     end
 
+     --Popup de vente de face de dé
+    if(self.dragAndDroppedReward or self.dragAndDroppedInventory)then
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.draw(Sprites.SELL_CIGGIE, 30, self.canvas:getHeight()-30, 0, 1, 1, 0, Sprites.SELL_CIGGIE:getHeight())
+        local sellText = love.graphics.newText(Fonts.soraBig, "Sell : 3$")
+        love.graphics.setColor(255/255, 178/255, 89/255, a)
+        love.graphics.draw(sellText, 250, 950, 0, 1, 1, sellText:getWidth()/2, sellText:getHeight()/2)
+        love.graphics.setColor(1, 1, 1, 1)
+    end
+
     --Draw the deck dices on the canvas
     for i,uiDice in next,self.uiDices do
         for j,uiFace in next,uiDice do
@@ -192,7 +203,9 @@ end
 
 function DiceCustomization:mousereleased(x, y, button, istouch, presses)
     self.dragAndDroppedObject = nil
-    
+    self.dragAndDroppedReward = nil
+    self.dragAndDroppedInventory = nil
+
     for i,face in next,self.newUIFaces do
         face:releaseEvent()
         
@@ -270,6 +283,7 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
                 self.dragAndDroppedObject = diceui
+                self.dragAndDroppedInventory = diceui
                 diceui.dragXspeed = dx
                 diceui.targetX = (diceui.targetX + dx) 
                 diceui.targetY = (diceui.targetY + dy)
@@ -281,6 +295,7 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
                 self.dragAndDroppedObject = diceui
+                self.dragAndDroppedReward = diceui
                 diceui.dragXspeed = dx
                 diceui.targetX = (diceui.targetX + dx) 
                 diceui.targetY = (diceui.targetY + dy)

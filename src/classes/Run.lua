@@ -28,7 +28,9 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     
     --Ciggies
     self.ciggiesObjects = {
-        CiggieTypes.Time:new()
+        CiggieTypes.Time:new(),
+        CiggieTypes.Rockmans:new(),
+        CiggieTypes.FreeRoller:new()
     }
     self.totalUsedCiggie = 0
 
