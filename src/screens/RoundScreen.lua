@@ -27,7 +27,12 @@ function RoundScreen:new(round)
     self.round = round
     self.endRoundPopUp = nil
 
-    self.firstRerollTime = 0
+    --Timers
+    self.timers = {
+        firstRerollTime = 0,
+        oscillationTimePlayer = math.random(0, 100),
+        oscillationTimeEnemy = math.random(0, 100)
+    }
 
     --FIGURE BUTTONS
     self.clickedFigure = nil
@@ -84,7 +89,7 @@ function RoundScreen:new(round)
     self.handScoreRot = 0
 
     --Start the round with the first roll
-    self.animator:addDelay(0.5, function()self.firstRerollTime=0;self.showFirstRollText=true;self:generateCiggiesUI()end)
+    self.animator:addDelay(0.5, function()self.timers.firstRerollTime=0;self.showFirstRollText=true;self:generateCiggiesUI()end)
 
     self.diceFaces = {}
     --On créé des objets pour les nouveaux diceFaces
@@ -111,7 +116,11 @@ function RoundScreen:new(round)
 end
 
 function RoundScreen:update(dt)
-    self.firstRerollTime = self.firstRerollTime+dt
+    
+    self.timers.firstRerollTime = self.timers.firstRerollTime+dt
+    self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy+dt
+    self.timers.oscillationTimePlayer = self.timers.oscillationTimePlayer+dt
+    
     --Update dices UI
     for key,dice in next,self.diceFaces do
         dice:update(dt)
@@ -185,7 +194,7 @@ function RoundScreen:updateCanvas(dt)
                             (self.canvas:getHeight()/2)+120,
                             {
                                 font = Fonts.soraFirstRoll,
-                                time = self.firstRerollTime,
+                                time = self.timers.firstRerollTime,
                                 centered=true,
                                 speed=2,
                                 revealSpeed = 120, -- lettres/seconde
@@ -421,6 +430,7 @@ end
 function RoundScreen:drawPlayersInfos()
     local currentCanvas = love.graphics.getCanvas()
     --Player
+    local playerYOffset = AnimationUtils.osccilate(self.timers.oscillationTimePlayer, 20, 8)
     love.graphics.setCanvas(self.playerInfos)
     love.graphics.clear()
     love.graphics.draw(Sprites.PLAYER_INFOS, 0, 0)
@@ -430,6 +440,7 @@ function RoundScreen:drawPlayersInfos()
     love.graphics.setColor(1, 1, 1, 1)
 
     --Ennemy
+    local enemyYOffset = AnimationUtils.osccilate(self.timers.oscillationTimeEnemy, 20, 8)
     love.graphics.setCanvas(self.enemyInfos)
     love.graphics.clear()
     love.graphics.draw(Sprites.ENEMY_INFOS, 0, 0)
@@ -443,8 +454,8 @@ function RoundScreen:drawPlayersInfos()
     self.round.enemyCharacter:draw(390+130, 125, 250, 250)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.playerInfos, self.playerX, self.playerY)
-    love.graphics.draw(self.enemyInfos, self.enemyX, self.enemyY)
+    love.graphics.draw(self.playerInfos, self.playerX, self.playerY+playerYOffset)
+    love.graphics.draw(self.enemyInfos, self.enemyX, self.enemyY+enemyYOffset)
 end
 
 --==CREATE CANVAS FUNCTIONS==--
