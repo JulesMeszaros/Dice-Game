@@ -279,9 +279,33 @@ end
 function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
     if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.run.runPaused == false) then
         --Drag and drop dice
-        if(isDragging == true)then 
+        if(isDragging == true)then
             for key,diceui in next, self.diceFaces do
                 if(diceui.isDraggable and diceui.isBeingClicked) then
+                    
+                    if(diceui:getIsSelected())then
+                        local i = math.max(1, math.min(table.getn(self.round.selectedDices), math.floor((diceui.x+105)/(180)))) --Numéro de la case survolée (capée au nombre de dés selectionnés)
+                        --Récupérer l'indexe du dé bougé
+                        local currentIndex = indexOf(self.round.selectedDices, diceui.representedObject.diceObject)
+
+                        print(i, currentIndex)
+
+                        --Si l'indexe du dé bougé est différent de i :
+                        if(i~=currentIndex)then
+                            --On bouge l'élément dans la liste
+                            moveElement(self.round.selectedDices, currentIndex, i)
+                            --On met à jour la position des dés (seulement leur anchorX)
+                            self:updateSelectedPosDices()
+                            --On les fait bouger
+                            for i,dice in next,self.diceFaces do
+                                if(dice:getIsSelected() and not dice.isBeingClicked)then
+                                    dice.targetX = dice.anchorX
+                                    dice.targetY = dice.anchorY
+                                end
+                            end
+                        end
+                    end
+
                     diceui.isBeingDragged = true
                     self.dragAndDroppedDice = diceui
                     diceui.dragXspeed = dx
@@ -690,6 +714,23 @@ function RoundScreen:highlightDices(usedDices)
             end
         end
     end
+end
+
+--generic functions
+
+function moveElement(list, fromIndex, toIndex)
+    if fromIndex == toIndex then return end
+    local element = table.remove(list, fromIndex)
+    table.insert(list, toIndex, element)
+end
+
+function indexOf(list, element)
+    for i, v in ipairs(list) do
+        if v == element then
+            return i
+        end
+    end
+    return nil -- retourne nil si l'élément n'est pas trouvé
 end
 
 return RoundScreen
