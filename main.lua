@@ -24,8 +24,12 @@ function love.load()
 
     love.graphics.setBackgroundColor(G.backgroundR, G.backgroundG, G.backgroundB)
 
-    --cursor = love.mouse.newCursor("src/assets/sprites/ui/cursor.png", 0, 0)
-    --love.mouse.setCursor(cursor)
+    local sys = love.system.getOS()
+
+    if(sys=="OS X" or sys=="Windows")then
+        cursor = love.mouse.newCursor("src/assets/sprites/ui/cursor.png", 0, 0)
+        love.mouse.setCursor(cursor)
+    end
 
     game = Game:start()
 end
