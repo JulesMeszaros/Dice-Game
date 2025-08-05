@@ -219,11 +219,15 @@ function DiceFace:updateCanvas(dt)
 end
 
 function DiceFace:updateSprite(n)
-    local number = n or self.representedObject.faceValue
+    local representedFace = self.representedObject
+    if(n) then
+        representedFace = self.representedObject.diceObject:getAllFaces()[n]
+    end
+    
 
-    self.spriteSheet = self.representedObject:getSpriteSheet()
-    self.quad = self.representedObject:getQuad(number)
-    self.dim = self.representedObject:getFaceDim()
+    self.spriteSheet = representedFace:getSpriteSheet()
+    self.quad = representedFace:getQuad(representedFace.faceValue)
+    self.dim = representedFace:getFaceDim()
 end
 
 function DiceFace:setRepresentedFace(face)
