@@ -242,7 +242,9 @@ function RoundScreen:updateCanvas(dt)
 
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
-        ciggie:draw()
+        if self.dragAndDroppedCiggie ~= ciggie then
+            ciggie:draw()
+        end
     end
 
     self:drawCiggiesTrayFront()
@@ -439,7 +441,9 @@ function RoundScreen:drawDiceTray(x, y, dices2)
     
     --On déssine les autres dés
     for key,uiFace in next,dices2 do
-        uiFace:draw()
+        if(uiFace ~= self.dragAndDroppedDice)then
+            uiFace:draw()
+        end
     end
 
     --dessiner le dé drag and drop au dessus des autres

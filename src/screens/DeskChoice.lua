@@ -95,7 +95,9 @@ function DeskChoice:update(dt)
      --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
         ciggie:update(dt)
-        ciggie:draw()
+        if(ciggie~=self.dragAndDroppedObject)then
+            ciggie:draw()
+        end
     end
     
     if(self.dragAndDroppedObject)then

@@ -184,7 +184,9 @@ function Shop:updateCanvas(dt)
     --Shop faces UI
     for i,faceUI in next,self.availableFaceObjectsUI do
         faceUI:update(dt)
-        faceUI:draw()
+        if faceUI ~= self.dragAndDroppedObject then
+            faceUI:draw()
+        end
     end
 
     --Coffee UI
@@ -195,7 +197,9 @@ function Shop:updateCanvas(dt)
     --Shop Ciggie UI
     for i,ciggieUI in next,self.availableCiggieObjectsUI do
         ciggieUI:update(dt)
-        ciggieUI:draw()
+        if ciggieUI ~= self.dragAndDroppedObject then
+            ciggieUI:draw()
+        end
     end
 
     self:drawFacesPriceTags()
@@ -226,7 +230,9 @@ function Shop:updateCanvas(dt)
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
         ciggie:update(dt)
-        ciggie:draw()
+        if ciggie ~= self.dragAndDroppedObject then
+            ciggie:draw()
+        end
     end
 
     self:drawCiggiesTrayFront()
@@ -989,12 +995,16 @@ end
 function Shop:drawInventoryFaces(dt)
     for k,uiFace in next,self.inventoryFacesUI do
         uiFace:update(dt)
-        uiFace:draw()
+        if(uiFace ~= self.dragAndDroppedObject)then
+            uiFace:draw()
+        end
     end
 
     for k,uiFace in next,self.rewardsFacesUI do
         uiFace:update(dt)
-        uiFace:draw()
+        if(uiFace ~= self.dragAndDroppedObject)then
+            uiFace:draw()
+        end
     end
 end
 

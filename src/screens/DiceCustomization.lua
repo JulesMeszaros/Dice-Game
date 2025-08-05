@@ -190,7 +190,9 @@ function DiceCustomization:updateCanvas(dt)
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
         ciggie:update(dt)
-        ciggie:draw()
+        if(ciggie ~= self.dragAndDroppedObject)then
+            ciggie:draw()
+        end
     end
 
     
@@ -383,13 +385,17 @@ end
 
 function DiceCustomization:drawNewFaces()
     for i,face in next,self.newUIFaces do
-        face:draw()
+        if(face ~= self.dragAndDroppedObject)then
+            face:draw()
+        end
     end
 end
 
 function DiceCustomization:drawRewards()
     for i,face in next,self.rewardsUIFaces do
-        face:draw()
+        if(face ~= self.dragAndDroppedObject)then
+            face:draw()
+        end
     end
 end
 
