@@ -526,6 +526,8 @@ function Round:resetselectedDices()
     self.selectedDices = {} --remove the dices
     for key,uiFace in next,self.terrain.diceFaces do --unselect the UI Faces
         uiFace:setSelected(false)
+        uiFace.anchorX = nil
+        uiFace.anchorY = nil
     end
 end
 

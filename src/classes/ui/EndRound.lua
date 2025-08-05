@@ -217,7 +217,9 @@ function EndRound:mousemoved(x, y, dx, dy, isDragging)
                 self.dragAndDroppedDice = diceui
                 diceui.dragXspeed = dx
                 diceui.targetX = (diceui.targetX + dx) 
-                diceui.targetY = (diceui.targetY + dy) 
+                diceui.targetY = (diceui.targetY + dy)
+
+                self.round.terrain.dragAndDroppedCiggie = diceui
                 break;
             end
         end
@@ -227,7 +229,8 @@ function EndRound:mousemoved(x, y, dx, dy, isDragging)
             self.dragAndDroppedDice = self.ciggieReward
             self.ciggieReward.dragXspeed = dx
             self.ciggieReward.targetX = (self.ciggieReward.targetX + dx) 
-            self.ciggieReward.targetY = (self.ciggieReward.targetY + dy) 
+            self.ciggieReward.targetY = (self.ciggieReward.targetY + dy)
+            self.round.terrain.dragAndDroppedCiggie = self.ciggieReward
         end
 
     end

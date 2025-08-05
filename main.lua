@@ -1,12 +1,19 @@
 local Fonts = require("src.utils.Fonts")
-
 local Game = require("src.classes.Game")
+local Animator = require("src.utils.Animator")
 
 local delta = 0
 
 local fpsLimit = nil -- nil = pas de limite
 local fpsOptions = { nil, 60, 30, 15 , 5}
 local currentFpsIndex = 1
+
+local G = {
+    backgroundR = 40/255,
+    backgroundG = 40/255,
+    backgroundB = 43/255,
+    animator = Animator:new()
+}
 
 function love.load()
     --bien randomiser le jeu
@@ -15,7 +22,7 @@ function love.load()
         math.random()
     end
 
-    love.graphics.setBackgroundColor(40/255, 40/255, 43/255)
+    love.graphics.setBackgroundColor(G.backgroundR, G.backgroundG, G.backgroundB)
 
     --cursor = love.mouse.newCursor("src/assets/sprites/ui/cursor.png", 0, 0)
     --love.mouse.setCursor(cursor)
@@ -41,7 +48,7 @@ end
 
 function love.draw()
     love.graphics.setCanvas()
-    love.graphics.clear(40/255, 40/255, 43/255)
+    love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
     game:draw()
     fpstext = love.graphics.newText(Fonts.soraSmall, "fps:"..delta)
     love.graphics.draw(fpstext, love.graphics.getWidth()-5, 5, 0, 1, 1, fpstext:getWidth(), 0)

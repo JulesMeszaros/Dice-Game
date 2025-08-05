@@ -175,11 +175,7 @@ function RoundScreen:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     --set background
-    if(self.round.roundType == Constants.ROUND_TYPES.BASE)then
-        love.graphics.clear(40/255, 40/255, 43/255)
-    else
-        love.graphics.clear(55/255, 96/255, 85/255)
-    end
+    love.graphics.clear()
 
     --Check if a ciggie is being dragged to the screen
     self:checkForDraggedCiggie()
@@ -270,8 +266,6 @@ function RoundScreen:updateCanvas(dt)
         self.dragAndDroppedCiggie:draw()
     end
 
-   
-
     love.graphics.setCanvas(currentCanvas)
 end
 
@@ -282,13 +276,24 @@ function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
         if(isDragging == true)then
             for key,diceui in next, self.diceFaces do
                 if(diceui.isDraggable and diceui.isBeingClicked) then
+                    diceui.isBeingDragged = true
+                    self.dragAndDroppedDice = diceui
                     
+                    --Drag and drop
+                    diceui.dragXspeed = dx
+                    if(diceui.targetX+dx<self.dice_tray:getWidth()-diceui.size/2 and diceui.targetX+dx>0+diceui.size/2) then --Vérification qu'on ne dépasse par les limites horizontales
+                        diceui.targetX = (diceui.targetX + dx) 
+                    end
+
+                    if(diceui.targetY+dy<self.dice_tray:getHeight()-diceui.size/2-85 and diceui.targetY+dy>165+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
+                        diceui.targetY = (diceui.targetY + dy) 
+                    end
+
+                    --Changer l'ordre des dés sélectionnés
                     if(diceui:getIsSelected())then
                         local i = math.max(1, math.min(table.getn(self.round.selectedDices), math.floor((diceui.x+105)/(180)))) --Numéro de la case survolée (capée au nombre de dés selectionnés)
                         --Récupérer l'indexe du dé bougé
                         local currentIndex = indexOf(self.round.selectedDices, diceui.representedObject.diceObject)
-
-                        print(i, currentIndex)
 
                         --Si l'indexe du dé bougé est différent de i :
                         if(i~=currentIndex)then
@@ -306,20 +311,11 @@ function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
                         end
                     end
 
-                    diceui.isBeingDragged = true
-                    self.dragAndDroppedDice = diceui
-                    diceui.dragXspeed = dx
-                    if(diceui.targetX+dx<self.dice_tray:getWidth()-diceui.size/2 and diceui.targetX+dx>0+diceui.size/2) then --Vérification qu'on ne dépasse par les limites horizontales
-                        diceui.targetX = (diceui.targetX + dx) 
-                    end
-
-                    if(diceui.targetY+dy<self.dice_tray:getHeight()-diceui.size/2-85 and diceui.targetY+dy>165+diceui.size/2) then --Vérification qu'on ne dépasse pas les limites verticales
-                        diceui.targetY = (diceui.targetY + dy) 
-                    end
                     break;
                 end
             end
         end
+
         --Drag and drop Ciggies
         if(isDragging == true)then 
             for key,ciggie in next, self.uiElements.ciggiesUI do
