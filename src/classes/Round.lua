@@ -460,14 +460,26 @@ function Round:makeRoll(dices)
         --self.terrain.diceFaces[dice].targetY = 2000
         self.terrain.diceFaces[dice].rotation = 0
 
-        --Add an animation to make them roll
+        --Add an animation to make them roll--
+
+        --Add a small delay relative to the number of dices to rolls
+        self.terrain.diceFaces[dice].animator:addDelay(((5-table.getn(dices))/5)*0.4)
+
+        --Add a small delay if its the last roll
+        if(self.availableRerolls==1)then
+            self.terrain.diceFaces[dice].animator:addDelay(0.3)
+        end
+
+        --Add a small random delay to add some relaness
+        self.terrain.diceFaces[dice].animator:addDelay((math.random(0,100)/100)*0.2)
+        local rollDuration = (math.random(50,100)/100)*0.6
         self.terrain.diceFaces[dice].animator:addGroup({
-            {property = "x", from=self.terrain.canvas:getWidth()/2, targetValue = randomXPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
-            {property = "targetX", from=self.terrain.canvas:getWidth()/2, targetValue = randomXPos, duration = 0.5, onComplete=function()end},
-            {property = "y", from=self.terrain.canvas:getHeight()+100, targetValue = randomYPos, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
-            {property = "targetY", from=self.terrain.canvas:getHeight()+100, targetValue = randomYPos, duration = 0.5, onComplete=function()end},
-            {property = "rotation", from=-0, targetValue = randomR, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
-            {property = "baseRotation", from=-0, targetValue = randomR, duration = 0.5, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "x", from=self.terrain.canvas:getWidth()/2, targetValue = randomXPos, duration = rollDuration, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "targetX", from=self.terrain.canvas:getWidth()/2, targetValue = randomXPos, duration = rollDuration, onComplete=function()end},
+            {property = "y", from=self.terrain.canvas:getHeight()+100, targetValue = randomYPos, duration = rollDuration, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "targetY", from=self.terrain.canvas:getHeight()+100, targetValue = randomYPos, duration = rollDuration, onComplete=function()end},
+            {property = "rotation", from=-0, targetValue = randomR, duration = rollDuration, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "baseRotation", from=-0, targetValue = randomR, duration = rollDuration, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
 
         })
 
