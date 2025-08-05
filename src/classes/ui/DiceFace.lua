@@ -63,6 +63,7 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
     self.vely = 0
     self.velrotation = 0
     self.velscale = 0
+    self.displayedNumber = nil
 
     --The canvas to be rendred in
     self.round = round
@@ -81,7 +82,12 @@ end
 
 function DiceFace:update(dt)
     self.time=self.time+dt
-    
+    --Rolling animation
+    if(self.displayedNumber)then
+        self:updateSprite(math.floor(self.displayedNumber))
+    end
+
+
     --Calculate targeted Scale and Rotation
     self:calculateAngleDrag()
     self.targetedRotation = self.baseRotation + self.dragRotation
@@ -212,9 +218,11 @@ function DiceFace:updateCanvas(dt)
     love.graphics.setCanvas(currentCanvas)
 end
 
-function DiceFace:updateSprite()
+function DiceFace:updateSprite(n)
+    local number = n or self.representedObject.faceValue
+
     self.spriteSheet = self.representedObject:getSpriteSheet()
-    self.quad = self.representedObject:getQuad(self.representedObject.faceValue)
+    self.quad = self.representedObject:getQuad(number)
     self.dim = self.representedObject:getFaceDim()
 end
 

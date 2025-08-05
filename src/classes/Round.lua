@@ -449,6 +449,8 @@ function Round:makeRoll(dices)
 
     for key,dice in next,dices do --Creates the roll animation for the rerolled dices
 
+        self.terrain.diceFaces[dice].isRolling = true
+
         local randomXPos = math.random(80, self.terrain.dice_tray:getWidth()-80)
         local randomYPos = math.random(220, self.terrain.dice_tray:getHeight()-150)
         local randomR = ((math.random(0,1000)/1000)*5)-2.5 --(1001 angles possibles entre -2.5 et 5 radians)
@@ -465,14 +467,13 @@ function Round:makeRoll(dices)
         --Add a small delay relative to the number of dices to rolls
         self.terrain.diceFaces[dice].animator:addDelay(((5-table.getn(dices))/5)*0.4)
 
-        --Add a small delay if its the last roll
-        if(self.availableRerolls==1)then
-            self.terrain.diceFaces[dice].animator:addDelay(0.3)
-        end
-
         --Add a small random delay to add some relaness
         self.terrain.diceFaces[dice].animator:addDelay((math.random(0,100)/100)*0.2)
         local rollDuration = (math.random(50,100)/100)*0.6
+        if(self.availableRerolls==1)then
+            rollDuration = rollDuration+0.3
+        end
+
         self.terrain.diceFaces[dice].animator:addGroup({
             {property = "x", from=self.terrain.canvas:getWidth()/2, targetValue = randomXPos, duration = rollDuration, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
             {property = "targetX", from=self.terrain.canvas:getWidth()/2, targetValue = randomXPos, duration = rollDuration, onComplete=function()end},
@@ -480,10 +481,11 @@ function Round:makeRoll(dices)
             {property = "targetY", from=self.terrain.canvas:getHeight()+100, targetValue = randomYPos, duration = rollDuration, onComplete=function()end},
             {property = "rotation", from=-0, targetValue = randomR, duration = rollDuration, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
             {property = "baseRotation", from=-0, targetValue = randomR, duration = rollDuration, onComplete=function()end, easing=AnimationUtils.Easing.outCubic},
+            {property = "displayedNumber", from=2, targetValue=6, duration = rollDuration*2, easing=AnimationUtils.makeRandomEasing(0.3, 0.00000005, function(t) return 1 - t end)}
 
         })
-
-        self.terrain.diceFaces[dice].animator:addDelay(0.4, function()self.terrain:reorganiseDiceFaces(rerolledDiceFaces)end)
+        self.terrain.diceFaces[dice].animator:addDelay(0.00, function()self.terrain.diceFaces[dice].displayedNumber = nil ;  self.terrain.diceFaces[dice]:updateSprite()end)
+        self.terrain.diceFaces[dice].animator:addDelay(0.6, function()self.terrain:reorganiseDiceFaces(rerolledDiceFaces)end)
     end
 
 end 
