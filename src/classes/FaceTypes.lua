@@ -1083,6 +1083,55 @@ end
 
 FaceTypes.Patience = Patience
 
+--==Data Dice==--
+local DataDice = setmetatable({}, { __index = FaceObject })
+DataDice.__index = DataDice
+
+function DataDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), DataDice)
+
+    --Metadatas about the DataDice
+    self.name = "Data Dice"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the DataDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Number Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Scoring : +10pts, increases by 10 if figure is a numbered figure (1, 2, 3,...) decreases by 10pts if not."
+    self.faceDimmension = 120 --sets the dimmensions for a face of the DataDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function DataDice:triggerEffect(round)
+    --Complementary effect triggered by the face
+    if round.playedFigure < 7 then
+        upgradeStat(self, 'pointsValue', 5)
+        print("upgrade")
+    else
+        if(self.pointsValue>10)then
+            upgradeStat(self, 'pointsValue', -5)
+            print("downgrade")
+        end
+    end
+    addScore(round, self.pointsValue)
+end
+
+FaceTypes.DataDice = DataDice
+
 --UTILS--
 function multiplyScore(round, f)
     round.handScore = round.handScore * f
