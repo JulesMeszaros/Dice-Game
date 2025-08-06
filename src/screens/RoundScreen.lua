@@ -197,7 +197,8 @@ function RoundScreen:updateCanvas(dt)
         df:updateCanvas(dt) 
         df:update(dt)
     end
-    self:drawDiceDetails(self.diceDetailsX, self.diceDetailsY)
+    
+    self:drawDiceDetails()
     
     --ROUND DETAILS
     self:drawRoundDetails(dt)
@@ -238,7 +239,7 @@ function RoundScreen:updateCanvas(dt)
     end
 
     --Ciggies Tray
-    self:drawCiggiesTray()
+    --self:drawCiggiesTray()
 
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
@@ -247,7 +248,7 @@ function RoundScreen:updateCanvas(dt)
         end
     end
 
-    self:drawCiggiesTrayFront()
+    --self:drawCiggiesTrayFront()
     
     --Figure Buttons
     self:drawFigureGrid(self.gridX, self.gridY)
@@ -261,7 +262,7 @@ function RoundScreen:updateCanvas(dt)
     end
 
     --Face Details
-    self:drawDescription(self.descriptionX, self.descriptionY)
+    --self:drawDescription(self.descriptionX, self.descriptionY)
 
     --On dessine l'objet drag and drop au dessus de tout le reste
     if(self.dragAndDroppedCiggie)then
@@ -464,7 +465,7 @@ function RoundScreen:drawDiceTray(x, y, dices2)
 
 end
 
-function RoundScreen:drawDiceDetails(x, y)
+function RoundScreen:drawDiceDetails()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.diceDetailsCanvas)
     love.graphics.clear()
@@ -481,7 +482,7 @@ function RoundScreen:drawDiceDetails(x, y)
 
     love.graphics.setCanvas(currentCanvas)
 
-    love.graphics.draw(self.diceDetailsCanvas, x, y, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
+    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, 0, 0)
 end
 
 function RoundScreen:drawPlayersInfos(dt)
@@ -584,7 +585,7 @@ end
 --HOVER FUNCTIONS
 function RoundScreen:getCurrentlyHoveredLine()
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
-    local i = math.floor((mv.y-10)/50)+1
+    local i = math.floor((mv.y-60)/70)+1
     if(i>0 and i<=13)then
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             self:highlightDices(self.calcBasePoints[i]()[2])

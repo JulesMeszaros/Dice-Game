@@ -224,8 +224,8 @@ function Shop:updateCanvas(dt)
         self:drawCiggiePopup(dt)
     end
 
-    self:drawDescription()
-    self:drawCiggiesTray()
+    --self:drawDescription()
+    --self:drawCiggiesTray()
 
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
@@ -235,7 +235,7 @@ function Shop:updateCanvas(dt)
         end
     end
 
-    self:drawCiggiesTrayFront()
+    --self:drawCiggiesTrayFront()
 
     --Buy CiggiePopup
     if(self.dragAndDroppedShopCiggie)then
@@ -972,24 +972,6 @@ function Shop:drawDeck(dt)
 
     love.graphics.setCanvas(targetCanvas)
     love.graphics.draw(self.deckCanvas, self.deckX, self.deckY)
-end
-
-function Shop:drawDiceDetails(dt)
-    local currentCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.diceDetailsCanvas)
-    love.graphics.clear()
-
-    --Draw sprite
-    love.graphics.draw(Sprites.DICE_INFOS, 0, 0)
-    
-    --Draw the dice net
-    if(self.currentlySelectedDice)then
-        self:updateDiceNet(dt)
-    end
-
-    love.graphics.setCanvas(currentCanvas)
-
-    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
 end
 
 function Shop:drawInventoryFaces(dt)

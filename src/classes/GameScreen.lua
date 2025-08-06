@@ -58,13 +58,13 @@ function GameScreen:new(floor, run, screenType, round)
     self.newFacesCanvas = love.graphics.newCanvas(950, 400)
     self.dice_tray = love.graphics.newCanvas(930, 630)
     self.descriptionCanvas = love.graphics.newCanvas(420, 240)
-    self.figureButtonsCanvas = love.graphics.newCanvas(450,670)
+    self.figureButtonsCanvas = love.graphics.newCanvas(450,980)
     self.rerollsCanvas = love.graphics.newCanvas(220, 120)
     self.handsCanvas = love.graphics.newCanvas(220, 120)
-    self.roundNumberCanvas = love.graphics.newCanvas(290, 80)
-    self.moneyCanvas = love.graphics.newCanvas(290, 100)
+    self.roundNumberCanvas = love.graphics.newCanvas(220, 120)
+    self.moneyCanvas = love.graphics.newCanvas(220, 120)
     self.deckCanvas = love.graphics.newCanvas(140, 860)
-    self.diceDetailsCanvas = love.graphics.newCanvas(420, 600)
+    self.diceDetailsCanvas = love.graphics.newCanvas(180, 830)
     self.ciggiesTray = love.graphics.newCanvas(420, 160)
     self.ciggiesTrayFront = love.graphics.newCanvas(420, 160)
     self.playerInfos = love.graphics.newCanvas(650,260)
@@ -109,13 +109,13 @@ function GameScreen:new(floor, run, screenType, round)
     self.playerTX, self.playerTY, self.playerX, self.playerY = 510, 30, -800, 30
     
     self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, -900, 30
-    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = self.canvas:getWidth()-30, 30, self.canvas:getWidth()+600, 30
+    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = 1460, 30, self.canvas:getWidth()+350, 30
     self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, 650, self.canvas:getWidth()+600, 650
 
-    self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 260, 721, -500, 721
-    self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 30, 721, -730, 721
-    self.floorTX, self.floorTY, self.floorX, self.floorY = 190, 970, -730, 970
-    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 190, 860, -500, 860
+    self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 1670, 310, self.canvas:getWidth()+500, 310
+    self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 1670, 170, self.canvas:getWidth()+500, 170
+    self.floorTX, self.floorTY, self.floorX, self.floorY = 1670, 30, self.canvas:getWidth()+500, 30
+    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 1670, 450, self.canvas:getWidth()+500, 450
     self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight(), self.canvas:getWidth()+450, self.canvas:getHeight()
     self.deckTX, self.deckTY , self.deckX, self.deckY = 1300, 110, 1300, self.canvas:getHeight()+20
 
@@ -136,8 +136,8 @@ function GameScreen:new(floor, run, screenType, round)
     
 
     --Btns positions
-    self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 100, 910, -730, 910
-    self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 100, 1010, -730, 1010
+    self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 1460+90, 880+40, self.canvas:getWidth()+350, 880+40
+    self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 1460+90, 970+40, self.canvas:getWidth()+350, 970+40
     self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
     self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY = 255, 680, -255, 680
     self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY = 510+(370/2), 640, -255, 640
@@ -184,7 +184,7 @@ function GameScreen:new(floor, run, screenType, round)
         "src/assets/sprites/ui/Menu.png",
         self.menuBtnX,
         self.menuBtnY,
-        140,
+        180,
         80,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
@@ -192,11 +192,11 @@ function GameScreen:new(floor, run, screenType, round)
 
     self.uiElements.buttons["planButton"] = Button:new(
         function()self.run:toggleInfoScreen()end,
-        "src/assets/sprites/ui/Plan.png",
+        "src/assets/sprites/ui/Infos.png",
         self.planBtnX,
         self.planBtnY,
-        140,
-        100,
+        180,
+        80,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
@@ -474,7 +474,7 @@ function GameScreen:drawFigureGrid()
 
         for i=1, 13 do
             local calcScore = love.graphics.newText(Fonts.soraSmall, self.calcBasePoints[i]()[1])
-            love.graphics.draw(calcScore, 225, 50*(i-1)+38, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
+            love.graphics.draw(calcScore, 225, 70*(i-1)+95, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
         end
     end
 
@@ -483,11 +483,11 @@ function GameScreen:drawFigureGrid()
 
     for i=1, 13 do
         local handsRemaining = love.graphics.newText(Fonts.soraSmall, self.run.availableFigures[i])
-        love.graphics.draw(handsRemaining, 368, 50*(i-1)+38, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
+        love.graphics.draw(handsRemaining, 368, 70*(i-1)+95, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
         --if no hands remaining, grey out the line
         if(self.run.availableFigures[i]<=0) then
             love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
-            love.graphics.rectangle("fill", 10, (i-1)*50+10, self.figureButtonsCanvas:getWidth()-20, 50)
+            love.graphics.rectangle("fill", 10, 70*(i-1)+60, self.figureButtonsCanvas:getWidth()-20, 70)
             love.graphics.setColor(0, 0, 0, 1)
         end
     end
@@ -495,7 +495,8 @@ function GameScreen:drawFigureGrid()
     love.graphics.setColor(1, 1, 1, 1)
 
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
-    local i = math.floor((mv.y-10)/50)+1
+    local i = math.floor((mv.y-60)/70)+1
+    
 
     --If we are hovering a line
     if(i>0 and i<=13)then
@@ -503,7 +504,7 @@ function GameScreen:drawFigureGrid()
             --Draw a shadow on the line
             if(self.run.availableFigures[i]>=1)then
                 love.graphics.setColor(Constants.FIGURES_COLORS[i][1], Constants.FIGURES_COLORS[i][2], Constants.FIGURES_COLORS[i][3], 0.3)
-                love.graphics.rectangle("fill", 10, (i-1)*50+10, self.figureButtonsCanvas:getWidth()-20, 50)
+                love.graphics.rectangle("fill", 10, 70*(i-1)+60, self.figureButtonsCanvas:getWidth()-20, 70)
             end
             love.graphics.setColor(1, 1, 1, 1)
         end
@@ -554,6 +555,24 @@ function GameScreen:drawRewardsSmall()
     love.graphics.draw(self.rewardsSmallCanvas, self.rewardsSMX, self.rewardsSMY)
 end
 
+function GameScreen:drawDiceDetails(dt)
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.diceDetailsCanvas)
+    love.graphics.clear()
+
+    --Draw sprite
+    love.graphics.draw(Sprites.DICE_INFOS, 0, 0)
+    
+    --Draw the dice net
+    if(self.currentlySelectedDice)then
+        self:updateDiceNet(dt)
+    end
+
+    love.graphics.setCanvas(currentCanvas)
+
+    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, 0, 0)
+end
+
 function GameScreen:drawInventoryBackGroundMedium()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.inventoryCanvasMedium)
@@ -581,12 +600,12 @@ function GameScreen:createDiceNet()
 
     --Create the coordinates of each dice face
     local diceFacesCoords = {
-        {self.diceDetailsCanvas:getWidth()/2-120, self.diceDetailsCanvas:getHeight()/2-30}, --1
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-120-30}, --2
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2-30}, --3
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+240-30}, --4
-        {self.diceDetailsCanvas:getWidth()/2, self.diceDetailsCanvas:getHeight()/2+120-30}, --5
-        {self.diceDetailsCanvas:getWidth()/2+120, self.diceDetailsCanvas:getHeight()/2-30}, --6
+        {self.diceDetailsCanvas:getWidth()/2, 80+60}, --1
+        {self.diceDetailsCanvas:getWidth()/2, 200+60}, --2
+        {self.diceDetailsCanvas:getWidth()/2, 320+60}, --3
+        {self.diceDetailsCanvas:getWidth()/2, 440+60}, --4
+        {self.diceDetailsCanvas:getWidth()/2, 560+60}, --5
+        {self.diceDetailsCanvas:getWidth()/2, 680+60}, --6
     }
     
     -- Create the uiFaces objects
@@ -601,7 +620,7 @@ function GameScreen:createDiceNet()
             120, --Width/Height
             false, --is Selectable
             true, --isHoverable,
-            function()return Inputs.getMouseInCanvas(self.diceDetailsX - self.diceDetailsCanvas:getWidth(), self.diceDetailsY)end,
+            function()return Inputs.getMouseInCanvas(self.diceDetailsX, self.diceDetailsY)end,
             self.round
         )
 
@@ -616,7 +635,7 @@ function GameScreen:generateCiggiesUI()
     self.uiElements.ciggiesUI = {}
 
     --calculate the xPosistions
-    local xPos = self:getSpacedPositions(table.getn(self.run.ciggiesObjects), self.ciggiesTrayTX-self.ciggiesTray:getWidth(), self.ciggiesTrayTX)
+    local xPos = self:getSpacedPositions(table.getn(self.run.ciggiesObjects), 1670, 1890)
 
     for i,ciggie in next,self.run.ciggiesObjects do
         

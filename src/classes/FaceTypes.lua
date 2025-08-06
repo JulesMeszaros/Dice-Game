@@ -1122,7 +1122,7 @@ function DataDice:triggerEffect(round)
         upgradeStat(self, 'pointsValue', 5)
         print("upgrade")
     else
-        if(self.pointsValue>10)then
+        if(self.pointsValue>=10)then
             upgradeStat(self, 'pointsValue', -5)
             print("downgrade")
         end

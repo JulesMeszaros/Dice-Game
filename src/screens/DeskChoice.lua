@@ -89,8 +89,8 @@ function DeskChoice:update(dt)
 
     
     
-    self:drawDescription()
-    self:drawCiggiesTray()
+    --self:drawDescription()
+    --self:drawCiggiesTray()
 
      --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
@@ -104,7 +104,7 @@ function DeskChoice:update(dt)
         self.dragAndDroppedObject:draw()
     end
 
-    self:drawCiggiesTrayFront()
+    --self:drawCiggiesTrayFront()
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -172,24 +172,6 @@ function DeskChoice:updateDiceNet(dt)
         df:draw()
         i =i+1
     end
-end
-
-function DeskChoice:drawDiceDetails(dt)
-    local currentCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.diceDetailsCanvas)
-    love.graphics.clear()
-
-    --Draw sprite
-    love.graphics.draw(Sprites.DICE_INFOS, 0, 0)
-    
-    --Draw the dice net
-    if(self.currentlySelectedDice)then
-        self:updateDiceNet(dt)
-    end
-
-    love.graphics.setCanvas(currentCanvas)
-
-    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
 end
 
 --==CHOICES==--
