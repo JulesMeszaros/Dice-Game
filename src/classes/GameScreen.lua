@@ -54,7 +54,7 @@ function GameScreen:new(floor, run, screenType, round)
 
     --UI Canvas
     self.upgradingFigureCanvas = love.graphics.newCanvas(self.canvas:getWidth(), self.canvas:getHeight())
-    self.customizationMat = love.graphics.newCanvas(1860, 600)
+    self.customizationMat = love.graphics.newCanvas(820, 830)
     self.newFacesCanvas = love.graphics.newCanvas(950, 400)
     self.dice_tray = love.graphics.newCanvas(930, 630)
     self.descriptionCanvas = love.graphics.newCanvas(420, 240)
@@ -72,10 +72,10 @@ function GameScreen:new(floor, run, screenType, round)
     self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)
     self.inventoryCanvas = love.graphics.newCanvas(680, 410)
     self.inventoryCanvasSmall = love.graphics.newCanvas(550, 360)
-    self.inventoryCanvasMedium = love.graphics.newCanvas(680, 410)
+    self.inventoryCanvasMedium = love.graphics.newCanvas(290, 600)
     self.shopCanvas = love.graphics.newCanvas(780, 560)
     self.rewardsSmallCanvas = love.graphics.newCanvas(210, 360)
-    self.rewardsMediumCanvas = love.graphics.newCanvas(240, 410)
+    self.rewardsMediumCanvas = love.graphics.newCanvas(290, 210)
     self.ciggiePopupCanvas = love.graphics.newCanvas(self.canvas:getWidth(), self.canvas:getHeight())
 
     --Wavy Texts
@@ -119,16 +119,16 @@ function GameScreen:new(floor, run, screenType, round)
     self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight(), self.canvas:getWidth()+450, self.canvas:getHeight()
     self.deckTX, self.deckTY , self.deckX, self.deckY = 1300, 110, 1300, self.canvas:getHeight()+20
 
-    self.customizationMatTX, self.customizationMatTY, self.customizationMatX, self.customizationMatY = 30, 30, 30, -700
+    self.customizationMatTX, self.customizationMatTY, self.customizationMatX, self.customizationMatY = 820, 30, 820, -900
     self.newFacesTX, self.newFacesTY, self.newFacesX, self.newFacesY = 500, 650, 500, self.canvas:getHeight()+450
 
     self.shopBGTX, self.shopBGTY, self.shopBGX, self.shopBGY = 500, 30, 500, -600
     self.inventoryTX, self.inventoryTY, self.inventoryX, self.inventoryY = 550, 640, 550, self.canvas:getHeight()+450
     self.inventorySMTX, self.inventorySMTY, self.inventorySMX, self.inventorySMY = 730, 690, 730, self.canvas:getHeight()+600
-    self.inventoryMDTX, self.inventoryMDTY, self.inventoryMDX, self.inventoryMDY = 770, 650, 770, self.canvas:getHeight()+700
+    self.inventoryMDTX, self.inventoryMDTY, self.inventoryMDX, self.inventoryMDY = 510, 260, -320, 260
 
     self.rewardsSMTX, self.rewardsSMTY, self.rewardsSMX, self.rewardsSMY = 500, 690, 500, self.canvas:getHeight()+600
-    self.rewardsMDTX, self.rewardsMDTY, self.rewardsMDX, self.rewardsMDY = 500, 650, 500, self.canvas:getHeight()+700
+    self.rewardsMDTX, self.rewardsMDTY, self.rewardsMDX, self.rewardsMDY = 510, 30, -320, 30
 
     self.lighterBaseX, self.lighterBaseY, self.lighterTargetX, self.lighterTargetY = self.canvas:getWidth()/2, self.canvas:getHeight()+500, self.canvas:getWidth()/2, 4*self.canvas:getHeight()/5
     self.lighterX, self.lighterY = self.lighterBaseX, self.lighterBaseY
@@ -139,7 +139,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 1460+90, 880+40, self.canvas:getWidth()+350, 880+40
     self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 1460+90, 970+40, self.canvas:getWidth()+350, 970+40
     self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
-    self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY = 255, 680, -255, 680
+    self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY = 520+455, 890+75, 520+455, self.canvas:getHeight()+80
     self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY = 510+(370/2), 640, -255, 640
     self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY = 900+(370/2), 640, self.canvas:getWidth()+255, 640
 
@@ -162,9 +162,9 @@ function GameScreen:new(floor, run, screenType, round)
         {property = "shopBGY", from = self.shopBGY, targetValue = self.shopBGTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "inventoryY", from = self.inventoryY, targetValue = self.inventoryTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "inventorySMY", from = self.inventorySMY, targetValue = self.inventorySMTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
-        {property = "inventoryMDY", from = self.inventoryMDY, targetValue = self.inventoryMDTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
+        {property = "inventoryMDX", from = self.inventoryMDX, targetValue = self.inventoryMDTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "rewardsSMY", from = self.rewardsSMY, targetValue = self.rewardsSMTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
-        {property = "rewardsMDY", from = self.rewardsMDY, targetValue = self.rewardsMDTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
+        {property = "rewardsMDX", from = self.rewardsMDX, targetValue = self.rewardsMDTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
     })
     
     --Cas particulier de l'écran de round

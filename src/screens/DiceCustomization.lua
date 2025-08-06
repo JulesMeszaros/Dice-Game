@@ -33,16 +33,16 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 
     self.uiElements.buttons["nextRound"] = Button:new(
         function()self:switchFaces()end,
-        "src/assets/sprites/ui/Next Round.png",
+        "src/assets/sprites/ui/Next Round Big.png",
         self.nextRoundX,
         self.nextRoundY,
-        450,
-        60,
+        910,
+        150,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
-    self.uiElements.buttons["nextRound"].animator:add('x', self.nextRoundX, self.nextRoundTX, AnimationUtils.EntryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["nextRound"].animator:add('y', self.nextRoundY, self.nextRoundTY, AnimationUtils.EntryDuration, AnimationUtils.Easing.inOutCubic)
 
     self.addRewardText = UI.Text.TextWavy:new(
         "Add to inventory?",
@@ -70,7 +70,7 @@ function DiceCustomization:new(previousRound, newFaceObjects)
         }
     )
 
-    self:createNewFacesUI()
+    self:createInventoryUI()
     self:createRewardsUI()
 
     self.animator:addDelay(0.5, function()self:generateCiggiesUI()end)
@@ -129,12 +129,13 @@ function DiceCustomization:updateCanvas(dt)
     
     --New Faces Canvas
     --self:drawNewFacesCanvas()
+    self:drawFigureGrid()
     self:drawRewardsMedium()
     self:drawInventoryBackGroundMedium()
     --Customization mat
     self:drawCustomizationMat()
     --Ciggies
-    self:drawCiggiesTray()
+    --self:drawCiggiesTray()
 
     --Buttons
     for key,button in next,self.uiElements.buttons do
@@ -185,7 +186,7 @@ function DiceCustomization:updateCanvas(dt)
     end
 
     --Description
-    self:drawDescription()
+    --self:drawDescription()
 
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
@@ -202,7 +203,7 @@ function DiceCustomization:updateCanvas(dt)
         self.dragAndDroppedObject:draw()
     end 
 
-    self:drawCiggiesTrayFront()
+    --self:drawCiggiesTrayFront()
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -543,17 +544,17 @@ end
 
 function DiceCustomization:detectClosestFace(x, y)
     local relativeXPositions = { -- this table represents the position of the dice after applying the offset
-        180, 60, 180, 300, 180, 180
+        0, 0, 0, 0, 0, 0
     }
 
     local relativeYPositions = {
-        60, 180, 180, 180, 300, 420
+        60, 180, 300, 420, 540, 660
     }
 
-    local basisY = 180
+    local basisY = 80 + 30 + 60
 
     for i=1,5 do --loop over dices
-        local basisX = 110+365*(i-1)  
+        local basisX = 160*(i-1) + self.customizationMatX +90+60
         for j=1,6 do --loop over faces 
             if(math.abs((x+60)-(relativeXPositions[j]+basisX))<60 and math.abs((y+60)-(relativeYPositions[j]+basisY))<60) then
                 return({relativeXPositions[j]+basisX-60, relativeYPositions[j]+basisY-60, i, j})
@@ -563,9 +564,9 @@ function DiceCustomization:detectClosestFace(x, y)
     return nil
 end
 
-function DiceCustomization:createNewFacesUI()
-    self.xPositions = {40, 200, 360, 520, 40, 200, 360, 520}
-    self.yPositions = {100, 100, 100, 100, 250, 250, 250, 250}
+function DiceCustomization:createInventoryUI()
+    self.xPositions = {20, 150, 20, 150, 20, 150, 20, 150}
+    self.yPositions = {70, 70, 200, 200, 330, 330, 460, 460}
 
 
     local startY = self.canvas:getHeight()/2
@@ -601,8 +602,8 @@ function DiceCustomization:createNewFacesUI()
 end
 
 function DiceCustomization:createRewardsUI()
-    self.xPositionsRewards = {60, 60}
-    self.yPositionsRewards = {100, 250}
+    self.xPositionsRewards = {20, 150}
+    self.yPositionsRewards = {70, 70}
 
 
     local startY = self.canvas:getHeight()/2
@@ -641,15 +642,15 @@ end
 function DiceCustomization:createDiceUI(diceObject, i)
     --This function creates every faces of a ui Dice and stores them in a table located in self.uiDices
     local diceUI = {}
-    local xOffset = 110+365*(i-1) - 60 -- the base position of the dice
-    local yOffset = 180 - 60
+    local xOffset = 160*(i-1) + self.customizationMatX +90 -- the base position of the dice
+    local yOffset = 80 + 30
     
     local relativeXPositions = { -- this table represents the position of the dice after applying the offset
-        180, 60, 180, 300, 180, 180
+        0, 0, 0, 0, 0, 0
     }
 
     local relativeYPosition = {
-        60, 180, 180, 180, 300, 420
+        60, 180, 300, 420, 540, 660
     }
 
     for k,faceObject in next,diceObject:getAllFaces() do
