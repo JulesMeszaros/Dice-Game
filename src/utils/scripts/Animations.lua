@@ -107,4 +107,35 @@ AnimationUtils.Easing = Easing
 
 AnimationUtils.EntryDuration = 0.2
 
+-- bruit 1D déterministe (value noise simple)
+local function valueNoise(x)
+    -- constants magiques pour dispersion
+    return (math.sin(x * 12.9898 + 78.233) * 43758.5453) % 1
+end
+
+-- Retourne une fonction easing qui va de 0 à 1 avec jitter contrôlé.
+-- params :
+--   strength : amplitude maximale du jitter (ex : 0.2 pour ±20%)
+--   frequency : fréquence du jitter dans l’espace de t (plus grand = variations plus rapides)
+--   decayFn : fonction de décroissance du jitter en fonction de t (par défaut linéaire : 1 - t)
+-- Exemples de decayFn : 
+--    function(t) return 1 - t end
+--    function(t) return (1 - t)^2 end -- décroissance plus douce au début
+function AnimationUtils.makeRandomEasing(strength, frequency, decayFn)
+    strength = strength or 0.2
+    frequency = frequency or 5
+    decayFn = decayFn or function(t) return 1 - t end
+
+    return function(t)
+        -- t dans [0,1]
+        local base = t -- interpolation linéaire de base; tu peux remplacer par un easing classique si tu veux
+        local jitterFactor = decayFn(t)
+        -- Génère un bruit selon t pour être déterministe
+        local noise = valueNoise(t * frequency)
+        local jitter = (noise * 2 - 1) * strength * jitterFactor -- entre -strength*decay et +...
+
+        return base + jitter
+    end
+end
+
 return AnimationUtils 

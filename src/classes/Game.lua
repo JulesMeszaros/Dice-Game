@@ -21,18 +21,6 @@ local virtualWidth, virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRT
 local gameCanvas = love.graphics.newCanvas(virtualWidth, virtualHeight)
 gameCanvas:setFilter("linear", "linear")
 
---Creating the dices
-local diceObjects = {} --liste des 6 dés blancs
-
-for i=1, 5 do 
-    local fs = {}
-    for j=1,6 do
-        local f = FaceTypes.DataDice:new(j, 10)
-        table.insert(fs,f)
-    end
-    table.insert(diceObjects, DiceObject:new(fs))
-end
-
 function Game:start()
     local self = setmetatable({}, Game)
 
