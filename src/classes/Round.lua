@@ -56,7 +56,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 
     --Choix du type de manager
     if(self.roundType == Constants.ROUND_TYPES.BOSS)then
-        self.bossType = Constants.BOSS_TYPES.TRESORIER
+        self.bossType = Constants.BOSS_TYPES.RESPONSABLE_SECURITE
     end
 
     --Ennemy metadata

@@ -143,7 +143,25 @@ function GameScreen:new(floor, run, screenType, round)
     self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY = 510+(370/2), 640, -255, 640
     self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY = 900+(370/2), 640, self.canvas:getWidth()+255, 640
 
+    --Background animation TODO: à modifier un peu plus tard pour rendre le truc modulable
+    self.animator:addDelay(0.0, function() 
+        if(self.screenType==Constants.RUN_STATES.ROUND and self.round.roundType==Constants.ROUND_TYPES.BOSS) then
+            G.animator:addGroup({
+                {property = "backgroundR", from=G.backgroundR, targetValue = 163/255, duration = 0.6},
+                {property = "backgroundG", from=G.backgroundG, targetValue = 149/255, duration = 0.6},
+                {property = "backgroundB", from=G.backgroundB, targetValue = 219/255, duration = 0.6},
+            })
+        else
+            G.animator:addGroup({
+                {property = "backgroundR", from=G.backgroundR, targetValue = 40/255, duration = 0.6},
+                {property = "backgroundG", from=G.backgroundG, targetValue = 40/255, duration = 0.6},
+                {property = "backgroundB", from=G.backgroundB, targetValue = 43/255, duration = 0.6},
+            })
+        end
+    end)
+
     --Entry animation
+    
     self.animator:addDelay(0.2)
 
     self.animator:addGroup({
@@ -723,7 +741,13 @@ function GameScreen:ciggieReleaseAction(ciggie)
 
     --Trigger effect
     if(position == 1) then
-        ciggie.representedObject:trigger(self, self.screenType)
+        if(self.screenType~=Constants.RUN_STATES.ROUND) then
+            ciggie.representedObject:trigger(self, self.screenType)
+        else
+            if(self.round.bossType ~= Constants.BOSS_TYPES.RESPONSABLE_SECURITE)then
+                ciggie.representedObject:trigger(self, self.screenType)
+            end
+        end
     elseif(position == 2) then
         self:sellCiggie(ciggie)
     end

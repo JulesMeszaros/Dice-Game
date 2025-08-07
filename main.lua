@@ -1,6 +1,15 @@
+local Animator = require("src.utils.Animator")
+
+G = {
+    backgroundR = 40/255,
+    backgroundG = 40/255,
+    backgroundB = 43/255,
+}
+
+G.animator = Animator:new(G)
+
 local Fonts = require("src.utils.Fonts")
 local Game = require("src.classes.Game")
-local Animator = require("src.utils.Animator")
 
 local delta = 0
 
@@ -8,12 +17,7 @@ local fpsLimit = nil -- nil = pas de limite
 local fpsOptions = { nil, 60, 30, 15 , 5}
 local currentFpsIndex = 1
 
-local G = {
-    backgroundR = 40/255,
-    backgroundG = 40/255,
-    backgroundB = 43/255,
-    animator = Animator:new()
-}
+
 
 function love.load()
     --bien randomiser le jeu
@@ -35,6 +39,7 @@ function love.load()
 end
 
 function love.update(dt)
+    G.animator:update(dt)
     game:update(dt)
     delta = love.timer.getFPS()
     
