@@ -385,7 +385,6 @@ function GameScreen:drawRoundDetails(dt)
     local rerollText = love.graphics.newText(Fonts.soraBig, '-')
     local currentHands = love.graphics.newText(Fonts.soraBig, '-')
     local currentRoundText = love.graphics.newText(Fonts.soraSmall, 'Floor '..tostring(self.run.floorNumber)..'\nDesk : '..tostring("-"))
-    local moneyText = love.graphics.newText(Fonts.soraBig, tostring(self.run.money).."€")
     local moneyText = tostring(self.run.money).."$"
 
     if(self.round) then
