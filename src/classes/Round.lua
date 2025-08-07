@@ -56,7 +56,12 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 
     --Choix du type de manager
     if(self.roundType == Constants.ROUND_TYPES.BOSS)then
-        self.bossType = Constants.BOSS_TYPES.TRESORIER
+        self.bossType = Constants.BOSS_TYPES.CHEF_RD
+    end
+
+    if(self.bossType==Constants.BOSS_TYPES.CHEF_RD) then
+        self.remainingHands = self.remainingHands + self.availableRerolls
+        self.availableRerolls = 0
     end
 
     --Ennemy metadata
@@ -363,7 +368,11 @@ function Round:endTriggeringPhase()
     if(self.remainingHands>=1)then
         self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
         self:resetselectedDices()
-        self.availableRerolls = Constants.BASE_REROLLS
+        if(self.bossType==Constants.BOSS_TYPES.CHEF_RD) then
+            self.availableRerolls = 0
+        else
+            self.availableRerolls = Constants.BASE_REROLLS
+        end
         self.roundScore = self.roundScore + self.handScore
         self.handScore = 0
     end
