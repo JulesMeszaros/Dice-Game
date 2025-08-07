@@ -21,9 +21,6 @@ Sprites.DICE_MAT = love.graphics.newImage("src/assets/sprites/ui/Dice Mat.png")
 Sprites.REWARDS = love.graphics.newImage("src/assets/sprites/ui/Rewards.png")
 Sprites.CUSTOMIZATION_MAT = love.graphics.newImage("src/assets/sprites/ui/DiceComposition New.png")
 
-Sprites.CIGGIES_TRAY = love.graphics.newImage("src/assets/sprites/ui/CiggieTray.png")
-Sprites.CIGGIES_TRAY_BACK = love.graphics.newImage("src/assets/sprites/ui/Ciggie Tray Back.png")
-Sprites.CIGGIES_TRAY_FRONT = love.graphics.newImage("src/assets/sprites/ui/Ciggie Tray Front.png")
 Sprites.GUM = love.graphics.newImage("src/assets/sprites/ui/Gum.png")
 
 Sprites.BADGE = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
