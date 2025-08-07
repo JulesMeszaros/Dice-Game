@@ -171,15 +171,7 @@ function Shop:updateCanvas(dt)
         self.addRewardText:reset()
     end
 
-    --Popup de vente de face de dé
-    if(self.dragAndDroppedReward or self.dragAndDroppedInventory)then
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.draw(Sprites.SELL_CIGGIE, 30, self.canvas:getHeight()-30, 0, 1, 1, 0, Sprites.SELL_CIGGIE:getHeight())
-        self.sellText:update(dt)
-        self.sellText:draw()
-    else
-        self.sellText:reset()
-    end
+    
 
     --Shop faces UI
     for i,faceUI in next,self.availableFaceObjectsUI do
@@ -204,12 +196,24 @@ function Shop:updateCanvas(dt)
 
     self:drawFacesPriceTags()
 
+    
+
     --Upgrade hand popup
     if(self.addingAvailableHand == true) then
         self:drawUpgradingFigurePopup(dt)
     end
 
     self:drawFigureGrid()
+
+    --Popup de vente de face de dé
+    if(self.dragAndDroppedReward or self.dragAndDroppedInventory)then
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.draw(Sprites.SELL_CIGGIE, 30, self.canvas:getHeight()-30, 0, 1, 1, 0, Sprites.SELL_CIGGIE:getHeight())
+        self.sellText:update(dt)
+        self.sellText:draw()
+    else
+        self.sellText:reset()
+    end
 
     --Ciggie Popup
     if(self.previousCiggieDraggedState ~= self.draggedCiggie) then

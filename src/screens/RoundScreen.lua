@@ -220,6 +220,17 @@ function RoundScreen:updateCanvas(dt)
                         })
     end
 
+    
+
+    --Upgrading figure popup
+    if(self.addingAvailableHand == true) then
+        self:drawUpgradingFigurePopup(dt)
+    end
+
+    --Figure Buttons
+    self:getCurrentlyHoveredLine() --La figure survolée
+    self:drawFigureGrid(self.gridX, self.gridY)
+
     --Ciggie Popup
     if(self.previousCiggieDraggedState ~= self.draggedCiggie) then
         if(self.draggedCiggie)then
@@ -231,11 +242,6 @@ function RoundScreen:updateCanvas(dt)
 
     if(self.showCiggiePopup) then
         self:drawCiggiePopup(dt)
-    end
-
-    --Upgrading figure popup
-    if(self.addingAvailableHand == true) then
-        self:drawUpgradingFigurePopup(dt)
     end
 
     --Ciggies Tray
@@ -250,9 +256,7 @@ function RoundScreen:updateCanvas(dt)
 
     --self:drawCiggiesTrayFront()
     
-    --Figure Buttons
-    self:drawFigureGrid(self.gridX, self.gridY)
-    self:getCurrentlyHoveredLine() --La figure survolée
+    
 
     --EndRoundScreen
     if(self.endRoundPopUp)then
