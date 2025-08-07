@@ -1162,20 +1162,17 @@ function Shop:outAnimation()
     
     --Remove the elements from the UI
     self.animator:addGroup({
-        {property = "gridY", from = self.gridY, targetValue = -820, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        
-        {property = "shopBGY", from = self.shopBGY, targetValue = -1000, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        
-        {property = "deckY", from = self.deckY, targetValue = self.canvas:getHeight()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        
-        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "gridX", from = self.gridX, targetValue = 0-self.figureButtonsCanvas:getWidth(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+       
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+200, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "deckX", from = self.deckX, targetValue = self.canvas:getWidth()+50, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyX", from = self.moneyX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorX", from = self.floorX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
 
+        {property = "shopBGY", from = self.shopBGY, targetValue = -1000, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+                
         {property = "inventorySMY", from = self.inventorySMY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "rewardsSMY", from = self.rewardsSMY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
 
@@ -1183,10 +1180,10 @@ function Shop:outAnimation()
     self.animator:addDelay(0.5, function()self.run:goToDiceCustomization()end)
 
     --Buttons animation
-    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration, AnimationUtils.Easing.inOutCubic)
-    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration, AnimationUtils.Easing.inOutCubic)
-    self.uiElements.buttons["nextRoundSmallBtn"].animator:add('x', self.uiElements.buttons["nextRoundSmallBtn"].x, self.canvas:getWidth()+400, outDuration, AnimationUtils.Easing.inOutCubic)
-    self.uiElements.buttons["rerollShopButton"].animator:add('x', self.uiElements.buttons["rerollShopButton"].x, -400, outDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["nextRoundSmallBtn"].animator:addDelay(outDuration)
+    self.uiElements.buttons["rerollShopButton"].animator:addDelay(outDuration)
+    self.uiElements.buttons["nextRoundSmallBtn"].animator:add('y', self.uiElements.buttons["nextRoundSmallBtn"].y, -50, outDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["rerollShopButton"].animator:add('y', self.uiElements.buttons["rerollShopButton"].y, -50, outDuration, AnimationUtils.Easing.inOutCubic)
 
 end
 

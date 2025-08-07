@@ -45,9 +45,21 @@ function DiceCustomization:new(previousRound, newFaceObjects)
     self.uiElements.buttons["nextRound"].animator:add('y', self.nextRoundY, self.nextRoundTY, AnimationUtils.EntryDuration, AnimationUtils.Easing.inOutCubic)
 
     self.addRewardText = UI.Text.TextWavy:new(
-        "Add to inventory?",
+        "Add to",
         self.inventoryMDTX + self.inventoryCanvasMedium:getWidth()/2,
-        self.inventoryMDTY + self.inventoryCanvasMedium:getHeight()/2,
+        self.inventoryMDTY + self.inventoryCanvasMedium:getHeight()/2-35,
+        {
+            font = Fonts.soraRewardTotal,
+            centered = true,
+            amplitude = 5,
+            speed = 2
+        }
+    )
+
+    self.addRewardText2 = UI.Text.TextWavy:new(
+        "inventory?",
+        self.inventoryMDTX + self.inventoryCanvasMedium:getWidth()/2,
+        self.inventoryMDTY + self.inventoryCanvasMedium:getHeight()/2+35,
         {
             font = Fonts.soraRewardTotal,
             centered = true,
@@ -147,8 +159,12 @@ function DiceCustomization:updateCanvas(dt)
         love.graphics.draw(Sprites.ADD_TO_INVENTORY_L, self.inventoryMDTX, self.inventoryMDTY, 0, 1, 1)
         self.addRewardText:update(dt)
         self.addRewardText:draw()
+
+        self.addRewardText2:update(dt)
+        self.addRewardText2:draw()
     else
         self.addRewardText:reset()
+        self.addRewardText2:reset()
     end
 
     --Popup de vente de face de dé
@@ -407,18 +423,21 @@ end
 function DiceCustomization:outAnimation()
     local outDuration = 0.4
     self.animator:addGroup({
-        {property = "customizationMatY", from = self.customizationMatY, targetValue = -700, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+600, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "newFacesY", from = self.newFacesY, targetValue = self.canvas:getHeight()+500, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+450, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        
-        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        
-        {property = "inventoryMDY", from = self.inventoryMDY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "rewardsMDY", from = self.rewardsMDY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "gridX", from = self.gridX, targetValue = 0-self.figureButtonsCanvas:getWidth(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+
+        {property = "customizationMatY", from = self.customizationMatY, targetValue = 0-self.customizationMat:getHeight()-50, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "newFacesY", from = self.newFacesY, targetValue = self.canvas:getHeight()+500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+                
+        {property = "inventoryMDY", from = self.inventoryMDY, targetValue = -50+self.rewardsMediumCanvas:getHeight()-self.customizationMat:getHeight(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rewardsMDY", from = self.rewardsMDY, targetValue = -50-self.customizationMat:getHeight(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+    
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+200, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "deckX", from = self.deckX, targetValue = self.canvas:getWidth()+50, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyX", from = self.moneyX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorX", from = self.floorX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+    
     })
 
     --Ciggarettes
@@ -432,9 +451,9 @@ function DiceCustomization:outAnimation()
     end
 
     --Buttons animation
-    self.uiElements.buttons["nextRound"].animator:add('x', self.nextRoundX, -500, outDuration)
-    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)
-    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration)
+    self.uiElements.buttons["nextRound"].animator:add('y', self.nextRoundY, self.canvas:getHeight()+150, outDuration,AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["menuButton"].animator:add('x', self.uiElements.buttons["menuButton"].x, self.canvas:getWidth()+200, outDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["planButton"].animator:add('x', self.uiElements.buttons["menuButton"].x, self.canvas:getWidth()+200, outDuration, AnimationUtils.Easing.inOutCubic)
 
     --Dices exit
     for i,dice in next,self.uiDices do

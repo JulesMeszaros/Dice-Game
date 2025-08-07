@@ -108,16 +108,16 @@ function GameScreen:new(floor, run, screenType, round)
     self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.canvas:getWidth()+20, 30
     self.playerTX, self.playerTY, self.playerX, self.playerY = 510, 30, -800, 30
     
-    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, -900, 30
-    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = 1460, 30, self.canvas:getWidth()+350, 30
+    self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30,  0-self.figureButtonsCanvas:getWidth(), 30
+    self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY = 1460, 30, self.canvas:getWidth()+200, 30
     self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, 650, self.canvas:getWidth()+600, 650
 
-    self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 1670, 310, self.canvas:getWidth()+500, 310
-    self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 1670, 170, self.canvas:getWidth()+500, 170
-    self.floorTX, self.floorTY, self.floorX, self.floorY = 1670, 30, self.canvas:getWidth()+500, 30
-    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 1670, 450, self.canvas:getWidth()+500, 450
+    self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 1670, 310, self.canvas:getWidth()+400, 310
+    self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 1670, 170, self.canvas:getWidth()+400, 170
+    self.floorTX, self.floorTY, self.floorX, self.floorY = 1670, 30, self.canvas:getWidth()+400, 30
+    self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 1670, 450, self.canvas:getWidth()+400, 450
     self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight(), self.canvas:getWidth()+450, self.canvas:getHeight()
-    self.deckTX, self.deckTY , self.deckX, self.deckY = 1300, 110, 1300, self.canvas:getHeight()+20
+    self.deckTX, self.deckTY , self.deckX, self.deckY = 1300, 110, self.canvas:getWidth()+50, 110
 
     self.customizationMatTX, self.customizationMatTY, self.customizationMatX, self.customizationMatY = 820, 30, 820, -900
     self.newFacesTX, self.newFacesTY, self.newFacesX, self.newFacesY = 500, 650, 500, self.canvas:getHeight()+450
@@ -136,12 +136,12 @@ function GameScreen:new(floor, run, screenType, round)
     
 
     --Btns positions
-    self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 1460+90, 880+40, self.canvas:getWidth()+350, 880+40
-    self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 1460+90, 970+40, self.canvas:getWidth()+350, 970+40
+    self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 1460+90, 880+40, self.canvas:getWidth()+200, 880+40
+    self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 1460+90, 970+40, self.canvas:getWidth()+200, 970+40
     self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
     self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY = 520+455, 890+75, 520+455, self.canvas:getHeight()+80
-    self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY = 510+(370/2), 640, -255, 640
-    self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY = 900+(370/2), 640, self.canvas:getWidth()+255, 640
+    self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY = 900+(370/2), 640, 510+(370/2), -50
+    self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY = 900+(370/2), 640, 900+(370/2), -50
 
     --Entry animation
     self.animator:addDelay(0.2)
@@ -153,7 +153,7 @@ function GameScreen:new(floor, run, screenType, round)
         {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.diceDetailsTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "descriptionX", from = self.descriptionX, targetValue = self.descriptionTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "diceMaty", from = self.diceMaty, targetValue = self.diceMatTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "deckY", from = self.deckY, targetValue = self.deckTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
+        {property = "deckX", from = self.deckX, targetValue = self.deckTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.outCubic},
         {property = "moneyX", from = self.moneyX, targetValue = self.moneyTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "turnsX", from = self.turnsX, targetValue = self.turnsTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "rerollsX", from = self.rerollsX, targetValue = self.rerollsTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},
@@ -236,20 +236,20 @@ function GameScreen:new(floor, run, screenType, round)
             function()return Inputs.getMouseInCanvas(0, 0)end
         )
         self.uiElements.buttons["rerollShopButton"].animator:addDelay(0.2)
-        self.uiElements.buttons["rerollShopButton"].animator:add('x', self.rerollShopX, self.rerollShopTX, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.outCubic)
+        self.uiElements.buttons["rerollShopButton"].animator:add('y', self.rerollShopY, self.rerollShopTY, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.inOutCubic)
 
         self.uiElements.buttons["nextRoundSmallBtn"] = Button:new(
             function()self:outAnimation()end, 
             "src/assets/sprites/ui/Next Round Small.png", 
-            self.rerollShopX,
-            self.rerollShopY,
+            self.nextRoundSMTX,
+            self.nextRoundSMTX,
             370, 
             60,
             self.gameCanvas,
             function()return Inputs.getMouseInCanvas(0, 0)end
         )
         self.uiElements.buttons["nextRoundSmallBtn"].animator:addDelay(0.2)
-        self.uiElements.buttons["nextRoundSmallBtn"].animator:add('x', self.nextRoundSMX, self.nextRoundSMTX, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.outCubic)
+        self.uiElements.buttons["nextRoundSmallBtn"].animator:add('y', self.nextRoundSMY, self.nextRoundSMTY, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.inOutCubic)
 
     end
 
