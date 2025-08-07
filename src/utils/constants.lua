@@ -10,7 +10,7 @@ local Constants = {
     BASE_REROLLS = 2,
     DESKS_BY_FLOOR = 2,
     FLOORS_BY_RUN = 8,
-    BASE_MAX_CIGGIES = 5,
+    BASE_MAX_CIGGIES = 3,
     BASE_TURNS = 3,
     BASE_AVAILABLE_HANDS = 1,
 
