@@ -241,9 +241,9 @@ function Shop:updateCanvas(dt)
 
     --self:drawCiggiesTrayFront()
 
-    --Buy CiggiePopup
+    --Buy Ciggie Popup
     if(self.dragAndDroppedShopCiggie)then
-        love.graphics.draw(Sprites.BUY_CIGGIE, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, Sprites.BUY_CIGGIE:getWidth(), Sprites.BUY_CIGGIE:getHeight())
+        love.graphics.draw(Sprites.BUY_CIGGIE, 1670, 590, 0, 1, 1)
         self.buyCiggieText:update(dt)
         self.buyCiggieText:draw()
     else
@@ -416,7 +416,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
         ciggie.targetX = ciggie.anchorX
         ciggie.targetY = ciggie.anchorY
 
-        if(ciggie.x > 1470 and ciggie.y > 800 ) then
+        if(ciggie.x > 1670 and ciggie.y > 590 and  ciggie.x < 1670+Sprites.BUY_CIGGIE:getWidth() and ciggie.y < 590+Sprites.BUY_CIGGIE:getHeight()) then
             self:buyCiggie(ciggie.representedObject, ciggie, key)
         end
     end

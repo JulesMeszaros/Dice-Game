@@ -476,7 +476,7 @@ function Infos:generateCiggiesUI()
 
     for i,ciggie in next,self.run.ciggiesObjects do
         
-        local c = Ciggie:new(ciggie, xPos[i], self.canvas:getHeight()+30, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+        local c = Ciggie:new(ciggie, xPos[i], 830, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
         c.baseRotation, c.rotation, c.targetedRotation = 1.57, 1.57, 1.57
         self.uiElements.ciggiesUI[ciggie] = c
     end

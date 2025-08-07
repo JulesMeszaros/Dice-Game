@@ -638,7 +638,7 @@ function GameScreen:generateCiggiesUI()
 
     for i,ciggie in next,self.run.ciggiesObjects do
         
-        local c = Ciggie:new(ciggie, xPos[i], self.canvas:getHeight()+30, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+        local c = Ciggie:new(ciggie, xPos[i], 830, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
         c.baseRotation, c.rotation = 1.57, 1.57
         self.uiElements.ciggiesUI[ciggie] = c
 
@@ -697,7 +697,7 @@ function GameScreen:checkForDraggedCiggie()
     self.previousCiggieDraggedState = self.draggedCiggie
     
     for i,ciggie in next,self.uiElements.ciggiesUI do
-        if(ciggie.x < 1470 or ciggie.y < 800)then
+        if(ciggie.x < 1600 or ciggie.y < 500)then
             draggedCiggie = true
             self.showCiggiePopup = true
             self.currentlyDraggedCiggie = ciggie
@@ -729,7 +729,7 @@ function GameScreen:endCiggiePopup()
 end
 
 function GameScreen:checkCiggiePosition(ciggie)
-    if((ciggie.x > 500 and ciggie.x<1400) or (ciggie.y>0 and ciggie.y<850))then
+    if((ciggie.x > 500 and ciggie.x<1600) or (ciggie.y>0 and ciggie.y<500))then
         return 1
     elseif((ciggie.x > 0 and ciggie.x < 500) and (ciggie.y>850 and ciggie.y<self.canvas:getHeight())) then
         return 2
