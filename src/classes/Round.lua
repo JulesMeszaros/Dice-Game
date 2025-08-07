@@ -516,7 +516,7 @@ function Round:playFigure(points, usedDices, figure) --Function that triggers th
     --Si boss trésorier : on retire de l'argent selon le nombre de dés
     print(table.getn(usedDices))
     if(self.roundType==Constants.ROUND_TYPES.BOSS and self.bossType==Constants.BOSS_TYPES.TRESORIER)then
-        self.run.money = self.run.money - table.getn(usedDices)
+        self:setMoneyTo(self.run.money - table.getn(usedDices))
     end
 
     self:startTriggeringPhase(usedDices, figure)

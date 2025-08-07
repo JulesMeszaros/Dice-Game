@@ -404,13 +404,13 @@ function GameScreen:drawRoundDetails(dt)
     local currentHands = love.graphics.newText(Fonts.soraBig, '-')
     local currentRoundText = love.graphics.newText(Fonts.soraSmall, 'Floor '..tostring(self.run.floorNumber)..'\nDesk : '..tostring("-"))
     local moneyText = love.graphics.newText(Fonts.soraBig, tostring(self.run.money).."€")
-    local moneyText = tostring(self.run.money).."$"
+    local moneyText = tostring(math.floor(self.run.money)).."$"
 
     if(self.round) then
         rerollText = love.graphics.newText(Fonts.soraBig, tostring(self.round.availableRerolls))
         currentHands = love.graphics.newText(Fonts.soraBig, tostring(self.round.remainingHands))
         currentRoundText = love.graphics.newText(Fonts.soraSmall, 'Floor '..tostring(self.round.floorNumber)..'\nDesk : '..tostring(self.round.deskNumber))
-        moneyText = tostring(self.round.run.money).."$"
+        moneyText = tostring(math.floor(self.round.run.money)).."$"
     end
 
     --ROUND
@@ -755,7 +755,7 @@ end
 
 function GameScreen:sellCiggie(ciggie)
     --Add money to bank account
-    self.run.money = self.run.money+1
+    self:setMoneyTo(self.run.money+1)
     
     --On retire l'objet de l'inventaire
     for j,c in next,self.run.ciggiesObjects do
@@ -858,6 +858,12 @@ end
 function GameScreen:addAvailableHand(i)
     self.run.baseAvailableHands[i] = self.run.baseAvailableHands[i]+1
     self.run.availableFigures[i] = self.run.availableFigures[i]+1
+end
+
+--==State modification functions==--
+function GameScreen:setMoneyTo(m)
+    local d = 0.1
+    self.run.animator:add("money", self.run.money, m, d)
 end
 
 return GameScreen

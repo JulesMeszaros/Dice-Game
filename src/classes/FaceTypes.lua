@@ -1142,7 +1142,7 @@ function addScore(round, f)
 end
 
 function addMoney(round, m)
-    round.run.money = round.run.money + m
+    round.terrain:setMoneyTo(round.run.money + m)
 end
 
 function removeMoney(round, m)

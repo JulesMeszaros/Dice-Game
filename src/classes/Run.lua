@@ -12,6 +12,8 @@ local Floor = require("src.classes.Floor")
 local CiggieObject = require("src.classes.CiggieObject")
 local CiggieTypes = require("src.classes.CiggieTypes")
 
+local Animator = require("src.utils.Animator")
+
 local FaceTypes = require("src.classes.FaceTypes")
 
 local Run = {}
@@ -23,6 +25,8 @@ Run.__index = Run
 function Run:new(dices, gameCanvas, game, diceObjects)
     local self = setmetatable({}, Run)
 
+    self.animator = Animator:new(self)
+
     self.facesInventory = {}
     self.facesRewardsInventory = {}
     
@@ -30,7 +34,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.ciggiesObjects = {
         CiggieTypes.Time:new(),
         CiggieTypes.Rockmans:new(),
-        CiggieTypes.FreeRoller:new()
+        CiggieTypes.Fortune:new()
     }
     self.totalUsedCiggie = 0
 
@@ -91,6 +95,7 @@ end
 
 function Run:update(dt)
     if(self.runPaused~=true) then
+        self.animator:update(dt)
         if(self.currentState==Constants.RUN_STATES.ROUND)then
             --update Round
             self.currentRound:update(dt)

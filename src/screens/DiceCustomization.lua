@@ -754,7 +754,7 @@ end
 
 function DiceCustomization:sellReward(face, faceUI, key)
     --Add money to bank account
-    self.run.money = self.run.money + 3
+    self:setMoneyTo(self.run.money + 3)
 
     --Remove dice face object from inventory
 
@@ -778,7 +778,7 @@ end
 
 function DiceCustomization:sellDiceFace(face, faceUI, key)
     --Add money to bank account
-    self.run.money = self.run.money + 3
+    self:setMoneyTo(self.run.money + 3)
 
     --Remove dice face object from inventory
 

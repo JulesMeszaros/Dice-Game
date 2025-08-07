@@ -69,7 +69,7 @@ function Fortune:new()
 end
 
 function Fortune:effect(screen)
-    screen.run.money = screen.run.money+5
+    screen:setMoneyTo(screen.run.money+5)
 end
 
 CiggieTypes.Fortune = Fortune
