@@ -54,6 +54,11 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.roundType = roundType
     self.availableRerolls = Constants.BASE_REROLLS
 
+    --Choix du type de manager
+    if(self.roundType == Constants.ROUND_TYPES.BOSS)then
+        self.bossType = Constants.BOSS_TYPES.TRESORIER
+    end
+
     --Ennemy metadata
     self.enemyCharacter = Lion:new()
     if(self.roundType == Constants.ROUND_TYPES.BASE) then
@@ -507,6 +512,13 @@ end
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
     --Commencer la phase de déclenchement
+
+    --Si boss trésorier : on retire de l'argent selon le nombre de dés
+    print(table.getn(usedDices))
+    if(self.roundType==Constants.ROUND_TYPES.BOSS and self.bossType==Constants.BOSS_TYPES.TRESORIER)then
+        self.run.money = self.run.money - table.getn(usedDices)
+    end
+
     self:startTriggeringPhase(usedDices, figure)
 
     --Add one to the playcount

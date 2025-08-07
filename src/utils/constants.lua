@@ -4,7 +4,7 @@ local Constants = {
     --Game metadatas
     VIRTUAL_GAME_WIDTH = 1920,
     VIRTUAL_GAME_HEIGHT = 1080,
-    GAME_VERSION = "0.5.0",
+    GAME_VERSION = "0.6.0",
 
     --Game base stats
     BASE_REROLLS = 2,
@@ -153,6 +153,22 @@ Constants.ROUND_STATES = {
 Constants.ROUND_TYPES = {
     BASE = 1,
     BOSS = 2
+}
+
+Constants.BOSS_TYPES = {
+    CHEF_DE_PROJET = 1,
+    CHEF_COMPTABLE = 2,
+    TRESORIER = 3,
+    REPONSABLE_SECURITE = 4,
+    CHEF_RD = 5
+}
+
+Constants.BOSS_LABELS = {
+    "Chef de Projet",
+    "Chef Comptable",
+    "Trésorier",
+    "Responsable Sureté",
+    "Chef R&D"
 }
 
 Constants.EMPLOIS = {
