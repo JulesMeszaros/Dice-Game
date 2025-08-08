@@ -585,8 +585,8 @@ function DiceCustomization:detectClosestFace(x, y)
 end
 
 function DiceCustomization:createInventoryUI()
-    -
-    
+    self.xPositions = {20, 150, 20, 150, 20, 150, 20, 150}
+    self.yPositions = {70, 70, 200, 200, 330, 330, 460, 460}
 
 
     local startY = self.canvas:getHeight()/2
