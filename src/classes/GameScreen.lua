@@ -65,7 +65,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.moneyCanvas = love.graphics.newCanvas(220, 120)
     self.deckCanvas = love.graphics.newCanvas(140, 860)
     self.diceDetailsCanvas = love.graphics.newCanvas(180, 830)
-    self.ciggiesTray = love.graphics.newCanvas(420, 160)
+    self.ciggiesTray = love.graphics.newCanvas(220, 460)
     self.ciggiesTrayFront = love.graphics.newCanvas(420, 160)
     self.playerInfos = love.graphics.newCanvas(650,260)
     self.enemyInfos = love.graphics.newCanvas(650,260)
@@ -116,7 +116,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 1670, 170, self.canvas:getWidth()+400, 170
     self.floorTX, self.floorTY, self.floorX, self.floorY = 1670, 30, self.canvas:getWidth()+400, 30
     self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 1670, 450, self.canvas:getWidth()+400, 450
-    self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight(), self.canvas:getWidth()+450, self.canvas:getHeight()
+    self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY = 1670, 590, self.canvas:getWidth()+400, 590
     self.deckTX, self.deckTY , self.deckX, self.deckY = 1300, 110, self.canvas:getWidth()+50, 110
 
     self.customizationMatTX, self.customizationMatTY, self.customizationMatX, self.customizationMatY = 820, 30, 820, -900
@@ -444,10 +444,10 @@ function GameScreen:drawCiggiesTray()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.ciggiesTray)
 
-    love.graphics.draw(Sprites.CIGGIES_TRAY_BACK, 0, 0)
+    love.graphics.draw(Sprites.GUM, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
+    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1)
 end
 
 function GameScreen:drawCiggiesTrayFront()

@@ -229,7 +229,7 @@ function Shop:updateCanvas(dt)
     end
 
     --self:drawDescription()
-    --self:drawCiggiesTray()
+    self:drawCiggiesTray()
 
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
@@ -1106,6 +1106,7 @@ function Shop:outAnimation()
             {property="scaleY", from=face.scaleY, targetValue=0, duration = outDuration/2},
             {property = "baseTargetedScale", from = face.baseTargetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
             {property = "targetedScale", from = face.targetedScale, targetValue = 0, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},
+            {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+650, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
 
             --Rotation
             {property = "rotation", from = 0, targetValue = -1, duration = outDuration/2, easing = AnimationUtils.Easing.easeOutBack},

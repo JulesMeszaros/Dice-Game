@@ -245,7 +245,7 @@ function RoundScreen:updateCanvas(dt)
     end
 
     --Ciggies Tray
-    --self:drawCiggiesTray()
+    self:drawCiggiesTray()
 
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
@@ -553,6 +553,7 @@ function RoundScreen:outAnimation()
         {property = "gridX", from = self.gridX, targetValue = 0-self.figureButtonsCanvas:getWidth(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
 
         {property = "diceMaty", from = self.diceMaty, targetValue = self.canvas:getHeight()+1000, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+650, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         
         {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+200, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "deckX", from = self.deckX, targetValue = self.canvas:getWidth()+50, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},

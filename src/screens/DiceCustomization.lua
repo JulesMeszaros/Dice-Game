@@ -147,7 +147,7 @@ function DiceCustomization:updateCanvas(dt)
     --Customization mat
     self:drawCustomizationMat()
     --Ciggies
-    --self:drawCiggiesTray()
+    self:drawCiggiesTray()
 
     --Buttons
     for key,button in next,self.uiElements.buttons do
@@ -424,7 +424,8 @@ function DiceCustomization:outAnimation()
     local outDuration = 0.4
     self.animator:addGroup({
         {property = "gridX", from = self.gridX, targetValue = 0-self.figureButtonsCanvas:getWidth(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+650, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+   
         {property = "customizationMatY", from = self.customizationMatY, targetValue = 0-self.customizationMat:getHeight()-50, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "newFacesY", from = self.newFacesY, targetValue = self.canvas:getHeight()+500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
                 
@@ -584,8 +585,8 @@ function DiceCustomization:detectClosestFace(x, y)
 end
 
 function DiceCustomization:createInventoryUI()
-    self.xPositions = {20, 150, 20, 150, 20, 150, 20, 150}
-    self.yPositions = {70, 70, 200, 200, 330, 330, 460, 460}
+    -
+    
 
 
     local startY = self.canvas:getHeight()/2

@@ -90,7 +90,7 @@ function DeskChoice:update(dt)
     
     
     --self:drawDescription()
-    --self:drawCiggiesTray()
+    self:drawCiggiesTray()
 
      --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
