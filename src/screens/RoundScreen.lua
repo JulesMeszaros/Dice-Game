@@ -206,7 +206,7 @@ function RoundScreen:updateCanvas(dt)
      --First round text
     if(self.showFirstRollText==true and self.round.firstRoll==false) then
         UI.Text.drawWavyText(
-                            "Make your first Roll!", 
+                            "Roll the dice!", 
                             self.canvas:getWidth()/2, 
                             (self.canvas:getHeight()/2)+120,
                             {

@@ -177,7 +177,6 @@ end
 --==CHOICES==--
 function DeskChoice:generateChoiceCanvas()
     self.badges = {}
-    self.choiceCanvas = {}
 
     local coords = {
         {510, 30},
@@ -191,23 +190,21 @@ function DeskChoice:generateChoiceCanvas()
     }
 
     for i=1, table.getn(self.possibleRounds) do
-        local c = love.graphics.newCanvas(220*1.5, 330*1.5)
-        local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 370, 500, function()return Inputs.getMouseInCanvas(0, 0)end)
-        table.insert(self.choiceCanvas, c)
-        table.insert(self.badges, b)
+        if(self.possibleRounds[i].roundType == Constants.ROUND_TYPES.BOSS) then
+            print("boss")
+            local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 540, 680, function()return Inputs.getMouseInCanvas(0, 0)end, true)
+            table.insert(self.badges, b)
+        else
+            print("pas boss")
+            local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 370, 500, function()return Inputs.getMouseInCanvas(0, 0)end)
+            table.insert(self.badges, b)
+        end
     end
 
 end
 
 function DeskChoice:updateChoiceCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
-
-    local coords = {
-        {550, 30},
-        {908, 30},
-        {550, 555},
-        {908, 555},
-    }
 
     for i,badge in next,self.badges do
         badge:update(dt)
