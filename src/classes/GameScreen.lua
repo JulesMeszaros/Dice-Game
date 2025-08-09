@@ -489,7 +489,7 @@ function GameScreen:drawFigureGrid()
         --if no hands remaining, grey out the line
         if(self.run.availableFigures[i]<=0) then
             love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
-            love.graphics.rectangle("fill", 10, 70*(i-1)+125, self.figureButtonsCanvas:getWidth()-20, 70)
+            love.graphics.rectangle("fill", 20, 70*(i-1)+90, 410, 70)
             love.graphics.setColor(0, 0, 0, 1)
         end
     end
