@@ -136,13 +136,14 @@ function GameScreen:new(floor, run, screenType, round)
     self.baseCiggiePopupAlpha, self.targetCiggiePopupAlpha, self.ciggiePopupAlpha = 0, 0.7, 0
     
     self.bossDescTX, self.bossDescTY, self.bossDescX, self.bossDescY = 520, 890, 520, self.canvas:getHeight()+300
+    
     --Btns positions
     self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 1460+90, 880+40, self.canvas:getWidth()+200, 880+40
     self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 1460+90, 970+40, self.canvas:getWidth()+200, 970+40
     self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
-    self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY = 255, 680, -255, 680
-    self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY = 510+(370/2), 640, -255, 640
-    self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY = 900+(370/2), 640, self.canvas:getWidth()+255, 640
+    self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY =520+455, 890+75, 520+455, self.canvas:getHeight()+80
+    self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY = 900+(370/2), 640, 510+(370/2), -50
+    self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY = 900+(370/2), 640, 900+(370/2), -50
 
     --Background animation TODO: à modifier un peu plus tard pour rendre le truc modulable
     self.animator:addDelay(0.0, function() 

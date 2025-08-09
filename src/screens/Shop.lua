@@ -569,7 +569,6 @@ end
 function Shop:sellDiceFace(face, faceUI, key)
     --Add money to bank account
     self:setMoneyTo(self.run.money + 3)
-
     --Remove dice face object from inventory
 
     table.remove(self.run.facesInventory, key)
@@ -592,7 +591,7 @@ end
 
 function Shop:sellReward(face, faceUI, key)
     --Add money to bank account
-    self:setMoneyTo(self.run.money + 3)
+    self.run.money = self.run.money + 3
 
     --Remove dice face object from inventory
 
