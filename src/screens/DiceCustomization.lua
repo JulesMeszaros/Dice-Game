@@ -452,7 +452,7 @@ function DiceCustomization:outAnimation()
     end
 
     --Buttons animation
-    self.uiElements.buttons["nextRound"].animator:add('y', self.nextRoundY, self.canvas:getHeight()+150, outDuration,AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["nextRound"].animator:add('y', self.uiElements.buttons["nextRound"].y, self.canvas:getHeight()+150, outDuration,AnimationUtils.Easing.inOutCubic)
     self.uiElements.buttons["menuButton"].animator:add('x', self.uiElements.buttons["menuButton"].x, self.canvas:getWidth()+200, outDuration, AnimationUtils.Easing.inOutCubic)
     self.uiElements.buttons["planButton"].animator:add('x', self.uiElements.buttons["menuButton"].x, self.canvas:getWidth()+200, outDuration, AnimationUtils.Easing.inOutCubic)
 
