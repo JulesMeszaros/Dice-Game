@@ -290,7 +290,7 @@ function GameScreen:drawCiggiePopup(dt)
 
     --Texts
     UI.Text.drawWavyText(
-        "Use Ciggie?",
+        "Use Magic Wand?",
         self.canvas:getWidth()/2,
         100,
         {
@@ -638,7 +638,7 @@ function GameScreen:generateCiggiesUI()
 
     for i,ciggie in next,self.run.ciggiesObjects do
         
-        local c = Ciggie:new(ciggie, xPos[i], 830, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+        local c = Ciggie:new(ciggie, xPos[i], 780, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
         c.baseRotation, c.rotation = 1.57, 1.57
         self.uiElements.ciggiesUI[ciggie] = c
 
