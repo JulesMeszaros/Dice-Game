@@ -316,10 +316,13 @@ function Infos:drawBadgeHorizontal()
     if(self.run.currentState == Constants.RUN_STATES.ROUND) then
         love.graphics.draw(Sprites.OFFICE_DESCRIPTION, 0, 0)
 
+        --Enemy face
+        self.run.currentRound.enemyCharacter:draw(150, 245, 250, 250)
+
         --Texts
         local jobDeskText = love.graphics.newText(Fonts.soraLightMini, 'Office '..tostring(self.run.currentRound.deskNumber).." - "..tostring(self.run.currentRound.enemyJob))
         local targetText = love.graphics.newText(Fonts.soraReward, 'Target : '..tostring(self.run.currentRound.targetScore).."pts")
-        
+
         love.graphics.draw(jobDeskText, self.badgeHorizontal:getWidth()/2 ,85, 0, 1, 1, jobDeskText:getWidth()/2, jobDeskText:getHeight()/2)
         love.graphics.setColor(91/255, 113/255, 254/255)
         love.graphics.draw(targetText, 480 ,35, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
