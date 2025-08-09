@@ -171,15 +171,7 @@ function Shop:updateCanvas(dt)
         self.addRewardText:reset()
     end
 
-    --Popup de vente de face de dé
-    if(self.dragAndDroppedReward or self.dragAndDroppedInventory)then
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.draw(Sprites.SELL_CIGGIE, 30, self.canvas:getHeight()-30, 0, 1, 1, 0, Sprites.SELL_CIGGIE:getHeight())
-        self.sellText:update(dt)
-        self.sellText:draw()
-    else
-        self.sellText:reset()
-    end
+    
 
     --Shop faces UI
     for i,faceUI in next,self.availableFaceObjectsUI do
@@ -204,12 +196,24 @@ function Shop:updateCanvas(dt)
 
     self:drawFacesPriceTags()
 
+    
+
     --Upgrade hand popup
     if(self.addingAvailableHand == true) then
         self:drawUpgradingFigurePopup(dt)
     end
 
     self:drawFigureGrid()
+
+    --Popup de vente de face de dé
+    if(self.dragAndDroppedReward or self.dragAndDroppedInventory)then
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.draw(Sprites.SELL_CIGGIE, 30, self.canvas:getHeight()-30, 0, 1, 1, 0, Sprites.SELL_CIGGIE:getHeight())
+        self.sellText:update(dt)
+        self.sellText:draw()
+    else
+        self.sellText:reset()
+    end
 
     --Ciggie Popup
     if(self.previousCiggieDraggedState ~= self.draggedCiggie) then
@@ -224,7 +228,7 @@ function Shop:updateCanvas(dt)
         self:drawCiggiePopup(dt)
     end
 
-    self:drawDescription()
+    --self:drawDescription()
     self:drawCiggiesTray()
 
     --Ciggies UI
@@ -237,9 +241,9 @@ function Shop:updateCanvas(dt)
 
     self:drawCiggiesTrayFront()
 
-    --Buy CiggiePopup
+    --Buy Ciggie Popup
     if(self.dragAndDroppedShopCiggie)then
-        love.graphics.draw(Sprites.BUY_CIGGIE, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, Sprites.BUY_CIGGIE:getWidth(), Sprites.BUY_CIGGIE:getHeight())
+        love.graphics.draw(Sprites.BUY_CIGGIE, 1670, 590, 0, 1, 1)
         self.buyCiggieText:update(dt)
         self.buyCiggieText:draw()
     else
@@ -412,7 +416,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
         ciggie.targetX = ciggie.anchorX
         ciggie.targetY = ciggie.anchorY
 
-        if(ciggie.x > 1470 and ciggie.y > 800 ) then
+        if(ciggie.x > 1670 and ciggie.y > 590 and  ciggie.x < 1670+Sprites.BUY_CIGGIE:getWidth() and ciggie.y < 590+Sprites.BUY_CIGGIE:getHeight()) then
             self:buyCiggie(ciggie.representedObject, ciggie, key)
         end
     end
@@ -974,24 +978,6 @@ function Shop:drawDeck(dt)
     love.graphics.draw(self.deckCanvas, self.deckX, self.deckY)
 end
 
-function Shop:drawDiceDetails(dt)
-    local currentCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.diceDetailsCanvas)
-    love.graphics.clear()
-
-    --Draw sprite
-    love.graphics.draw(Sprites.DICE_INFOS, 0, 0)
-    
-    --Draw the dice net
-    if(self.currentlySelectedDice)then
-        self:updateDiceNet(dt)
-    end
-
-    love.graphics.setCanvas(currentCanvas)
-
-    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
-end
-
 function Shop:drawInventoryFaces(dt)
     for k,uiFace in next,self.inventoryFacesUI do
         uiFace:update(dt)
@@ -1180,20 +1166,18 @@ function Shop:outAnimation()
     
     --Remove the elements from the UI
     self.animator:addGroup({
-        {property = "gridY", from = self.gridY, targetValue = -820, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        
-        {property = "shopBGY", from = self.shopBGY, targetValue = -1000, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        
-        {property = "deckY", from = self.deckY, targetValue = self.canvas:getHeight()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        
-        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "gridX", from = self.gridX, targetValue = 0-self.figureButtonsCanvas:getWidth(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+650, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+       
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+200, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "deckX", from = self.deckX, targetValue = self.canvas:getWidth()+50, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyX", from = self.moneyX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorX", from = self.floorX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
 
+        {property = "shopBGY", from = self.shopBGY, targetValue = -1000, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+                
         {property = "inventorySMY", from = self.inventorySMY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "rewardsSMY", from = self.rewardsSMY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
 
@@ -1201,10 +1185,10 @@ function Shop:outAnimation()
     self.animator:addDelay(0.5, function()self.run:goToDiceCustomization()end)
 
     --Buttons animation
-    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration, AnimationUtils.Easing.inOutCubic)
-    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration, AnimationUtils.Easing.inOutCubic)
-    self.uiElements.buttons["nextRoundSmallBtn"].animator:add('x', self.uiElements.buttons["nextRoundSmallBtn"].x, self.canvas:getWidth()+400, outDuration, AnimationUtils.Easing.inOutCubic)
-    self.uiElements.buttons["rerollShopButton"].animator:add('x', self.uiElements.buttons["rerollShopButton"].x, -400, outDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["nextRoundSmallBtn"].animator:addDelay(outDuration)
+    self.uiElements.buttons["rerollShopButton"].animator:addDelay(outDuration)
+    self.uiElements.buttons["nextRoundSmallBtn"].animator:add('y', self.uiElements.buttons["nextRoundSmallBtn"].y, -50, outDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["rerollShopButton"].animator:add('y', self.uiElements.buttons["rerollShopButton"].y, -50, outDuration, AnimationUtils.Easing.inOutCubic)
 
 end
 
@@ -1220,7 +1204,7 @@ end
 
 function Shop:getCurrentlyHoveredLine()
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
-    local i = math.floor((mv.y-10)/50)+1
+    local i = math.floor((mv.y-90)/70)+1
     if(i>0 and i<=13)then
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             return i

@@ -6,7 +6,7 @@ local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 local DiceFace = require("src.classes.ui.DiceFace")
 local UIElement = require("src.classes.ui.UIElement")
 local Inputs = require("src.utils.scripts.Inputs")
-local badgeSprite = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
+local Sprites = require("src.utils.Sprites")
 
 local Badge = setmetatable({}, { __index = UIElement })
 Badge.__index = Badge
@@ -18,7 +18,10 @@ function Badge:new(
     originalY,
     width, 
     height,
-    mousePosition)
+    mousePosition,
+    large)
+
+    self.bossBadge = large
 
     local self = setmetatable(UIElement.new(), Badge)
     self.animator = Animator:new(self)
@@ -29,8 +32,12 @@ function Badge:new(
     self.oscillatingTime = math.random(0, 200)
     self.oscillatingY = 0
     self.oscillatingR = 0
-
-    self.sprite = badgeSprite
+    
+    if(self.bossBadge == true) then
+        self.sprite = Sprites.BADGE_LARGE
+    else
+        self.sprite = Sprites.BADGE
+    end
 
     self.height = height
     self.width = width
@@ -100,17 +107,24 @@ end
 
 function Badge:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
+    
     love.graphics.setCanvas(self.uiCanvas)
     love.graphics.clear()
     love.graphics.setShader(Shaders.grayRainbowShader)
+    
     Shaders.grayRainbowShader:send("time", 4*self.scale)
     Shaders.grayRainbowShader:send("frequency", 0.3)
     Shaders.grayRainbowShader:send("intensity", 0.3)
+    
     love.graphics.draw(self.sprite, 0, 0) -- add the background
 
     --Lion
     self.round.enemyCharacter:update(dt)
-    self.round.enemyCharacter:draw(120, 195, 200, 200)
+    if(self.bossBadge == true) then
+        self.round.enemyCharacter:draw(50+130, 150+135, 250, 250)
+    else
+        self.round.enemyCharacter:draw(120, 195, 200, 200)
+    end
 
     love.graphics.setShader()
 
@@ -118,8 +132,17 @@ function Badge:updateCanvas(dt)
     local jobDeskText = love.graphics.newText(Fonts.soraLightMini, 'Office '..tostring(self.round.deskNumber).." - "..tostring(self.round.enemyJob))
     local targetText = love.graphics.newText(Fonts.soraLightMini, 'Target : '..tostring(self.round.targetScore))
     
-    love.graphics.draw(jobDeskText, self.uiCanvas:getWidth()/2, 59, 0, 1, 1, jobDeskText:getWidth()/2, 0)
-    love.graphics.draw(targetText, 120, 330, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
+    if(self.bossBadge==true)then
+        jobDeskText = love.graphics.newText(Fonts.soraReward, 'Office '..tostring(self.round.deskNumber).." - "..tostring(self.round.enemyJob))
+        targetText = love.graphics.newText(Fonts.soraMedium, 'Target : '..tostring(self.round.targetScore))
+
+
+        love.graphics.draw(jobDeskText, self.uiCanvas:getWidth()/2, 110, 0, 1, 1, jobDeskText:getWidth()/2, jobDeskText:getHeight()/2)
+        love.graphics.draw(targetText, self.uiCanvas:getWidth()/2, 470, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
+    else
+        love.graphics.draw(jobDeskText, self.uiCanvas:getWidth()/2, 59, 0, 1, 1, jobDeskText:getWidth()/2, 0)
+        love.graphics.draw(targetText, 120, 330, 0, 1, 1, targetText:getWidth()/2, targetText:getHeight()/2)
+    end
 
     self:updateFaceCanvas(dt)
 
@@ -146,6 +169,12 @@ end
 function Badge:createFaceRewards()
     local xPos = {290, 290}
     local yPos = {160, 290}
+
+    if(self.bossBadge == true)then
+        xPos = {410, 410}
+        yPos = {220, 360}
+    end
+
     self.faceRewards = {}
     for i,faceReward in next,self.round.faceRewards do
         local diceFace = DiceFace:new(nil,

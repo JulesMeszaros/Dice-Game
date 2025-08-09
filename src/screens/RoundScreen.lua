@@ -197,7 +197,8 @@ function RoundScreen:updateCanvas(dt)
         df:updateCanvas(dt) 
         df:update(dt)
     end
-    self:drawDiceDetails(self.diceDetailsX, self.diceDetailsY)
+    
+    self:drawDiceDetails()
     
     --ROUND DETAILS
     self:drawRoundDetails(dt)
@@ -205,11 +206,11 @@ function RoundScreen:updateCanvas(dt)
      --First round text
     if(self.showFirstRollText==true and self.round.firstRoll==false) then
         UI.Text.drawWavyText(
-                            "Make your first Roll!", 
+                            "Roll the dice!", 
                             self.canvas:getWidth()/2, 
                             (self.canvas:getHeight()/2)+120,
                             {
-                                font = Fonts.soraFirstRoll,
+                                font = Fonts.soraBig,
                                 time = self.timers.firstRerollTime,
                                 centered=true,
                                 speed=2,
@@ -218,6 +219,17 @@ function RoundScreen:updateCanvas(dt)
                                 colorEnd = {221/255, 76/255, 173/255, 1}
                         })
     end
+
+    
+
+    --Upgrading figure popup
+    if(self.addingAvailableHand == true) then
+        self:drawUpgradingFigurePopup(dt)
+    end
+
+    --Figure Buttons
+    self:getCurrentlyHoveredLine() --La figure survolée
+    self:drawFigureGrid(self.gridX, self.gridY)
 
     --Ciggie Popup
     if(self.previousCiggieDraggedState ~= self.draggedCiggie) then
@@ -232,11 +244,6 @@ function RoundScreen:updateCanvas(dt)
         self:drawCiggiePopup(dt)
     end
 
-    --Upgrading figure popup
-    if(self.addingAvailableHand == true) then
-        self:drawUpgradingFigurePopup(dt)
-    end
-
     --Ciggies Tray
     self:drawCiggiesTray()
 
@@ -249,9 +256,7 @@ function RoundScreen:updateCanvas(dt)
 
     self:drawCiggiesTrayFront()
     
-    --Figure Buttons
-    self:drawFigureGrid(self.gridX, self.gridY)
-    self:getCurrentlyHoveredLine() --La figure survolée
+    
 
     --EndRoundScreen
     if(self.endRoundPopUp)then
@@ -261,7 +266,7 @@ function RoundScreen:updateCanvas(dt)
     end
 
     --Face Details
-    self:drawDescription(self.descriptionX, self.descriptionY)
+    --self:drawDescription(self.descriptionX, self.descriptionY)
 
     --On dessine l'objet drag and drop au dessus de tout le reste
     if(self.dragAndDroppedCiggie)then
@@ -464,7 +469,7 @@ function RoundScreen:drawDiceTray(x, y, dices2)
 
 end
 
-function RoundScreen:drawDiceDetails(x, y)
+function RoundScreen:drawDiceDetails()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.diceDetailsCanvas)
     love.graphics.clear()
@@ -481,7 +486,7 @@ function RoundScreen:drawDiceDetails(x, y)
 
     love.graphics.setCanvas(currentCanvas)
 
-    love.graphics.draw(self.diceDetailsCanvas, x, y, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
+    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, 0, 0)
 end
 
 function RoundScreen:drawPlayersInfos(dt)
@@ -545,17 +550,19 @@ end
 function RoundScreen:outAnimation()
     local outDuration = 0.4
     self.animator:addGroup({
-        {property = "gridY", from = self.gridY, targetValue = -820, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "gridX", from = self.gridX, targetValue = 0-self.figureButtonsCanvas:getWidth(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+
         {property = "diceMaty", from = self.diceMaty, targetValue = self.canvas:getHeight()+1000, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+650, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         
-        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-    })
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+200, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "deckX", from = self.deckX, targetValue = self.canvas:getWidth()+50, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyX", from = self.moneyX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorX", from = self.floorX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+
+        })
 
     --Ciggarettes
     for i,c in next,self.uiElements.ciggiesUI do
@@ -575,8 +582,9 @@ function RoundScreen:outAnimation()
 
     --Buttons animation
     self.uiElements.buttons["rerollButton"].animator:add('y', self.rerollBtnY, 1500, outDuration)
-    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)
-    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration)
+    self.uiElements.buttons["menuButton"].animator:add('x', self.uiElements.buttons["menuButton"].x, self.canvas:getWidth()+200, outDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["planButton"].animator:add('x', self.uiElements.buttons["menuButton"].x, self.canvas:getWidth()+200, outDuration, AnimationUtils.Easing.inOutCubic)
+
 
 end
 
@@ -584,7 +592,7 @@ end
 --HOVER FUNCTIONS
 function RoundScreen:getCurrentlyHoveredLine()
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
-    local i = math.floor((mv.y-10)/50)+1
+    local i = math.floor((mv.y-90)/70)+1
     if(i>0 and i<=13)then
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             self:highlightDices(self.calcBasePoints[i]()[2])

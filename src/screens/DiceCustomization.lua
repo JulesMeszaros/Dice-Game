@@ -33,21 +33,33 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 
     self.uiElements.buttons["nextRound"] = Button:new(
         function()self:switchFaces()end,
-        "src/assets/sprites/ui/Next Round.png",
+        "src/assets/sprites/ui/Next Round Big.png",
         self.nextRoundX,
         self.nextRoundY,
-        450,
-        60,
+        910,
+        150,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
-    self.uiElements.buttons["nextRound"].animator:add('x', self.nextRoundX, self.nextRoundTX, AnimationUtils.EntryDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["nextRound"].animator:add('y', self.nextRoundY, self.nextRoundTY, AnimationUtils.EntryDuration, AnimationUtils.Easing.inOutCubic)
 
     self.addRewardText = UI.Text.TextWavy:new(
-        "Add to inventory?",
+        "Add to",
         self.inventoryMDTX + self.inventoryCanvasMedium:getWidth()/2,
-        self.inventoryMDTY + self.inventoryCanvasMedium:getHeight()/2,
+        self.inventoryMDTY + self.inventoryCanvasMedium:getHeight()/2-35,
+        {
+            font = Fonts.soraRewardTotal,
+            centered = true,
+            amplitude = 5,
+            speed = 2
+        }
+    )
+
+    self.addRewardText2 = UI.Text.TextWavy:new(
+        "inventory?",
+        self.inventoryMDTX + self.inventoryCanvasMedium:getWidth()/2,
+        self.inventoryMDTY + self.inventoryCanvasMedium:getHeight()/2+35,
         {
             font = Fonts.soraRewardTotal,
             centered = true,
@@ -70,7 +82,7 @@ function DiceCustomization:new(previousRound, newFaceObjects)
         }
     )
 
-    self:createNewFacesUI()
+    self:createInventoryUI()
     self:createRewardsUI()
 
     self.animator:addDelay(0.5, function()self:generateCiggiesUI()end)
@@ -129,6 +141,7 @@ function DiceCustomization:updateCanvas(dt)
     
     --New Faces Canvas
     --self:drawNewFacesCanvas()
+    self:drawFigureGrid()
     self:drawRewardsMedium()
     self:drawInventoryBackGroundMedium()
     --Customization mat
@@ -146,8 +159,12 @@ function DiceCustomization:updateCanvas(dt)
         love.graphics.draw(Sprites.ADD_TO_INVENTORY_L, self.inventoryMDTX, self.inventoryMDTY, 0, 1, 1)
         self.addRewardText:update(dt)
         self.addRewardText:draw()
+
+        self.addRewardText2:update(dt)
+        self.addRewardText2:draw()
     else
         self.addRewardText:reset()
+        self.addRewardText2:reset()
     end
 
     --Popup de vente de face de dé
@@ -185,7 +202,7 @@ function DiceCustomization:updateCanvas(dt)
     end
 
     --Description
-    self:drawDescription()
+    --self:drawDescription()
 
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
@@ -406,18 +423,22 @@ end
 function DiceCustomization:outAnimation()
     local outDuration = 0.4
     self.animator:addGroup({
-        {property = "customizationMatY", from = self.customizationMatY, targetValue = -700, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+600, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "newFacesY", from = self.newFacesY, targetValue = self.canvas:getHeight()+500, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+450, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        
-        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        
-        {property = "inventoryMDY", from = self.inventoryMDY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "rewardsMDY", from = self.rewardsMDY, targetValue = self.canvas:getHeight()+600, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "gridX", from = self.gridX, targetValue = 0-self.figureButtonsCanvas:getWidth(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+650, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+   
+        {property = "customizationMatY", from = self.customizationMatY, targetValue = 0-self.customizationMat:getHeight()-50, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "newFacesY", from = self.newFacesY, targetValue = self.canvas:getHeight()+500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+                
+        {property = "inventoryMDY", from = self.inventoryMDY, targetValue = -50+self.rewardsMediumCanvas:getHeight()-self.customizationMat:getHeight(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rewardsMDY", from = self.rewardsMDY, targetValue = -50-self.customizationMat:getHeight(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+    
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+200, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "deckX", from = self.deckX, targetValue = self.canvas:getWidth()+50, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyX", from = self.moneyX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorX", from = self.floorX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+    
     })
 
     --Ciggarettes
@@ -431,9 +452,9 @@ function DiceCustomization:outAnimation()
     end
 
     --Buttons animation
-    self.uiElements.buttons["nextRound"].animator:add('x', self.nextRoundX, -500, outDuration)
-    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)
-    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration)
+    self.uiElements.buttons["nextRound"].animator:add('y', self.nextRoundY, self.canvas:getHeight()+150, outDuration,AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["menuButton"].animator:add('x', self.uiElements.buttons["menuButton"].x, self.canvas:getWidth()+200, outDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["planButton"].animator:add('x', self.uiElements.buttons["menuButton"].x, self.canvas:getWidth()+200, outDuration, AnimationUtils.Easing.inOutCubic)
 
     --Dices exit
     for i,dice in next,self.uiDices do
@@ -543,17 +564,17 @@ end
 
 function DiceCustomization:detectClosestFace(x, y)
     local relativeXPositions = { -- this table represents the position of the dice after applying the offset
-        180, 60, 180, 300, 180, 180
+        0, 0, 0, 0, 0, 0
     }
 
     local relativeYPositions = {
-        60, 180, 180, 180, 300, 420
+        60, 180, 300, 420, 540, 660
     }
 
-    local basisY = 180
+    local basisY = 80 + 30 + 60
 
     for i=1,5 do --loop over dices
-        local basisX = 110+365*(i-1)  
+        local basisX = 160*(i-1) + self.customizationMatX +90+60
         for j=1,6 do --loop over faces 
             if(math.abs((x+60)-(relativeXPositions[j]+basisX))<60 and math.abs((y+60)-(relativeYPositions[j]+basisY))<60) then
                 return({relativeXPositions[j]+basisX-60, relativeYPositions[j]+basisY-60, i, j})
@@ -563,9 +584,9 @@ function DiceCustomization:detectClosestFace(x, y)
     return nil
 end
 
-function DiceCustomization:createNewFacesUI()
-    self.xPositions = {40, 200, 360, 520, 40, 200, 360, 520}
-    self.yPositions = {100, 100, 100, 100, 250, 250, 250, 250}
+function DiceCustomization:createInventoryUI()
+    self.xPositions = {20, 150, 20, 150, 20, 150, 20, 150}
+    self.yPositions = {70, 70, 200, 200, 330, 330, 460, 460}
 
 
     local startY = self.canvas:getHeight()/2
@@ -601,8 +622,8 @@ function DiceCustomization:createNewFacesUI()
 end
 
 function DiceCustomization:createRewardsUI()
-    self.xPositionsRewards = {60, 60}
-    self.yPositionsRewards = {100, 250}
+    self.xPositionsRewards = {20, 150}
+    self.yPositionsRewards = {70, 70}
 
 
     local startY = self.canvas:getHeight()/2
@@ -641,15 +662,15 @@ end
 function DiceCustomization:createDiceUI(diceObject, i)
     --This function creates every faces of a ui Dice and stores them in a table located in self.uiDices
     local diceUI = {}
-    local xOffset = 110+365*(i-1) - 60 -- the base position of the dice
-    local yOffset = 180 - 60
+    local xOffset = 160*(i-1) + self.customizationMatX +90 -- the base position of the dice
+    local yOffset = 80 + 30
     
     local relativeXPositions = { -- this table represents the position of the dice after applying the offset
-        180, 60, 180, 300, 180, 180
+        0, 0, 0, 0, 0, 0
     }
 
     local relativeYPosition = {
-        60, 180, 180, 180, 300, 420
+        60, 180, 300, 420, 540, 660
     }
 
     for k,faceObject in next,diceObject:getAllFaces() do

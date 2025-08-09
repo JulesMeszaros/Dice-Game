@@ -7,6 +7,8 @@ local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 local Badge = require("src.classes.ui.Badge")
 local DiceFace = require("src.classes.ui.DiceFace")
 local Screen = require("src.classes.GameScreen")
+local UI = require("src.utils.scripts.UI")
+local Fonts = require("src.utils.Fonts")
 
 local DeskChoice = setmetatable({}, { __index = Screen })
 DeskChoice.__index = DeskChoice
@@ -30,7 +32,24 @@ function DeskChoice:new(floor, run)
         self.possibleRounds = self.floor.desks[self.run.floorDeskNumber]
     else
         self.possibleRounds = {self.floor.boss}
+        self.animator:addDelay(0.0, function()
+            --Si boss d'étage : on ajoute un texte wavy
+            self.bossWavyText = UI.Text.TextWavy:new(
+                "Face the manager!",
+                890,
+                110,
+                {
+                    colorStart = {255/255, 104/255, 147/255},
+                    colorEnd = {176/255, 169/255, 228/255},
+                    amplitude = 5,
+                    speed = 3,
+                    centered = true,
+                    font = Fonts.soraLarge,
+                    revealSpeed = 40
+                }
+            ) end)
     end
+    self.showText = true
 
     --Création des différents canvas de choix de round
     self:generateChoiceCanvas()
@@ -47,6 +66,11 @@ function DeskChoice:update(dt)
     love.graphics.clear()
 
     self.animator:update(dt)
+
+    if(self.bossWavyText and self.showText==true)then
+        self.bossWavyText:update(dt)
+        self.bossWavyText:draw()
+    end
 
     --Check if a ciggie is being dragged to the screen
     self:checkForDraggedCiggie()
@@ -65,6 +89,9 @@ function DeskChoice:update(dt)
     self:drawRoundDetails(dt)
     self:drawDiceDetails(dt)
     self:updateChoiceCanvas(dt)
+    if(self.run.floorDeskNumber > Constants.DESKS_BY_FLOOR) then
+        self:drawBossDesc(dt)
+    end
     
     --Upgrading figure popup
     if(self.addingAvailableHand == true) then
@@ -89,7 +116,7 @@ function DeskChoice:update(dt)
 
     
     
-    self:drawDescription()
+    --self:drawDescription()
     self:drawCiggiesTray()
 
      --Ciggies UI
@@ -174,28 +201,9 @@ function DeskChoice:updateDiceNet(dt)
     end
 end
 
-function DeskChoice:drawDiceDetails(dt)
-    local currentCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.diceDetailsCanvas)
-    love.graphics.clear()
-
-    --Draw sprite
-    love.graphics.draw(Sprites.DICE_INFOS, 0, 0)
-    
-    --Draw the dice net
-    if(self.currentlySelectedDice)then
-        self:updateDiceNet(dt)
-    end
-
-    love.graphics.setCanvas(currentCanvas)
-
-    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, self.diceDetailsCanvas:getWidth(), 0)
-end
-
 --==CHOICES==--
 function DeskChoice:generateChoiceCanvas()
     self.badges = {}
-    self.choiceCanvas = {}
 
     local coords = {
         {510, 30},
@@ -204,28 +212,30 @@ function DeskChoice:generateChoiceCanvas()
         {905, 550},
     }
 
+    if(self.run.floorDeskNumber > Constants.DESKS_BY_FLOOR)then
+        coords = {{620, 170}}
+    end
+
     local originalY = {
         -1000, -1000, 3000, 3000
     }
 
     for i=1, table.getn(self.possibleRounds) do
-        local c = love.graphics.newCanvas(220*1.5, 330*1.5)
-        local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 370, 500, function()return Inputs.getMouseInCanvas(0, 0)end)
-        table.insert(self.choiceCanvas, c)
-        table.insert(self.badges, b)
+        if(self.possibleRounds[i].roundType == Constants.ROUND_TYPES.BOSS) then
+            print("boss")
+            local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 540, 680, function()return Inputs.getMouseInCanvas(0, 0)end, true)
+            table.insert(self.badges, b)
+        else
+            print("pas boss")
+            local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 370, 500, function()return Inputs.getMouseInCanvas(0, 0)end)
+            table.insert(self.badges, b)
+        end
     end
 
 end
 
 function DeskChoice:updateChoiceCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
-
-    local coords = {
-        {550, 30},
-        {908, 30},
-        {550, 555},
-        {908, 555},
-    }
 
     for i,badge in next,self.badges do
         badge:update(dt)
@@ -331,22 +341,25 @@ end
 --==Utils==--
 
 function DeskChoice:outAnimation(badge)
-    local outDuration = 0.2
+    self.showText = false
+    local outDuration = 0.3
     local newBadgeY = {
         -1000, -1000, 3000, 3000
     }
     --UI
     self.animator:addGroup({
-        {property = "gridY", from = self.gridY, targetValue = -820, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "descriptionX", from = self.descriptionX, targetValue = self.canvas:getWidth()+420, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "deckY", from = self.deckY, targetValue = self.canvas:getHeight()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+450, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-
-        {property = "moneyY", from = self.moneyY, targetValue = self.canvas:getHeight()+300, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "turnsX", from = self.turnsX, targetValue = -730, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "rerollsX", from = self.rerollsX, targetValue = -500, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
-        {property = "floorY", from = self.floorY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "gridX", from = self.gridX, targetValue = 0-self.figureButtonsCanvas:getWidth(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        
+        --right Pannel
+        {property = "diceDetailsX", from = self.diceDetailsX, targetValue = self.canvas:getWidth()+200, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "deckX", from = self.deckX, targetValue = self.canvas:getWidth()+50, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "moneyX", from = self.moneyX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "turnsX", from = self.turnsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "rerollsX", from = self.rerollsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "floorX", from = self.floorX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "bossDescY", from = self.bossDescY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        
+        {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+650, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
 
     --Bages
@@ -355,8 +368,8 @@ function DeskChoice:outAnimation(badge)
     end
 
     --Buttons animation
-    self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, -150, outDuration)
-    self.uiElements.buttons["planButton"].animator:add('x', self.planBtnX, -150, outDuration)
+    self.uiElements.buttons["menuButton"].animator:add('x', self.uiElements.buttons["menuButton"].x, self.canvas:getWidth()+200, outDuration, AnimationUtils.Easing.inOutCubic)
+    self.uiElements.buttons["planButton"].animator:add('x', self.uiElements.buttons["menuButton"].x, self.canvas:getWidth()+200, outDuration, AnimationUtils.Easing.inOutCubic)
 
     --Ciggarettes
     for i,c in next,self.uiElements.ciggiesUI do
@@ -434,7 +447,10 @@ end
 
 function DeskChoice:getCurrentlyHoveredLine()
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
-    local i = math.floor((mv.y-10)/50)+1
+    local i = math.floor((mv.y-90)/70)+1
+
+    print(i)
+    
     if(i>0 and i<=13)then
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             return i
@@ -442,6 +458,20 @@ function DeskChoice:getCurrentlyHoveredLine()
     else
         return nil
     end 
+end
+
+function DeskChoice:drawBossDesc(dt)
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.bossDesc)
+    love.graphics.clear()
+
+    --bakground
+    love.graphics.draw(Sprites.BOSS_DESC, 0, 0)
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.bossDesc, self.bossDescX, self.bossDescY, 0, 1, 1)
+
+
 end
 
 return DeskChoice

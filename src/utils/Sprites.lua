@@ -4,7 +4,7 @@ local Sprites = {}
 Sprites.MAIN_LOGO = love.graphics.newImage("src/assets/sprites/ui/Main Logo.png")
 
 Sprites.DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Description.png")
-Sprites.DICE_INFOS = love.graphics.newImage("src/assets/sprites/ui/DiceComposition.png")
+Sprites.DICE_INFOS = love.graphics.newImage("src/assets/sprites/ui/Dice Vertical.png")
 Sprites.DECK = love.graphics.newImage("src/assets/sprites/ui/Deck.png")
 
 Sprites.ENEMY_INFOS= love.graphics.newImage("src/assets/sprites/ui/Enemy.png")
@@ -19,13 +19,14 @@ Sprites.GRID= love.graphics.newImage("src/assets/sprites/ui/Grid.png")
 Sprites.DICE_MAT = love.graphics.newImage("src/assets/sprites/ui/Dice Mat.png")
 
 Sprites.REWARDS = love.graphics.newImage("src/assets/sprites/ui/Rewards.png")
-Sprites.CUSTOMIZATION_MAT = love.graphics.newImage("src/assets/sprites/ui/Customization Mat.png")
+Sprites.CUSTOMIZATION_MAT = love.graphics.newImage("src/assets/sprites/ui/DiceComposition New.png")
 
-Sprites.CIGGIES_TRAY = love.graphics.newImage("src/assets/sprites/ui/CiggieTray.png")
-Sprites.CIGGIES_TRAY_BACK = love.graphics.newImage("src/assets/sprites/ui/Ciggie Tray Back.png")
-Sprites.CIGGIES_TRAY_FRONT = love.graphics.newImage("src/assets/sprites/ui/Ciggie Tray Front.png")
+Sprites.MAGIC_WANDS = love.graphics.newImage("src/assets/sprites/ui/Ciggie Tray Back.png")
+Sprites.MAGIC_WANDS_FRONT = love.graphics.newImage("src/assets/sprites/ui/Ciggie Tray Front.png")
 
 Sprites.BADGE = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
+Sprites.BADGE_LARGE = love.graphics.newImage("src/assets/sprites/ui/Badge Large.png")
+Sprites.BOSS_DESC = love.graphics.newImage("src/assets/sprites/ui/Boss Desc.png")
 
 Sprites.SHOP_BG = love.graphics.newImage("src/assets/sprites/ui/Shop.png")
 Sprites.BUY_POPUP = love.graphics.newImage("src/assets/sprites/ui/Buy Popup.png")
@@ -35,13 +36,13 @@ Sprites.BUY_CIGGIE = love.graphics.newImage("src/assets/sprites/ui/Buy Ciggie.pn
 
 Sprites.INVENTORY = love.graphics.newImage("src/assets/sprites/ui/Inventory.png")
 Sprites.INVENTORY_SMALL = love.graphics.newImage("src/assets/sprites/ui/Inventory Small.png")
-Sprites.INVENTORY_MEDIUM = love.graphics.newImage("src/assets/sprites/ui/Inventory Medium.png")
+Sprites.INVENTORY_MEDIUM = love.graphics.newImage("src/assets/sprites/ui/Inventory Vertical.png")
 Sprites.INVENTORY_LARGE = love.graphics.newImage("src/assets/sprites/ui/Inventory Large.png")
 
 Sprites.PRICE_TAG = love.graphics.newImage("src/assets/sprites/ui/PriceTag.png")
 
 Sprites.REWARDS_SMALL = love.graphics.newImage("src/assets/sprites/ui/Rewards Small.png")
-Sprites.REWARDS_MEDIUM = love.graphics.newImage("src/assets/sprites/ui/Rewards Medium.png")
+Sprites.REWARDS_MEDIUM = love.graphics.newImage("src/assets/sprites/ui/Rewards Vertical.png")
 
 Sprites.DISABLED = love.graphics.newImage("src/assets/sprites/ui/Disabled.png")
 
@@ -57,9 +58,9 @@ Sprites.SELL_CIGGIE = love.graphics.newImage("src/assets/sprites/ui/Sell Ciggie.
 --Infos screen
 Sprites.PLAYER_BADGE = love.graphics.newImage("src/assets/sprites/ui/Player Badge.png")
 Sprites.GRID_LARGE = love.graphics.newImage("src/assets/sprites/ui/Grid Large.png")
-Sprites.OFFICE_DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Office Description.png")
+Sprites.OFFICE_DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Badge Horizontal.png")
 Sprites.OFFICE_DESCRIPTION_EMPTY = love.graphics.newImage("src/assets/sprites/ui/Office Description Empty.png")
-Sprites.FLOOR_DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Floor Description.png")
+
 Sprites.PROGRESSION = love.graphics.newImage("src/assets/sprites/ui/Progression.png")
 
 --COFFE
