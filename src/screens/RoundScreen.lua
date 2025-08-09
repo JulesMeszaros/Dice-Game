@@ -254,7 +254,7 @@ function RoundScreen:updateCanvas(dt)
         end
     end
 
-    --self:drawCiggiesTrayFront()
+    self:drawCiggiesTrayFront()
     
     
 

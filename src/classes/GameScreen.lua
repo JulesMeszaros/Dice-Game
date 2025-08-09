@@ -66,7 +66,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.deckCanvas = love.graphics.newCanvas(140, 860)
     self.diceDetailsCanvas = love.graphics.newCanvas(180, 830)
     self.ciggiesTray = love.graphics.newCanvas(220, 460)
-    self.ciggiesTrayFront = love.graphics.newCanvas(420, 160)
+    self.ciggiesTrayFront = love.graphics.newCanvas(220, 390)
     self.playerInfos = love.graphics.newCanvas(650,260)
     self.enemyInfos = love.graphics.newCanvas(650,260)
     self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)
@@ -444,7 +444,7 @@ function GameScreen:drawCiggiesTray()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.ciggiesTray)
 
-    love.graphics.draw(Sprites.GUM, 0, 0)
+    love.graphics.draw(Sprites.MAGIC_WANDS, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1)
@@ -454,10 +454,10 @@ function GameScreen:drawCiggiesTrayFront()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.ciggiesTrayFront)
 
-    love.graphics.draw(Sprites.CIGGIES_TRAY_FRONT, 0, self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, Sprites.CIGGIES_TRAY_FRONT:getHeight())
+    love.graphics.draw(Sprites.MAGIC_WANDS_FRONT, 0, self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, Sprites.MAGIC_WANDS_FRONT:getHeight())
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
+    love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX, self.ciggiesTrayY + self.ciggiesTray:getHeight() -self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, 0)
 end
 
 function GameScreen:drawFigureGrid()

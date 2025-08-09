@@ -239,7 +239,7 @@ function Shop:updateCanvas(dt)
         end
     end
 
-    --self:drawCiggiesTrayFront()
+    self:drawCiggiesTrayFront()
 
     --Buy Ciggie Popup
     if(self.dragAndDroppedShopCiggie)then

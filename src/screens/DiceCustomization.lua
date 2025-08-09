@@ -219,7 +219,7 @@ function DiceCustomization:updateCanvas(dt)
         self.dragAndDroppedObject:draw()
     end 
 
-    --self:drawCiggiesTrayFront()
+    self:drawCiggiesTrayFront()
 
     love.graphics.setCanvas(currentCanvas)
 end
