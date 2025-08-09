@@ -210,7 +210,7 @@ function RoundScreen:updateCanvas(dt)
                             self.canvas:getWidth()/2, 
                             (self.canvas:getHeight()/2)+120,
                             {
-                                font = Fonts.soraFirstRoll,
+                                font = Fonts.soraBig,
                                 time = self.timers.firstRerollTime,
                                 centered=true,
                                 speed=2,

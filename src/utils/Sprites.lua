@@ -26,6 +26,7 @@ Sprites.MAGIC_WANDS_FRONT = love.graphics.newImage("src/assets/sprites/ui/Ciggie
 
 Sprites.BADGE = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
 Sprites.BADGE_LARGE = love.graphics.newImage("src/assets/sprites/ui/Badge Large.png")
+Sprites.BOSS_DESC = love.graphics.newImage("src/assets/sprites/ui/Boss Desc.png")
 
 Sprites.SHOP_BG = love.graphics.newImage("src/assets/sprites/ui/Shop.png")
 Sprites.BUY_POPUP = love.graphics.newImage("src/assets/sprites/ui/Buy Popup.png")

@@ -77,6 +77,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.rewardsSmallCanvas = love.graphics.newCanvas(210, 360)
     self.rewardsMediumCanvas = love.graphics.newCanvas(290, 210)
     self.ciggiePopupCanvas = love.graphics.newCanvas(self.canvas:getWidth(), self.canvas:getHeight())
+    self.bossDesc = love.graphics.newCanvas(730, 140)
 
     --Wavy Texts
     self.moneyWavyText = UI.Text.TextWavy:new("5$", 50, 50, {
@@ -134,7 +135,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.lighterX, self.lighterY = self.lighterBaseX, self.lighterBaseY
     self.baseCiggiePopupAlpha, self.targetCiggiePopupAlpha, self.ciggiePopupAlpha = 0, 0.7, 0
     
-
+    self.bossDescTX, self.bossDescTY, self.bossDescX, self.bossDescY = 520, 890, 520, self.canvas:getHeight()+300
     --Btns positions
     self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY = 1460+90, 880+40, self.canvas:getWidth()+200, 880+40
     self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY = 1460+90, 970+40, self.canvas:getWidth()+200, 970+40
@@ -165,6 +166,7 @@ function GameScreen:new(floor, run, screenType, round)
         {property = "inventoryMDX", from = self.inventoryMDX, targetValue = self.inventoryMDTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "rewardsSMY", from = self.rewardsSMY, targetValue = self.rewardsSMTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
         {property = "rewardsMDX", from = self.rewardsMDX, targetValue = self.rewardsMDTX, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
+        {property = "bossDescY", from = self.bossDescY, targetValue = self.bossDescTY, duration = AnimationUtils.EntryDuration, easing = AnimationUtils.Easing.inOutCubic},    
     })
     
     --Cas particulier de l'écran de round

@@ -7,6 +7,8 @@ local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 local Badge = require("src.classes.ui.Badge")
 local DiceFace = require("src.classes.ui.DiceFace")
 local Screen = require("src.classes.GameScreen")
+local UI = require("src.utils.scripts.UI")
+local Fonts = require("src.utils.Fonts")
 
 local DeskChoice = setmetatable({}, { __index = Screen })
 DeskChoice.__index = DeskChoice
@@ -30,7 +32,22 @@ function DeskChoice:new(floor, run)
         self.possibleRounds = self.floor.desks[self.run.floorDeskNumber]
     else
         self.possibleRounds = {self.floor.boss}
+        self.animator:addDelay(0.0, function()
+            --Si boss d'étage : on ajoute un texte wavy
+            self.bossWavyText = UI.Text.TextWavy:new(
+                "Face the manager!",
+                890,
+                110,
+                {
+                    amplitude = 5,
+                    speed = 3,
+                    centered = true,
+                    font = Fonts.soraLarge,
+                    revealSpeed = 40
+                }
+            ) end)
     end
+    self.showText = true
 
     --Création des différents canvas de choix de round
     self:generateChoiceCanvas()
@@ -47,6 +64,11 @@ function DeskChoice:update(dt)
     love.graphics.clear()
 
     self.animator:update(dt)
+
+    if(self.bossWavyText and self.showText==true)then
+        self.bossWavyText:update(dt)
+        self.bossWavyText:draw()
+    end
 
     --Check if a ciggie is being dragged to the screen
     self:checkForDraggedCiggie()
@@ -65,6 +87,7 @@ function DeskChoice:update(dt)
     self:drawRoundDetails(dt)
     self:drawDiceDetails(dt)
     self:updateChoiceCanvas(dt)
+    self:drawBossDec(dt)
     
     --Upgrading figure popup
     if(self.addingAvailableHand == true) then
@@ -184,6 +207,10 @@ function DeskChoice:generateChoiceCanvas()
         {510, 550},
         {905, 550},
     }
+
+    if(self.run.floorDeskNumber > Constants.DESKS_BY_FLOOR)then
+        coords = {{620, 170}}
+    end
 
     local originalY = {
         -1000, -1000, 3000, 3000
@@ -310,6 +337,7 @@ end
 --==Utils==--
 
 function DeskChoice:outAnimation(badge)
+    self.showText = false
     local outDuration = 0.3
     local newBadgeY = {
         -1000, -1000, 3000, 3000
@@ -325,6 +353,7 @@ function DeskChoice:outAnimation(badge)
         {property = "turnsX", from = self.turnsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "rerollsX", from = self.rerollsX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         {property = "floorX", from = self.floorX, targetValue = self.canvas:getWidth()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
+        {property = "bossDescY", from = self.bossDescY, targetValue = self.canvas:getHeight()+400, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
         
         {property = "ciggiesTrayX", from = self.ciggiesTrayX, targetValue = self.canvas:getWidth()+650, duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
     })
@@ -422,6 +451,20 @@ function DeskChoice:getCurrentlyHoveredLine()
     else
         return nil
     end 
+end
+
+function DeskChoice:drawBossDec(dt)
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.bossDesc)
+    love.graphics.clear()
+
+    --bakground
+    love.graphics.draw(Sprites.BOSS_DESC, 0, 0)
+
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.bossDesc, self.bossDescX, self.bossDescY, 0, 1, 1)
+
+
 end
 
 return DeskChoice
