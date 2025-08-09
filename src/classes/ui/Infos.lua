@@ -31,8 +31,8 @@ function Infos:new(run)
     self.rerollsCanvas = love.graphics.newCanvas(220, 120)
     self.handsCanvas = love.graphics.newCanvas(220, 120)
     self.descriptionCanvas = love.graphics.newCanvas(420, 240)
-    self.ciggiesTray = love.graphics.newCanvas(420, 160)
-    self.ciggiesTrayFront = love.graphics.newCanvas(420, 160)
+    self.ciggiesTray = love.graphics.newCanvas(220, 460)
+    self.ciggiesTrayFront = love.graphics.newCanvas(220, 390)
 
     --Wavy Texts
     self.moneyWavyText = UI.Text.TextWavy:new("5$", 50, 50, {
@@ -61,7 +61,7 @@ function Infos:new(run)
     self.floorX, self.floorY = 1670, 30
     self.descriptionX, self.descriptionY = self.canvas:getWidth()-30, 650
 
-    self.ciggiesTrayX, self.ciggiesTrayY = self.canvas:getWidth()-30, self.canvas:getHeight()
+    self.ciggiesTrayX, self.ciggiesTrayY = 1670, 590
 
     --Buttons
     self.uiElements = {buttons = {}, ciggiesUI={}, inventoryFaces={}, rewardFaces={}}
@@ -146,11 +146,15 @@ function Infos:updateCanvas(dt)
         faceUI:draw()
     end
 
+    self:drawCiggiesTray()
+
     --Ciggies UI
     for i, ciggie in next,self.uiElements.ciggiesUI do
         ciggie:update(dt)
         ciggie:draw()
     end
+
+    self:drawCiggiesTrayFront()
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -276,14 +280,14 @@ function Infos:drawGridLarge()
     for figure, i in next,Constants.FIGURES do
         --Playcount
         local playcountText = love.graphics.newText(Fonts.soraGridL, "Played : "..tostring(self.run.figuresInfos[i].playcount))
-        love.graphics.draw(playcountText,360, 34+(i-1)*50, 0, 1, 1, playcountText:getWidth()/2, playcountText:getHeight()/2)
+        love.graphics.draw(playcountText,355, 70*(i-1)+125, 0, 1, 1, playcountText:getWidth()/2, playcountText:getHeight()/2)
         --Level
         local levelText = love.graphics.newText(Fonts.soraGridL, "Level : "..tostring(self.run.figuresInfos[i].level))
-        love.graphics.draw(levelText,500, 34+(i-1)*50, 0, 1, 1, levelText:getWidth()/2, levelText:getHeight()/2)
+        love.graphics.draw(levelText,225, 70*(i-1)+125, 0, 1, 1, levelText:getWidth()/2, levelText:getHeight()/2)
 
         --Base points
         local basePoints = love.graphics.newText(Fonts.soraGridL, " - ")
-        love.graphics.draw(basePoints,640, 34+(i-1)*50, 0, 1, 1, basePoints:getWidth()/2, basePoints:getHeight()/2)
+        love.graphics.draw(basePoints,490, 70*(i-1)+125, 0, 1, 1, basePoints:getWidth()/2, basePoints:getHeight()/2)
 
     end
     love.graphics.setColor(1,1,1,1)
@@ -410,20 +414,20 @@ function Infos:drawCiggiesTray()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.ciggiesTray)
 
-    love.graphics.draw(Sprites.CIGGIES_TRAY_BACK, 0, 0)
+    love.graphics.draw(Sprites.MAGIC_WANDS, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
+    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1)
 end
 
 function Infos:drawCiggiesTrayFront()
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.ciggiesTrayFront)
 
-    love.graphics.draw(Sprites.CIGGIES_TRAY_FRONT, 0, self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, Sprites.CIGGIES_TRAY_FRONT:getHeight())
+    love.graphics.draw(Sprites.MAGIC_WANDS_FRONT, 0, self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, Sprites.MAGIC_WANDS_FRONT:getHeight())
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1, self.ciggiesTray:getWidth(), self.ciggiesTray:getHeight())
+    love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX, self.ciggiesTrayY + self.ciggiesTray:getHeight() -self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, 0)
 end
 
 --Hovered objects
@@ -472,11 +476,11 @@ function Infos:generateCiggiesUI()
     self.uiElements.ciggiesUI = {}
 
     --calculate the xPosistions
-    local xPos = self:getSpacedPositions(table.getn(self.run.ciggiesObjects), 1670, 1890)
+    local xPos = self:getSpacedPositions(table.getn(self.run.ciggiesObjects), 1680, 1880)
 
     for i,ciggie in next,self.run.ciggiesObjects do
         
-        local c = Ciggie:new(ciggie, xPos[i], 830, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
+        local c = Ciggie:new(ciggie, xPos[i], 780, true, true, function()return Inputs.getMouseInCanvas(0, 0)end, self.round)
         c.baseRotation, c.rotation, c.targetedRotation = 1.57, 1.57, 1.57
         self.uiElements.ciggiesUI[ciggie] = c
     end

@@ -15,7 +15,7 @@ Sprites.TURNS= love.graphics.newImage("src/assets/sprites/ui/Turns.png")
 Sprites.MONEY= love.graphics.newImage("src/assets/sprites/ui/Money.png")
 Sprites.REROLLS= love.graphics.newImage("src/assets/sprites/ui/Rerolls.png")
 
-Sprites.GRID= love.graphics.newImage("src/assets/sprites/ui/Grid New.png")
+Sprites.GRID= love.graphics.newImage("src/assets/sprites/ui/Grid.png")
 Sprites.DICE_MAT = love.graphics.newImage("src/assets/sprites/ui/Dice Mat.png")
 
 Sprites.REWARDS = love.graphics.newImage("src/assets/sprites/ui/Rewards.png")

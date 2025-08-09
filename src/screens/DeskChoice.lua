@@ -89,7 +89,9 @@ function DeskChoice:update(dt)
     self:drawRoundDetails(dt)
     self:drawDiceDetails(dt)
     self:updateChoiceCanvas(dt)
-    self:drawBossDec(dt)
+    if(self.run.floorDeskNumber > Constants.DESKS_BY_FLOOR) then
+        self:drawBossDesc(dt)
+    end
     
     --Upgrading figure popup
     if(self.addingAvailableHand == true) then
@@ -445,7 +447,10 @@ end
 
 function DeskChoice:getCurrentlyHoveredLine()
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
-    local i = math.floor((mv.y-10)/50)+1
+    local i = math.floor((mv.y-90)/70)+1
+
+    print(i)
+    
     if(i>0 and i<=13)then
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
             return i
@@ -455,7 +460,7 @@ function DeskChoice:getCurrentlyHoveredLine()
     end 
 end
 
-function DeskChoice:drawBossDec(dt)
+function DeskChoice:drawBossDesc(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.bossDesc)
     love.graphics.clear()

@@ -58,7 +58,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.newFacesCanvas = love.graphics.newCanvas(950, 400)
     self.dice_tray = love.graphics.newCanvas(930, 630)
     self.descriptionCanvas = love.graphics.newCanvas(420, 240)
-    self.figureButtonsCanvas = love.graphics.newCanvas(450,980)
+    self.figureButtonsCanvas = love.graphics.newCanvas(450,1020)
     self.rerollsCanvas = love.graphics.newCanvas(220, 120)
     self.handsCanvas = love.graphics.newCanvas(220, 120)
     self.roundNumberCanvas = love.graphics.newCanvas(220, 120)
@@ -475,7 +475,7 @@ function GameScreen:drawFigureGrid()
 
         for i=1, 13 do
             local calcScore = love.graphics.newText(Fonts.soraSmall, self.calcBasePoints[i]()[1])
-            love.graphics.draw(calcScore, 225, 70*(i-1)+95, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
+            love.graphics.draw(calcScore, 225, 70*(i-1)+125, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
         end
     end
 
@@ -484,11 +484,12 @@ function GameScreen:drawFigureGrid()
 
     for i=1, 13 do
         local handsRemaining = love.graphics.newText(Fonts.soraSmall, self.run.availableFigures[i])
-        love.graphics.draw(handsRemaining, 368, 70*(i-1)+95, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
+        love.graphics.draw(handsRemaining, 360, 70*(i-1)+125, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
+        
         --if no hands remaining, grey out the line
         if(self.run.availableFigures[i]<=0) then
             love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
-            love.graphics.rectangle("fill", 10, 70*(i-1)+60, self.figureButtonsCanvas:getWidth()-20, 70)
+            love.graphics.rectangle("fill", 10, 70*(i-1)+125, self.figureButtonsCanvas:getWidth()-20, 70)
             love.graphics.setColor(0, 0, 0, 1)
         end
     end
@@ -496,7 +497,7 @@ function GameScreen:drawFigureGrid()
     love.graphics.setColor(1, 1, 1, 1)
 
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
-    local i = math.floor((mv.y-60)/70)+1
+    local i = math.floor((mv.y-90)/70)+1
     
 
     --If we are hovering a line
@@ -505,7 +506,7 @@ function GameScreen:drawFigureGrid()
             --Draw a shadow on the line
             if(self.run.availableFigures[i]>=1)then
                 love.graphics.setColor(Constants.FIGURES_COLORS[i][1], Constants.FIGURES_COLORS[i][2], Constants.FIGURES_COLORS[i][3], 0.3)
-                love.graphics.rectangle("fill", 10, 70*(i-1)+60, self.figureButtonsCanvas:getWidth()-20, 70)
+                love.graphics.rectangle("fill", 20, 70*(i-1)+90, 410, 70)
             end
             love.graphics.setColor(1, 1, 1, 1)
         end
@@ -636,7 +637,7 @@ function GameScreen:generateCiggiesUI()
     self.uiElements.ciggiesUI = {}
 
     --calculate the xPosistions
-    local xPos = self:getSpacedPositions(table.getn(self.run.ciggiesObjects), 1670, 1890)
+    local xPos = self:getSpacedPositions(table.getn(self.run.ciggiesObjects), 1680, 1880)
 
     for i,ciggie in next,self.run.ciggiesObjects do
         
