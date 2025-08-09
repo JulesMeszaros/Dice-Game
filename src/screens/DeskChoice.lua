@@ -39,6 +39,8 @@ function DeskChoice:new(floor, run)
                 890,
                 110,
                 {
+                    colorStart = {255/255, 104/255, 147/255},
+                    colorEnd = {176/255, 169/255, 228/255},
                     amplitude = 5,
                     speed = 3,
                     centered = true,
