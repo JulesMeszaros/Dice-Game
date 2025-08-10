@@ -47,9 +47,43 @@ function DeskChoice:new(floor, run)
                     font = Fonts.soraLarge,
                     revealSpeed = 40
                 }
-            ) end)
+            )
+            --Description de boss (nom)
+            self.bossWavyTitle = UI.Text.TextWavy:new(
+                Constants.BOSS_TYPES_DESC[self.possibleRounds[1].bossType][1],
+                self.bossDesc:getWidth()/2,
+                30,
+                {
+                    colorStart = {0, 0, 0},
+                    amplitude = 2,
+                    speed = 1,
+                    centered = true,
+                    font = Fonts.sora30,
+                    revealSpeed = 40
+                }
+            )
+
+            --Description de boss
+            self.bossWavyDesc = UI.Text.TextWavy:new(
+                Constants.BOSS_TYPES_DESC[self.possibleRounds[1].bossType][2],
+                self.bossDesc:getWidth()/2,
+                80,
+                {
+                    colorStart = {0, 0, 0},
+                    amplitude = 2,
+                    speed = 1,
+                    centered = true,
+                    font = Fonts.soraSmall,
+                    revealSpeed = 40
+                }
+            )
+            
+        end)
     end
+
     self.showText = true
+
+    
 
     --Création des différents canvas de choix de round
     self:generateChoiceCanvas()
@@ -467,6 +501,16 @@ function DeskChoice:drawBossDesc(dt)
 
     --bakground
     love.graphics.draw(Sprites.BOSS_DESC, 0, 0)
+
+    --Text
+    print(Constants.BOSS_TYPES_DESC[self.possibleRounds[1].bossType][1])
+
+    if(self.bossWavyDesc and self.bossWavyTitle)then
+        self.bossWavyTitle:update(dt)
+        self.bossWavyTitle:draw(dt)
+        self.bossWavyDesc:update(dt)
+        self.bossWavyDesc:draw(dt)
+    end
 
     love.graphics.setCanvas(currentCanvas)
     love.graphics.draw(self.bossDesc, self.bossDescX, self.bossDescY, 0, 1, 1)

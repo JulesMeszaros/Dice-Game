@@ -56,7 +56,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 
     --Choix du type de manager
     if(self.roundType == Constants.ROUND_TYPES.BOSS)then
-        self.bossType = Constants.BOSS_TYPES.CHEF_RD
+        self.bossType = Constants.BOSS_TYPES.CHEF_COMPTABLE
     end
 
     if(self.bossType==Constants.BOSS_TYPES.CHEF_RD) then
