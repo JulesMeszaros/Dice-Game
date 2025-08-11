@@ -37,7 +37,8 @@ function Run:new(dices, gameCanvas, game, diceObjects)
         CiggieTypes.Fortune:new()
     }
     self.totalUsedCiggie = 0
-
+    self.totalUsedCoffees = 0
+    
     self.shop = nil
 
     --Dices variables

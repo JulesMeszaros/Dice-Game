@@ -558,6 +558,9 @@ function Shop:buyCoffee(coffeeUI, figureIndex)
         --Retirer l'argent
         self.run.money = self.run.money - Constants.BASE_COFFEE_PRICE
 
+        --Augmenter de 1 le compte de nombre de cafés bus
+        self.run.totalUsedCoffees = self.run.totalUsedCoffees + 1
+
         --Level Up la figure
         self.run:levelUpFigure(figureIndex)
 

@@ -1357,7 +1357,7 @@ end
 
 FaceTypes.RoyaltyCard = RoyaltyCard
 
---==Royalty Card==--
+--==Mirror Dice==--
 local MirrorDice = setmetatable({}, { __index = FaceObject })
 MirrorDice.__index = MirrorDice
 
@@ -1407,6 +1407,54 @@ function MirrorDice:triggerEffect(round)
 end
 
 FaceTypes.MirrorDice = MirrorDice
+
+--==Mirror Dice==--
+local CookieDice = setmetatable({}, { __index = FaceObject })
+CookieDice.__index = CookieDice
+
+function CookieDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), CookieDice)
+
+    --Metadatas about the CookieDice
+    self.name = "Cookie Dice"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the CookieDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Cookie Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Scoring : +10pts, 1/3 chances of upgrading the played figure by one level"
+    self.faceDimmension = 120 --sets the dimmensions for a face of the CookieDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function CookieDice:triggerEffect(round)
+    local i = math.floor(math.random(1, 3))
+    print(i)
+
+    if(i==1) then
+        round.run:levelUpFigure(round.playedFigure)
+        print("figure leveled up!")
+    end
+
+    addScore(round, self.pointsValue)
+
+end
+
+FaceTypes.CookieDice = CookieDice
 
 
 
