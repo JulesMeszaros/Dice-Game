@@ -1408,7 +1408,7 @@ end
 
 FaceTypes.MirrorDice = MirrorDice
 
---==Mirror Dice==--
+--==Lucky Cookie==--
 local CookieDice = setmetatable({}, { __index = FaceObject })
 CookieDice.__index = CookieDice
 
@@ -1416,7 +1416,7 @@ function CookieDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), CookieDice)
 
     --Metadatas about the CookieDice
-    self.name = "Cookie Dice"
+    self.name = "Lucky Cookie"
     self.id = 1
     self.tier = "Common"
 
