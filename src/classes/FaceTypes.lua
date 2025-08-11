@@ -1132,6 +1132,146 @@ end
 
 FaceTypes.DataDice = DataDice
 
+--==Stock Option==--
+local StockOption = setmetatable({}, { __index = FaceObject })
+StockOption.__index = StockOption
+
+function StockOption:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), StockOption)
+
+    --Metadatas about the StockOption
+    self.name = "Stock Option"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the StockOption
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Stock Option.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Scoring : +10pts, 1/2 Chances of giving 10$, or loosing 5$."
+    self.faceDimmension = 120 --sets the dimmensions for a face of the StockOption in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function StockOption:triggerEffect(round)
+    --Complementary effect triggered by the face
+    
+    local i = math.random(0, 1)
+
+    if(i==0)then
+        addMoney(round, 10)
+    else
+        removeMoney(round, 5)
+    end
+
+    addScore(round, self.pointsValue)
+end
+
+FaceTypes.StockOption = StockOption
+
+--==Rainbow Dice==--
+local RainbowDice = setmetatable({}, { __index = FaceObject })
+RainbowDice.__index = RainbowDice
+
+function RainbowDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), RainbowDice)
+
+    --Metadatas about the RainbowDice
+    self.name = "Rainbow Dice"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the RainbowDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Straight Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Scoring : +10pts, goes up by 30pts if played in a small or large straight."
+    self.faceDimmension = 120 --sets the dimmensions for a face of the RainbowDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function RainbowDice:triggerEffect(round)
+    --Complementary effect triggered by the face
+    
+    if(round.playedFigure == Constants.FIGURES.SMALL_SUITE or round.playedFigure == Constants.LARGE_SUITE) then
+        upgradeStat(self, 'pointsValue', 30)
+        print('upgrade', round.playedFigure)
+    end
+
+    addScore(round, self.pointsValue)
+end
+
+FaceTypes.RainbowDice = RainbowDice
+
+--==Magic Dice==--
+local MagicDice = setmetatable({}, { __index = FaceObject })
+MagicDice.__index = MagicDice
+
+function MagicDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), MagicDice)
+
+    --Metadatas about the MagicDice
+    self.name = "Magic Dice"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the MagicDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Magic Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Scoring : Multiplies the score by the number or magic wands held, if the number is at least 2."
+    self.faceDimmension = 120 --sets the dimmensions for a face of the MagicDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function MagicDice:triggerEffect(round)
+    --Complementary effect triggered by the face
+    
+    if(table.getn(round.run.ciggiesObjects)>=2) then
+        multiplyScore(round, table.getn(round.run.ciggiesObjects))
+    end
+end
+
+FaceTypes.MagicDice = MagicDice
+
+
+
 --UTILS--
 function multiplyScore(round, f)
     round.handScore = round.handScore * f
@@ -1146,7 +1286,7 @@ function addMoney(round, m)
 end
 
 function removeMoney(round, m)
-    round.run.money = round.run.money - m
+    round.terrain:setMoneyTo(round.run.money - m)
 end
 
 function setMoney(round, m)
