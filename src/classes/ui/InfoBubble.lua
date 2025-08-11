@@ -1,6 +1,6 @@
 local Fonts = require("src.utils.Fonts")
 local Sprites = require("src.utils.Sprites")
-
+local AnimationUtils = require("src.utils.scripts.Animations")
 local InfoBubble = {}
 InfoBubble.__index = InfoBubble
 
@@ -41,6 +41,7 @@ function InfoBubble:new(screen)
 end
 
 function InfoBubble:update(dt)
+    self.time = self.time + dt
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -52,7 +53,7 @@ function InfoBubble:update(dt)
         self:generateBubble()
     end
 
-    print(self.canvas:getWidth(), self.canvas:getHeight())
+    print(self.x, self.y)
 
     --On dessine les angles
     love.graphics.draw(self.baseSprite, self.quads[1], 0, 0)
@@ -68,15 +69,12 @@ function InfoBubble:update(dt)
     love.graphics.draw(self.baseSprite, self.quads[8], 30, self.height-30, 0, self.wr, 1)
 
     love.graphics.draw(self.baseSprite, self.quads[9], 30, 30, 0, self.wr, self.hr)
-
-    --Text
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.draw(self.name, self.canvas:getWidth()/2, 15, 0, 1, 1, self.name:getWidth()/2, 0)
-    for i,line in next,self.wrappedText do
-        love.graphics.draw(line, self.canvas:getWidth()/2, 60+(i-1)*30, 0, 1, 1, line:getWidth()/2, 0)
+    
+    --On dessine la description
+    print(self.object.type)
+    if(self.object.representedObject.type == "Dice Face") then
+        self:drawDiceDescription()
     end
-
-    love.graphics.setColor(1, 1, 1)
 
     love.graphics.setCanvas(currentCanvas)
 end
@@ -90,7 +88,7 @@ function InfoBubble:draw()
         oy = 0
     end
 
-    love.graphics.draw(self.canvas, x, y, 0, 1, 1, ox, oy)
+    love.graphics.draw(self.canvas, x, y + AnimationUtils.osccilate(self.time, 3, 6), 0, 1, 1, ox, oy)
 end
 
 function InfoBubble:reset()
@@ -107,6 +105,7 @@ function InfoBubble:generateCanvas(w, h)
 end
 
 function InfoBubble:generateBubble()
+    self.time = 0
     --Name
     local name = love.graphics.newText(Fonts.soraDesc, self.object.representedObject.name)
 
@@ -126,6 +125,17 @@ function InfoBubble:generateBubble()
     self.wrappedText = textLines
     self.width, self.height = width, height
     self:generateCanvas(width, height)
+end
+
+function InfoBubble:drawDiceDescription()
+    --Text
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.draw(self.name, self.canvas:getWidth()/2, 15, 0, 1, 1, self.name:getWidth()/2, 0)
+    for i,line in next,self.wrappedText do
+        love.graphics.draw(line, self.canvas:getWidth()/2, 60+(i-1)*30, 0, 1, 1, line:getWidth()/2, 0)
+    end
+
+    love.graphics.setColor(1, 1, 1)
 end
 
 return InfoBubble

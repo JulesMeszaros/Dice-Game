@@ -221,6 +221,15 @@ function DiceCustomization:updateCanvas(dt)
 
     self:drawCiggiesTrayFront()
 
+    if(self.currentlyHoveredFace)then
+        --Info bubble (wip)
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
+        self.infoBubble:update(dt)
+        self.infoBubble:draw()
+        
+    end
+
     love.graphics.setCanvas(currentCanvas)
 end
 

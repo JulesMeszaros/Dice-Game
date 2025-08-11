@@ -58,7 +58,7 @@ function Badge:new(
     self.uiCanvas = self:createCanvas()
     self.uiCanvas:setFilter("linear", "linear")
 
-    self:createFaceRewards()
+    self:createFaceRewards(y)
 
     self.animator:addDelay(0.1)
     self.animator:addGroup({
@@ -166,7 +166,7 @@ function Badge:isHovered() --Check if mouse is above the face
         )
 end
 
-function Badge:createFaceRewards()
+function Badge:createFaceRewards(y)
     local xPos = {290, 290}
     local yPos = {160, 290}
 
@@ -187,7 +187,7 @@ function Badge:createFaceRewards()
                                     function()return Inputs.getMouseInCanvas(self.x, self.y)end,
                                     nil,
                                     self.x,
-                                    self.y)
+                                    y)
         diceFace.reduceOnHover = nil --On désactive la modif de taille au hover
         table.insert(self.faceRewards, diceFace)
     end
