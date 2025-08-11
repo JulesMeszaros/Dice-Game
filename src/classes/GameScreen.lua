@@ -21,7 +21,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.screenType = screenType
 
     --Hovered Objects
-    self.infoBubble = InfoBubble:new()
+    self.infoBubble = InfoBubble:new(self)
     self.hoverableObjects = {}
     self.currentlyHoveredFace = nil
     self.previouslyHoveredFace = nil
@@ -645,8 +645,8 @@ function GameScreen:createDiceNet()
             true, --isHoverable,
             function()return Inputs.getMouseInCanvas(self.diceDetailsX, self.diceDetailsY)end,
             self.round,
-            self.diceDetailsX,
-            self.diceDetailsY
+            self.diceDetailsTX,
+            self.diceDetailsTY
         )
 
         table.insert(infoFaces, diceFaceUI)
