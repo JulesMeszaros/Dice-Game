@@ -1270,6 +1270,51 @@ end
 
 FaceTypes.MagicDice = MagicDice
 
+--==Magic Dice==--
+local ReturnOnInvestment = setmetatable({}, { __index = FaceObject })
+ReturnOnInvestment.__index = ReturnOnInvestment
+
+function ReturnOnInvestment:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), ReturnOnInvestment)
+
+    --Metadatas about the ReturnOnInvestment
+    self.name = "Return On Invenstment"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the ReturnOnInvestment
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Return On Invenstment.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Backup : Multiplies the score by 1.5 for each 10$ in bank."
+    self.faceDimmension = 120 --sets the dimmensions for a face of the ReturnOnInvestment in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    self.backup = true
+    return self
+end
+
+function ReturnOnInvestment:backupEffect(round)
+    local i = math.floor(round.run.money/10)
+    local f = i*1.5
+    if(f>0)then
+        multiplyScore(round, f)
+    end
+
+end
+
+FaceTypes.ReturnOnInvestment = ReturnOnInvestment
+
 
 
 --UTILS--
