@@ -1315,7 +1315,7 @@ end
 
 FaceTypes.ReturnOnInvestment = ReturnOnInvestment
 
---==Return On Invenstment==--
+--==Royalty Card==--
 local RoyaltyCard = setmetatable({}, { __index = FaceObject })
 RoyaltyCard.__index = RoyaltyCard
 
@@ -1357,6 +1357,57 @@ end
 
 FaceTypes.RoyaltyCard = RoyaltyCard
 
+--==Royalty Card==--
+local MirrorDice = setmetatable({}, { __index = FaceObject })
+MirrorDice.__index = MirrorDice
+
+function MirrorDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), MirrorDice)
+
+    --Metadatas about the MirrorDice
+    self.name = "Mirror Dice"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the MirrorDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Mirror Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Scoring : +10pts, gains 5pts by played dice with the same number as this one"
+    self.faceDimmension = 120 --sets the dimmensions for a face of the MirrorDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function MirrorDice:triggerEffect(round)
+    local sameDices = 0
+    local sortedFaces, sortedDices = round:getDicesOrder(round.usedDices)
+    
+    --On récupère le nombre de dé avec le meme numéro de face
+    for i,d in next, sortedFaces do
+        if(d.representedObject.faceValue == self.faceValue) then sameDices = sameDices +1 end
+    end
+    print(sameDices)
+
+    --On upgrade la pointsValue du dé
+    upgradeStat(self, "pointsValue", (sameDices-1)*5)
+    addScore(round, self.pointsValue)
+
+end
+
+FaceTypes.MirrorDice = MirrorDice
+
 
 
 
@@ -1384,7 +1435,6 @@ end
 
 function upgradeStat(object, stat, v)
     object[stat] = object[stat] + v
-    print(object[stat])
 end
 
 return FaceTypes
