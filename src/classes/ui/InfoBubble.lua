@@ -1,8 +1,12 @@
 local Fonts = require("src.utils.Fonts")
 local Sprites = require("src.utils.Sprites")
 local AnimationUtils = require("src.utils.scripts.Animations")
+local UI = require("src.utils.scripts.UI")
+
 local InfoBubble = {}
 InfoBubble.__index = InfoBubble
+
+local lineWidth = 320
 
 function InfoBubble:new(screen)
     local self = setmetatable({}, InfoBubble)
@@ -110,7 +114,7 @@ function InfoBubble:generateBubble()
     local name = love.graphics.newText(Fonts.soraDesc, self.object.representedObject.name)
 
     --Description
-    local textW, wrappedText = Fonts.soraDesc:getWrap(self.object.representedObject.description, 320)
+    local textW, wrappedText = Fonts.soraDesc:getWrap(self.object.representedObject.description, lineWidth)
     local textLines = {}
     for i,line in next,wrappedText do
         local lineText = love.graphics.newText(Fonts.soraDesc, line)
@@ -119,10 +123,9 @@ function InfoBubble:generateBubble()
 
     --Creation des dimmensions
     local width = math.max(name:getWidth(), 350)
-    local height = 60 + table.getn(wrappedText)*30 + 15
+    local height = 50 + table.getn(wrappedText)*30 + 20
 
     self.name = name
-    self.wrappedText = textLines
     self.width, self.height = width, height
     self:generateCanvas(width, height)
 end
@@ -131,9 +134,8 @@ function InfoBubble:drawDiceDescription()
     --Text
     love.graphics.setColor(0, 0, 0)
     love.graphics.draw(self.name, self.canvas:getWidth()/2, 15, 0, 1, 1, self.name:getWidth()/2, 0)
-    for i,line in next,self.wrappedText do
-        love.graphics.draw(line, self.canvas:getWidth()/2, 60+(i-1)*30, 0, 1, 1, line:getWidth()/2, 0)
-    end
+    
+    local formatedText = UI.Text.drawFormattedText(self.object.representedObject.description, self.canvas:getWidth()/2, 50, Fonts.soraDesc, lineWidth, true)
 
     love.graphics.setColor(1, 1, 1)
 end

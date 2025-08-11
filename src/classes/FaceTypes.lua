@@ -18,7 +18,7 @@ function WhiteFace:new(faceValue, pointsValue)
     self.name = "White Face"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : +10pts"
+    self.description = "Scoring : [[+10pts]]"
 
     --Metadatas about the graphics of the WhiteFace
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
@@ -60,7 +60,7 @@ function ChunkyFace:new(faceValue, pointsValue)
     self.name = "Chunky Dice"
     self.id = 2
     self.tier = "Common"
-    self.description = "Scoring : +20pts"
+    self.description = "Scoring : [[+20pts]]"
 
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Chunky Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
@@ -101,7 +101,7 @@ function MassiveFace:new(faceValue, pointsValue)
     self.name = "Massive Dice"
     self.id = 3
     self.tier = "Common"
-    self.description = "Scoring : +50pts"
+    self.description = "Scoring : [[+50pts]]"
 
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Massive Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
@@ -144,7 +144,7 @@ function BlueFace:new(faceValue, pointsValue)
     self.name = "Blue Face"
     self.tier = "Uncommon"
     self.id = 2
-    self.description = "Scoring : +10pts. \n Passive : Adds 2 points per used rerolls this building to its points value (currently : 0)"
+    self.description = "Scoring : [[+10pts]]. \n Passive : Adds [[2pts]] per used rerolls this building to its points value (currently : 0)"
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Blue Dice.png")
@@ -171,7 +171,7 @@ end
 
 function BlueFace:update(dt, run)
     self.pointsValue = 1+(2*run.usedRerolls)
-    self.description = "Scoring : +10pts. \n Passive : Adds 2 point per used rerolls this building to its points value (currently : "..tostring(2*run.usedRerolls)..')'
+    self.description = "Scoring : [[+10pts]]. \n Passive : Adds [[2pts]] per used rerolls this building to its points value (currently : "..tostring(2*run.usedRerolls)..')'
 
 end
 
@@ -193,7 +193,7 @@ function GoldFace:new(faceValue, pointsValue)
     self.name = "Gold Face"
     self.tier = "Common"
     self.id = 2
-    self.description = "+10pts. When triggered, adds 2€ to the balance"
+    self.description = "[[+10pts]]. When triggered, adds 2€ to the balance"
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Gold Dice.png")
@@ -291,7 +291,7 @@ function StrikeOfLuck:new(faceValue, pointsValue)
     self.name = "Strike Of Luck"
     self.tier = "Common"
     self.id = 5
-    self.description = "Scoring: Adds a random ciggie to the inventory. \n +10pts"
+    self.description = "Scoring: Adds a random ciggie to the inventory. \n [[+10pts]]"
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Strike of Luck.png")
@@ -407,7 +407,7 @@ function BasketOfEggs:new(faceValue, pointsValue)
     self.name = "Basket Of Eggs"
     self.tier = "Uncommon"
     self.id = 5
-    self.description = "Full Hand: Multiplies the total score by 1,5."
+    self.description = "Full Hand: Multiplies the total score by ((1,5))."
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Milk Dice.png")
@@ -456,7 +456,7 @@ function Apparition:new(faceValue, pointsValue)
     self.name = "Apparition"
     self.tier = "Uncommon"
     self.id = 5
-    self.description = "Scoring : Multiplies the hand score by 2. \n Ghost"
+    self.description = "Scoring : Multiplies the hand score by ((2)). \n Ghost"
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Apparition.png")
@@ -500,7 +500,7 @@ function BlackStar:new(faceValue, pointsValue)
     self.name = "Black Star"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : +30pts \n Blank"
+    self.description = "Scoring : [[+30pts ]]\n Blank"
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Black Star.png")
@@ -542,7 +542,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
     self.name = "Clockwork Dice"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : Adds 10pts multiplied by this face's number to the score. Passive : decreases the face number by one the first time you score this Face in the Office."
+    self.description = "Scoring : Adds [[10pts]] multiplied by this face's number to the score. Passive : decreases the face number by one the first time you score this Face in the Office."
 
     --Metadatas about the graphics of the ClockWorkDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Clockwork Dice.png")
@@ -590,7 +590,7 @@ function AshtrayDice:new(faceValue, pointsValue)
     self.name = "Ashtray Dice"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : Multiplies the total score by 1. This factor is upgraded by 0.1 each time a cigarette is smoked"
+    self.description = "Scoring : Multiplies the total score by ((1)). This factor is upgraded by ((0.1)) each time a cigarette is smoked"
 
     --Metadatas about the graphics of the AshtrayDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ashtray Dice.png")
@@ -631,7 +631,7 @@ function SteelDice:new(faceValue, pointsValue)
     self.name = "Steel Dice"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : Adds 10 points per € under 10€"
+    self.description = "Scoring : Adds [[10pts]] per € under 10€"
 
     --Metadatas about the graphics of the SteelDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Steel Dice.png")
@@ -672,7 +672,7 @@ function DoubleDown:new(faceValue, pointsValue)
     self.name = "Double Down"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : Adds 10 points per even dices in scored hand"
+    self.description = "Scoring : Adds [[10pts]] per even dices in scored hand"
 
     --Metadatas about the graphics of the DoubleDown
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Double Down.png")
@@ -723,7 +723,7 @@ function OddJob:new(faceValue, pointsValue)
     self.name = "Odd Job"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : Adds 10 points per odd dices in scored hand"
+    self.description = "Scoring : Adds [[10pts]] per odd dices in scored hand"
 
     --Metadatas about the graphics of the OddJob
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Odd Job.png")
@@ -775,7 +775,7 @@ function MusicDice:new(faceValue, pointsValue)
     self.name = "Music Dice"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : +10pts, multiplies the score by 2 if played hand contains exactly 4 dices"
+    self.description = "Scoring : [[+10pts]], multiplies the score by ((2))if played hand contains exactly 4 dices"
 
     --Metadatas about the graphics of the MusicDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Tempo Dice.png")
@@ -823,7 +823,7 @@ function Signature:new(faceValue, pointsValue)
     self.name = "Signature"
     self.id = 1
     self.tier = "Common"
-    self.description = "Unique : Multiplies the hand score by 3. Scoring: +10pts."
+    self.description = "Unique : Multiplies the hand score by ((3)). Scoring: [[+10pts]]."
 
     --Metadatas about the graphics of the Signature
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Signature Dice.png")
@@ -887,7 +887,7 @@ function SniperDice:new(faceValue, pointsValue)
     
     self.backup=true
     self.backupScoreValue = 10
-    self.description = "Backup : Adds 10 points to the score. Value goes up by 5. Currently : "..tostring(self.backupScoreValue)..' pts'
+    self.description = "Backup : Adds [[10pts]] to the score. Value goes up by [[5]]. Currently : [["..tostring(self.backupScoreValue)..' pts]]'
 
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -897,7 +897,7 @@ function SniperDice:new(faceValue, pointsValue)
 end
 
 function SniperDice:update(dt, run)
-    self.description = "Backup : Adds 10 points to the score. Value goes up by 5. Currently : "..tostring(self.backupScoreValue)..' pts'
+    self.description = "Backup : Adds [[10pts]] to the score. Value goes up by [[5]]. Currently : [["..tostring(self.backupScoreValue)..' pts]]'
 end
 
 function SniperDice:triggerEffect(round)
@@ -927,7 +927,7 @@ function Spotlight:new(faceValue, pointsValue)
     --Metadatas about the graphics of the Spotlight
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Spotlight Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "First : Multiplies the hand score by 2. Scoring: +10pts"
+    self.description = "First : Multiplies the hand score by ((2)). Scoring: [[+10pts]]"
     self.faceDimmension = 120 --sets the dimmensions for a face of the Spotlight in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -973,7 +973,7 @@ function RiskyBusiness:new(faceValue, pointsValue)
     --Metadatas about the graphics of the RiskyBusiness
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Risky Business.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Scoring : +100pts, -10$."
+    self.description = "Scoring : [[+100pts]], -10$."
     self.faceDimmension = 120 --sets the dimmensions for a face of the RiskyBusiness in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -1014,7 +1014,7 @@ function CryptoDice:new(faceValue, pointsValue)
     --Metadatas about the graphics of the CryptoDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crypto Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Scoring : Multiplies the hand score by 2, lowers the money to 0"
+    self.description = "Scoring : Multiplies the hand score by ((2)), lowers the money to 0$"
     self.faceDimmension = 120 --sets the dimmensions for a face of the CryptoDice in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -1057,7 +1057,7 @@ function Patience:new(faceValue, pointsValue)
     --Metadatas about the graphics of the Patience
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Patience.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Scoring : +10pts, increase this value by 5"
+    self.description = "Scoring : [[+10pts]], increase this value by [[5pts]]"
     self.faceDimmension = 120 --sets the dimmensions for a face of the Patience in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -1098,7 +1098,7 @@ function DataDice:new(faceValue, pointsValue)
     --Metadatas about the graphics of the DataDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Number Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Scoring : +10pts, increases by 10 if figure is a numbered figure (1, 2, 3,...) decreases by 10pts if not."
+    self.description = "Scoring : [[+10pts]], increases by [[10pts]] if figure is a numbered figure (1, 2, 3,...) decreases by [[10pts]] if not."
     self.faceDimmension = 120 --sets the dimmensions for a face of the DataDice in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -1119,11 +1119,11 @@ end
 function DataDice:triggerEffect(round)
     --Complementary effect triggered by the face
     if round.playedFigure < 7 then
-        upgradeStat(self, 'pointsValue', 5)
+        upgradeStat(self, 'pointsValue', 10)
         print("upgrade")
     else
         if(self.pointsValue>=10)then
-            upgradeStat(self, 'pointsValue', -5)
+            upgradeStat(self, 'pointsValue', -10)
             print("downgrade")
         end
     end
@@ -1147,7 +1147,7 @@ function StockOption:new(faceValue, pointsValue)
     --Metadatas about the graphics of the StockOption
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Stock Option.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Scoring : +10pts, 1/2 Chances of giving 10$, or loosing 5$."
+    self.description = "Scoring : [[+10pts]], 1/2 Chances of giving 10$, or loosing 5$."
     self.faceDimmension = 120 --sets the dimmensions for a face of the StockOption in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -1196,7 +1196,7 @@ function RainbowDice:new(faceValue, pointsValue)
     --Metadatas about the graphics of the RainbowDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Straight Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Scoring : +10pts, goes up by 30pts if played in a small or large straight."
+    self.description = "Scoring : [[+10pts]], goes up by 30pts if played in a small or large straight."
     self.faceDimmension = 120 --sets the dimmensions for a face of the RainbowDice in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -1242,7 +1242,7 @@ function MagicDice:new(faceValue, pointsValue)
     --Metadatas about the graphics of the MagicDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Magic Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Scoring : Multiplies the score by the number or magic wands held, if the number is at least 2."
+    self.description = "Scoring : Multiplies the score by the ((number or magic wands held)), if the number is at least 2."
     self.faceDimmension = 120 --sets the dimmensions for a face of the MagicDice in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -1285,7 +1285,7 @@ function ReturnOnInvestment:new(faceValue, pointsValue)
     --Metadatas about the graphics of the ReturnOnInvestment
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Return On Invenstment.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Backup : Multiplies the score by 1.5 for each 10$ in bank."
+    self.description = "Backup : Multiplies the score by ((1.5)) for each 10$ in bank."
     self.faceDimmension = 120 --sets the dimmensions for a face of the ReturnOnInvestment in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -1330,7 +1330,7 @@ function RoyaltyCard:new(faceValue, pointsValue)
     --Metadatas about the graphics of the RoyaltyCard
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Royalty Card.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Scoring : Gives the level of the played figure in $. +10pts"
+    self.description = "Scoring : Gives the level of the played figure in $. [[+10pts]]"
     self.faceDimmension = 120 --sets the dimmensions for a face of the RoyaltyCard in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -1372,7 +1372,7 @@ function MirrorDice:new(faceValue, pointsValue)
     --Metadatas about the graphics of the MirrorDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Mirror Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Scoring : +10pts, gains 5pts by played dice with the same number as this one"
+    self.description = "Scoring : [[+10pts]], gains [[5pts]] by played dice with the same number as this one"
     self.faceDimmension = 120 --sets the dimmensions for a face of the MirrorDice in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
@@ -1423,7 +1423,7 @@ function CookieDice:new(faceValue, pointsValue)
     --Metadatas about the graphics of the CookieDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Cookie Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.description = "Scoring : +10pts, 1/3 chances of upgrading the played figure by one level"
+    self.description = "Scoring : [[+10pts]], 1/3 chances of upgrading the played figure by one level"
     self.faceDimmension = 120 --sets the dimmensions for a face of the CookieDice in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1

@@ -4,7 +4,7 @@ local Constants = {
     --Game metadatas
     VIRTUAL_GAME_WIDTH = 1920,
     VIRTUAL_GAME_HEIGHT = 1080,
-    GAME_VERSION = "0.6.0",
+    GAME_VERSION = "0.7.0",
 
     --Game base stats
     BASE_REROLLS = 2,
@@ -18,7 +18,7 @@ local Constants = {
     BASE_TRIGGER_ANIMATION_TIME = 0.15,--secondes
     
     --Debug
-    SHOP_EVERY_DESK = true,
+    SHOP_EVERY_DESK = false,
     
     --Prices
     BASE_FACE_SELL_PRICE = 3,
