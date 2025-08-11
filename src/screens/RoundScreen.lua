@@ -9,6 +9,7 @@ local UI = require("src.utils.scripts.UI")
 --UI
 local Sprites = require("src.utils.Sprites")
 local DiceFace = require("src.classes.ui.DiceFace")
+local InfoBubble = require("src.classes.ui.InfoBubble")
 --Ciggies
 local Ciggie = require("src.classes.ui.Ciggie")
 --Dices
@@ -136,7 +137,10 @@ function RoundScreen:new(round)
 end
 
 function RoundScreen:update(dt)
-    
+    --Info bubble (wip)
+    self.infoBubble.x, self.infoBubble.y = Inputs.getMouseInCanvas(0, 0).x + 20, Inputs.getMouseInCanvas(0, 0).y + 20
+    self.infoBubble:update(dt)
+
     self.timers.firstRerollTime = self.timers.firstRerollTime+dt
     self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy+dt
     self.timers.oscillationTimePlayer = self.timers.oscillationTimePlayer+dt
@@ -272,6 +276,8 @@ function RoundScreen:updateCanvas(dt)
     if(self.dragAndDroppedCiggie)then
         self.dragAndDroppedCiggie:draw()
     end
+
+    self.infoBubble:draw()
 
     love.graphics.setCanvas(currentCanvas)
 end
