@@ -1270,7 +1270,7 @@ end
 
 FaceTypes.MagicDice = MagicDice
 
---==Magic Dice==--
+--==Return On Invenstment==--
 local ReturnOnInvestment = setmetatable({}, { __index = FaceObject })
 ReturnOnInvestment.__index = ReturnOnInvestment
 
@@ -1314,6 +1314,50 @@ function ReturnOnInvestment:backupEffect(round)
 end
 
 FaceTypes.ReturnOnInvestment = ReturnOnInvestment
+
+--==Return On Invenstment==--
+local RoyaltyCard = setmetatable({}, { __index = FaceObject })
+RoyaltyCard.__index = RoyaltyCard
+
+function RoyaltyCard:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), RoyaltyCard)
+
+    --Metadatas about the RoyaltyCard
+    self.name = "Royalty Card"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the RoyaltyCard
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Royalty Card.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Scoring : Gives the level of the played figure in $. +10pts"
+    self.faceDimmension = 120 --sets the dimmensions for a face of the RoyaltyCard in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function RoyaltyCard:triggerEffect(round)
+    local level = round.run.figuresInfos[round.playedFigure].level
+
+    addMoney(round, level)
+    addScore(round, self.pointsValue)
+end
+
+FaceTypes.RoyaltyCard = RoyaltyCard
+
+
 
 
 
