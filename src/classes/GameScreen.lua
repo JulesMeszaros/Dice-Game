@@ -644,7 +644,9 @@ function GameScreen:createDiceNet()
             false, --is Selectable
             true, --isHoverable,
             function()return Inputs.getMouseInCanvas(self.diceDetailsX, self.diceDetailsY)end,
-            self.round
+            self.round,
+            self.diceDetailsX,
+            self.diceDetailsY
         )
 
         table.insert(infoFaces, diceFaceUI)

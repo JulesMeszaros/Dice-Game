@@ -185,7 +185,9 @@ function Badge:createFaceRewards()
                                     false,
                                     true,
                                     function()return Inputs.getMouseInCanvas(self.x, self.y)end,
-                                    nil)
+                                    nil,
+                                    self.x,
+                                    self.y)
         diceFace.reduceOnHover = nil --On désactive la modif de taille au hover
         table.insert(self.faceRewards, diceFace)
     end

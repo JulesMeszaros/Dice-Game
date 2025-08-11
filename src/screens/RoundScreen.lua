@@ -125,7 +125,9 @@ function RoundScreen:new(round)
             true, --is Selectable
             true, --isHoverable,
             function()return Inputs.getMouseInCanvas(510 , 320)end,
-            self.round
+            self.round,
+            510,
+            320
         )
 
         diceFaceUI.reduceOnHover = false --Aggrandis quand on hover

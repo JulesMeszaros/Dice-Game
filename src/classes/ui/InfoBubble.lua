@@ -6,9 +6,12 @@ InfoBubble.__index = InfoBubble
 function InfoBubble:new()
     local self = setmetatable({}, InfoBubble)
 
+    self.time = 0
+
     --Position/Scale
     self.x = 0
     self.y = 0
+
 
     self.width = 300
     self.height = 200

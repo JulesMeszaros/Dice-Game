@@ -850,7 +850,9 @@ function Shop:createDeck()
                 true,
                 true,
                 function()return Inputs.getMouseInCanvas(1300, 110)end,
-                nil
+                nil,
+                1300,
+                110
             )
         deckFaces[dice] = faceUI
     end
