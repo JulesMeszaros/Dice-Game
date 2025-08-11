@@ -256,11 +256,9 @@ function DeskChoice:generateChoiceCanvas()
 
     for i=1, table.getn(self.possibleRounds) do
         if(self.possibleRounds[i].roundType == Constants.ROUND_TYPES.BOSS) then
-            print("boss")
             local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 540, 680, function()return Inputs.getMouseInCanvas(0, 0)end, true)
             table.insert(self.badges, b)
         else
-            print("pas boss")
             local b = Badge:new(self.possibleRounds[i], coords[i][1], coords[i][2], originalY[i], 370, 500, function()return Inputs.getMouseInCanvas(0, 0)end)
             table.insert(self.badges, b)
         end
@@ -482,8 +480,6 @@ end
 function DeskChoice:getCurrentlyHoveredLine()
     local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
     local i = math.floor((mv.y-90)/70)+1
-
-    print(i)
     
     if(i>0 and i<=13)then
         if(mv.x>0 and mv.x<self.figureButtonsCanvas:getWidth())then
@@ -503,7 +499,6 @@ function DeskChoice:drawBossDesc(dt)
     love.graphics.draw(Sprites.BOSS_DESC, 0, 0)
 
     --Text
-    print(Constants.BOSS_TYPES_DESC[self.possibleRounds[1].bossType][1])
 
     if(self.bossWavyDesc and self.bossWavyTitle)then
         self.bossWavyTitle:update(dt)
