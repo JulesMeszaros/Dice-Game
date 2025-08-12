@@ -254,6 +254,15 @@ function Shop:updateCanvas(dt)
     if(self.dragAndDroppedObject) then
         self.dragAndDroppedObject:draw()
     end
+
+    if(self.currentlyHoveredFace)then
+        --Info bubble (wip)
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
+        self.infoBubble:update(dt)
+        self.infoBubble:draw()
+        
+    end
     
     love.graphics.setCanvas(currentCanvas)
 end
@@ -833,7 +842,9 @@ function Shop:createDeck()
                 true,
                 true,
                 function()return Inputs.getMouseInCanvas(1300, 110)end,
-                nil
+                nil,
+                1300,
+                110
             )
         deckFaces[dice] = faceUI
     end

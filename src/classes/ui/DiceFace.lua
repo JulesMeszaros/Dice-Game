@@ -12,7 +12,7 @@ local DiceFace = setmetatable({}, { __index = UIElement })
 
 DiceFace.__index = DiceFace
 
-function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isHoverable, mousePosition, round)    
+function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isHoverable, mousePosition, round, absoluteX, absoluteY)    
     local self = setmetatable(UIElement.new(), DiceFace)
     self.animator = Animator:new(self)
 
@@ -36,6 +36,8 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
     self.x = x
     self.y = y
 	self.z = 0 --Détermine l'ordre de dessin des dés sur le terrain
+    self.absoluteX = absoluteX or 0
+    self.absoluteY = absoluteY or 0
 
     --Size
     self.baseSize = size

@@ -10,6 +10,7 @@ FaceObject.__index = FaceObject
 function FaceObject:new()
     local self = setmetatable({}, FaceObject)
 
+    self.type = "Dice Face"
 
     --Metadatas about the FaceObject
     self.name = "FACE OBJECT"
@@ -173,6 +174,10 @@ end
 
 function FaceObject:setFacePoints(n)
     self.pointsValue = n
+end
+
+function FaceObject:getDescription(run)
+    return self.description
 end
 
 return FaceObject

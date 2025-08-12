@@ -10,7 +10,7 @@ local Button = require("src.classes.ui.Button")
 local DiceFace = require("src.classes.ui.DiceFace")
 local Ciggie = require("src.classes.ui.Ciggie")
 local UI = require("src.utils.scripts.UI")
-
+local InfoBubble = require("src.classes.ui.InfoBubble")
 
 local GameScreen = {}
 GameScreen.__index = GameScreen
@@ -21,6 +21,7 @@ function GameScreen:new(floor, run, screenType, round)
     self.screenType = screenType
 
     --Hovered Objects
+    self.infoBubble = InfoBubble:new(self)
     self.hoverableObjects = {}
     self.currentlyHoveredFace = nil
     self.previouslyHoveredFace = nil
@@ -643,7 +644,9 @@ function GameScreen:createDiceNet()
             false, --is Selectable
             true, --isHoverable,
             function()return Inputs.getMouseInCanvas(self.diceDetailsX, self.diceDetailsY)end,
-            self.round
+            self.round,
+            self.diceDetailsTX,
+            self.diceDetailsTY
         )
 
         table.insert(infoFaces, diceFaceUI)

@@ -167,6 +167,16 @@ function DeskChoice:update(dt)
 
     self:drawCiggiesTrayFront()
 
+    if(self.currentlyHoveredFace)then
+        --Info bubble (wip)
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        print(self.currentlyHoveredFace.absoluteX, self.currentlyHoveredFace.absoluteY)
+        --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
+        self.infoBubble:update(dt)
+        self.infoBubble:draw()
+        
+    end
+
     love.graphics.setCanvas(currentCanvas)
 end
 
@@ -192,7 +202,9 @@ function DeskChoice:createDeck()
                 true,
                 true,
                 function()return Inputs.getMouseInCanvas(1300, 110)end,
-                nil
+                nil,
+                1300,
+                110
             )
         deckFaces[dice] = faceUI
     end

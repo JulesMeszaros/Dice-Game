@@ -3,6 +3,7 @@ CiggieObject.__index = CiggieObject
 
 function CiggieObject:new()
     local self = setmetatable({}, CiggieObject)
+    self.type = "Magic Wand"
     self.name = "Cigarette"
     self.description = "Donne le cancer askiiiip"
     self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Channel Cigarette.png")

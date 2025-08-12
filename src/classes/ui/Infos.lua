@@ -7,12 +7,14 @@ local Button = require("src/classes/ui/Button")
 local Inputs = require("src/utils/scripts/Inputs")
 local DiceFace = require("src/classes/ui/DiceFace")
 local UI = require("src.utils.scripts.UI")
+local InfoBubble = require("src.classes.ui.InfoBubble")
 
 local Infos = {}
 Infos.__index = Infos
 
 function Infos:new(run)
     local self = setmetatable({}, Infos)
+    self.infoBubble = InfoBubble:new(self)
 
     self.run = run
     self.round = run.currentRound
@@ -155,6 +157,16 @@ function Infos:updateCanvas(dt)
     end
 
     self:drawCiggiesTrayFront()
+    self:getCurrentlyHoveredFace()
+    print(self.currentlyHoveredFace)
+    if(self.currentlyHoveredFace)then
+        --Info bubble (wip)
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
+        self.infoBubble:update(dt)
+        self.infoBubble:draw()
+        
+    end
 
     love.graphics.setCanvas(currentCanvas)
 end

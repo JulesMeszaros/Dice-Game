@@ -9,6 +9,7 @@ local UI = require("src.utils.scripts.UI")
 --UI
 local Sprites = require("src.utils.Sprites")
 local DiceFace = require("src.classes.ui.DiceFace")
+local InfoBubble = require("src.classes.ui.InfoBubble")
 --Ciggies
 local Ciggie = require("src.classes.ui.Ciggie")
 --Dices
@@ -124,7 +125,9 @@ function RoundScreen:new(round)
             true, --is Selectable
             true, --isHoverable,
             function()return Inputs.getMouseInCanvas(510 , 320)end,
-            self.round
+            self.round,
+            510,
+            320
         )
 
         diceFaceUI.reduceOnHover = false --Aggrandis quand on hover
@@ -136,7 +139,6 @@ function RoundScreen:new(round)
 end
 
 function RoundScreen:update(dt)
-    
     self.timers.firstRerollTime = self.timers.firstRerollTime+dt
     self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy+dt
     self.timers.oscillationTimePlayer = self.timers.oscillationTimePlayer+dt
@@ -271,6 +273,15 @@ function RoundScreen:updateCanvas(dt)
     --On dessine l'objet drag and drop au dessus de tout le reste
     if(self.dragAndDroppedCiggie)then
         self.dragAndDroppedCiggie:draw()
+    end
+
+    if(self.currentlyHoveredFace)then
+        --Info bubble (wip)
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
+        self.infoBubble:update(dt)
+        self.infoBubble:draw()
+        
     end
 
     love.graphics.setCanvas(currentCanvas)
