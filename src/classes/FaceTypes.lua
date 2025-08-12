@@ -24,14 +24,7 @@ function WhiteDice:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -65,14 +58,7 @@ function ChunkyDice:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Chunky Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -106,14 +92,7 @@ function MassiveDice:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Massive Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -152,14 +131,7 @@ function BlueDice:new(faceValue, pointsValue)
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Round status
     self.faceValue = faceValue --Le numéro de face que le dé représente
@@ -204,14 +176,7 @@ function GoldDice:new(faceValue, pointsValue)
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Round status
     self.faceValue = faceValue --Le numéro de face que le dé représente
@@ -249,14 +214,7 @@ function DeluxeDice:new(faceValue, pointsValue)
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Round status
     self.faceValue = faceValue --Le numéro de face que le dé représente
@@ -302,14 +260,7 @@ function StrikeOfLuck:new(faceValue, pointsValue)
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Round status
     self.faceValue = faceValue --Le numéro de face que le dé représente
@@ -352,14 +303,7 @@ function Copyprinter:new(faceValue, pointsValue)
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     self.blank = true
 
@@ -418,14 +362,7 @@ function BasketOfEggs:new(faceValue, pointsValue)
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     self.fullHand = true
 
@@ -467,14 +404,7 @@ function Apparition:new(faceValue, pointsValue)
 
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     self.ghost = true
 
@@ -509,14 +439,7 @@ function BlackStar:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Black Star.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     self.blank = true
 
@@ -551,14 +474,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Clockwork Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the ClockWorkDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
 
     --Numbered status
@@ -599,14 +515,7 @@ function AshtrayDice:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ashtray Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the AshtrayDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
 
     --Numbered status
@@ -644,14 +553,7 @@ function SteelDice:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Steel Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the SteelDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
 
     --Numbered status
@@ -689,14 +591,7 @@ function DoubleDown:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Double Down.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the DoubleDown in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
 
     --Numbered status
@@ -740,14 +635,7 @@ function OddJob:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Odd Job.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the OddJob in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
 
     --Numbered status
@@ -792,14 +680,7 @@ function MusicDice:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Tempo Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the MusicDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
 
     --Numbered status
@@ -840,14 +721,7 @@ function Signature:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Signature Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the Signature in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     self.unique=true
 
@@ -887,14 +761,7 @@ function SniperDice:new(faceValue, pointsValue)
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crosshairs Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
     self.faceDimmension = 120 --sets the dimmensions for a face of the SniperDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     self.backup=true
     self.backupScoreValue = 10
@@ -940,14 +807,7 @@ function Spotlight:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "First : Multiplies the hand score by ((2)). Scoring: [[+10pts]]"
     self.faceDimmension = 120 --sets the dimmensions for a face of the Spotlight in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     self.first=true
 
@@ -986,14 +846,7 @@ function RiskyBusiness:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "Scoring : [[+100pts]], -10$."
     self.faceDimmension = 120 --sets the dimmensions for a face of the RiskyBusiness in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1027,14 +880,7 @@ function CryptoDice:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "Scoring : Multiplies the hand score by ((2)), lowers the money to 0$"
     self.faceDimmension = 120 --sets the dimmensions for a face of the CryptoDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1070,14 +916,7 @@ function Patience:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "Scoring : [[+10pts]], increase this value by [[5pts]]"
     self.faceDimmension = 120 --sets the dimmensions for a face of the Patience in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1115,14 +954,7 @@ function DataDice:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "Scoring : [[+10pts]], increases by [[10pts]] if figure is a numbered figure (1, 2, 3,...) decreases by [[10pts]] if not."
     self.faceDimmension = 120 --sets the dimmensions for a face of the DataDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1168,14 +1000,7 @@ function StockOption:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "Scoring : [[+10pts]], 1/2 Chances of giving 10$, or loosing 5$."
     self.faceDimmension = 120 --sets the dimmensions for a face of the StockOption in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1217,14 +1042,7 @@ function RainbowDice:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "Scoring : [[+10pts]], goes up by 30pts if played in a small or large straight."
     self.faceDimmension = 120 --sets the dimmensions for a face of the RainbowDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1267,14 +1085,7 @@ function MagicDice:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "Scoring : Multiplies the score by the ((number or magic wands held)), if the number is at least 2."
     self.faceDimmension = 120 --sets the dimmensions for a face of the MagicDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1310,14 +1121,7 @@ function ReturnOnInvestment:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "Backup : Multiplies the score by ((1.5)) for each 10$ in bank."
     self.faceDimmension = 120 --sets the dimmensions for a face of the ReturnOnInvestment in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1359,14 +1163,7 @@ function RoyaltyCard:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "Scoring : Gives the level of the played figure in $. [[+10pts]]"
     self.faceDimmension = 120 --sets the dimmensions for a face of the RoyaltyCard in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1401,14 +1198,7 @@ function MirrorDice:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "Scoring : [[+10pts]], gains [[5pts]] by played dice with the same number as this one"
     self.faceDimmension = 120 --sets the dimmensions for a face of the MirrorDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1456,14 +1246,7 @@ function CookieDice:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = "Scoring : [[+10pts]], 1/3 chances of upgrading the played figure by one level"
     self.faceDimmension = 120 --sets the dimmensions for a face of the CookieDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1502,14 +1285,7 @@ function InsomniacDice:new(faceValue, pointsValue)
     self.spriteSheet:setFilter("linear", "linear")
     self.description = " "
     self.faceDimmension = 120 --sets the dimmensions for a face of the InsomniacDice in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
+    
     
     --Numbered status
     self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1528,6 +1304,44 @@ function InsomniacDice:getDescription(run)
 end
 
 FaceTypes.InsomniacDice = InsomniacDice
+
+--==Insomniac Dice==--
+local TwinFlame = setmetatable({}, { __index = FaceObject })
+TwinFlame.__index = TwinFlame
+
+function TwinFlame:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), TwinFlame)
+
+    --Metadatas about the TwinFlame
+    self.name = "Twin Flame"
+    self.id = 1
+    self.tier = "Rare"
+
+    --Metadatas about the graphics of the TwinFlame
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Twin Flame.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "[[+10pts]], clones a random magic wand in hand."
+    self.faceDimmension = 120 --sets the dimmensions for a face of the TwinFlame in px (in the png)
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function TwinFlame:triggerEffect(round)
+    addScore(round, self:getPointsValue())
+
+    if(table.getn(round.run.ciggiesObjects)<Constants.BASE_MAX_CIGGIES and table.getn(round.run.ciggiesObjects)>0)then
+        local randomCiggie = round.run.ciggiesObjects[math.random(1, #round.run.ciggiesObjects)]
+
+        table.insert(round.run.ciggiesObjects, getmetatable(randomCiggie):new())
+        round.terrain:generateCiggiesUI()
+    end
+end
+
+FaceTypes.TwinFlame = TwinFlame
 
 --UTILS--
 function multiplyScore(round, f)
