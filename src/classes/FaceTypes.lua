@@ -1305,7 +1305,7 @@ end
 
 FaceTypes.InsomniacDice = InsomniacDice
 
---==Insomniac Dice==--
+--==Twin Flame==--
 local TwinFlame = setmetatable({}, { __index = FaceObject })
 TwinFlame.__index = TwinFlame
 
@@ -1342,6 +1342,47 @@ function TwinFlame:triggerEffect(round)
 end
 
 FaceTypes.TwinFlame = TwinFlame
+
+--==Fax Machine==--
+local FaxMachine = setmetatable({}, { __index = FaceObject })
+FaxMachine.__index = FaxMachine
+
+function FaxMachine:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), FaxMachine)
+
+    --Metadatas about the FaxMachine
+    self.name = "Fax Machine"
+    self.id = 1
+    self.tier = "Rare"
+
+    --Metadatas about the graphics of the FaxMachine
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Fax Machine.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = "Retriggers the first scored dice"
+    self.faceDimmension = 120 --sets the dimmensions for a face of the FaxMachine in px (in the png)
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    
+    self.blank = true
+    return self
+end
+
+function FaxMachine:triggerEffect(round)
+    local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
+
+    print(dicesOrder[1]:getCurrentFaceObject().faceValue)
+    --On vérifie que le premier dé joué n'est pas celui-là
+    if(dicesOrder[1] ~= self.diceObject)then
+        table.insert(round.dicesTriggerQueue, 1, dicesOrder[1])
+        table.insert(round.diceFacesTriggerQueue, 1, round.terrain.diceFaces[dicesOrder[1]])
+    end
+    
+end
+
+FaceTypes.FaxMachine = FaxMachine
 
 --UTILS--
 function multiplyScore(round, f)
