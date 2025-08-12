@@ -99,8 +99,6 @@ function CoffeeButton:clickAction()
         --Desactiver le bouton
         self.used=true
         self.isActivated=false
-
-        print(self.figureIndex, "utilisé")
     end
 end
 
