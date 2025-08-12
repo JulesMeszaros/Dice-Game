@@ -95,14 +95,6 @@ function Game:startNewRun()
         table.insert(diceObjects, DiceObject:new(fs))
     end
 
-    local faxf = {}
-    for j=1,6 do
-        local f = FaceTypes.FaxMachine:new(j, 10)
-        table.insert(faxf,f)
-    end
-
-    diceObjects[2] = DiceObject:new(faxf)
-
     self.diceObjects = diceObjects
 
     self.currentScreen = Constants.PAGES.GAME

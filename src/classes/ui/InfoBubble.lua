@@ -116,7 +116,7 @@ function InfoBubble:generateBubble()
 
     --Description
     local descriptionText = self.object.representedObject:getDescription(self.screen.run)
-    local textW, wrappedText = Fonts.soraDesc:getWrap(descriptionText, lineWidth)
+    local textW, wrappedText = Fonts.soraDesc:getWrap(descriptionText, math.max(name:getWidth()+40, 350))
     local textLines = {}
     for i,line in next,wrappedText do
         local lineText = love.graphics.newText(Fonts.soraDesc, line)
@@ -124,8 +124,8 @@ function InfoBubble:generateBubble()
     end
 
     --Creation des dimmensions
-    local width = math.max(name:getWidth(), 350)
-    local height = 50 + table.getn(wrappedText)*30 + 20
+    local width = math.max(name:getWidth()+40, 350)
+    local height = 100 + table.getn(wrappedText)*30 + 20
 
     self.name = name
     self.width, self.height = width, height
@@ -133,11 +133,22 @@ function InfoBubble:generateBubble()
 end
 
 function InfoBubble:drawDiceDescription()
+    
+    --Rarity icon
+    if(self.object.representedObject.tier == "Common") then
+        love.graphics.draw(Sprites.COMMON, self.canvas:getWidth()/2, 55, 0, 1, 1, Sprites.COMMON:getWidth()/2, 0)
+    elseif(self.object.representedObject.tier == "Uncommon") then
+        love.graphics.draw(Sprites.UNCOMMON, self.canvas:getWidth()/2, 55, 0, 1, 1, Sprites.UNCOMMON:getWidth()/2, 0)
+    elseif(self.object.representedObject.tier == "Rare") then
+        love.graphics.draw(Sprites.RARE, self.canvas:getWidth()/2, 55, 0, 1, 1, Sprites.RARE:getWidth()/2, 0)
+    end
+
     --Text
     love.graphics.setColor(0, 0, 0)
     love.graphics.draw(self.name, self.canvas:getWidth()/2, 5, 0, 1, 1, self.name:getWidth()/2, 0)
-    
-    local formatedText = UI.Text.drawFormattedText(self.object.representedObject:getDescription(self.screen.run), self.canvas:getWidth()/2, 50, Fonts.soraDesc, lineWidth, true)
+
+
+    local formatedText = UI.Text.drawFormattedText(self.object.representedObject:getDescription(self.screen.run), self.canvas:getWidth()/2, 100, Fonts.soraDesc, lineWidth, true)
 
     love.graphics.setColor(1, 1, 1)
 end

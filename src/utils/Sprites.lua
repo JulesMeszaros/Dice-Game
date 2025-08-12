@@ -8,6 +8,10 @@ Sprites.DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Description.
 Sprites.DICE_INFOS = love.graphics.newImage("src/assets/sprites/ui/Dice Vertical.png")
 Sprites.DECK = love.graphics.newImage("src/assets/sprites/ui/Deck.png")
 
+Sprites.COMMON = love.graphics.newImage("src/assets/sprites/ui/Common.png")
+Sprites.UNCOMMON = love.graphics.newImage("src/assets/sprites/ui/Uncommon.png")
+Sprites.RARE = love.graphics.newImage("src/assets/sprites/ui/Rare.png")
+
 Sprites.ENEMY_INFOS= love.graphics.newImage("src/assets/sprites/ui/Enemy.png")
 Sprites.PLAYER_INFOS = love.graphics.newImage("src/assets/sprites/ui/Player.png")
 

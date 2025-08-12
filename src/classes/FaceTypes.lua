@@ -1141,7 +1141,7 @@ function ReturnOnInvestment:backupEffect(round)
 end
 
 function ReturnOnInvestment:getDescription(run)
-    return "Backup : Multiplies the score by ((1.5)) for each 10$ in bank (currently : (("..tostring(math.floor(run.money/10))..")))"
+    return "Backup : Multiplies the score by ((1.5)) for each 10$ in bank (currently : (("..tostring(math.floor(run.money/10)*1.5)..")))"
 end
 
 FaceTypes.ReturnOnInvestment = ReturnOnInvestment
