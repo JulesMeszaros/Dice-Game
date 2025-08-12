@@ -176,4 +176,8 @@ function FaceObject:setFacePoints(n)
     self.pointsValue = n
 end
 
+function FaceObject:getDescription(run)
+    return self.description
+end
+
 return FaceObject

@@ -114,7 +114,8 @@ function InfoBubble:generateBubble()
     local name = love.graphics.newText(Fonts.soraDesc, self.object.representedObject.name)
 
     --Description
-    local textW, wrappedText = Fonts.soraDesc:getWrap(self.object.representedObject.description, lineWidth)
+    local descriptionText = self.object.representedObject:getDescription(self.screen.run)
+    local textW, wrappedText = Fonts.soraDesc:getWrap(descriptionText, lineWidth)
     local textLines = {}
     for i,line in next,wrappedText do
         local lineText = love.graphics.newText(Fonts.soraDesc, line)
@@ -135,7 +136,7 @@ function InfoBubble:drawDiceDescription()
     love.graphics.setColor(0, 0, 0)
     love.graphics.draw(self.name, self.canvas:getWidth()/2, 15, 0, 1, 1, self.name:getWidth()/2, 0)
     
-    local formatedText = UI.Text.drawFormattedText(self.object.representedObject.description, self.canvas:getWidth()/2, 50, Fonts.soraDesc, lineWidth, true)
+    local formatedText = UI.Text.drawFormattedText(self.object.representedObject:getDescription(self.screen.run), self.canvas:getWidth()/2, 50, Fonts.soraDesc, lineWidth, true)
 
     love.graphics.setColor(1, 1, 1)
 end

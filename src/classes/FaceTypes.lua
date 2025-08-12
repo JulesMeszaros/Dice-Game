@@ -141,7 +141,7 @@ function BlueFace:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), BlueFace)
 
     --Metadatas about the BlackStar
-    self.name = "Blue Face"
+    self.name = "Blue Dice"
     self.tier = "Uncommon"
     self.id = 2
     self.description = "Scoring : [[+10pts]]. \n Passive : Adds [[2pts]] per used rerolls this building to its points value (currently : 0)"
@@ -171,12 +171,15 @@ end
 
 function BlueFace:update(dt, run)
     self.pointsValue = 1+(2*run.usedRerolls)
-    self.description = "Scoring : [[+10pts]]. \n Passive : Adds [[2pts]] per used rerolls this building to its points value (currently : "..tostring(2*run.usedRerolls)..')'
 
 end
 
 function BlueFace:triggerEffect(round)
     addScore(round, self.pointsValue)
+end
+
+function BlueFace:getDescription(run)
+    return "Scoring : [["..tostring(2*run.usedRerolls).."pts]]. \n Passive : Adds [[2pts]] per used rerolls this building to its points value)"
 end
 
 FaceTypes.BlueFace = BlueFace
@@ -291,7 +294,7 @@ function StrikeOfLuck:new(faceValue, pointsValue)
     self.name = "Strike Of Luck"
     self.tier = "Common"
     self.id = 5
-    self.description = "Scoring: Adds a random ciggie to the inventory. \n [[+10pts]]"
+    self.description = "Scoring : [[+10pts]], adds a random ciggie to the inventory"
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Strike of Luck.png")
@@ -500,7 +503,7 @@ function BlackStar:new(faceValue, pointsValue)
     self.name = "Black Star"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : [[+30pts ]]\n Blank"
+    self.description = "Scoring : [[+30pts]]\n Blank"
 
     --Metadatas about the graphics of the BlackStar
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Black Star.png")
@@ -542,7 +545,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
     self.name = "Clockwork Dice"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : Adds [[10pts]] multiplied by this face's number to the score. Passive : decreases the face number by one the first time you score this Face in the Office."
+    self.description = "Scoring : Adds [[20pts]] multiplied by this face's number to the score. Passive : decreases the face number by one the first time you score this Face in the Office."
 
     --Metadatas about the graphics of the ClockWorkDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Clockwork Dice.png")
@@ -618,6 +621,10 @@ function AshtrayDice:triggerEffect(round)
     multiplyScore(round, (1+(0.1)*round.run.totalUsedCiggie))
 end
 
+function AshtrayDice:getDescription(run)
+    return "Scoring : Multiplies the total score by (("..(1+(0.1)*run.totalUsedCiggie)..")). This factor is upgraded by ((0.1)) each time a cigarette is smoked"
+end
+
 FaceTypes.AshtrayDice = AshtrayDice
 
 --==Steel Dice==--
@@ -657,6 +664,10 @@ end
 function SteelDice:triggerEffect(round)
     --Complementary effect triggered by the face
     addScore(round, math.max(0, 10 - round.run.money)*10)
+end
+
+function SteelDice:getDescription(run)
+    return "Scoring : Adds [[10pts]] per € under 10€ (currently : [["..(math.max(0, 10 - run.money)*10).."pts]])"
 end
 
 FaceTypes.SteelDice = SteelDice
@@ -775,7 +786,7 @@ function MusicDice:new(faceValue, pointsValue)
     self.name = "Music Dice"
     self.id = 1
     self.tier = "Common"
-    self.description = "Scoring : [[+10pts]], multiplies the score by ((2))if played hand contains exactly 4 dices"
+    self.description = "Scoring : [[+10pts]], multiplies the score by ((2)) if played hand contains exactly 4 dices"
 
     --Metadatas about the graphics of the MusicDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Tempo Dice.png")
@@ -896,10 +907,6 @@ function SniperDice:new(faceValue, pointsValue)
     return self
 end
 
-function SniperDice:update(dt, run)
-    self.description = "Backup : Adds [[10pts]] to the score. Value goes up by [[5]]. Currently : [["..tostring(self.backupScoreValue)..' pts]]'
-end
-
 function SniperDice:triggerEffect(round)
     --Complementary effect triggered by the face
 
@@ -908,6 +915,10 @@ end
 function SniperDice:backupEffect(round)
     addScore(round, self.backupScoreValue)
     self.backupScoreValue = self.backupScoreValue + 5
+end
+
+function SniperDice:getDescription(run)
+    return "Backup : Adds [["..self.backupScoreValue.."pts]] to the score. Value goes up by [[5pts]]"
 end
 
 FaceTypes.SniperDice = SniperDice
@@ -1081,6 +1092,10 @@ function Patience:triggerEffect(round)
     upgradeStat(self, 'pointsValue', 5)
 end
 
+function Patience:getDescription(run)
+    return "Scoring : [[+"..tostring(self.pointsValue).."pts]], increase this value by [[5pts]]"
+end
+
 FaceTypes.Patience = Patience
 
 --==Data Dice==--
@@ -1128,6 +1143,10 @@ function DataDice:triggerEffect(round)
         end
     end
     addScore(round, self.pointsValue)
+end
+
+function DataDice:getDescription(run)
+    return "Scoring : [[+"..tostring(self.pointsValue).."pts]], increases by [[10pts]] if figure is a numbered figure, decreases by  if not."
 end
 
 FaceTypes.DataDice = DataDice
@@ -1225,6 +1244,10 @@ function RainbowDice:triggerEffect(round)
     addScore(round, self.pointsValue)
 end
 
+function RainbowDice:getDescription(run)
+    return "Scoring : [[+"..tostring(self.pointsValue).."pts]], goes up by 30pts if played in a small or large straight."
+end
+
 FaceTypes.RainbowDice = RainbowDice
 
 --==Magic Dice==--
@@ -1311,6 +1334,10 @@ function ReturnOnInvestment:backupEffect(round)
         multiplyScore(round, f)
     end
 
+end
+
+function ReturnOnInvestment:getDescription(run)
+    return "Backup : Multiplies the score by ((1.5)) for each 10$ in bank (currently : (("..tostring(math.floor(run.money/10))..")))"
 end
 
 FaceTypes.ReturnOnInvestment = ReturnOnInvestment
@@ -1406,6 +1433,10 @@ function MirrorDice:triggerEffect(round)
 
 end
 
+function MirrorDice:getDescription(run)
+    return "Scoring : [[+"..tostring(self.pointsValue).."pts]], gains [[5pts]] by played dice with the same number as this one"
+end
+
 FaceTypes.MirrorDice = MirrorDice
 
 --==Mirror Dice==--
@@ -1447,7 +1478,6 @@ function CookieDice:triggerEffect(round)
 
     if(i==1) then
         round.run:levelUpFigure(round.playedFigure)
-        print("figure leveled up!")
     end
 
     addScore(round, self.pointsValue)
@@ -1455,10 +1485,6 @@ function CookieDice:triggerEffect(round)
 end
 
 FaceTypes.CookieDice = CookieDice
-
-
-
-
 
 --UTILS--
 function multiplyScore(round, f)
