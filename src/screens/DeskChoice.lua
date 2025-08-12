@@ -170,7 +170,6 @@ function DeskChoice:update(dt)
     if(self.currentlyHoveredFace)then
         --Info bubble (wip)
         self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
-        print(self.currentlyHoveredFace.absoluteX, self.currentlyHoveredFace.absoluteY)
         --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
         self.infoBubble:update(dt)
         self.infoBubble:draw()

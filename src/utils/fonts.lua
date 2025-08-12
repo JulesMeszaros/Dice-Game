@@ -2,6 +2,7 @@ local Fonts = {}
 
 --sora
 Fonts.soraDesc = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 22)
+Fonts.soraName = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 30)
 Fonts.soraPrice = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 18)
 Fonts.soraSmall = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 25)
 Fonts.soraGridL = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 20)

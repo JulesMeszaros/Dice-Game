@@ -39,6 +39,9 @@ function love.load()
 end
 
 function love.update(dt)
+    if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
+        print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
+    end
     G.animator:update(dt)
     game:update(dt)
     delta = love.timer.getFPS()

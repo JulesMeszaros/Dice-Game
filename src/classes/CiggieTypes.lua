@@ -96,7 +96,6 @@ function Rockmans:effect(screen)
     local randomCiggie = getRandomExcluding(screen.run.ciggiesObjects, self)
     
     table.insert(screen.run.ciggiesObjects, getmetatable(randomCiggie):new())
-    print(table.getn(screen.run.ciggiesObjects))
 end
 
 CiggieTypes.Rockmans = Rockmans

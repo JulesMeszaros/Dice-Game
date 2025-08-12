@@ -180,4 +180,8 @@ function FaceObject:getDescription(run)
     return self.description
 end
 
+function FaceObject:getPointsValue(run)
+    return self.pointsValue
+end
+
 return FaceObject
