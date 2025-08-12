@@ -320,6 +320,62 @@ function drawFormattedText(text, x, y, font, maxWidth, centered)
     love.graphics.setColor(1, 1, 1)
 end
 
+function arrangeImagesWrapped(images, centerX, startY, maxWidth, spacingX, spacingY)
+    spacingX = spacingX or 0
+    spacingY = spacingY or 0
+
+    local lines = {}
+    local currentLine = {}
+    local lineWidth = 0
+
+    -- 1. Découpage en lignes
+    for _, img in ipairs(images) do
+        local imgWidth = img:getWidth()
+        if #currentLine > 0 and (lineWidth + spacingX + imgWidth) > maxWidth then
+            table.insert(lines, currentLine)
+            currentLine = {}
+            lineWidth = 0
+        end
+        table.insert(currentLine, img)
+        lineWidth = lineWidth + ( (#currentLine > 1) and spacingX or 0 ) + imgWidth
+    end
+    if #currentLine > 0 then
+        table.insert(lines, currentLine)
+    end
+
+    -- 2. Calcul des positions
+    local positions = {}
+    local y = startY
+    for _, line in ipairs(lines) do
+        -- largeur totale de la ligne
+        local totalWidth = 0
+        for i, img in ipairs(line) do
+            totalWidth = totalWidth + img:getWidth()
+            if i < #line then totalWidth = totalWidth + spacingX end
+        end
+
+        -- point de départ pour centrer la ligne autour de centerX
+        local startX = centerX - totalWidth / 2
+        local x = startX
+
+        -- positions de chaque image
+        for _, img in ipairs(line) do
+            table.insert(positions, {
+                image = img,
+                x = x + img:getWidth() / 2,
+                y = y + img:getHeight() / 2
+            })
+            x = x + img:getWidth() + spacingX
+        end
+
+        y = y + (line[1]:getHeight()) + spacingY
+    end
+
+    return positions
+end
+
+UI.arrangeImagesWrapped = arrangeImagesWrapped
+
 UI.Text.drawFormattedText = drawFormattedText
 UI.Text.drawWavyText = drawWavyText
 UI.Text.TextWavy = TextWavy

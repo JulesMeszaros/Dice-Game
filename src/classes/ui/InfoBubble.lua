@@ -114,6 +114,37 @@ function InfoBubble:generateBubble()
     --Name
     local name = love.graphics.newText(Fonts.soraName, self.object.representedObject.name)
 
+    --Creation de la largeur
+    local width = math.max(name:getWidth()+40, 350)
+    self.width = width
+    --Tags
+    local tags = {}
+
+    if(self.object.representedObject.tier == "Common") then
+        table.insert(tags, Sprites.COMMON)
+    elseif(self.object.representedObject.tier == "Uncommon") then
+        table.insert(tags, Sprites.UNCOMMON)
+    elseif(self.object.representedObject.tier == "Rare") then
+        table.insert(tags, Sprites.RARE)
+    end
+
+    if(self.object.representedObject.ghost == true) then
+        table.insert(tags, Sprites.GHOST)
+    end
+
+    if(self.object.representedObject.blank == true) then
+        table.insert(tags, Sprites.BLANK)
+    end
+
+    self.tagsPositions = UI.arrangeImagesWrapped(
+        tags,
+        self.width/2,
+        55,
+        self.width-10,
+        5, 
+        5
+    )
+
     --Description
     local descriptionText = self.object.representedObject:getDescription(self.screen.run)
     local textW, wrappedText = Fonts.soraDesc:getWrap(descriptionText, math.max(name:getWidth()+40, 350))
@@ -123,24 +154,20 @@ function InfoBubble:generateBubble()
         table.insert(textLines, lineText)
     end
 
-    --Creation des dimmensions
-    local width = math.max(name:getWidth()+40, 350)
-    local height = 100 + table.getn(wrappedText)*30 + 20
+    --Creation de la largeur
+    local height = getMaxY(self.tagsPositions) + table.getn(wrappedText)*30 + 20
 
     self.name = name
-    self.width, self.height = width, height
+    self.height = height
+
     self:generateCanvas(width, height)
 end
 
 function InfoBubble:drawDiceDescription()
     
-    --Rarity icon
-    if(self.object.representedObject.tier == "Common") then
-        love.graphics.draw(Sprites.COMMON, self.canvas:getWidth()/2, 55, 0, 1, 1, Sprites.COMMON:getWidth()/2, 0)
-    elseif(self.object.representedObject.tier == "Uncommon") then
-        love.graphics.draw(Sprites.UNCOMMON, self.canvas:getWidth()/2, 55, 0, 1, 1, Sprites.UNCOMMON:getWidth()/2, 0)
-    elseif(self.object.representedObject.tier == "Rare") then
-        love.graphics.draw(Sprites.RARE, self.canvas:getWidth()/2, 55, 0, 1, 1, Sprites.RARE:getWidth()/2, 0)
+    --Draw tags
+    for i,p in next,self.tagsPositions do
+        love.graphics.draw(p.image, p.x, p.y, 0, 1, 1, p.image:getWidth()/2, p.image:getHeight()/2)
     end
 
     --Text
@@ -148,9 +175,20 @@ function InfoBubble:drawDiceDescription()
     love.graphics.draw(self.name, self.canvas:getWidth()/2, 5, 0, 1, 1, self.name:getWidth()/2, 0)
 
 
-    local formatedText = UI.Text.drawFormattedText(self.object.representedObject:getDescription(self.screen.run), self.canvas:getWidth()/2, 100, Fonts.soraDesc, lineWidth, true)
+    local formatedText = UI.Text.drawFormattedText(self.object.representedObject:getDescription(self.screen.run), self.canvas:getWidth()/2, getMaxY(self.tagsPositions), Fonts.soraDesc, lineWidth, true)
 
     love.graphics.setColor(1, 1, 1)
+end
+
+function getMaxY(positions)
+    local maxY = -math.huge
+    for _, p in ipairs(positions) do
+        local bottom = p.y + p.image:getHeight() / 2
+        if bottom > maxY then
+            maxY = bottom
+        end
+    end
+    return maxY
 end
 
 return InfoBubble
