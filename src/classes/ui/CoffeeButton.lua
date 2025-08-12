@@ -93,6 +93,7 @@ function CoffeeButton:clickAction()
         self.run.money = self.run.money - Constants.BASE_COFFEE_PRICE
 
         --Level Up la figure
+        self.run.totalUsedCoffees = self.run.totalUsedCoffees + 1
         self.run:levelUpFigure(self.figureIndex)
 
         --Desactiver le bouton

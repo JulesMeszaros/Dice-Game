@@ -1456,6 +1456,50 @@ end
 
 FaceTypes.CookieDice = CookieDice
 
+--==Insomniac Dice==--
+local InsomniacDice = setmetatable({}, { __index = FaceObject })
+InsomniacDice.__index = InsomniacDice
+
+function InsomniacDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), InsomniacDice)
+
+    --Metadatas about the InsomniacDice
+    self.name = "Insomniac Dice"
+    self.id = 1
+    self.tier = "Common"
+
+    --Metadatas about the graphics of the InsomniacDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Eclipse Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = " "
+    self.faceDimmension = 120 --sets the dimmensions for a face of the InsomniacDice in px (in the png)
+    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+        {120, 120}, -- 1
+        {0, 120}, -- 2
+        {120, 240}, -- 3
+        {120, 0}, -- 4
+        {240, 120}, -- 5
+        {120, 360} -- 6
+    }
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    return self
+end
+
+function InsomniacDice:triggerEffect(round)
+    print(round.run.totalUsedCoffees)
+    addScore(round, 10+(15*round.run.totalUsedCoffees))
+end
+
+function InsomniacDice:getDescription(run)
+    return "Scoring : [[+"..tostring(10+(15*run.totalUsedCoffees)).."pts]], goes up by [[15pts]] for each coffee used in this building."
+end
+
+FaceTypes.InsomniacDice = InsomniacDice
+
 
 
 
