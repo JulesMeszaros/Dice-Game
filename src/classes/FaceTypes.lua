@@ -8,22 +8,22 @@ local FaceTypes = {}
 --==COMMON==--
 
 --==WHITE FACE==--
-local WhiteFace = setmetatable({}, { __index = FaceObject })
-WhiteFace.__index = WhiteFace
+local WhiteDice = setmetatable({}, { __index = FaceObject })
+WhiteDice.__index = WhiteDice
 
-function WhiteFace:new(faceValue, pointsValue)
-    local self = setmetatable(FaceObject:new(), WhiteFace)
+function WhiteDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), WhiteDice)
 
-    --Metadatas about the WhiteFace
+    --Metadatas about the WhiteDice
     self.name = "White Face"
     self.id = 1
     self.tier = "Common"
     self.description = "Scoring : [[+10pts]]"
 
-    --Metadatas about the graphics of the WhiteFace
+    --Metadatas about the graphics of the WhiteDice
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
     self.spriteSheet:setFilter("linear", "linear")
-    self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteFace in px (in the png)
+    self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteDice in px (in the png)
     self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
         {120, 120}, -- 1
         {0, 120}, -- 2
@@ -40,23 +40,23 @@ function WhiteFace:new(faceValue, pointsValue)
     return self
 end
 
-function WhiteFace:triggerEffect(round)
+function WhiteDice:triggerEffect(round)
     --Complementary effect triggered by the face
     addScore(round, self.pointsValue)
 end
 
-FaceTypes.WhiteFace = WhiteFace
+FaceTypes.WhiteDice = WhiteDice
 
 
 
 --==CHUNKY DICE==--
-local ChunkyFace = setmetatable({}, { __index = FaceObject })
-ChunkyFace.__index = ChunkyFace
+local ChunkyDice = setmetatable({}, { __index = FaceObject })
+ChunkyDice.__index = ChunkyDice
 
-function ChunkyFace:new(faceValue, pointsValue)
-    local self = setmetatable(FaceObject:new(), ChunkyFace)
+function ChunkyDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), ChunkyDice)
 
-    --Metadatas about the ChunkyFace
+    --Metadatas about the ChunkyDice
     self.name = "Chunky Dice"
     self.id = 2
     self.tier = "Common"
@@ -82,22 +82,22 @@ function ChunkyFace:new(faceValue, pointsValue)
 end
 
 
-function ChunkyFace:triggerEffect(round)
+function ChunkyDice:triggerEffect(round)
     --Complementary effect triggered by the face
     addScore(round, self.pointsValue)
 end
 
-FaceTypes.ChunkyFace = ChunkyFace
+FaceTypes.ChunkyDice = ChunkyDice
 
 
 --==MASSIVE DICE==--
-local MassiveFace = setmetatable({}, { __index = FaceObject })
-MassiveFace.__index = MassiveFace
+local MassiveDice = setmetatable({}, { __index = FaceObject })
+MassiveDice.__index = MassiveDice
 
-function MassiveFace:new(faceValue, pointsValue)
-    local self = setmetatable(FaceObject:new(), MassiveFace)
+function MassiveDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), MassiveDice)
 
-    --Metadatas about the ChunkyFace
+    --Metadatas about the ChunkyDice
     self.name = "Massive Dice"
     self.id = 3
     self.tier = "Common"
@@ -123,22 +123,22 @@ function MassiveFace:new(faceValue, pointsValue)
 end
 
 
-function MassiveFace:triggerEffect(round)
+function MassiveDice:triggerEffect(round)
     --Complementary effect triggered by the face
     addScore(round, self.pointsValue)
     
 end
 
-FaceTypes.MassiveFace = MassiveFace
+FaceTypes.MassiveDice = MassiveDice
 
 
 --==BLUE FACE==--
 
-local BlueFace = setmetatable({}, { __index = FaceObject })
-BlueFace.__index = BlueFace
+local BlueDice = setmetatable({}, { __index = FaceObject })
+BlueDice.__index = BlueDice
 
-function BlueFace:new(faceValue, pointsValue)
-    local self = setmetatable(FaceObject:new(), BlueFace)
+function BlueDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), BlueDice)
 
     --Metadatas about the BlackStar
     self.name = "Blue Dice"
@@ -169,28 +169,28 @@ function BlueFace:new(faceValue, pointsValue)
     return self
 end
 
-function BlueFace:update(dt, run)
+function BlueDice:update(dt, run)
     self.pointsValue = 1+(2*run.usedRerolls)
 
 end
 
-function BlueFace:triggerEffect(round)
+function BlueDice:triggerEffect(round)
     addScore(round, self.pointsValue)
 end
 
-function BlueFace:getDescription(run)
+function BlueDice:getDescription(run)
     return "Scoring : [["..tostring(2*run.usedRerolls).."pts]]. \n Passive : Adds [[2pts]] per used rerolls this building to its points value)"
 end
 
-FaceTypes.BlueFace = BlueFace
+FaceTypes.BlueDice = BlueDice
 
 --==GOLD FACE==--
 
-local GoldFace = setmetatable({}, { __index = FaceObject })
-GoldFace.__index = GoldFace
+local GoldDice = setmetatable({}, { __index = FaceObject })
+GoldDice.__index = GoldDice
 
-function GoldFace:new(faceValue, pointsValue)
-    local self = setmetatable(FaceObject:new(), GoldFace)
+function GoldDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), GoldDice)
 
     --Metadatas about the BlackStar
     self.name = "Gold Face"
@@ -221,21 +221,21 @@ function GoldFace:new(faceValue, pointsValue)
     return self
 end
 
-function GoldFace:triggerEffect(round)
+function GoldDice:triggerEffect(round)
     --Ajoute 1€ au solde banquaire
     addMoney(round, 2)
     addScore(round, self.pointsValue)
 end
 
-FaceTypes.GoldFace = GoldFace
+FaceTypes.GoldDice = GoldDice
 
 --==DELUXE FACE==--
 
-local DeluxeFace = setmetatable({}, { __index = FaceObject })
-DeluxeFace.__index = DeluxeFace
+local DeluxeDice = setmetatable({}, { __index = FaceObject })
+DeluxeDice.__index = DeluxeDice
 
-function DeluxeFace:new(faceValue, pointsValue)
-    local self = setmetatable(FaceObject:new(), DeluxeFace)
+function DeluxeDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), DeluxeDice)
 
     --Metadatas about the BlackStar
     self.name = "Deluxe Face"
@@ -266,7 +266,7 @@ function DeluxeFace:new(faceValue, pointsValue)
     return self
 end
 
-function DeluxeFace:triggerEffect(round)    
+function DeluxeDice:triggerEffect(round)    
     if(round.playedFigure == Constants.FIGURES.DELUXE)then
         local sumScore = 0
         for i,k in next,round.usedDices do
@@ -281,7 +281,7 @@ function DeluxeFace:triggerEffect(round)
 
 end
 
-FaceTypes.DeluxeFace = DeluxeFace
+FaceTypes.DeluxeDice = DeluxeDice
 
 --==STRIKE OF LUCK==--
 local StrikeOfLuck = setmetatable({}, { __index = FaceObject })
@@ -1474,7 +1474,6 @@ end
 
 function CookieDice:triggerEffect(round)
     local i = math.floor(math.random(1, 3))
-    print(i)
 
     if(i==1) then
         round.run:levelUpFigure(round.playedFigure)
