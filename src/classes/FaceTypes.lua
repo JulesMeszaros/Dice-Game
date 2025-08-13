@@ -1484,6 +1484,57 @@ end
 
 FaceTypes.SixthSense = SixthSense
 
+--==Sacrifice==--
+local Sacrifice = setmetatable({}, { __index = FaceObject })
+Sacrifice.__index = Sacrifice
+
+function Sacrifice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), Sacrifice)
+
+    --Metadatas about the Sacrifice
+    self.name = "Sacrifice"
+    self.id = 1
+    self.tier = "Rare"
+
+    --Metadatas about the graphics of the Sacrifice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Marble Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the Sacrifice in px (in the png)
+
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 0 --This is the points scored by the dice
+    self.totalTriggered = 0
+    
+    self.backup = true
+    
+    return self
+end
+
+function Sacrifice:triggerEffect(round)
+    local i = 0
+    for n,dice in next,round.run.diceObjects do
+        if(dice:getCurrentFaceObject() and dice:getCurrentFaceObject().ghost == true) then
+            i = i+1
+        end
+    end
+
+    multiplyScore(round, 1+(i*1.5))
+end
+
+function Sacrifice:backupEffect(round)
+    local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
+
+    dicesOrder[1]:getCurrentFaceObject().ghost = true
+end
+
+function Sacrifice:getDescription(run)
+    return "Scoring : Multiplies the score by ((1.5)) for each Ghost dice in hand or on the play mat. Backup : Adds Ghost effect to leftmost scored dice."
+end
+
+FaceTypes.Sacrifice = Sacrifice
+
+
 
 
 
