@@ -58,10 +58,6 @@ function FaceObject:resetStats()
     self.disabled = false
 end
 
-function FaceObject:update(dt, run)
-
-end
-
 function FaceObject:trigger(round)
     --Incrémente les variables numériques
     self.totalTriggered = self.totalTriggered + 1
@@ -177,11 +173,13 @@ function FaceObject:setFacePoints(n)
 end
 
 function FaceObject:getDescription(run)
-    return self.description
+    local d = self.description or "[[No description.]]"
+    return d
 end
 
 function FaceObject:getPointsValue(run)
-    return self.pointsValue
+    local p = self.pointsValue or 0
+    return p
 end
 
 return FaceObject

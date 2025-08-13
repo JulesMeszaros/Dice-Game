@@ -1215,7 +1215,6 @@ function MirrorDice:triggerEffect(round)
     for i,d in next, sortedFaces do
         if(d.representedObject.faceValue == self.faceValue) then sameDices = sameDices +1 end
     end
-    print(sameDices)
 
     --On upgrade la pointsValue du dé
     upgradeStat(self, "pointsValue", (sameDices-1)*5)
@@ -1426,6 +1425,64 @@ function Necromancer:getDescription(run)
 end
 
 FaceTypes.Necromancer = Necromancer
+
+--==SixthSense==--
+local SixthSense = setmetatable({}, { __index = FaceObject })
+SixthSense.__index = SixthSense
+
+function SixthSense:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), SixthSense)
+
+    --Metadatas about the SixthSense
+    self.name = "Sixth Sense"
+    self.id = 1
+    self.tier = "Uncommon"
+
+    --Metadatas about the graphics of the SixthSense
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ghost Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the SixthSense in px (in the png)
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    
+    return self
+end
+
+function SixthSense:triggerEffect(round)
+    addScore(round, self:getPointsValue(round.run))
+end
+
+function SixthSense:getDescription(run)
+    --Get the current number of disabled dices
+    local i = 0
+
+    for _, dice in next, run.diceObjects do
+        for j, face in next,dice:getAllFaces() do
+            if face.disabled == true then i=i+1 end
+        end
+    end
+
+    return "Scoring : [[+"..tostring(self:getPointsValue(run)).."pts]]. Passive : Goes up by [[30pts]] for each dice face in deck currently disabled. (currently : "..tostring(i)..")"
+end
+
+function SixthSense:getPointsValue(run)
+    --Get the current number of disabled dices
+    local i = 0
+
+    for _, dice in next, run.diceObjects do
+        for j, face in next,dice:getAllFaces() do
+            if face.disabled == true then i=i+1 end
+        end
+    end
+    
+
+    return i*30
+end
+
+FaceTypes.SixthSense = SixthSense
 
 
 

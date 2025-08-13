@@ -87,18 +87,6 @@ end
 function Round:update(dt)
     self.animator:update(dt)
 
-        --update les objets de face (deck)
-    for i,dice in next,self.diceObjects do
-        for j,face in next,dice:getAllFaces() do
-            face:update(dt, self.run)
-        end
-    end
-
-    --update les objets de face (inventaire)
-    for i,face in next,self.run.facesInventory do
-        face:update(dt, self.run)
-    end
-
     --update le terrain
     self.terrain:update(dt)
 
@@ -148,7 +136,6 @@ function Round:keypressed(key) --(Mainly for debug)
 
     if(key=="u")then
         self.terrain.addingAvailableHand = not self.terrain.addingAvailableHand
-        print(self.terrain.addingAvailableHand)
     end
 end
 
