@@ -36,8 +36,10 @@ function Run:new(dices, gameCanvas, game, diceObjects)
         CiggieTypes.Rockmans:new(),
         CiggieTypes.Fortune:new()
     }
+    --Run stats
     self.totalUsedCiggie = 0
     self.totalUsedCoffees = 0
+    self.totalDisabled = 0
     
     self.shop = nil
 

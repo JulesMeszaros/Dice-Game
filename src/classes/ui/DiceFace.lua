@@ -302,8 +302,10 @@ end
 
 --==UTILS==--
 
-function DiceFace:disable()
+function DiceFace:disable(run)
+    run.totalDisabled = run.totalDisabled + 1
     self.representedObject.disabled = true
+    print(run.totalDisabled)
 end
 
 function DiceFace:calculateAngleDrag()

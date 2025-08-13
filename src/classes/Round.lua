@@ -341,7 +341,7 @@ function Round:triggerNextBackupDice()
         --On désactive les dés ghosts qui ne sont pas utilisés
         for i,d in next,unusedDices do
             if(d:getCurrentFaceObject().ghost == true) then
-                self.terrain.diceFaces[d]:disable()
+                self.terrain.diceFaces[d]:disable(self.run)
             end
         end
 
@@ -439,7 +439,7 @@ function Round:rerollDices() --Triggers the makeRoll function after clicking the
     --On désactive les dés ghost qui sont reroll
     for k,d in next,dicesToReroll do
         if(d:getCurrentFaceObject().ghost == true) then
-            self.terrain.diceFaces[d]:disable()
+            self.terrain.diceFaces[d]:disable(self.run)
         end
     end
 

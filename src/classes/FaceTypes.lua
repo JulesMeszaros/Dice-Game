@@ -1331,7 +1331,7 @@ function TwinFlame:new(faceValue, pointsValue)
 end
 
 function TwinFlame:triggerEffect(round)
-    addScore(round, self:getPointsValue())
+    addScore(round, self:getPointsValue(round.run))
 
     if(table.getn(round.run.ciggiesObjects)<Constants.BASE_MAX_CIGGIES and table.getn(round.run.ciggiesObjects)>0)then
         local randomCiggie = round.run.ciggiesObjects[math.random(1, #round.run.ciggiesObjects)]
@@ -1383,6 +1383,53 @@ function FaxMachine:triggerEffect(round)
 end
 
 FaceTypes.FaxMachine = FaxMachine
+
+--==Necromancer==--
+local Necromancer = setmetatable({}, { __index = FaceObject })
+Necromancer.__index = Necromancer
+
+function Necromancer:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), Necromancer)
+
+    --Metadatas about the Necromancer
+    self.name = "Necromancer Dice"
+    self.id = 1
+    self.tier = "Rare"
+
+    --Metadatas about the graphics of the Necromancer
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Necromancer Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.description = " "
+    self.faceDimmension = 120 --sets the dimmensions for a face of the Necromancer in px (in the png)
+    
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+    
+    return self
+end
+
+function Necromancer:triggerEffect(round)
+    local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
+
+    addScore(round, self:getPointsValue(round.run))
+    
+end
+
+function Necromancer:getPointsValue(run)
+    return 50*run.totalDisabled
+end
+
+function Necromancer:getDescription(run)
+    return "Scoring : [[+"..self:getPointsValue(run).."]]. Passive : Goes up by [[50pts]] each time a dice gets disabled"
+end
+
+FaceTypes.Necromancer = Necromancer
+
+
+
+
 
 --UTILS--
 function multiplyScore(round, f)
