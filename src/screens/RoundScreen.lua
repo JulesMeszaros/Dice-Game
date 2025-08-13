@@ -159,7 +159,7 @@ function RoundScreen:update(dt)
 
     --Utilities buttons
     for key,button in next,self.uiElements.buttons do
-        self.uiElements.buttons["rerollButton"]:setActivated((self.round.availableRerolls>0 or self.round.firstRoll==false) and table.getn(self.round.selectedDices)<table.getn(self.round.diceObjects))
+        self.uiElements.buttons["rerollButton"]:setActivated((self.round.availableRerolls>0 or self.round.firstRoll==false) and table.getn(self.round.selectedDices)<table.getn(self.round.diceObjects) and self.round.phase ~= Constants.ROUND_STATES.TRIGGERING)
 
         button:update(dt)
     end
@@ -380,19 +380,17 @@ end
 
 function RoundScreen:mousereleased(x, y, button, istouch, presses)
     if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND)then
-        --release event for dice faces
 
         self.dragAndDroppedCiggie = nil
         self.dragAndDroppedFace = nil
 
+        --release event for dice faces
         for key,diceface in next,self.diceFaces do
             local wasReleased = diceface:releaseEvent()
             if(wasReleased)then
                 self.round:updateselectedDices(diceface)
             end
             diceface.isBeingDragged = false
-
-            
         end
 
         for key,diceface in next,self.diceFaces do
@@ -413,11 +411,13 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
         --Figure buttons
         if(self.clickedFigure)then
             if(self.clickedFigure == self:getCurrentlyHoveredLine())then
-                if(self.addingAvailableHand==false) then
-                    self.calculatePointsFunctions[self.clickedFigure]()
-                else
-                    self:addAvailableHand(self.clickedFigure)
-                    self.addingAvailableHand = false
+                if(self.round.phase ~= Constants.ROUND_STATES.TRIGGERING)then
+                    if(self.addingAvailableHand==false) then
+                        self.calculatePointsFunctions[self.clickedFigure]()
+                    else
+                        self:addAvailableHand(self.clickedFigure)
+                        self.addingAvailableHand = false
+                    end
                 end
             end
         end
