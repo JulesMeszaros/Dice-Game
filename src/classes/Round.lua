@@ -406,7 +406,7 @@ end
 
 --==REROLL FUNCTIONS==--
 function Round:rerollDices() --Triggers the makeRoll function after clicking the reroll button
-    
+    self.terrain.rerollingTimer = 2
     if(self.firstRoll == false) then
         self:makeRoll(self.diceObjects);
         self.firstRoll = true

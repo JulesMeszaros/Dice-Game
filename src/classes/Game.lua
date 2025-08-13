@@ -89,19 +89,19 @@ function Game:startNewRun()
     for i=1, 5 do 
         local fs = {}
         for j=1,6 do
-            local f = FaceTypes.Sacrifice:new(j, 10)
+            local f = FaceTypes.CheckeredDice:new(j, 10)
             table.insert(fs,f)
         end
         table.insert(diceObjects, DiceObject:new(fs))
     end
 
-    local f2 = {}
+    --[[ local f2 = {}
     for j=1,6 do
         local f = FaceTypes.Apparition:new(j, 10)
         table.insert(f2,f)
-    end
+    end ]]
 
-    diceObjects[1] = DiceObject:new(f2)
+    --diceObjects[1] = DiceObject:new(f2)
 
     self.diceObjects = diceObjects
 
