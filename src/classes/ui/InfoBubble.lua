@@ -18,7 +18,7 @@ function InfoBubble:new(screen)
     --Position/Scale
     self.x = 0
     self.y = 0
-    self.position = 0 -- 0 : under, 1 : above, 2: left, 3 : right
+    self.position = 1 -- 0 : under, 1 : above, 2: left, 3 : right
 
     self.width = 300
     self.height = 200
@@ -84,11 +84,23 @@ end
 
 function InfoBubble:draw()
     local x, y, ox, oy = self.x, self.y, 0, 0
+
+    if(y>self.screen.canvas:getHeight()/2) then
+        self.position = 1
+    else
+        self.position = 0
+    end
+
     if(self.position == 0) then
         x = x
         y = y+70
         ox = self.canvas:getWidth()/2
         oy = 0
+    elseif(self.position ==1) then
+        x = x
+        y = y-70
+        ox = self.canvas:getWidth()/2
+        oy = self.canvas:getHeight()
     end
     --shadow
     love.graphics.setShader(Shaders.black)
