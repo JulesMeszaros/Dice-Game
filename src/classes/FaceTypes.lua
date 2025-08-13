@@ -1542,7 +1542,7 @@ function CheckeredDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), CheckeredDice)
 
     --Metadatas about the CheckeredDice
-    self.name = "CheckeredDice"
+    self.name = "Checkered Dice"
     self.id = 1
     self.tier = "Common"
 
@@ -1567,6 +1567,39 @@ function CheckeredDice:triggerEffect(round)
 end
 
 FaceTypes.CheckeredDice = CheckeredDice
+
+--==Star Dice==--
+local StarDice = setmetatable({}, { __index = FaceObject })
+StarDice.__index = StarDice
+
+function StarDice:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), StarDice)
+
+    --Metadatas about the StarDice
+    self.name = "Star Dice"
+    self.id = 1
+    self.tier = "Rare"
+
+    --Metadatas about the graphics of the StarDice
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Star Dice.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the StarDice in px (in the png)
+    self.description = "Scoring : [[+20pts]]. Can be counted as any number for numbered figures."
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 20 --This is the points scored by the dice
+    self.totalTriggered = 0
+    
+    self.blank = true
+
+    return self
+end
+
+function StarDice:triggerEffect(round)
+    addScore(round, self:getPointsValue(run))
+end
+
+FaceTypes.StarDice = StarDice
 
 --UTILS--
 function multiplyScore(round, f)

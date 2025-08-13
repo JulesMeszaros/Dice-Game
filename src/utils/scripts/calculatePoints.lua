@@ -15,6 +15,10 @@ function CalculatePoints.numberBasePoints(number, dices, level)
                 table.insert(usedDices, d) 
             end
         else
+            if(d:getCurrentFaceObject().name == "Star Dice")then
+                score = score + number
+            end
+            
             table.insert(usedDices, d)
         end
     end
