@@ -327,7 +327,7 @@ function Round:triggerNextBackupDice()
 
         --On désactive les dés ghosts qui ne sont pas utilisés
         for i,d in next,unusedDices do
-            if(d:getCurrentFaceObject().ghost == true) then
+            if(d:getCurrentFaceObject().ghost == true and d:getCurrentFaceObject().wasJustReenabled ~= true) then
                 self.terrain.diceFaces[d]:disable(self.run)
             end
         end
@@ -335,6 +335,7 @@ function Round:triggerNextBackupDice()
         local j = 0
         for i,diceface in next,self.terrain.diceFaces do
             j = j+1
+            diceface.representedObject.wasJustReenabled = false
             if(j==5)then
                 diceface.animator:add("y", diceface.y, diceface.y-20, 0.1)
                 diceface.animator:add("y", diceface.y-20, 1000, 0.2)

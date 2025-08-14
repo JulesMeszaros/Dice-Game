@@ -1601,6 +1601,49 @@ end
 
 FaceTypes.StarDice = StarDice
 
+--==Star Dice==--
+local Resurection = setmetatable({}, { __index = FaceObject })
+Resurection.__index = Resurection
+
+function Resurection:new(faceValue, pointsValue)
+    local self = setmetatable(FaceObject:new(), Resurection)
+
+    --Metadatas about the Resurection
+    self.name = "Resurection"
+    self.id = 1
+    self.tier = "Uncommon"
+
+    --Metadatas about the graphics of the Resurection
+    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Resurection.png")
+    self.spriteSheet:setFilter("linear", "linear")
+    self.faceDimmension = 120 --sets the dimmensions for a face of the Resurection in px (in the png)
+    --Numbered status
+    self.faceValue = faceValue --This is the face represented by the face (the number shown)
+    self.pointsValue = 10 --This is the points scored by the dice
+    self.totalTriggered = 0
+   
+    self.first = true
+
+    return self
+end
+
+function Resurection:triggerEffect(round)
+    addScore(round, self:getPointsValue(run))
+end
+
+function Resurection:firstEffect(round)
+    for _,dice in next,round.run.diceObjects do
+        dice:getCurrentFaceObject().disabled = false
+        dice:getCurrentFaceObject().wasJustReenabled = true
+    end
+end
+
+function Resurection:getDescription(run)
+    return "Scoring : [[+"..self:getPointsValue(run).."]]. First : reenables every disabled dice face in the play mat."
+end
+
+FaceTypes.Resurection = Resurection
+
 --UTILS--
 function multiplyScore(round, f)
     round.handScore = round.handScore * f
