@@ -161,23 +161,7 @@ function Game:mousemoved(x, y, dx, dy)
 end
 
 function Game:cleanup()
-    -- Release game canvas
-    if self.gameCanvas then
-        self.gameCanvas:release()
-        self.gameCanvas = nil
-    end
-
-    -- Cleanup main menu
-    if self.mainMenu then
-        self.mainMenu:cleanup()
-        self.mainMenu = nil
-    end
-
-    -- Cleanup current run
-    if self.run then
-        self.run:cleanup()
-        self.run = nil
-    end
+    
 end
 
 return Game

@@ -6,6 +6,7 @@ local Constants = require("src.utils.Constants")
 local FaceHoverInfos = require("src.classes.ui.FaceHoverInfo")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local UI = require("src.utils.scripts.UI")
+local MainMenu = require("src.screens.MainMenu")
 --UI
 local Sprites = require("src.utils.Sprites")
 local DiceFace = require("src.classes.ui.DiceFace")
@@ -27,6 +28,7 @@ function RoundScreen:new(round)
     self.gameCanvas = round.gameCanvas
     self.round = round
     self.endRoundPopUp = nil
+    self.gameOverPopup = nil
 
     --Timers
     self.timers = {
@@ -279,6 +281,12 @@ function RoundScreen:updateCanvas(dt)
         self.endRoundPopUp:draw()
     end
 
+    if(self.gameOverPopup)then
+        self.gameOverPopup:update(dt)
+        self.gameOverPopup:updateCanvas(dt)
+        self.gameOverPopup:draw(dt)
+    end
+
     --Face Details
     --self:drawDescription(self.descriptionX, self.descriptionY)
 
@@ -301,7 +309,7 @@ end
 
 --==INPUT FUNCTIONS==--
 function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
-    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.run.runPaused == false) then
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER and self.run.runPaused == false) then
         --Drag and drop dice
         if(isDragging == true)then
             for key,diceui in next, self.diceFaces do
@@ -365,7 +373,7 @@ function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
 end
 
 function RoundScreen:mousepressed(x, y, button, istouch, presses)
-    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND) then
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER) then
         --DiceFaces
         for key,uiFace in next,self.diceFaces do
             uiFace:clickEvent()
@@ -386,12 +394,14 @@ function RoundScreen:mousepressed(x, y, button, istouch, presses)
     else
         if(self.endRoundPopUp) then
             self.endRoundPopUp:mousepressed(x, y, button, istouch, pressed)
+        elseif(self.gameOverPopup)then
+            self.gameOverPopup:mousepressed(x, y, button, istouch, presses)
         end
     end
 end
 
 function RoundScreen:mousereleased(x, y, button, istouch, presses)
-    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND)then
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER)then
 
         self.dragAndDroppedCiggie = nil
         self.dragAndDroppedFace = nil
@@ -442,6 +452,8 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
         end
     elseif(self.endRoundPopUp)then
         self.endRoundPopUp:mousereleased(x, y, button, istouch, presses)
+    elseif(self.gameOverPopup)then
+        self.gameOverPopup:mousereleased(x, y, button, istouch, presses)
     end
 end
 
@@ -570,7 +582,7 @@ function RoundScreen:drawHandScore()
     love.graphics.draw(self.handScoreCanvas, 0, 200)
 end
 
-function RoundScreen:outAnimation()
+function RoundScreen:outAnimation(onEnd)
     local outDuration = 0.4
     self.animator:addGroup({
         {property = "gridX", from = self.gridX, targetValue = 0-self.figureButtonsCanvas:getWidth(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
@@ -600,7 +612,16 @@ function RoundScreen:outAnimation()
     self.animator:addDelay(0.2)
     self.animator:addGroup({
         {property = "playerX", from = self.playerX, targetValue = -800, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "enemyX", from = self.enemyX, targetValue = self.canvas:getWidth()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic, onComplete=function()self.round.run:goToNextRound()end},
+        {property = "enemyX", from = self.enemyX, targetValue = self.canvas:getWidth()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic, onComplete=function()
+            if(onEnd == nil) then
+                self.round.run:goToNextRound()
+            elseif(onEnd == "newRun") then
+                self.round.run.game:startNewRun()
+            else
+                self.round.run.game.mainMenu = MainMenu:new(nil, self.round.run.game)
+                self.round.run.game.currentScreen = 0
+            end
+        end},
     })
 
     --Buttons animation
@@ -793,6 +814,8 @@ function RoundScreen:cleanup()
     self.currentlyHoveredDice = nil
     self.currentlyHoveredCiggie = nil
     self.endRoundPopUp = nil
+    self.gameOverPopup = nil
+
 end
 
 return RoundScreen

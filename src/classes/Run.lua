@@ -157,7 +157,7 @@ function Run:goToNextRound()
         
         --On vérifie que la run soit terminée (étage 5 atteint)
         if(self.currentFloor.floorNumber == Constants.FLOORS_BY_RUN)then
-            self.game.mainMenu = MainMenu:new()
+            self.game.mainMenu = MainMenu:new(nil, self.game)
             self.game.currentScreen = Constants.PAGES.MAIN_MENU
             return
         end
@@ -386,12 +386,6 @@ function Run:cleanup()
     self.facesInventory = {}
     self.facesRewardsInventory = {}
     self.ciggiesObjects = {}
-
-    -- Release game canvas if it exists
-    if self.gameCanvas then
-        self.gameCanvas:release()
-        self.gameCanvas = nil
-    end
 end
 
 return Run

@@ -292,9 +292,6 @@ function GameScreen:new(floor, run, screenType, round)
 end
 
 function GameScreen:update(dt)
-    -- Mark scores as changed every frame to ensure they stay current
-    -- The text objects are still cached, so this is much better than creating new ones
-    self.scoresChanged = true
 end
 
 function GameScreen:updateCanvas(dt)
