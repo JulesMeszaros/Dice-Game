@@ -273,14 +273,40 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
     for i,face in next,self.newUIFaces do
         face:releaseEvent()
         
+        --On vérifie que la nouvelle face soit au dessus d'une face des dés à customiser
         local closestFace = self:detectClosestFace(face.x, face.y)
 
+        --Si c'est le cas : on la place dessus
         if(closestFace) then
-            face.anchorX = closestFace[1]
-            face.anchorY = closestFace[2]
+            --On check s'il n'y a aucune autre face à cette place
+            --TODO
+            local isAlreadyCovered = false
+
+            --On parcoure les autres faces de l'inventaire pour vérifier qu'aucune n'est au meme endroit
+            for j,otherFace in next,self.newUIFaces do
+                local cf = self:detectClosestFace(otherFace.x, otherFace.y)
+                if(cf and cf[1]==closestFace[1] and cf[2]==closestFace[2] and otherFace~=face)then
+                    isAlreadyCovered = true
+                end
+            end
+
+            --On fait de même pour les faces reward
+            for j,otherFace in next,self.rewardsUIFaces do
+                local cf = self:detectClosestFace(otherFace.x, otherFace.y)
+                if(cf and cf[1]==closestFace[1] and cf[2]==closestFace[2] and otherFace~=face)then
+                    isAlreadyCovered = true
+                end
+            end
+
+            if(isAlreadyCovered==false)then
+                face.anchorX = closestFace[1]
+                face.anchorY = closestFace[2]
+            end
+
+        --Sinon, et si la face est au dessus de l'encart de vente
         elseif(face.x > 0 and face.x < 500) and (face.y>850 and face.y<self.canvas:getHeight()) then
             self:sellDiceFace(face.representedObject, face, i)
-
+        --Sinon on la replace à son endroit de base
         else
             face.anchorX = self.xPositions[i] + self.inventoryMDTX + 60
             face.anchorY = self.yPositions[i] + self.inventoryMDTY + 60
@@ -302,9 +328,33 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
         
         local closestFace = self:detectClosestFace(face.x, face.y)
 
+        
+
         if(closestFace) then
-            face.anchorX = closestFace[1]
-            face.anchorY = closestFace[2]
+
+            local isAlreadyCovered = false
+
+            --On parcoure les autres faces de l'inventaire pour vérifier qu'aucune n'est au meme endroit
+            for j,otherFace in next,self.newUIFaces do
+                local cf = self:detectClosestFace(otherFace.x, otherFace.y)
+                if(cf and cf[1]==closestFace[1] and cf[2]==closestFace[2] and otherFace~=face)then
+                    isAlreadyCovered = true
+                end
+            end
+
+            --On fait de même pour les faces reward
+            for j,otherFace in next,self.rewardsUIFaces do
+                local cf = self:detectClosestFace(otherFace.x, otherFace.y)
+                if(cf and cf[1]==closestFace[1] and cf[2]==closestFace[2] and otherFace~=face)then
+                    isAlreadyCovered = true
+                end
+            end
+
+            if(isAlreadyCovered==false)then
+                face.anchorX = closestFace[1]
+                face.anchorY = closestFace[2]
+            end
+            
         elseif(
             (face.targetX > self.inventoryMDTX and face.targetX < self.inventoryMDTX + self.inventoryCanvasMedium:getWidth()) and
             (face.targetY > self.inventoryMDTY and face.targetY < self.inventoryMDTY + self.inventoryCanvasMedium:getHeight()) --[[ and
