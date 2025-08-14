@@ -122,7 +122,7 @@ function BlueDice:new(faceValue, pointsValue)
     --Metadatas about the BlackStar
     self.name = "Blue Dice"
     self.tier = "Uncommon"
-    self.id = 2
+    self.id = 4
     self.description = "Scoring : [[+10pts]]. \n Passive : Adds [[2pts]] per used rerolls this building to its points value (currently : 0)"
 
     --Metadatas about the graphics of the BlackStar
@@ -167,7 +167,7 @@ function GoldDice:new(faceValue, pointsValue)
     --Metadatas about the BlackStar
     self.name = "Gold Face"
     self.tier = "Common"
-    self.id = 2
+    self.id = 5
     self.description = "[[+10pts]]. When triggered, adds 2€ to the balance"
 
     --Metadatas about the graphics of the BlackStar
@@ -205,7 +205,7 @@ function DeluxeDice:new(faceValue, pointsValue)
     --Metadatas about the BlackStar
     self.name = "Deluxe Face"
     self.tier = "Common"
-    self.id = 5
+    self.id = 6
     self.description = "Scoring: This Face adds the Point Value of every other scoring Face to the Total Score."
 
     --Metadatas about the graphics of the BlackStar
@@ -251,7 +251,7 @@ function StrikeOfLuck:new(faceValue, pointsValue)
     --Metadatas about the BlackStar
     self.name = "Strike Of Luck"
     self.tier = "Common"
-    self.id = 5
+    self.id = 7
     self.description = "Scoring : [[+10pts]], adds a random ciggie to the inventory"
 
     --Metadatas about the graphics of the BlackStar
@@ -294,7 +294,7 @@ function Copyprinter:new(faceValue, pointsValue)
     --Metadatas about the BlackStar
     self.name = "Copyprinter"
     self.tier = "Uncommon"
-    self.id = 5
+    self.id = 8
     self.description = "Scoring: Triggers the scoring dice to its left again. \n Blank"
 
     --Metadatas about the graphics of the BlackStar
@@ -353,7 +353,7 @@ function BasketOfEggs:new(faceValue, pointsValue)
     --Metadatas about the BlackStar
     self.name = "Basket Of Eggs"
     self.tier = "Uncommon"
-    self.id = 5
+    self.id = 9
     self.description = "Full Hand: Multiplies the total score by ((1,5))."
 
     --Metadatas about the graphics of the BlackStar
@@ -395,7 +395,7 @@ function Apparition:new(faceValue, pointsValue)
     --Metadatas about the BlackStar
     self.name = "Apparition"
     self.tier = "Uncommon"
-    self.id = 5
+    self.id = 10
     self.description = "Scoring : Multiplies the hand score by ((2)). \n Ghost"
 
     --Metadatas about the graphics of the BlackStar
@@ -431,7 +431,7 @@ function BlackStar:new(faceValue, pointsValue)
 
     --Metadatas about the BlackStar
     self.name = "Black Star"
-    self.id = 1
+    self.id = 11
     self.tier = "Common"
     self.description = "Scoring : [[+30pts]]\n Blank"
 
@@ -457,7 +457,7 @@ end
 
 FaceTypes.BlackStar = BlackStar
 
---==Black Star==--
+--==Clockwork Dice==--
 local ClockWorkDice = setmetatable({}, { __index = FaceObject })
 ClockWorkDice.__index = ClockWorkDice
 
@@ -466,7 +466,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
 
     --Metadatas about the ClockWorkDice
     self.name = "Clockwork Dice"
-    self.id = 1
+    self.id = 12
     self.tier = "Common"
     self.description = "Scoring : Adds [[20pts]] multiplied by this face's number to the score. Passive : decreases the face number by one the first time you score this Face in the Office."
 
@@ -507,7 +507,7 @@ function AshtrayDice:new(faceValue, pointsValue)
 
     --Metadatas about the AshtrayDice
     self.name = "Ashtray Dice"
-    self.id = 1
+    self.id = 13
     self.tier = "Common"
     self.description = "Scoring : Multiplies the total score by ((1)). This factor is upgraded by ((0.1)) each time a cigarette is smoked"
 
@@ -545,7 +545,7 @@ function SteelDice:new(faceValue, pointsValue)
 
     --Metadatas about the SteelDice
     self.name = "Steel Dice"
-    self.id = 1
+    self.id = 14
     self.tier = "Common"
     self.description = "Scoring : Adds [[10pts]] per € under 10€"
 
@@ -583,7 +583,7 @@ function DoubleDown:new(faceValue, pointsValue)
 
     --Metadatas about the DoubleDown
     self.name = "Double Down"
-    self.id = 1
+    self.id = 16
     self.tier = "Common"
     self.description = "Scoring : Adds [[10pts]] per even dices in scored hand"
 
@@ -627,7 +627,7 @@ function OddJob:new(faceValue, pointsValue)
 
     --Metadatas about the OddJob
     self.name = "Odd Job"
-    self.id = 1
+    self.id = 15
     self.tier = "Common"
     self.description = "Scoring : Adds [[10pts]] per odd dices in scored hand"
 
@@ -672,7 +672,7 @@ function MusicDice:new(faceValue, pointsValue)
 
     --Metadatas about the MusicDice
     self.name = "Music Dice"
-    self.id = 1
+    self.id = 17
     self.tier = "Common"
     self.description = "Scoring : [[+10pts]], multiplies the score by ((2)) if played hand contains exactly 4 dices"
 
@@ -713,7 +713,7 @@ function Signature:new(faceValue, pointsValue)
 
     --Metadatas about the Signature
     self.name = "Signature"
-    self.id = 1
+    self.id = 18
     self.tier = "Common"
     self.description = "Unique : Multiplies the hand score by ((3)). Scoring: [[+10pts]]."
 
@@ -754,7 +754,7 @@ function SniperDice:new(faceValue, pointsValue)
 
     --Metadatas about the SniperDice
     self.name = "SniperDice"
-    self.id = 1
+    self.id = 19
     self.tier = "Common"
 
     --Metadatas about the graphics of the SniperDice
@@ -799,7 +799,7 @@ function Spotlight:new(faceValue, pointsValue)
 
     --Metadatas about the Spotlight
     self.name = "Spotlight"
-    self.id = 1
+    self.id = 20
     self.tier = "Common"
 
     --Metadatas about the graphics of the Spotlight
@@ -838,7 +838,7 @@ function RiskyBusiness:new(faceValue, pointsValue)
 
     --Metadatas about the RiskyBusiness
     self.name = "Risky Business"
-    self.id = 1
+    self.id = 21
     self.tier = "Common"
 
     --Metadatas about the graphics of the RiskyBusiness
@@ -872,7 +872,7 @@ function CryptoDice:new(faceValue, pointsValue)
 
     --Metadatas about the CryptoDice
     self.name = "Crypto Dice"
-    self.id = 1
+    self.id = 22
     self.tier = "Common"
 
     --Metadatas about the graphics of the CryptoDice
@@ -908,7 +908,7 @@ function Patience:new(faceValue, pointsValue)
 
     --Metadatas about the Patience
     self.name = "Patience"
-    self.id = 1
+    self.id = 23
     self.tier = "Common"
 
     --Metadatas about the graphics of the Patience
@@ -946,7 +946,7 @@ function DataDice:new(faceValue, pointsValue)
 
     --Metadatas about the DataDice
     self.name = "Data Dice"
-    self.id = 1
+    self.id = 24
     self.tier = "Common"
 
     --Metadatas about the graphics of the DataDice
@@ -992,7 +992,7 @@ function StockOption:new(faceValue, pointsValue)
 
     --Metadatas about the StockOption
     self.name = "Stock Option"
-    self.id = 1
+    self.id = 25
     self.tier = "Common"
 
     --Metadatas about the graphics of the StockOption
@@ -1034,7 +1034,7 @@ function RainbowDice:new(faceValue, pointsValue)
 
     --Metadatas about the RainbowDice
     self.name = "Rainbow Dice"
-    self.id = 1
+    self.id = 26
     self.tier = "Common"
 
     --Metadatas about the graphics of the RainbowDice
@@ -1077,7 +1077,7 @@ function MagicDice:new(faceValue, pointsValue)
 
     --Metadatas about the MagicDice
     self.name = "Magic Dice"
-    self.id = 1
+    self.id = 27
     self.tier = "Common"
 
     --Metadatas about the graphics of the MagicDice
@@ -1113,7 +1113,7 @@ function ReturnOnInvestment:new(faceValue, pointsValue)
 
     --Metadatas about the ReturnOnInvestment
     self.name = "Return On Invenstment"
-    self.id = 1
+    self.id = 28
     self.tier = "Common"
 
     --Metadatas about the graphics of the ReturnOnInvestment
@@ -1155,7 +1155,7 @@ function RoyaltyCard:new(faceValue, pointsValue)
 
     --Metadatas about the RoyaltyCard
     self.name = "Royalty Card"
-    self.id = 1
+    self.id = 29
     self.tier = "Common"
 
     --Metadatas about the graphics of the RoyaltyCard
@@ -1190,7 +1190,7 @@ function MirrorDice:new(faceValue, pointsValue)
 
     --Metadatas about the MirrorDice
     self.name = "Mirror Dice"
-    self.id = 1
+    self.id = 30
     self.tier = "Common"
 
     --Metadatas about the graphics of the MirrorDice
@@ -1237,7 +1237,7 @@ function CookieDice:new(faceValue, pointsValue)
 
     --Metadatas about the CookieDice
     self.name = "Lucky Cookie"
-    self.id = 1
+    self.id = 31
     self.tier = "Common"
 
     --Metadatas about the graphics of the CookieDice
@@ -1276,7 +1276,7 @@ function InsomniacDice:new(faceValue, pointsValue)
 
     --Metadatas about the InsomniacDice
     self.name = "Insomniac Dice"
-    self.id = 1
+    self.id = 32
     self.tier = "Common"
 
     --Metadatas about the graphics of the InsomniacDice
@@ -1313,7 +1313,7 @@ function TwinFlame:new(faceValue, pointsValue)
 
     --Metadatas about the TwinFlame
     self.name = "Twin Flame"
-    self.id = 1
+    self.id = 33
     self.tier = "Rare"
 
     --Metadatas about the graphics of the TwinFlame
@@ -1351,7 +1351,7 @@ function FaxMachine:new(faceValue, pointsValue)
 
     --Metadatas about the FaxMachine
     self.name = "Fax Machine"
-    self.id = 1
+    self.id = 34
     self.tier = "Rare"
 
     --Metadatas about the graphics of the FaxMachine
@@ -1392,7 +1392,7 @@ function Necromancer:new(faceValue, pointsValue)
 
     --Metadatas about the Necromancer
     self.name = "Necromancer Dice"
-    self.id = 1
+    self.id = 35
     self.tier = "Rare"
 
     --Metadatas about the graphics of the Necromancer
@@ -1435,7 +1435,7 @@ function SixthSense:new(faceValue, pointsValue)
 
     --Metadatas about the SixthSense
     self.name = "Sixth Sense"
-    self.id = 1
+    self.id = 36
     self.tier = "Uncommon"
 
     --Metadatas about the graphics of the SixthSense
@@ -1493,7 +1493,7 @@ function Sacrifice:new(faceValue, pointsValue)
 
     --Metadatas about the Sacrifice
     self.name = "Sacrifice"
-    self.id = 1
+    self.id = 37
     self.tier = "Rare"
 
     --Metadatas about the graphics of the Sacrifice
@@ -1611,7 +1611,7 @@ function Resurection:new(faceValue, pointsValue)
     --Metadatas about the Resurection
     self.name = "Resurection"
     self.id = 1
-    self.tier = "Uncommon"
+    self.tier = "Rare"
 
     --Metadatas about the graphics of the Resurection
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Resurection.png")
