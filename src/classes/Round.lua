@@ -362,6 +362,11 @@ function Round:endTriggeringPhase()
             self.availableRerolls = Constants.BASE_REROLLS
         end
         self.roundScore = self.roundScore + self.handScore
+        
+        if(self.handScore > self.run.bestHand)then
+            self.run.bestHand = self.handScore
+        end
+
         self.handScore = 0
     end
 

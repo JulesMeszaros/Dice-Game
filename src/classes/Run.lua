@@ -40,6 +40,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.totalUsedCiggie = 0
     self.totalUsedCoffees = 0
     self.totalDisabled = 0
+    self.bestHand = 0
     
     self.shop = nil
 
