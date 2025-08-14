@@ -24,6 +24,9 @@ function MainMenu:new(gameCanvas, game)
     --Creating the canvas
     self.mainMenuCanvas = love.graphics.newCanvas(self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
 
+    -- Create version text only once
+    self.versionText = love.graphics.newText(Fonts.soraSmall, "AEROSOL DELUXE GAMES — "..Constants.GAME_VERSION)
+
     self.uiElements.buttons["newRun"] = Button:new(
         function()self.game:startNewRun()end,
         "src/assets/sprites/ui/New Run.png",
@@ -59,8 +62,7 @@ function MainMenu:updateCanvas(dt)
     love.graphics.draw(Sprites.MAIN_LOGO, self.mainMenuCanvas:getWidth()/2, 75, 0, 1, 1, Sprites.MAIN_LOGO:getWidth()/2, 0)
 
     --Version
-    local versionText = love.graphics.newText(Fonts.soraSmall, "AEROSOL DELUXE GAMES — "..Constants.GAME_VERSION)
-    love.graphics.draw(versionText, 20, self.mainMenuCanvas:getHeight()-20, 0, 1, 1, 0, versionText:getHeight())
+    love.graphics.draw(self.versionText, 20, self.mainMenuCanvas:getHeight()-20, 0, 1, 1, 0, self.versionText:getHeight())
 
     --Buttons
     for key,button in next,self.uiElements.buttons do
@@ -102,6 +104,28 @@ end
 
 function MainMenu:mousemoved(x, y, dx, dy, isDragging)
     
+end
+
+function MainMenu:cleanup()
+    -- Release main menu canvas
+    if self.mainMenuCanvas then
+        self.mainMenuCanvas:release()
+        self.mainMenuCanvas = nil
+    end
+
+    -- Release button canvases
+    for _, button in pairs(self.uiElements.buttons) do
+        if button.uiCanvas then
+            button.uiCanvas:release()
+            button.uiCanvas = nil
+        end
+    end
+
+    -- Release version text
+    if self.versionText then
+        self.versionText:release()
+        self.versionText = nil
+    end
 end
 
 return MainMenu

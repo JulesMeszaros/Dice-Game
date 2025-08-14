@@ -346,4 +346,51 @@ function Run:goToDiceCustomization()
         self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION
 end
 
+function Run:cleanup()
+    -- Cleanup shop screen
+    if self.shop then
+        if self.shop.shopCanvas then
+            self.shop.shopCanvas:release()
+            self.shop.shopCanvas = nil
+        end
+        self.shop = nil
+    end
+
+    -- Cleanup desk choice screen
+    if self.deskChoice then
+        self.deskChoice = nil
+    end
+
+    -- Cleanup current round
+    if self.currentRound then
+        if self.currentRound.terrain and self.currentRound.terrain.canvas then
+            self.currentRound.terrain.canvas:release()
+            self.currentRound.terrain.canvas = nil
+        end
+        self.currentRound = nil
+    end
+
+    -- Cleanup customization screen
+    if self.customizationScreen then
+        self.customizationScreen = nil
+    end
+
+    -- Cleanup game over screen
+    if self.gameOver then
+        self.gameOver = nil
+    end
+
+    -- Clear large tables
+    self.diceObjects = {}
+    self.facesInventory = {}
+    self.facesRewardsInventory = {}
+    self.ciggiesObjects = {}
+
+    -- Release game canvas if it exists
+    if self.gameCanvas then
+        self.gameCanvas:release()
+        self.gameCanvas = nil
+    end
+end
+
 return Run

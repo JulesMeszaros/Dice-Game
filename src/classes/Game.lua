@@ -84,29 +84,33 @@ end
 --==GAME FUNCTION==--
 
 function Game:startNewRun()
+    -- Cleanup existing run if exists
+    if self.run then
+        self.run:cleanup()
+        self.run = nil
+    end
+
+    -- Cleanup main menu
+    if self.mainMenu then
+        self.mainMenu:cleanup()
+        self.mainMenu = nil
+    end
+
     local diceObjects = {} --liste des 6 dés blancs
 
     for i=1, 5 do 
         local fs = {}
         for j=1,6 do
-            local f = FaceTypes.Resurection:new(j, 10)
+            local f = FaceTypes.WhiteDice:new(j, 10)
             table.insert(fs,f)
         end
         table.insert(diceObjects, DiceObject:new(fs))
     end
 
-    local f2 = {}
-    for j=1,6 do
-        local f = FaceTypes.Apparition:new(j, 10)
-        table.insert(f2,f)
-    end
-
-    diceObjects[1] = DiceObject:new(f2)
-
     self.diceObjects = diceObjects
 
     self.currentScreen = Constants.PAGES.GAME
-    self.run = Run:new(dices, self.gameCanvas, self, self.diceObjects)
+    self.run = Run:new(diceObjects, self.gameCanvas, self, self.diceObjects)
 end
 
 --==INPUTS FUNCTIONS==--
@@ -153,6 +157,26 @@ function Game:mousemoved(x, y, dx, dy)
         self.mainMenu:mousemoved(vx, vy, vdx, vdy)
     elseif(self.currentScreen == Constants.PAGES.GAME)then
         self.run:mousemoved(vx, vy, vdx, vdy)
+    end
+end
+
+function Game:cleanup()
+    -- Release game canvas
+    if self.gameCanvas then
+        self.gameCanvas:release()
+        self.gameCanvas = nil
+    end
+
+    -- Cleanup main menu
+    if self.mainMenu then
+        self.mainMenu:cleanup()
+        self.mainMenu = nil
+    end
+
+    -- Cleanup current run
+    if self.run then
+        self.run:cleanup()
+        self.run = nil
     end
 end
 
