@@ -95,6 +95,10 @@ function DeskChoice:new(floor, run)
 end
 
 function DeskChoice:update(dt)
+    if love.timer.getTime() % 0.1 < dt then
+        self.scoresChanged = true
+    end
+    
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()

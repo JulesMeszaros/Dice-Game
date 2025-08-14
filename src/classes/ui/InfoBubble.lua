@@ -2,7 +2,7 @@ local Fonts = require("src.utils.Fonts")
 local Sprites = require("src.utils.Sprites")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local UI = require("src.utils.scripts.UI")
-local Shaders = require("src.utils.shaders")
+local Shaders = require("src.utils.Shaders")
 
 local InfoBubble = {}
 InfoBubble.__index = InfoBubble

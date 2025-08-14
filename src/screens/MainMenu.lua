@@ -22,7 +22,7 @@ function MainMenu:new(gameCanvas, game)
     self.animationDices = {}
 
     --Creating the canvas
-    self.mainMenuCanvas = love.graphics.newCanvas(self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
+    self.mainMenuCanvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 
     -- Create version text only once
     self.versionText = love.graphics.newText(Fonts.soraSmall, "AEROSOL DELUXE GAMES — "..Constants.GAME_VERSION)
@@ -34,9 +34,15 @@ function MainMenu:new(gameCanvas, game)
         730+180/2,
         678,
         180,
-        self.gameCanvas,
+        nil,
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
+
+    G.animator:addGroup({
+                {property = "backgroundR", from=G.backgroundR, targetValue = 40/255, duration = 0.6},
+                {property = "backgroundG", from=G.backgroundG, targetValue = 40/255, duration = 0.6},
+                {property = "backgroundB", from=G.backgroundB, targetValue = 43/255, duration = 0.6},
+            })
 
     return self
 end
@@ -53,6 +59,7 @@ function MainMenu:update(dt)
 end
 
 function MainMenu:updateCanvas(dt)
+    local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.mainMenuCanvas)
     love.graphics.clear()
 
@@ -69,7 +76,7 @@ function MainMenu:updateCanvas(dt)
         button:draw()
     end
 
-    love.graphics.setCanvas(self.gameCanvas)
+    love.graphics.setCanvas(currentCanvas)
 end
 
 function MainMenu:draw()

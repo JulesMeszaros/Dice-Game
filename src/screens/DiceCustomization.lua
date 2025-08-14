@@ -91,6 +91,10 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 end
 
 function DiceCustomization:update(dt)
+    if love.timer.getTime() % 0.1 < dt then
+        self.scoresChanged = true
+    end
+    
     --Get hovered objects
     self:getCurrentlyHoveredFace()
     self:getCurrentlyHoveredCiggie()
@@ -887,6 +891,58 @@ function DiceCustomization:updateInventoryPositions()
         uiFace.targetX = self.xPositions[i] + 60+ self.inventoryMDTX
         uiFace.targetY = self.yPositions[i] + self.inventoryMDTY + 60
     end
+end
+
+function DiceCustomization:cleanup()
+    -- Clear UI dice faces
+    if self.uiDices then
+        for _, dice in pairs(self.uiDices) do
+            for _, face in pairs(dice) do
+                face = nil
+            end
+            dice = {}
+        end
+        self.uiDices = {}
+    end
+
+    -- Clear new UI faces
+    if self.newUIFaces then
+        for _, face in pairs(self.newUIFaces) do
+            face = nil
+        end
+        self.newUIFaces = {}
+    end
+
+    -- Clear rewards UI faces
+    if self.rewardsUIFaces then
+        for _, face in pairs(self.rewardsUIFaces) do
+            face = nil
+        end
+        self.rewardsUIFaces = {}
+    end
+
+    -- Clear UI elements
+    if self.uiElements and self.uiElements.buttons then
+        for _, button in pairs(self.uiElements.buttons) do
+            button = nil
+        end
+        self.uiElements.buttons = {}
+    end
+
+    -- Clear ciggies UI
+    if self.uiElements and self.uiElements.ciggiesUI then
+        for _, ciggie in pairs(self.uiElements.ciggiesUI) do
+            ciggie = nil
+        end
+        self.uiElements.ciggiesUI = {}
+    end
+
+    -- Clear additional objects
+    self.dragAndDroppedObject = nil
+    self.dragAndDroppedReward = nil
+    self.dragAndDroppedInventory = nil
+    self.currentlyHoveredFace = nil
+    self.currentlyHoveredCiggie = nil
 end
 
 return DiceCustomization

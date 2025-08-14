@@ -761,4 +761,38 @@ function indexOf(list, element)
     return nil -- retourne nil si l'élément n'est pas trouvé
 end
 
+function RoundScreen:cleanup()
+    -- Clear UI faces
+    if self.diceFaces then
+        for _, face in pairs(self.diceFaces) do
+            face = nil
+        end
+        self.diceFaces = {}
+    end
+
+    -- Clear UI elements
+    if self.uiElements and self.uiElements.buttons then
+        for _, button in pairs(self.uiElements.buttons) do
+            button = nil
+        end
+        self.uiElements.buttons = {}
+    end
+
+    -- Clear ciggies UI
+    if self.uiElements and self.uiElements.ciggiesUI then
+        for _, ciggie in pairs(self.uiElements.ciggiesUI) do
+            ciggie = nil
+        end
+        self.uiElements.ciggiesUI = {}
+    end
+
+    -- Clear additional objects
+    self.dragAndDroppedDice = nil
+    self.dragAndDroppedCiggie = nil
+    self.currentlyHoveredFace = nil
+    self.currentlyHoveredDice = nil
+    self.currentlyHoveredCiggie = nil
+    self.endRoundPopUp = nil
+end
+
 return RoundScreen

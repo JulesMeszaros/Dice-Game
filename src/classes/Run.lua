@@ -5,7 +5,7 @@ local DeskChoice = require("src.screens.DeskChoice")
 local DiceCustomization = require("src.screens.DiceCustomization")
 local EndRound = require("src.classes.ui.EndRound")
 local Infos = require("src.classes.ui.Infos")
-
+local MainMenu = require("src.screens.MainMenu")
 local Constants = require("src.utils.Constants")
 local Floor = require("src.classes.Floor")
 
@@ -157,6 +157,7 @@ function Run:goToNextRound()
         
         --On vérifie que la run soit terminée (étage 5 atteint)
         if(self.currentFloor.floorNumber == Constants.FLOORS_BY_RUN)then
+            self.game.mainMenu = MainMenu:new()
             self.game.currentScreen = Constants.PAGES.MAIN_MENU
             return
         end
