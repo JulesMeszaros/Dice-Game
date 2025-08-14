@@ -12,6 +12,7 @@ local Fonts = require("src.utils.Fonts")
 local Game = require("src.classes.Game")
 
 local delta = 0
+local fpstext = nil -- Cache the FPS text object
 
 local fpsLimit = nil -- nil = pas de limite
 local fpsOptions = { nil, 60, 30, 15 , 5}
@@ -36,6 +37,9 @@ function love.load()
     end
 
     game = Game:start()
+    
+    -- Create the FPS text object once
+    fpstext = love.graphics.newText(Fonts.soraSmall, "fps:0")
 end
 
 function love.update(dt)
@@ -62,7 +66,8 @@ function love.draw()
     love.graphics.setCanvas()
     love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
     game:draw()
-    fpstext = love.graphics.newText(Fonts.soraSmall, "fps:"..delta)
+    -- Update the cached FPS text object
+    fpstext:set("fps:"..delta)
     love.graphics.draw(fpstext, love.graphics.getWidth()-5, 5, 0, 1, 1, fpstext:getWidth(), 0)
     
     --dimtext = love.graphics.newText(Fonts.soraSmall, tostring(love.graphics.getWidth()).."x"..tostring(love.graphics.getHeight()))

@@ -278,12 +278,23 @@ function GameScreen:new(floor, run, screenType, round)
     --Timers
     self.upgradeHandPopupTimer = 0
     self.firstRollTextTimer = 0
+    
+    -- Cached text objects for performance
+    self.scoreTexts = {}
+    self.handTexts = {}
+    for i=1,13 do
+        self.scoreTexts[i] = love.graphics.newText(Fonts.soraSmall, "")
+        self.handTexts[i] = love.graphics.newText(Fonts.soraSmall, "")
+    end
+    self.scoresChanged = true -- Flag to track when scores need updating
 
     return self
 end
 
 function GameScreen:update(dt)
-
+    -- Mark scores as changed every frame to ensure they stay current
+    -- The text objects are still cached, so this is much better than creating new ones
+    self.scoresChanged = true
 end
 
 function GameScreen:updateCanvas(dt)
@@ -490,13 +501,25 @@ function GameScreen:drawFigureGrid()
     --Draw the table
     love.graphics.draw(Sprites.GRID, 0, 0)
 
+    -- Update cached text objects if scores changed
+    if self.scoresChanged then
+        if(self.screenType == Constants.RUN_STATES.ROUND)then
+            for i=1, 13 do
+                self.scoreTexts[i]:set(self.calcBasePoints[i]()[1])
+            end
+        end
+        for i=1, 13 do
+            self.handTexts[i]:set(self.run.availableFigures[i])
+        end
+        self.scoresChanged = false
+    end
+
     if(self.screenType == Constants.RUN_STATES.ROUND)then
         --Draw the scores
         love.graphics.setColor(249/255, 130/255, 132/255)
 
         for i=1, 13 do
-            local calcScore = love.graphics.newText(Fonts.soraSmall, self.calcBasePoints[i]()[1])
-            love.graphics.draw(calcScore, 225, 70*(i-1)+125, 0, 1, 1, calcScore:getWidth()/2, calcScore:getHeight()/2)
+            love.graphics.draw(self.scoreTexts[i], 225, 70*(i-1)+125, 0, 1, 1, self.scoreTexts[i]:getWidth()/2, self.scoreTexts[i]:getHeight()/2)
         end
     end
 
@@ -504,8 +527,7 @@ function GameScreen:drawFigureGrid()
     love.graphics.setColor(0, 0, 0, 1)
 
     for i=1, 13 do
-        local handsRemaining = love.graphics.newText(Fonts.soraSmall, self.run.availableFigures[i])
-        love.graphics.draw(handsRemaining, 360, 70*(i-1)+125, 0, 1, 1, handsRemaining:getWidth()/2, handsRemaining:getHeight()/2)
+        love.graphics.draw(self.handTexts[i], 360, 70*(i-1)+125, 0, 1, 1, self.handTexts[i]:getWidth()/2, self.handTexts[i]:getHeight()/2)
         
         --if no hands remaining, grey out the line
         if(self.run.availableFigures[i]<=0) then

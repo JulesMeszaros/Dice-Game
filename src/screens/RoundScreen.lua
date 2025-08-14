@@ -145,6 +145,12 @@ function RoundScreen:update(dt)
     self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy+dt
     self.timers.oscillationTimePlayer = self.timers.oscillationTimePlayer+dt
     
+    -- Mark scores as changed when needed (this ensures text is updated when data changes)
+    -- For now, we'll update every few frames to be safe, but this could be optimized further
+    if love.timer.getTime() % 0.1 < dt then
+        self.scoresChanged = true
+    end
+
     if(self.rerollingTimer >= 0) then
         self.rerollingTimer = self.rerollingTimer - dt
     end
