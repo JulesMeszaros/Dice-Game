@@ -444,10 +444,6 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
                         diceObjectToSwap:updateAllFaces()
                         currentDiceObject:updateAllFaces()
 
-                        --On met à jour les objets visuels des faces de dés
-                        face.diceObject = diceObjectToSwap
-                        self.uiDices[closestFace[3]][closestFace[4]].diceObject = currentDiceObject
-
                         face.representedObject = faceToSwap
                         self.uiDices[closestFace[3]][closestFace[4]].representedObject = currentFace
                         
