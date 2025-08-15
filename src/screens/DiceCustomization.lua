@@ -247,14 +247,34 @@ function DiceCustomization:keypressed(key)
 end
 
 function DiceCustomization:mousepressed(x, y, button, istouch, presses)
-   --Dice faces
+    --Variable nous permetant de vérifier si une face de reward ou de l'inventaire a été clickée 
+    --Pour éviter de déplacer une face de dé située en dessous
+    local newFaceWasClicked = false
+
+    --Dice faces
     for key,face in next,self.newUIFaces do
         face:clickEvent()
+        if(face:isHovered())then
+            newFaceWasClicked = true
+        end
     end
 
     --Rewards
     for key,face in next,self.rewardsUIFaces do
         face:clickEvent()
+        if(face:isHovered())then
+            newFaceWasClicked = true
+        end
+    end
+
+    --Dice Nets faces
+    --Check if another face (reward/inventory) wasnt already clicked
+    if(newFaceWasClicked == false)then
+        for k,dice in next,self.uiDices do
+            for i,face in next,dice do
+                face:clickEvent()
+            end
+        end
     end
    
     --Buttons
@@ -383,6 +403,17 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
 
     end
 
+    --Release event on dice net faces for swapping
+    for k,dice in next,self.uiDices do
+        for i,face in next,dice do
+            face:releaseEvent()
+
+            face.targetX, face.targetY = face.anchorX, face.anchorY
+
+            face.isBeingDragged = false
+        end
+    end
+
     --release event on UI elements (buttons)
     for key,button in next,self.uiElements.buttons do
         local wasReleased = button:releaseEvent()
@@ -402,6 +433,7 @@ end
 
 function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
     if(isDragging == true)then 
+        --Inventory
         for key,diceui in next, self.newUIFaces do
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
@@ -414,6 +446,7 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
             end
         end
 
+        --Rewards
         for key,diceui in next, self.rewardsUIFaces do
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
@@ -426,6 +459,22 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
             end
         end
 
+        --Dice nets
+        for k,dice in next,self.uiDices do
+            for i,face in next,dice do
+                if(face.isDraggable and face.isBeingClicked) then
+                    face.isBeingDragged = true
+                    self.dragAndDroppedObject = face
+                    self.dragAndDroppedReward = face
+                    face.dragXspeed = dx
+                    face.targetX = (face.targetX + dx)
+                    face.targetY = (face.targetY + dy)
+                    break;
+                end
+            end
+        end
+
+        --Ciggie
         for key,ciggie in next, self.uiElements.ciggiesUI do
             if(ciggie.isDraggable and ciggie.isBeingClicked) then
                 ciggie.isBeingDragged = true
@@ -770,6 +819,8 @@ function DiceCustomization:createDiceUI(diceObject, i)
             {property = "baseRotation", from = randomAngle, targetValue = 0, duration = duration, easing = AnimationUtils.Easing.outCubic}
 
         })
+
+        diceFace.anchorX, diceFace.anchorY = xOffset + relativeXPositions[k], yOffset + relativeYPosition[k]
         
         table.insert(diceUI, diceFace)
     end

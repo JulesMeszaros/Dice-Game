@@ -164,6 +164,7 @@ function DiceFace:clickAction()
     if(self.isSelectableAll == true) then
         self:selectOrDeselect()
     end
+    print(self.representedObject.name, self.representedObject.faceValue)
 end
 
 function DiceFace:selectOrDeselect()
