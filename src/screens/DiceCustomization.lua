@@ -352,8 +352,6 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
         
         local closestFace = self:detectClosestFace(face.x, face.y)
 
-        
-
         if(closestFace) then
 
             local isAlreadyCovered = false
@@ -407,9 +405,62 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
     for k,dice in next,self.uiDices do
         for i,face in next,dice do
             face:releaseEvent()
+            if(face.isBeingDragged == true)then
+                --On vérifie que la nouvelle face soit au dessus d'une face des dés à customiser
+                local closestFace = self:detectClosestFace(face.x, face.y)
+                
+                if(closestFace)then
+                    --On vérifie que cette face ne soit pas déjà couverte par une autre nouvelle face
+                    local isAlreadyCovered = false
 
-            face.targetX, face.targetY = face.anchorX, face.anchorY
+                    --On parcoure les autres faces de l'inventaire pour vérifier qu'aucune n'est au meme endroit (inventaire)
+                    for j,otherFace in next,self.newUIFaces do
+                        local cf = self:detectClosestFace(otherFace.x, otherFace.y)
+                        if(cf and cf[1]==closestFace[1] and cf[2]==closestFace[2] and otherFace~=face)then
+                            isAlreadyCovered = true
+                        end
+                    end
 
+                    --On fait de même pour les faces reward
+                    for j,otherFace in next,self.rewardsUIFaces do
+                        local cf = self:detectClosestFace(otherFace.x, otherFace.y)
+                        if(cf and cf[1]==closestFace[1] and cf[2]==closestFace[2] and otherFace~=face)then
+                            isAlreadyCovered = true
+                        end
+                    end
+                    
+                    if(isAlreadyCovered==false)then
+                        --Récupérer la face attribuée aux coordonnées de closestFace
+                        local currentDiceObject = face.representedObject.diceObject
+                        local diceObjectToSwap = self.uiDices[closestFace[3]][closestFace[4]].representedObject.diceObject
+
+                        local currentFace = face.representedObject
+                        local faceToSwap = self.uiDices[closestFace[3]][closestFace[4]].representedObject
+
+                        --On swap les faces
+                        diceObjectToSwap:setFace(currentFace, closestFace[4])
+                        currentDiceObject:setFace(faceToSwap, i)
+
+                        diceObjectToSwap:updateAllFaces()
+                        currentDiceObject:updateAllFaces()
+
+                        --On met à jour les objets visuels des faces de dés
+                        face.diceObject = diceObjectToSwap
+                        self.uiDices[closestFace[3]][closestFace[4]].diceObject = currentDiceObject
+
+                        face.representedObject = faceToSwap
+                        self.uiDices[closestFace[3]][closestFace[4]].representedObject = currentFace
+                        
+                        --On met à jour les sprites
+                        face:updateSprite()
+                        self.uiDices[closestFace[3]][closestFace[4]]:updateSprite()
+
+                        print(currentFace.faceValue, faceToSwap.faceValue)                        
+                    end
+                end
+                
+                face.targetX, face.targetY = face.anchorX, face.anchorY
+            end
             face.isBeingDragged = false
         end
     end
@@ -655,7 +706,7 @@ function DiceCustomization:switchFaces()
     for i,face in next,self.newUIFaces do
         local closestFace = self:detectClosestFace(face.x, face.y)
         if(closestFace) then
-            local diceObject = self.uiDices[closestFace[3]][closestFace[4]].diceObject
+            local diceObject = self.uiDices[closestFace[3]][closestFace[4]].representedObject.diceObject
             diceObject:setFace(face.representedObject, closestFace[4])
             --Removing the face from the inventory
             for k,d in next,self.run.facesInventory do
@@ -667,7 +718,7 @@ function DiceCustomization:switchFaces()
     for i,face in next,self.rewardsUIFaces do
         local closestFace = self:detectClosestFace(face.x, face.y)
         if(closestFace) then
-            local diceObject = self.uiDices[closestFace[3]][closestFace[4]].diceObject
+            local diceObject = self.uiDices[closestFace[3]][closestFace[4]].representedObject.diceObject
             diceObject:setFace(face.representedObject, closestFace[4])
         end
     end

@@ -47,4 +47,10 @@ function DiceObject:getNbFaces()
     return table.getn(self.faces)
 end
 
+function DiceObject:updateAllFaces()
+    for i,face in next,self.faces do
+        face:setDiceObject(self)
+    end
+end
+
 return DiceObject
