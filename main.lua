@@ -1,5 +1,5 @@
 local Animator = require("src.utils.Animator")
-
+local Shaders = require("src.utils.Shaders")
 G = {
     backgroundR = 40/255,
     backgroundG = 40/255,
@@ -17,6 +17,8 @@ local fpstext = nil -- Cache the FPS text object
 local fpsLimit = nil -- nil = pas de limite
 local fpsOptions = { nil, 60, 30, 15 , 5}
 local currentFpsIndex = 1
+
+local backgroundCanvas = nil
 
 
 
@@ -40,6 +42,9 @@ function love.load()
     
     -- Create the FPS text object once
     fpstext = love.graphics.newText(Fonts.soraSmall, "fps:0")
+    
+    -- Create background canvas
+    backgroundCanvas = love.graphics.newCanvas(love.graphics.getWidth(), love.graphics.getHeight())
 end
 
 function love.update(dt)
@@ -63,8 +68,8 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.setCanvas()
-    love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
+    drawBackground()
+    
     game:draw()
     -- Update the cached FPS text object
     fpstext:set("fps:"..delta)
@@ -99,4 +104,28 @@ end
 
 function love.mousemoved(x, y, dx, dy)
     game:mousemoved(x, y, dx, dy)
+end
+
+function love.resize(w, h)
+    backgroundCanvas = love.graphics.newCanvas(w, h)
+end
+
+function drawBackground()
+    -- Draw background to canvas with shader
+    love.graphics.setCanvas(backgroundCanvas)
+    love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
+    love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
+    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+    love.graphics.setColor(1, 1, 1)
+    
+    -- Set main canvas and draw background with shader
+    love.graphics.setCanvas()
+    love.graphics.setShader(Shaders.diagonalCircles)
+    Shaders.diagonalCircles:send("time", love.timer.getTime())
+    Shaders.diagonalCircles:send("circle_size", 0.05)
+    Shaders.diagonalCircles:send("spacing", 0.2)
+    Shaders.diagonalCircles:send("speed", 0.2)
+    Shaders.diagonalCircles:send("darkness", 0.1)
+    love.graphics.draw(backgroundCanvas, 0, 0)
+    love.graphics.setShader()
 end
