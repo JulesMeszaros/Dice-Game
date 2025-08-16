@@ -375,14 +375,20 @@ end
 
 function RoundScreen:mousepressed(x, y, button, istouch, presses)
     if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER) then
-        --DiceFaces
-        for key,uiFace in next,self.diceFaces do
-            uiFace:clickEvent()
-        end
+        
+        if self.round.phase~=Constants.ROUND_STATES.TRIGGERING then
+            --DiceFaces
+            for key,uiFace in next,self.diceFaces do
+                uiFace:clickEvent()
+            end
 
-        --Ciggies
-        for key,ciggie in next,self.uiElements.ciggiesUI do
-            ciggie:clickEvent()
+            --Ciggies
+            for key,ciggie in next,self.uiElements.ciggiesUI do
+                ciggie:clickEvent()
+            end
+
+            --Figure buttons
+            self.clickedFigure = self:getCurrentlyHoveredLine()
         end
 
         --Round Buttons
@@ -390,8 +396,7 @@ function RoundScreen:mousepressed(x, y, button, istouch, presses)
             button:clickEvent()
         end
 
-        --Figure buttons
-        self.clickedFigure = self:getCurrentlyHoveredLine()
+        
     else
         if(self.endRoundPopUp) then
             self.endRoundPopUp:mousepressed(x, y, button, istouch, pressed)
