@@ -65,6 +65,8 @@ function Ciggie:new(ciggieObject, x, y, isSelectable, isHoverable, mousePosition
 
     self.sprite = ciggieObject.sprite
 
+    self.topY = 0
+
     return self
 end
 
@@ -85,6 +87,9 @@ function Ciggie:update(dt)
     self:calculateAngleDrag()
     self.targetedRotation = self.baseRotation + self.dragRotation
     self:updateAngle(dt)
+
+    self.topY = self.y - (self.canvas:getHeight()/2)*(1-self.rotation/(-1.57)) - (self.canvas:getWidth()/2)*(self.rotation/(-1.57))
+    self.bottomY = self.y + (self.canvas:getHeight()/2)*(1-self.rotation/(-1.57)) - (self.canvas:getWidth()/2)*(self.rotation/(-1.57))
 
     self:updateCanvas(dt)
 end

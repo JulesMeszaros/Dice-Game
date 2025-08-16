@@ -71,6 +71,8 @@ end
 function InfoBubble:draw()
     local x, y, ox, oy = self.x, self.y, 0, 0
 
+    
+
     --On détermine la position (au dessus ou en dessous) de la bulle
     if(y>self.screen.canvas:getHeight()/2) then
         self.position = 1
@@ -81,11 +83,21 @@ function InfoBubble:draw()
     if(self.position == 0) then
         x = x
         y = y+70
+        
+        if(self.object.representedObject.objectType == "Magic Wand") then
+            y = self.object.bottomY + 30
+        end
+
         ox = self.canvas:getWidth()/2
         oy = 0
     elseif(self.position ==1) then
         x = x
         y = y-70
+
+        if(self.object.representedObject.objectType == "Magic Wand") then
+            y = self.object.topY - 30
+        end
+
         ox = self.canvas:getWidth()/2
         oy = self.canvas:getHeight()
     end
