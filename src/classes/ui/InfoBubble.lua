@@ -88,6 +88,10 @@ function InfoBubble:draw()
             y = self.object.bottomY + 30
         end
 
+        if(self.object.representedObject.objectType == "Coffee") then
+            y = y-30
+        end
+
         ox = self.canvas:getWidth()/2
         oy = 0
     elseif(self.position ==1) then
@@ -96,6 +100,10 @@ function InfoBubble:draw()
 
         if(self.object.representedObject.objectType == "Magic Wand") then
             y = self.object.topY - 30
+        end
+
+        if(self.object.representedObject.objectType == "Coffee") then
+            y = y-30
         end
 
         ox = self.canvas:getWidth()/2

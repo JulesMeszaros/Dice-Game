@@ -88,8 +88,8 @@ function Ciggie:update(dt)
     self.targetedRotation = self.baseRotation + self.dragRotation
     self:updateAngle(dt)
 
-    self.topY = self.y - (self.canvas:getHeight()/2)*(1-self.rotation/(-1.57)) - (self.canvas:getWidth()/2)*(self.rotation/(-1.57))
-    self.bottomY = self.y + (self.canvas:getHeight()/2)*(1-self.rotation/(-1.57)) - (self.canvas:getWidth()/2)*(self.rotation/(-1.57))
+    self.topY = self.y - (self.canvas:getHeight()/2)*(1-self.rotation/(-1.57)) - math.abs(self.canvas:getWidth()/2)*(self.rotation/(-1.57))
+    self.bottomY = self.y + (self.canvas:getHeight()/2)*(1-self.rotation/(-1.57)) - math.abs(self.canvas:getWidth()/2)*(self.rotation/(-1.57))
 
     self:updateCanvas(dt)
 end

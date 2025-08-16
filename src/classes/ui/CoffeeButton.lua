@@ -40,7 +40,7 @@ function CoffeeButton:new(
         description = "Upgrades the figure "..Constants.FIGURES_LABELS[self.figureIndex]..' of one level (lvl.'..tostring(self.run.figuresInfos[self.figureIndex].level)..' -> lvl.'..tostring(self.run.figuresInfos[self.figureIndex].level+1)..')',
     }
 
-    self.representedObject.getDescription = function() return self.representedObject.description end
+    self.representedObject.getDescription = function() return "Upgrades the figure "..Constants.FIGURES_LABELS[self.figureIndex]..' of one level (lvl.'..tostring(self.run.figuresInfos[self.figureIndex].level)..' -> lvl.'..tostring(self.run.figuresInfos[self.figureIndex].level+1)..')' end
 
     self.absoluteX = 0
     self.absoluteY = 0
