@@ -795,6 +795,8 @@ function Shop:generateRandomCoffee(i)
         self.run
     )
 
+    coffeeButton.absoluteX, coffeeButton.absoluteY = self.shopBGX, self.shopBGY
+
     table.insert(self.availableCoffeesUI, coffeeButton)
 
 end
