@@ -119,6 +119,7 @@ function Shop:update(dt)
     self:getCurrentlyHoveredCiggie()
     self:getCurrentlyHoveredFace()
     self:getCurrentlyHoveredCoffeeButton()
+    self:getCurrentlyHoveredObject()
 
     self:updateCanvas(dt)
 end
@@ -248,9 +249,9 @@ function Shop:updateCanvas(dt)
         self.dragAndDroppedObject:draw()
     end
 
-    if(self.currentlyHoveredFace)then
+    if(self.currentlyHoveredObject)then
         --Info bubble (wip)
-        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX , self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
         --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
         self.infoBubble:update(dt)
         self.infoBubble:draw()
@@ -828,13 +829,13 @@ end
 
 function Shop:getCurrentlyHoveredObject()
     if(self.currentlyHoveredFace) then
-        return self.currentlyHoveredFace.representedObject
+        self.currentlyHoveredObject = self.currentlyHoveredFace
     elseif(self.currentlyHoveredCiggie)then
-        return self.currentlyHoveredCiggie.representedObject
+        self.currentlyHoveredObject = self.currentlyHoveredCiggie
     elseif(self.currentlyHoveredCoffeeButton) then
-        return self.currentlyHoveredCoffeeButton.representedObject
+        self.currentlyHoveredObject = self.currentlyHoveredCoffeeButton
     else
-        return nil
+        self.currentlyHoveredObject = nil
     end
 end
 

@@ -30,6 +30,8 @@ function Ciggie:new(ciggieObject, x, y, isSelectable, isHoverable, mousePosition
     self.anchorX ,self.anchorY = x, y
     self.x = x
     self.y = y
+    self.absoluteX = 0
+    self.absoluteY = 0
 
     --Rotation
     self.targetedRotation = 0 --Angle the dice is targeting

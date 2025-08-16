@@ -31,7 +31,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.facesRewardsInventory = {}
     
     --Ciggies
-    self.ciggiesObjects = {}
+    self.ciggiesObjects = {CiggieTypes.Rockmans:new(), CiggieTypes.Turnns:new()}
     --Run stats
     self.totalUsedCiggie = 0
     self.totalUsedCoffees = 0

@@ -12,8 +12,6 @@ function FreeRoller:new()
 
     self.usableIn = Constants.RUN_STATES.ROUND
 
-    self.type = self
-
     self.name="Free Roller"
     self.description="Adds one additionnal reroll to the current hand"
 
@@ -33,7 +31,6 @@ Turnns.__index = Turnns
 
 function Turnns:new()
     local self = setmetatable(CiggieObject.new(), Turnns)
-    self.type = self
 
     self.usableIn = Constants.RUN_STATES.ROUND
 
@@ -57,7 +54,6 @@ Fortune.__index = Fortune
 
 function Fortune:new()
     local self = setmetatable(CiggieObject.new(), Fortune)
-    self.type = self
 
     self.usableIn = "any"
 
@@ -91,6 +87,9 @@ function Rockmans:new()
     return self
 end
 
+function Rockmans:usageCondition(round)
+    return table.getn(round.run.ciggiesObjects)>1
+end
 
 function Rockmans:effect(screen)
     local randomCiggie = getRandomExcluding(screen.run.ciggiesObjects, self)

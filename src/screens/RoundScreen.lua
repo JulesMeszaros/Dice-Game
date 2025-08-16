@@ -170,6 +170,7 @@ function RoundScreen:update(dt)
     --Hover infos
     self:getCurrentlyHoveredDice() --Le dé survolé
     self:getCurrentlyHoveredCiggie() --Ciggie survolée
+    self:getCurrentlyHoveredObject()
 
     --Utilities buttons
     for key,button in next,self.uiElements.buttons do
@@ -295,9 +296,9 @@ function RoundScreen:updateCanvas(dt)
         self.dragAndDroppedCiggie:draw()
     end
 
-    if(self.currentlyHoveredFace)then
+    if(self.currentlyHoveredObject)then
         --Info bubble (wip)
-        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX , self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
         --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
         self.infoBubble:update(dt)
         self.infoBubble:draw()
@@ -689,12 +690,9 @@ end
 function RoundScreen:getCurrentlyHoveredObject()
     local object = nil
 
-    if(self.currentlyHoveredCiggie and not self.endRoundPopUp)then object = self.currentlyHoveredCiggie.representedObject
-    elseif(self.currentlyHoveredFace and not self.endRoundPopUp)then object = self.currentlyHoveredFace.representedObject
-    elseif(self.endRoundPopUp and self.endRoundPopUp.currentlyHoveredFace) then object = self.endRoundPopUp.currentlyHoveredFace.representedObject
-    else object = nil end
-
-    return object
+    if(self.currentlyHoveredCiggie)then self.currentlyHoveredObject = self.currentlyHoveredCiggie
+    elseif(self.currentlyHoveredFace)then self.currentlyHoveredObject = self.currentlyHoveredFace
+    else self.currentlyHoveredObject = nil end
 end
 
 -- Updates the dice net

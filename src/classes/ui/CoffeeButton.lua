@@ -39,6 +39,9 @@ function CoffeeButton:new(
         tier = 'Coffee',
         description = "Upgrades the figure "..Constants.FIGURES_LABELS[self.figureIndex]..' of one level (lvl.'..tostring(self.run.figuresInfos[self.figureIndex].level)..' -> lvl.'..tostring(self.run.figuresInfos[self.figureIndex].level+1)..')',
     }
+
+    self.absoluteX = 0
+    self.absoluteY = 0
     
     return self
 

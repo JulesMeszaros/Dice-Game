@@ -158,6 +158,7 @@ function Infos:updateCanvas(dt)
 
     self:drawCiggiesTrayFront()
     self:getCurrentlyHoveredFace()
+    
     if(self.currentlyHoveredFace)then
         --Info bubble (wip)
         self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY

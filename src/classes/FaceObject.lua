@@ -10,7 +10,7 @@ FaceObject.__index = FaceObject
 function FaceObject:new()
     local self = setmetatable({}, FaceObject)
 
-    self.type = "Dice Face"
+    self.objectType = "Dice Face"
 
     --Metadatas about the FaceObject
     self.name = "FACE OBJECT"

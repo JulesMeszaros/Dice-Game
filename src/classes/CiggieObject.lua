@@ -3,13 +3,17 @@ CiggieObject.__index = CiggieObject
 
 function CiggieObject:new()
     local self = setmetatable({}, CiggieObject)
-    self.type = "Magic Wand"
-    self.name = "Cigarette"
-    self.description = "Donne le cancer askiiiip"
+    self.objectType = "Magic Wand"
+    self.name = "Magic Wand"
+    self.description = "[[Description Missing]]"
     self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Channel Cigarette.png")
     self.tier = "Clope"
     self.usableIn = nil
     return self
+end
+
+function CiggieObject:getDescription()
+    return self.description
 end
 
 function CiggieObject:trigger(screen, screenType)
