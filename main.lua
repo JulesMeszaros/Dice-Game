@@ -48,8 +48,6 @@ function G.calculateParalaxeOffset(layer)
     return G.ox * Constants.PARALAXE_MAX_OFFSET[layer], G.oy * Constants.PARALAXE_MAX_OFFSET[layer]
 end
 
-local applyCRT = false
-
 local Fonts = require("src.utils.Fonts")
 local Game = require("src.classes.Game")
 

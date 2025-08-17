@@ -176,7 +176,7 @@ function Infos:updateCanvas(dt)
         self.infoBubble:update(dt)
         self.infoBubble:draw()
         
-    end
+    end ]]
 
     love.graphics.setCanvas(currentCanvas)
 end

@@ -148,7 +148,9 @@ function DiceFace:draw()
     love.graphics.setShader()
     love.graphics.setColor(1, 1, 1, 1) ]]
 
-	self.rainbowShader:send("time", self.rotation + self.scaleX * 2 + 30)
+    --Dé
+
+    self.rainbowShader:send("time", self.rotation + self.scaleX * 2 + 30)
 	self.rainbowShader:send("frequency", 0.3)
 	self.rainbowShader:send("intensity", 0.2)
 	--self.rainbowShader:send("scale", 50)

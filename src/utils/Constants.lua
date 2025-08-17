@@ -199,7 +199,6 @@ Constants.EMPLOIS = {
     "Expert"
 }
 
-
 Constants.PARALAXE_MAX_OFFSET = {
     --Layer 1 (front)
     60,
