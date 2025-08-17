@@ -159,14 +159,14 @@ function Infos:updateCanvas(dt)
     self:drawCiggiesTrayFront()
     self:getCurrentlyHoveredFace()
     
-    if(self.currentlyHoveredFace)then
+    --[[ if(self.currentlyHoveredFace)then
         --Info bubble (wip)
         self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
         --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
         self.infoBubble:update(dt)
         self.infoBubble:draw()
         
-    end
+    end ]]
 
     love.graphics.setCanvas(currentCanvas)
 end

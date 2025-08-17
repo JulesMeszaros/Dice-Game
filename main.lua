@@ -4,9 +4,17 @@ G = {
     backgroundR = 40/255,
     backgroundG = 40/255,
     backgroundB = 43/255,
+    ox = 0,
+    oy = 0,
 }
 
 G.animator = Animator:new(G)
+
+-- Function to calculate parallax offset
+function G.calculateParalaxeOffset(layer)
+    local Constants = require("src.utils.Constants")
+    return G.ox * Constants.PARALAXE_MAX_OFFSET[layer], G.oy * Constants.PARALAXE_MAX_OFFSET[layer]
+end
 
 local Fonts = require("src.utils.Fonts")
 local Game = require("src.classes.Game")
@@ -125,7 +133,7 @@ function drawBackground()
     Shaders.diagonalCircles:send("circle_size", 0.05)
     Shaders.diagonalCircles:send("spacing", 0.2)
     Shaders.diagonalCircles:send("speed", 0.2)
-    Shaders.diagonalCircles:send("darkness", 0.1)
+    Shaders.diagonalCircles:send("darkness", -0.4)
     love.graphics.draw(backgroundCanvas, 0, 0)
     love.graphics.setShader()
 end

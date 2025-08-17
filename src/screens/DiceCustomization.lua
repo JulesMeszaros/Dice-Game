@@ -39,8 +39,10 @@ function DiceCustomization:new(previousRound, newFaceObjects)
         910,
         150,
         self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
+        function()return Inputs.getMouseInCanvas(0, 0, 3)end
     )
+
+    self.uiElements.buttons["nextRound"].layer = 3
 
     self.uiElements.buttons["nextRound"].animator:add('y', self.nextRoundY, self.nextRoundTY, AnimationUtils.EntryDuration, AnimationUtils.Easing.inOutCubic)
 
@@ -550,6 +552,7 @@ function DiceCustomization:drawNewFacesCanvas()
 end
 
 function DiceCustomization:drawCustomizationMat()
+    local px, py = G.calculateParalaxeOffset(3)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.customizationMat)
     love.graphics.clear()
@@ -557,7 +560,7 @@ function DiceCustomization:drawCustomizationMat()
     love.graphics.draw(Sprites.CUSTOMIZATION_MAT, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.customizationMat, self.customizationMatX, self.customizationMatY, 0, 1, 1)
+    love.graphics.draw(self.customizationMat, self.customizationMatX+px, self.customizationMatY+py, 0, 1, 1)
 end
 
 function DiceCustomization:drawNewFaces()
@@ -763,6 +766,7 @@ function DiceCustomization:createInventoryUI()
                                     function()return Inputs.getMouseInCanvas(0, 0)end,
                                     nil)
         diceFace.animator:addDelay(0.3)
+        diceFace.layer = 3
         local duration = math.random(2, 8)/10
         
         local randomAngle = math.random(-500, 500)/100
@@ -801,6 +805,8 @@ function DiceCustomization:createRewardsUI()
                                     nil)
 
         diceFace.animator:addDelay(0.3)
+        diceFace.layer = 3
+
         local duration = math.random(2, 8)/10
         
         local randomAngle = math.random(-500, 500)/100
@@ -854,6 +860,7 @@ function DiceCustomization:createDiceUI(diceObject, i)
         local duration = math.random(3, 5)/10 -- the duration of the animation
         local delayStart = math.random(1, 3)/10 --a little delay before it starts to desynchronize the dices
         diceFace.animator:addDelay(delayStart) --applying the delay
+        diceFace.layer = 3
 
         local randomAngle = math.random(-500, 500)/100
 

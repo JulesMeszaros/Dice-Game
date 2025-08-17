@@ -37,6 +37,10 @@ function AnimationUtils.shake(target, xintensity, yintensity, duration)
 
 end
 
+function AnimationUtils.dampLerp(current, target, speed, dt)
+    return current + (target - current) * (1 - math.exp(-speed * dt))
+end
+
 --Easings
 local Easing = {}
 
