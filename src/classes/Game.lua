@@ -5,7 +5,7 @@ local MainMenu = require("src.screens.MainMenu")
 local Constants = require("src.utils.Constants")
 local Inputs = require("src.utils.scripts.Inputs")
 local Shaders = require("src.utils.Shaders")
-
+local Animations = require("src.utils.scripts.Animations")
 --Dice Face Types
 local DiceObject = require("src.classes.DiceObject") 
 local FaceTypes = require("src.classes.FaceTypes")
@@ -48,6 +48,13 @@ function Game:update(dt)
     elseif self.currentScreen == Constants.PAGES.GAME then
         self.run:update(dt)     
     end
+
+    local vx,vy = Inputs.getVirtualMousePosition()
+    --relative x/y mouse position (0-1)
+    self.rx, self.ry = (vx/Constants.VIRTUAL_GAME_WIDTH)-0.5, (vy/Constants.VIRTUAL_GAME_HEIGHT)-0.5
+    --damped offset
+    G.ox = Animations.dampLerp(G.ox, self.rx, 1.5, dt)
+    G.oy = Animations.dampLerp(G.oy, self.ry, 1.5, dt) / 1.2
 end
 
 function Game:draw()
@@ -71,8 +78,8 @@ function Game:draw()
     local scaledWidth = virtualWidth * scale
     local scaledHeight = virtualHeight * scale
 
-    local offsetX = (screenWidth - scaledWidth) / 2
-    local offsetY = (screenHeight - scaledHeight) / 2
+    local offsetX = (screenWidth - scaledWidth) / 2 --+ (G.ox*30)
+    local offsetY = (screenHeight - scaledHeight) / 2 --+ (G.oy*30)
     
     if(applyCRT)then
         love.graphics.setShader(Shaders.aChrom)

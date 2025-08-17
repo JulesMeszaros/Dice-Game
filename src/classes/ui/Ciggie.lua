@@ -95,7 +95,9 @@ function Ciggie:update(dt)
 end
 
 function Ciggie:draw()
-    love.graphics.draw(self.canvas, self.x, self.y, self.rotation, self.scaleX, self.scaleY, self.canvas:getWidth()/2, self.canvas:getHeight()/2)
+    local layer = self.layer or 1
+    local px, py = G.calculateParalaxeOffset(layer)
+    love.graphics.draw(self.canvas, self.x + px, self.y + py, self.rotation, self.scaleX, self.scaleY, self.canvas:getWidth()/2, self.canvas:getHeight()/2)
 end
 
 function Ciggie:createCanvas()
@@ -147,8 +149,9 @@ end
 function Ciggie:isHovered()
     if not self.isHoverable then return false end
 
-    local vx, vy = InputsUtils.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+    local layer = self.layer or 1
 
+    local vx, vy = InputsUtils.getVirtualMousePosition(1)
     -- Décale les coordonnées souris par rapport au centre de rotation
     local dx = vx - self.x
     local dy = vy - self.y

@@ -200,7 +200,8 @@ function RoundScreen:updateCanvas(dt)
     --PlayersInfos
     self:drawPlayersInfos(dt)
     --Dice Tray
-    self:drawDiceTray(self.diceMatx, self.diceMaty, self.diceFaces)
+    local px, py = G.calculateParalaxeOffset(3)
+    self:drawDiceTray(self.diceMatx+px, self.diceMaty+py, self.diceFaces)
 
     --Bouttouns de round
     for k,b in next,self.uiElements.buttons do
@@ -520,8 +521,8 @@ function RoundScreen:drawDiceDetails()
     end
 
     love.graphics.setCanvas(currentCanvas)
-
-    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, 0, 0)
+    local px, py = G.calculateParalaxeOffset(1)
+    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX + px, self.diceDetailsY + py, 0, 1, 1, 0, 0)
 end
 
 function RoundScreen:drawPlayersInfos(dt)
@@ -551,10 +552,10 @@ function RoundScreen:drawPlayersInfos(dt)
     --Lion
     self.round.enemyCharacter:update()
     self.round.enemyCharacter:draw(390+130, 125, 250, 250)
-
+    local px, py = G.calculateParalaxeOffset(2)
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.playerInfos, self.playerX, self.playerY+playerYOffset)
-    love.graphics.draw(self.enemyInfos, self.enemyX, self.enemyY+enemyYOffset)
+    love.graphics.draw(self.playerInfos, self.playerX+px, self.playerY+py)
+    love.graphics.draw(self.enemyInfos, self.enemyX+px, self.enemyY+py)
 end
 
 --==CREATE CANVAS FUNCTIONS==--

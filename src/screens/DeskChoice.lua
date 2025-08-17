@@ -236,7 +236,8 @@ function DeskChoice:drawDeck(dt)
     end
 
     love.graphics.setCanvas(targetCanvas)
-    love.graphics.draw(self.deckCanvas, self.deckX, self.deckY)
+    local px, py = G.calculateParalaxeOffset(2)
+    love.graphics.draw(self.deckCanvas, self.deckX + px, self.deckY + py)
 end
 
 --TODO: move in gamescreen.lua

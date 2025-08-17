@@ -194,4 +194,15 @@ Constants.EMPLOIS = {
     "Responsable"
 }
 
+Constants.PARALAXE_MAX_OFFSET = {
+    --Layer 1 (front)
+    60,
+    --Layer 2 (middle)
+    45,
+    --Layer 3 (back)
+    30,
+    --Aucun layer
+    0
+}
+
 return Constants

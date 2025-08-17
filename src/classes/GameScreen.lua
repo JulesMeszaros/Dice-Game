@@ -209,8 +209,11 @@ function GameScreen:new(floor, run, screenType, round)
         180,
         80,
         self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
+        function()return Inputs.getMouseInCanvas(0, 0, 1)end
     )
+
+    self.uiElements.buttons["menuButton"].layer = 1
+
 
     self.uiElements.buttons["planButton"] = Button:new(
         function()self.run:toggleInfoScreen()end,
@@ -220,8 +223,10 @@ function GameScreen:new(floor, run, screenType, round)
         180,
         80,
         self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
+        function()return Inputs.getMouseInCanvas(0, 0, 1)end
     )
+
+    self.uiElements.buttons["planButton"].layer = 1
     
     --Buttons animation
     self.uiElements.buttons["menuButton"].animator:add('x', self.menuBtnX, self.menuBtnTX, AnimationUtils.EntryDuration*3, AnimationUtils.Easing.inOutCubic)
@@ -242,6 +247,8 @@ function GameScreen:new(floor, run, screenType, round)
         )
         self.uiElements.buttons["rerollButton"].animator:add('y', self.rerollBtnY, self.rerollBtnTY, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.outCubic)
 
+        self.uiElements.buttons["rerollButton"].layer = 3
+
     end
 
     --Cas particulier du shop
@@ -255,8 +262,9 @@ function GameScreen:new(floor, run, screenType, round)
             370, 
             60,
             self.gameCanvas,
-            function()return Inputs.getMouseInCanvas(0, 0)end
+            function()return Inputs.getMouseInCanvas(0, 0, 3)end
         )
+        self.uiElements.buttons["rerollShopButton"].layer = 3
         self.uiElements.buttons["rerollShopButton"].animator:addDelay(0.2)
         self.uiElements.buttons["rerollShopButton"].animator:add('y', self.rerollShopY, self.rerollShopTY, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.inOutCubic)
 
@@ -268,8 +276,9 @@ function GameScreen:new(floor, run, screenType, round)
             370, 
             60,
             self.gameCanvas,
-            function()return Inputs.getMouseInCanvas(0, 0)end
+            function()return Inputs.getMouseInCanvas(0, 0, 3)end
         )
+        self.uiElements.buttons["nextRoundSmallBtn"].layer = 3
         self.uiElements.buttons["nextRoundSmallBtn"].animator:addDelay(0.2)
         self.uiElements.buttons["nextRoundSmallBtn"].animator:add('y', self.nextRoundSMY, self.nextRoundSMTY, AnimationUtils.EntryDuration*2, AnimationUtils.Easing.inOutCubic)
 
@@ -464,11 +473,12 @@ function GameScreen:drawRoundDetails(dt)
 
 
     --DRAW ALL THE CANVAS
+    local px, py = G.calculateParalaxeOffset(1)
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.roundNumberCanvas, self.floorX, self.floorY)
-    love.graphics.draw(self.handsCanvas, self.turnsX, self.turnsY)
-    love.graphics.draw(self.rerollsCanvas, self.rerollsX, self.rerollsY)
-    love.graphics.draw(self.moneyCanvas, self.moneyX, self.moneyY)
+    love.graphics.draw(self.roundNumberCanvas, self.floorX + px, self.floorY + py)
+    love.graphics.draw(self.handsCanvas, self.turnsX + px, self.turnsY + py)
+    love.graphics.draw(self.rerollsCanvas, self.rerollsX + px, self.rerollsY + py)
+    love.graphics.draw(self.moneyCanvas, self.moneyX + px, self.moneyY + py)
 end
 
 function GameScreen:drawCiggiesTray()
@@ -476,9 +486,11 @@ function GameScreen:drawCiggiesTray()
     love.graphics.setCanvas(self.ciggiesTray)
 
     love.graphics.draw(Sprites.MAGIC_WANDS, 0, 0)
+    local px, py = G.calculateParalaxeOffset(1)
+
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1)
+    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX + px, self.ciggiesTrayY + py, 0, 1, 1)
 end
 
 function GameScreen:drawCiggiesTrayFront()
@@ -486,9 +498,10 @@ function GameScreen:drawCiggiesTrayFront()
     love.graphics.setCanvas(self.ciggiesTrayFront)
 
     love.graphics.draw(Sprites.MAGIC_WANDS_FRONT, 0, self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, Sprites.MAGIC_WANDS_FRONT:getHeight())
+    local px, py = G.calculateParalaxeOffset(1)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX, self.ciggiesTrayY + self.ciggiesTray:getHeight() -self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, 0)
+    love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX + px, self.ciggiesTrayY + self.ciggiesTray:getHeight() -self.ciggiesTrayFront:getHeight() + py, 0, 1, 1, 0, 0)
 end
 
 function GameScreen:drawFigureGrid()
@@ -553,8 +566,8 @@ function GameScreen:drawFigureGrid()
     end
 
     love.graphics.setCanvas(targetCanvas)
-    
-    love.graphics.draw(self.figureButtonsCanvas, self.gridX, self.gridY)
+    local px, py = G.calculateParalaxeOffset(1)
+    love.graphics.draw(self.figureButtonsCanvas, self.gridX + px, self.gridY + py)
     
 end
 
@@ -570,9 +583,9 @@ function GameScreen:drawShopBackground()
             btn:draw()
         end
     end
-
+    local px, py = G.calculateParalaxeOffset(3)
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.shopCanvas, self.shopBGX, self.shopBGY)
+    love.graphics.draw(self.shopCanvas, self.shopBGX +px, self.shopBGY+py)
 end
 
 function GameScreen:drawInventoryBackGround()
@@ -580,21 +593,25 @@ function GameScreen:drawInventoryBackGround()
 end
 
 function GameScreen:drawInventoryBackGroundSmall()
+    local px, py = G.calculateParalaxeOffset(3)
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.inventoryCanvasSmall)
     love.graphics.clear()
     love.graphics.draw(Sprites.INVENTORY_SMALL, 0, 0)
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.inventoryCanvasSmall, self.inventorySMX, self.inventorySMY)
+    love.graphics.draw(self.inventoryCanvasSmall, self.inventorySMX+px, self.inventorySMY+py)
 end
 
 function GameScreen:drawRewardsSmall()
+    local px, py = G.calculateParalaxeOffset(3)
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.rewardsSmallCanvas)
     love.graphics.clear()
     love.graphics.draw(Sprites.REWARDS_SMALL, 0, 0)
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.rewardsSmallCanvas, self.rewardsSMX, self.rewardsSMY)
+    love.graphics.draw(self.rewardsSmallCanvas, self.rewardsSMX+px, self.rewardsSMY+py)
 end
 
 function GameScreen:drawDiceDetails(dt)
@@ -611,26 +628,30 @@ function GameScreen:drawDiceDetails(dt)
     end
 
     love.graphics.setCanvas(currentCanvas)
-
-    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, 0, 0)
+    local px, py = G.calculateParalaxeOffset(1)
+    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX + px, self.diceDetailsY + py, 0, 1, 1, 0, 0)
 end
 
 function GameScreen:drawInventoryBackGroundMedium()
+    local px, py = G.calculateParalaxeOffset(3)
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.inventoryCanvasMedium)
     love.graphics.clear()
     love.graphics.draw(Sprites.INVENTORY_MEDIUM, 0, 0)
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.inventoryCanvasMedium, self.inventoryMDX, self.inventoryMDY)
+    love.graphics.draw(self.inventoryCanvasMedium, self.inventoryMDX+px, self.inventoryMDY+py)
 end
 
 function GameScreen:drawRewardsMedium()
+    local px, py = G.calculateParalaxeOffset(3)
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.rewardsMediumCanvas)
     love.graphics.clear()
     love.graphics.draw(Sprites.REWARDS_MEDIUM, 0, 0)
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.rewardsMediumCanvas, self.rewardsMDX, self.rewardsMDY)
+    love.graphics.draw(self.rewardsMediumCanvas, self.rewardsMDX+px, self.rewardsMDY+py)
 end
 
 --==Initialization functions==--
@@ -910,5 +931,6 @@ function GameScreen:setMoneyTo(m)
     local d = 0.1
     self.run.animator:add("money", self.run.money, m, d)
 end
+
 
 return GameScreen

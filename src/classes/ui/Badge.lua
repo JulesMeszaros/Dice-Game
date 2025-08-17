@@ -1,3 +1,4 @@
+local Constants = require("src.utils.Constants")
 local Shaders = require("src.utils.Shaders")
 local Fonts = require("src.utils.Fonts")
 local Animator = require("src.utils.Animator")
@@ -150,8 +151,8 @@ function Badge:updateCanvas(dt)
 end
 
 function Badge:draw()
-
-    love.graphics.draw(self.uiCanvas, self.x+self.uiCanvas:getWidth()/2, self.y+self.oscillatingY+self.uiCanvas:getHeight()/2, self.oscillatingR, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
+    local px, py = G.calculateParalaxeOffset(2)
+    love.graphics.draw(self.uiCanvas, self.x+self.uiCanvas:getWidth()/2+px, self.y+self.oscillatingY+self.uiCanvas:getHeight()/2+py, self.oscillatingR, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
 end
 
 function Badge:isHovered() --Check if mouse is above the face
@@ -215,19 +216,6 @@ function Badge:getCurrentlyHoveredFace()
             self.hoverInfosCanvas = FaceHoverInfo:new(self.currentlyHoveredFace, "points", 0, 0)
         end
     end
-end
-
-function Badge:getCenteredPositions(count, objectWidth, spacing, centerX)
-    local totalWidth = count * objectWidth + (count - 1) * spacing
-    local startX = centerX - totalWidth / 2
-
-    local positions = {}
-    for i = 0, count - 1 do
-        local x = startX + i * (objectWidth + spacing)
-        table.insert(positions, x)
-    end
-
-    return positions
 end
 
 return Badge
