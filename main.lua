@@ -198,29 +198,3 @@ function drawBackground()
 	love.graphics.setShader()
 end
 
---[[ function drawBackground()
-    -- Draw background to canvas with shader
-    love.graphics.setCanvas(backgroundCanvas)
-    love.graphics.clear()
-    love.graphics.setColor(1, 1, 1)
-    
-    -- Set main canvas and draw background with shader
-    love.graphics.setCanvas()
-    love.graphics.setShader(bgShader)
-    
-    bgShader:send("time", love.timer.getTime())
-    bgShader:send("spin_time", 1)
-    bgShader:send("colour_1", {0.5, 0.0, 0.2, 1})
-    bgShader:send("colour_2", {0.1, 0.1, 0.9, 1})
-    bgShader:send("colour_3", {0.0, 0.1, 0.2, 1})
-    bgShader:send("contrast", 0.8)
-    bgShader:send("spin_amount", 0.9)
-
-    -- Draw the background canvas with premultiplied alpha to ensure correct blending
-    love.graphics.setBlendMode("alpha", "premultiplied")
-    love.graphics.draw(backgroundCanvas, 0, 0)
-    -- Restore default blend mode
-    love.graphics.setBlendMode("alpha", "alphamultiply")
-    love.graphics.setShader()
-end ]]
-
