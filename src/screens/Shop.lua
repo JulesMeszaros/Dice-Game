@@ -112,9 +112,14 @@ end
 function Shop:update(dt)
     self.animator:update(dt)
 
+    if love.timer.getTime() % 0.1 < dt then
+        self.scoresChanged = true
+    end
+
     self:getCurrentlyHoveredCiggie()
     self:getCurrentlyHoveredFace()
     self:getCurrentlyHoveredCoffeeButton()
+    self:getCurrentlyHoveredObject()
 
     self:updateCanvas(dt)
 end
@@ -244,9 +249,9 @@ function Shop:updateCanvas(dt)
         self.dragAndDroppedObject:draw()
     end
 
-    if(self.currentlyHoveredFace)then
+    if(self.currentlyHoveredObject)then
         --Info bubble (wip)
-        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX , self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
         --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
         self.infoBubble:update(dt)
         self.infoBubble:draw()
@@ -608,13 +613,44 @@ end
 
 --==Shop generation==--
 function Shop:generateNewShop()
+    -- Cleanup previous objects before generating new ones
+    for _, face in ipairs(self.availableFaceObjects or {}) do
+        face = nil  -- Allow for garbage collection
+    end
+    for _, ciggie in ipairs(self.availableCiggies or {}) do
+        ciggie = nil  -- Allow for garbage collection
+    end
+
     --Generate the objects to buy
     self:generateAvailableFaces()
     self:generateAvailableCiggies()
 
-    self.availableFaceObjectsUI = {}
-    self.availableCiggieObjectsUI = {}
+    -- Clear previous UI lists completely
+    for k in pairs(self.availableFaceObjectsUI or {}) do
+        self.availableFaceObjectsUI[k] = nil
+    end
+    for k in pairs(self.availableCiggieObjectsUI or {}) do
+        self.availableCiggieObjectsUI[k] = nil
+    end
+
     --Generate the UI elements--
+    -- Cleanup previous face UI objects
+    for k = #self.availableFaceObjectsUI, 1, -1 do
+        local faceUI = self.availableFaceObjectsUI[k]
+        -- Explicitly nil out properties to help garbage collection
+        if faceUI then
+            if faceUI.animator then
+                faceUI.animator:clear() -- Clear any running animations
+                faceUI.animator = nil
+            end
+            faceUI.representedObject = nil
+            faceUI.diceObject = nil
+            faceUI.sprite = nil
+            self.availableFaceObjectsUI[k] = nil
+        end
+    end
+    self.availableFaceObjectsUI = {}
+
     --Faces
     for i,f in next,self.availableFaceObjects do
         local faceUI = DiceFace:new(
@@ -650,6 +686,22 @@ function Shop:generateNewShop()
     end
 
     
+    -- Cleanup previous ciggie UI objects
+    for k = #self.availableCiggieObjectsUI, 1, -1 do
+        local ciggieUI = self.availableCiggieObjectsUI[k]
+        -- Explicitly nil out properties to help garbage collection
+        if ciggieUI then
+            if ciggieUI.animator then
+                ciggieUI.animator:clear() -- Clear any running animations
+                ciggieUI.animator = nil
+            end
+            ciggieUI.representedObject = nil
+            ciggieUI.sprite = nil
+            self.availableCiggieObjectsUI[k] = nil
+        end
+    end
+    self.availableCiggieObjectsUI = {}
+
     --Ciggies
     --Create the UI
     for i,c in next,self.availableCiggies do
@@ -701,6 +753,11 @@ end
 
 
 function Shop:generateAvailableFaces()
+    -- Cleanup previous faces before generating new ones
+    for k = #self.availableFaceObjects, 1, -1 do
+        self.availableFaceObjects[k] = nil
+    end
+    
     self.availableFaceObjects = {}
     for i=1, 4 do
         local f = self:getRandomFaceObject()
@@ -709,6 +766,11 @@ function Shop:generateAvailableFaces()
 end
 
 function Shop:generateAvailableCiggies()
+    -- Cleanup previous ciggies before generating new ones
+    for k = #self.availableCiggies, 1, -1 do
+        self.availableCiggies[k] = nil
+    end
+    
     self.availableCiggies = {}
     for i=1, 4 do
         local c = self:generateRandomCiggie()
@@ -732,6 +794,8 @@ function Shop:generateRandomCoffee(i)
         randomFigureIndex,
         self.run
     )
+
+    coffeeButton.absoluteX, coffeeButton.absoluteY = self.shopBGX, self.shopBGY
 
     table.insert(self.availableCoffeesUI, coffeeButton)
 
@@ -767,13 +831,13 @@ end
 
 function Shop:getCurrentlyHoveredObject()
     if(self.currentlyHoveredFace) then
-        return self.currentlyHoveredFace.representedObject
+        self.currentlyHoveredObject = self.currentlyHoveredFace
     elseif(self.currentlyHoveredCiggie)then
-        return self.currentlyHoveredCiggie.representedObject
+        self.currentlyHoveredObject = self.currentlyHoveredCiggie
     elseif(self.currentlyHoveredCoffeeButton) then
-        return self.currentlyHoveredCoffeeButton.representedObject
+        self.currentlyHoveredObject = self.currentlyHoveredCoffeeButton
     else
-        return nil
+        self.currentlyHoveredObject = nil
     end
 end
 
@@ -919,13 +983,23 @@ function Shop:createRewardFaces()
 end
 
 function Shop:createFacesPriceTags()
+    -- Release previous canvases to free GPU memory
+    for _, canvas in pairs(self.facesPriceTags or {}) do
+        canvas:release()
+    end
+    for _, canvas in pairs(self.ciggiesPriceTags or {}) do
+        canvas:release()
+    end
+    
     self.facesPriceTags = {}
+    self.faceTextObjects = {}
     --Faces
     for i=1, 4 do
         local c = love.graphics.newCanvas(110, 40)
         love.graphics.setBlendMode( "alpha" )
-
+        local priceText = love.graphics.newText(Fonts.soraPrice, '5€')
         table.insert(self.facesPriceTags, c)
+        table.insert(self.faceTextObjects, priceText)
     end
 
     --Ciggies
@@ -933,8 +1007,9 @@ function Shop:createFacesPriceTags()
     for i=1, 4 do
         local c = love.graphics.newCanvas(110, 40)
         love.graphics.setBlendMode( "alpha" )
-
+        local priceText = love.graphics.newText(Fonts.soraPrice, tostring(Constants.BASE_CIGGIE_PRICE)..'€')
         table.insert(self.ciggiesPriceTags, c)
+        table.insert(self.faceTextObjects, priceText)
     end
 
 end
@@ -1015,7 +1090,7 @@ function Shop:drawFacesPriceTags()
         --Background
         love.graphics.draw(Sprites.PRICE_TAG, 0, 0)
         --Text
-        local priceText = love.graphics.newText(Fonts.soraPrice, '5€')
+        local priceText = self.faceTextObjects[i]
 
         love.graphics.setColor(232/255, 79/255, 79/255, 1)
         love.graphics.draw(priceText, c:getWidth()/2, c:getHeight()/2, 0, 1, 1, priceText:getWidth()/2, priceText:getHeight()/2)
@@ -1032,7 +1107,7 @@ function Shop:drawFacesPriceTags()
         --Background
         love.graphics.draw(Sprites.PRICE_TAG, 0, 0)
         --Text
-        local priceText = love.graphics.newText(Fonts.soraPrice, tostring(Constants.BASE_CIGGIE_PRICE)..'€')
+        local priceText = self.faceTextObjects[#self.facesPriceTags + i]
 
         love.graphics.setColor(232/255, 79/255, 79/255, 1)
         love.graphics.draw(priceText, c:getWidth()/2, c:getHeight()/2, 0, 1,1, priceText:getWidth()/2, priceText:getHeight()/2)
@@ -1085,7 +1160,8 @@ function Shop:outAnimation()
     local outDuration = 0.4
 
     --Out animation for inventory faces
-    for i,face in next,self.inventoryFacesUI do
+    for i = #self.inventoryFacesUI, 1, -1 do
+        local face = self.inventoryFacesUI[i]
         face.animator:addGroup({
             {property="scaleX", from=face.scaleX, targetValue=0, duration = outDuration/2},
             {property="scaleY", from=face.scaleY, targetValue=0, duration = outDuration/2},
@@ -1197,6 +1273,125 @@ function Shop:getCurrentlyHoveredLine()
     else
         return nil
     end 
+end
+
+function Shop:cleanup()
+    -- Release canvases to free GPU memory
+    for _, canvas in pairs(self.facesPriceTags or {}) do
+        canvas:release()
+    end
+    for _, canvas in pairs(self.ciggiesPriceTags or {}) do
+        canvas:release()
+    end
+    
+    -- Clear text objects
+    if self.faceTextObjects then
+        for i = 1, #self.faceTextObjects do
+            self.faceTextObjects[i] = nil
+        end
+        self.faceTextObjects = {}
+    end
+    
+    -- Clear UI faces with proper cleanup
+    if self.availableFaceObjectsUI then
+        for _, face in pairs(self.availableFaceObjectsUI) do
+            if face and face.animator then
+                face.animator:clear()
+                face.animator = nil
+            end
+            if face then
+                face.representedObject = nil
+                face.diceObject = nil
+                face.sprite = nil
+            end
+        end
+        self.availableFaceObjectsUI = {}
+    end
+
+    if self.inventoryFacesUI then
+        for _, face in pairs(self.inventoryFacesUI) do
+            if face and face.animator then
+                face.animator:clear()
+                face.animator = nil
+            end
+            if face then
+                face.representedObject = nil
+                face.diceObject = nil
+                face.sprite = nil
+            end
+        end
+        self.inventoryFacesUI = {}
+    end
+
+    if self.rewardsFacesUI then
+        for _, face in pairs(self.rewardsFacesUI) do
+            if face and face.animator then
+                face.animator:clear()
+                face.animator = nil
+            end
+            if face then
+                face.representedObject = nil
+                face.diceObject = nil
+                face.sprite = nil
+            end
+        end
+        self.rewardsFacesUI = {}
+    end
+
+    -- Clear available objects
+    if self.availableFaceObjects then
+        for i = #self.availableFaceObjects, 1, -1 do
+            self.availableFaceObjects[i] = nil
+        end
+        self.availableFaceObjects = {}
+    end
+
+    if self.availableCiggies then
+        for i = #self.availableCiggies, 1, -1 do
+            self.availableCiggies[i] = nil
+        end
+        self.availableCiggies = {}
+    end
+
+    -- Clear UI elements
+    if self.uiElements and self.uiElements.buttons then
+        for _, button in pairs(self.uiElements.buttons) do
+            if button and button.animator then
+                button.animator:clear()
+                button.animator = nil
+            end
+        end
+        self.uiElements.buttons = {}
+    end
+
+    -- Clear ciggies UI
+    if self.uiElements and self.uiElements.ciggiesUI then
+        for _, ciggie in pairs(self.uiElements.ciggiesUI) do
+            if ciggie and ciggie.animator then
+                ciggie.animator:clear()
+                ciggie.animator = nil
+            end
+            if ciggie then
+                ciggie.representedObject = nil
+                ciggie.sprite = nil
+            end
+        end
+        self.uiElements.ciggiesUI = {}
+    end
+
+    -- Clear additional objects
+    self.dragAndDroppedObject = nil
+    self.dragAndDroppedShopDice = nil
+    self.dragAndDroppedReward = nil
+    self.dragAndDroppedInventory = nil
+    self.dragAndDroppedShopCiggie = nil
+    self.currentlyHoveredFace = nil
+    self.currentlyHoveredCiggie = nil
+    self.currentlyHoveredCoffeeButton = nil
+    
+    -- Clear canvas references
+    self.facesPriceTags = {}
+    self.ciggiesPriceTags = {}
 end
 
 return Shop

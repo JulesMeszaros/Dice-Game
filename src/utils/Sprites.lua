@@ -14,6 +14,8 @@ Sprites.RARE = love.graphics.newImage("src/assets/sprites/ui/Rare.png")
 
 Sprites.GHOST = love.graphics.newImage("src/assets/sprites/ui/Ghost.png")
 Sprites.BLANK = love.graphics.newImage("src/assets/sprites/ui/Blank.png")
+Sprites.COFFEE = love.graphics.newImage("src/assets/sprites/ui/Coffee.png")
+Sprites.MAGICWAND = love.graphics.newImage("src/assets/sprites/ui/Magic Wand.png")
 
 Sprites.ENEMY_INFOS= love.graphics.newImage("src/assets/sprites/ui/Enemy.png")
 Sprites.PLAYER_INFOS = love.graphics.newImage("src/assets/sprites/ui/Player.png")

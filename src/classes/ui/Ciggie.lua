@@ -30,6 +30,8 @@ function Ciggie:new(ciggieObject, x, y, isSelectable, isHoverable, mousePosition
     self.anchorX ,self.anchorY = x, y
     self.x = x
     self.y = y
+    self.absoluteX = 0
+    self.absoluteY = 0
 
     --Rotation
     self.targetedRotation = 0 --Angle the dice is targeting
@@ -63,6 +65,8 @@ function Ciggie:new(ciggieObject, x, y, isSelectable, isHoverable, mousePosition
 
     self.sprite = ciggieObject.sprite
 
+    self.topY = 0
+
     return self
 end
 
@@ -83,6 +87,9 @@ function Ciggie:update(dt)
     self:calculateAngleDrag()
     self.targetedRotation = self.baseRotation + self.dragRotation
     self:updateAngle(dt)
+
+    self.topY = self.y - (self.canvas:getHeight()/2)*(1-self.rotation/(-1.57)) - math.abs(self.canvas:getWidth()/2*(self.rotation/(-1.57)))
+    self.bottomY = self.y + (self.canvas:getHeight()/2)*(1-self.rotation/(-1.57)) - math.abs(self.canvas:getWidth()/2*(self.rotation/(-1.57)))
 
     self:updateCanvas(dt)
 end

@@ -6,6 +6,7 @@ local Constants = require("src.utils.Constants")
 local FaceHoverInfos = require("src.classes.ui.FaceHoverInfo")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local UI = require("src.utils.scripts.UI")
+local MainMenu = require("src.screens.MainMenu")
 --UI
 local Sprites = require("src.utils.Sprites")
 local DiceFace = require("src.classes.ui.DiceFace")
@@ -27,6 +28,7 @@ function RoundScreen:new(round)
     self.gameCanvas = round.gameCanvas
     self.round = round
     self.endRoundPopUp = nil
+    self.gameOverPopup = nil
 
     --Timers
     self.timers = {
@@ -145,6 +147,12 @@ function RoundScreen:update(dt)
     self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy+dt
     self.timers.oscillationTimePlayer = self.timers.oscillationTimePlayer+dt
     
+    -- Mark scores as changed when needed (this ensures text is updated when data changes)
+    -- For now, we'll update every few frames to be safe, but this could be optimized further
+    if love.timer.getTime() % 0.1 < dt then
+        self.scoresChanged = true
+    end
+
     if(self.rerollingTimer >= 0) then
         self.rerollingTimer = self.rerollingTimer - dt
     end
@@ -162,6 +170,7 @@ function RoundScreen:update(dt)
     --Hover infos
     self:getCurrentlyHoveredDice() --Le dé survolé
     self:getCurrentlyHoveredCiggie() --Ciggie survolée
+    self:getCurrentlyHoveredObject()
 
     --Utilities buttons
     for key,button in next,self.uiElements.buttons do
@@ -273,6 +282,12 @@ function RoundScreen:updateCanvas(dt)
         self.endRoundPopUp:draw()
     end
 
+    if(self.gameOverPopup)then
+        self.gameOverPopup:update(dt)
+        self.gameOverPopup:updateCanvas(dt)
+        self.gameOverPopup:draw(dt)
+    end
+
     --Face Details
     --self:drawDescription(self.descriptionX, self.descriptionY)
 
@@ -281,9 +296,9 @@ function RoundScreen:updateCanvas(dt)
         self.dragAndDroppedCiggie:draw()
     end
 
-    if(self.currentlyHoveredFace)then
+    if(self.currentlyHoveredObject)then
         --Info bubble (wip)
-        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX , self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
         --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
         self.infoBubble:update(dt)
         self.infoBubble:draw()
@@ -295,7 +310,7 @@ end
 
 --==INPUT FUNCTIONS==--
 function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
-    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.run.runPaused == false) then
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER and self.run.runPaused == false) then
         --Drag and drop dice
         if(isDragging == true)then
             for key,diceui in next, self.diceFaces do
@@ -359,15 +374,21 @@ function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
 end
 
 function RoundScreen:mousepressed(x, y, button, istouch, presses)
-    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND) then
-        --DiceFaces
-        for key,uiFace in next,self.diceFaces do
-            uiFace:clickEvent()
-        end
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER) then
+        
+        if self.round.phase~=Constants.ROUND_STATES.TRIGGERING then
+            --DiceFaces
+            for key,uiFace in next,self.diceFaces do
+                uiFace:clickEvent()
+            end
 
-        --Ciggies
-        for key,ciggie in next,self.uiElements.ciggiesUI do
-            ciggie:clickEvent()
+            --Ciggies
+            for key,ciggie in next,self.uiElements.ciggiesUI do
+                ciggie:clickEvent()
+            end
+
+            --Figure buttons
+            self.clickedFigure = self:getCurrentlyHoveredLine()
         end
 
         --Round Buttons
@@ -375,17 +396,18 @@ function RoundScreen:mousepressed(x, y, button, istouch, presses)
             button:clickEvent()
         end
 
-        --Figure buttons
-        self.clickedFigure = self:getCurrentlyHoveredLine()
+        
     else
         if(self.endRoundPopUp) then
             self.endRoundPopUp:mousepressed(x, y, button, istouch, pressed)
+        elseif(self.gameOverPopup)then
+            self.gameOverPopup:mousepressed(x, y, button, istouch, presses)
         end
     end
 end
 
 function RoundScreen:mousereleased(x, y, button, istouch, presses)
-    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND)then
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER)then
 
         self.dragAndDroppedCiggie = nil
         self.dragAndDroppedFace = nil
@@ -436,6 +458,8 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
         end
     elseif(self.endRoundPopUp)then
         self.endRoundPopUp:mousereleased(x, y, button, istouch, presses)
+    elseif(self.gameOverPopup)then
+        self.gameOverPopup:mousereleased(x, y, button, istouch, presses)
     end
 end
 
@@ -564,7 +588,7 @@ function RoundScreen:drawHandScore()
     love.graphics.draw(self.handScoreCanvas, 0, 200)
 end
 
-function RoundScreen:outAnimation()
+function RoundScreen:outAnimation(onEnd)
     local outDuration = 0.4
     self.animator:addGroup({
         {property = "gridX", from = self.gridX, targetValue = 0-self.figureButtonsCanvas:getWidth(), duration = outDuration, easing = AnimationUtils.Easing.inOutCubic},
@@ -594,7 +618,16 @@ function RoundScreen:outAnimation()
     self.animator:addDelay(0.2)
     self.animator:addGroup({
         {property = "playerX", from = self.playerX, targetValue = -800, duration = outDuration, easing = AnimationUtils.Easing.inCubic},
-        {property = "enemyX", from = self.enemyX, targetValue = self.canvas:getWidth()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic, onComplete=function()self.round.run:goToNextRound()end},
+        {property = "enemyX", from = self.enemyX, targetValue = self.canvas:getWidth()+20, duration = outDuration, easing = AnimationUtils.Easing.inCubic, onComplete=function()
+            if(onEnd == nil) then
+                self.round.run:goToNextRound()
+            elseif(onEnd == "newRun") then
+                self.round.run.game:startNewRun()
+            else
+                self.round.run.game.mainMenu = MainMenu:new(nil, self.round.run.game)
+                self.round.run.game.currentScreen = 0
+            end
+        end},
     })
 
     --Buttons animation
@@ -662,12 +695,9 @@ end
 function RoundScreen:getCurrentlyHoveredObject()
     local object = nil
 
-    if(self.currentlyHoveredCiggie and not self.endRoundPopUp)then object = self.currentlyHoveredCiggie.representedObject
-    elseif(self.currentlyHoveredFace and not self.endRoundPopUp)then object = self.currentlyHoveredFace.representedObject
-    elseif(self.endRoundPopUp and self.endRoundPopUp.currentlyHoveredFace) then object = self.endRoundPopUp.currentlyHoveredFace.representedObject
-    else object = nil end
-
-    return object
+    if(self.currentlyHoveredCiggie)then self.currentlyHoveredObject = self.currentlyHoveredCiggie
+    elseif(self.currentlyHoveredFace)then self.currentlyHoveredObject = self.currentlyHoveredFace
+    else self.currentlyHoveredObject = nil end
 end
 
 -- Updates the dice net
@@ -753,6 +783,42 @@ function indexOf(list, element)
         end
     end
     return nil -- retourne nil si l'élément n'est pas trouvé
+end
+
+function RoundScreen:cleanup()
+    -- Clear UI faces
+    if self.diceFaces then
+        for _, face in pairs(self.diceFaces) do
+            face = nil
+        end
+        self.diceFaces = {}
+    end
+
+    -- Clear UI elements
+    if self.uiElements and self.uiElements.buttons then
+        for _, button in pairs(self.uiElements.buttons) do
+            button = nil
+        end
+        self.uiElements.buttons = {}
+    end
+
+    -- Clear ciggies UI
+    if self.uiElements and self.uiElements.ciggiesUI then
+        for _, ciggie in pairs(self.uiElements.ciggiesUI) do
+            ciggie = nil
+        end
+        self.uiElements.ciggiesUI = {}
+    end
+
+    -- Clear additional objects
+    self.dragAndDroppedDice = nil
+    self.dragAndDroppedCiggie = nil
+    self.currentlyHoveredFace = nil
+    self.currentlyHoveredDice = nil
+    self.currentlyHoveredCiggie = nil
+    self.endRoundPopUp = nil
+    self.gameOverPopup = nil
+
 end
 
 return RoundScreen

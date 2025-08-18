@@ -91,9 +91,14 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 end
 
 function DiceCustomization:update(dt)
+    if love.timer.getTime() % 0.1 < dt then
+        self.scoresChanged = true
+    end
+    
     --Get hovered objects
     self:getCurrentlyHoveredFace()
     self:getCurrentlyHoveredCiggie()
+    self:getCurrentlyHoveredObject()
     
     --Update animations
     self.animator:update(dt)
@@ -221,9 +226,9 @@ function DiceCustomization:updateCanvas(dt)
 
     self:drawCiggiesTrayFront()
 
-    if(self.currentlyHoveredFace)then
+    if(self.currentlyHoveredObject)then
         --Info bubble (wip)
-        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX , self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
         --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
         self.infoBubble:update(dt)
         self.infoBubble:draw()
@@ -243,14 +248,34 @@ function DiceCustomization:keypressed(key)
 end
 
 function DiceCustomization:mousepressed(x, y, button, istouch, presses)
-   --Dice faces
+    --Variable nous permetant de vérifier si une face de reward ou de l'inventaire a été clickée 
+    --Pour éviter de déplacer une face de dé située en dessous
+    local newFaceWasClicked = false
+
+    --Dice faces
     for key,face in next,self.newUIFaces do
         face:clickEvent()
+        if(face:isHovered())then
+            newFaceWasClicked = true
+        end
     end
 
     --Rewards
     for key,face in next,self.rewardsUIFaces do
         face:clickEvent()
+        if(face:isHovered())then
+            newFaceWasClicked = true
+        end
+    end
+
+    --Dice Nets faces
+    --Check if another face (reward/inventory) wasnt already clicked
+    if(newFaceWasClicked == false)then
+        for k,dice in next,self.uiDices do
+            for i,face in next,dice do
+                face:clickEvent()
+            end
+        end
     end
    
     --Buttons
@@ -328,8 +353,6 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
         
         local closestFace = self:detectClosestFace(face.x, face.y)
 
-        
-
         if(closestFace) then
 
             local isAlreadyCovered = false
@@ -379,6 +402,66 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
 
     end
 
+    --Release event on dice net faces for swapping
+    for k,dice in next,self.uiDices do
+        for i,face in next,dice do
+            face:releaseEvent()
+            if(face.isBeingDragged == true)then
+                --On vérifie que la nouvelle face soit au dessus d'une face des dés à customiser
+                local closestFace = self:detectClosestFace(face.x, face.y)
+                
+                if(closestFace)then
+                    --On vérifie que cette face ne soit pas déjà couverte par une autre nouvelle face
+                    local isAlreadyCovered = false
+
+                    --On parcoure les autres faces de l'inventaire pour vérifier qu'aucune n'est au meme endroit (inventaire)
+                    for j,otherFace in next,self.newUIFaces do
+                        local cf = self:detectClosestFace(otherFace.x, otherFace.y)
+                        if(cf and cf[1]==closestFace[1] and cf[2]==closestFace[2] and otherFace~=face)then
+                            isAlreadyCovered = true
+                        end
+                    end
+
+                    --On fait de même pour les faces reward
+                    for j,otherFace in next,self.rewardsUIFaces do
+                        local cf = self:detectClosestFace(otherFace.x, otherFace.y)
+                        if(cf and cf[1]==closestFace[1] and cf[2]==closestFace[2] and otherFace~=face)then
+                            isAlreadyCovered = true
+                        end
+                    end
+                    
+                    if(isAlreadyCovered==false)then
+                        --Récupérer la face attribuée aux coordonnées de closestFace
+                        local currentDiceObject = face.representedObject.diceObject
+                        local diceObjectToSwap = self.uiDices[closestFace[3]][closestFace[4]].representedObject.diceObject
+
+                        local currentFace = face.representedObject
+                        local faceToSwap = self.uiDices[closestFace[3]][closestFace[4]].representedObject
+
+                        --On swap les faces
+                        diceObjectToSwap:setFace(currentFace, closestFace[4])
+                        currentDiceObject:setFace(faceToSwap, i)
+
+                        diceObjectToSwap:updateAllFaces()
+                        currentDiceObject:updateAllFaces()
+
+                        face.representedObject = faceToSwap
+                        self.uiDices[closestFace[3]][closestFace[4]].representedObject = currentFace
+                        
+                        --On met à jour les sprites
+                        face:updateSprite()
+                        self.uiDices[closestFace[3]][closestFace[4]]:updateSprite()
+
+                        print(currentFace.faceValue, faceToSwap.faceValue)                        
+                    end
+                end
+                
+                face.targetX, face.targetY = face.anchorX, face.anchorY
+            end
+            face.isBeingDragged = false
+        end
+    end
+
     --release event on UI elements (buttons)
     for key,button in next,self.uiElements.buttons do
         local wasReleased = button:releaseEvent()
@@ -398,6 +481,7 @@ end
 
 function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
     if(isDragging == true)then 
+        --Inventory
         for key,diceui in next, self.newUIFaces do
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
@@ -410,6 +494,7 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
             end
         end
 
+        --Rewards
         for key,diceui in next, self.rewardsUIFaces do
             if(diceui.isDraggable and diceui.isBeingClicked) then
                 diceui.isBeingDragged = true
@@ -422,6 +507,22 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
             end
         end
 
+        --Dice nets
+        for k,dice in next,self.uiDices do
+            for i,face in next,dice do
+                if(face.isDraggable and face.isBeingClicked) then
+                    face.isBeingDragged = true
+                    self.dragAndDroppedObject = face
+                    self.dragAndDroppedReward = face
+                    face.dragXspeed = dx
+                    face.targetX = (face.targetX + dx)
+                    face.targetY = (face.targetY + dy)
+                    break;
+                end
+            end
+        end
+
+        --Ciggie
         for key,ciggie in next, self.uiElements.ciggiesUI do
             if(ciggie.isDraggable and ciggie.isBeingClicked) then
                 ciggie.isBeingDragged = true
@@ -602,7 +703,7 @@ function DiceCustomization:switchFaces()
     for i,face in next,self.newUIFaces do
         local closestFace = self:detectClosestFace(face.x, face.y)
         if(closestFace) then
-            local diceObject = self.uiDices[closestFace[3]][closestFace[4]].diceObject
+            local diceObject = self.uiDices[closestFace[3]][closestFace[4]].representedObject.diceObject
             diceObject:setFace(face.representedObject, closestFace[4])
             --Removing the face from the inventory
             for k,d in next,self.run.facesInventory do
@@ -614,7 +715,7 @@ function DiceCustomization:switchFaces()
     for i,face in next,self.rewardsUIFaces do
         local closestFace = self:detectClosestFace(face.x, face.y)
         if(closestFace) then
-            local diceObject = self.uiDices[closestFace[3]][closestFace[4]].diceObject
+            local diceObject = self.uiDices[closestFace[3]][closestFace[4]].representedObject.diceObject
             diceObject:setFace(face.representedObject, closestFace[4])
         end
     end
@@ -766,6 +867,8 @@ function DiceCustomization:createDiceUI(diceObject, i)
             {property = "baseRotation", from = randomAngle, targetValue = 0, duration = duration, easing = AnimationUtils.Easing.outCubic}
 
         })
+
+        diceFace.anchorX, diceFace.anchorY = xOffset + relativeXPositions[k], yOffset + relativeYPosition[k]
         
         table.insert(diceUI, diceFace)
     end
@@ -810,11 +913,10 @@ end
 function DiceCustomization:getCurrentlyHoveredObject()
     local object = nil
 
-    if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie.representedObject
-    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedObject
-    else object = nil end
-    
-    return object
+    if(self.currentlyHoveredCiggie)then self.currentlyHoveredObject = self.currentlyHoveredCiggie
+    elseif(self.currentlyHoveredFace)then self.currentlyHoveredObject = self.currentlyHoveredFace
+    else self.currentlyHoveredObject = nil end
+
 end
 
 function DiceCustomization:addRewardToInventory(face, key)
@@ -887,6 +989,58 @@ function DiceCustomization:updateInventoryPositions()
         uiFace.targetX = self.xPositions[i] + 60+ self.inventoryMDTX
         uiFace.targetY = self.yPositions[i] + self.inventoryMDTY + 60
     end
+end
+
+function DiceCustomization:cleanup()
+    -- Clear UI dice faces
+    if self.uiDices then
+        for _, dice in pairs(self.uiDices) do
+            for _, face in pairs(dice) do
+                face = nil
+            end
+            dice = {}
+        end
+        self.uiDices = {}
+    end
+
+    -- Clear new UI faces
+    if self.newUIFaces then
+        for _, face in pairs(self.newUIFaces) do
+            face = nil
+        end
+        self.newUIFaces = {}
+    end
+
+    -- Clear rewards UI faces
+    if self.rewardsUIFaces then
+        for _, face in pairs(self.rewardsUIFaces) do
+            face = nil
+        end
+        self.rewardsUIFaces = {}
+    end
+
+    -- Clear UI elements
+    if self.uiElements and self.uiElements.buttons then
+        for _, button in pairs(self.uiElements.buttons) do
+            button = nil
+        end
+        self.uiElements.buttons = {}
+    end
+
+    -- Clear ciggies UI
+    if self.uiElements and self.uiElements.ciggiesUI then
+        for _, ciggie in pairs(self.uiElements.ciggiesUI) do
+            ciggie = nil
+        end
+        self.uiElements.ciggiesUI = {}
+    end
+
+    -- Clear additional objects
+    self.dragAndDroppedObject = nil
+    self.dragAndDroppedReward = nil
+    self.dragAndDroppedInventory = nil
+    self.currentlyHoveredFace = nil
+    self.currentlyHoveredCiggie = nil
 end
 
 return DiceCustomization

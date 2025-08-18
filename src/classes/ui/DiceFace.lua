@@ -164,6 +164,7 @@ function DiceFace:clickAction()
     if(self.isSelectableAll == true) then
         self:selectOrDeselect()
     end
+    print(self.representedObject.name, self.representedObject.faceValue)
 end
 
 function DiceFace:selectOrDeselect()
@@ -222,11 +223,11 @@ end
 
 function DiceFace:updateSprite(n)
     local representedFace = self.representedObject
+    
     if(n) then
         representedFace = self.representedObject.diceObject:getAllFaces()[n]
     end
     
-
     self.spriteSheet = representedFace:getSpriteSheet()
     self.quad = representedFace:getQuad(representedFace.faceValue)
     self.dim = representedFace:getFaceDim()

@@ -95,6 +95,10 @@ function DeskChoice:new(floor, run)
 end
 
 function DeskChoice:update(dt)
+    if love.timer.getTime() % 0.1 < dt then
+        self.scoresChanged = true
+    end
+    
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -112,6 +116,7 @@ function DeskChoice:update(dt)
     --hovered objects
     self:getCurrentlyHoveredFace()
     self:getCurrentlyHoveredCiggie()
+    self:getCurrentlyHoveredObject()
 
     for key,button in next,self.uiElements.buttons do
         button:update(dt)
@@ -167,9 +172,9 @@ function DeskChoice:update(dt)
 
     self:drawCiggiesTrayFront()
 
-    if(self.currentlyHoveredFace)then
+    if(self.currentlyHoveredObject)then
         --Info bubble (wip)
-        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX , self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
         --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
         self.infoBubble:update(dt)
         self.infoBubble:draw()
@@ -481,11 +486,9 @@ end
 function DeskChoice:getCurrentlyHoveredObject()
     local object = nil
 
-    if(self.currentlyHoveredCiggie)then object = self.currentlyHoveredCiggie.representedObject
-    elseif(self.currentlyHoveredFace)then object = self.currentlyHoveredFace.representedObject
-    else object = nil end
-
-    return object
+    if(self.currentlyHoveredCiggie)then self.currentlyHoveredObject = self.currentlyHoveredCiggie
+    elseif(self.currentlyHoveredFace)then self.currentlyHoveredObject = self.currentlyHoveredFace
+    else self.currentlyHoveredObject = nil end
 end
 
 function DeskChoice:getCurrentlyHoveredLine()

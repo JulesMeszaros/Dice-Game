@@ -66,7 +66,11 @@ function EndRound:new(run, round)
     })
     self.animator:addDelay(0.1, function()self:generateRewards()end)
 
-    
+    G.animator:addGroup({
+                {property = "backgroundR", from=G.backgroundR, targetValue = 81/255, duration = 0.6},
+                {property = "backgroundG", from=G.backgroundG, targetValue = 126/255, duration = 0.6},
+                {property = "backgroundB", from=G.backgroundB, targetValue = 84/255, duration = 0.6},
+            })
 
     return self
 end
@@ -80,10 +84,6 @@ function EndRound:updateCanvas(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
-
-    love.graphics.setColor(0.1, 0.1, 0.1, self.backgroundOpacity)
-    love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
-    love.graphics.setColor(1, 1, 1, 1)
 
     --Pop up content
     self:drawMainCanvas(dt)

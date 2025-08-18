@@ -18,7 +18,7 @@ local Constants = {
     BASE_TRIGGER_ANIMATION_TIME = 0.15,--secondes
     
     --Debug
-    SHOP_EVERY_DESK = false,
+    SHOP_EVERY_DESK = true,
     
     --Prices
     BASE_FACE_SELL_PRICE = 3,
@@ -147,7 +147,8 @@ Constants.ROUND_STATES = {
     PLAYING = 2,
     TRIGGERING_DICE = 3,
     RECALLING = 4,
-    END_ROUND = 5
+    END_ROUND = 5,
+    GAME_OVER = 6
 }
 
 Constants.ROUND_TYPES = {

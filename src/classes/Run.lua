@@ -5,7 +5,7 @@ local DeskChoice = require("src.screens.DeskChoice")
 local DiceCustomization = require("src.screens.DiceCustomization")
 local EndRound = require("src.classes.ui.EndRound")
 local Infos = require("src.classes.ui.Infos")
-
+local MainMenu = require("src.screens.MainMenu")
 local Constants = require("src.utils.Constants")
 local Floor = require("src.classes.Floor")
 
@@ -31,11 +31,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.facesRewardsInventory = {}
     
     --Ciggies
-    self.ciggiesObjects = {
-        CiggieTypes.Time:new(),
-        CiggieTypes.Rockmans:new(),
-        CiggieTypes.Fortune:new()
-    }
+    self.ciggiesObjects = {CiggieTypes.Rockmans:new(), CiggieTypes.Turnns:new()}
     --Run stats
     self.totalUsedCiggie = 0
     self.totalUsedCoffees = 0
@@ -158,6 +154,7 @@ function Run:goToNextRound()
         
         --On vérifie que la run soit terminée (étage 5 atteint)
         if(self.currentFloor.floorNumber == Constants.FLOORS_BY_RUN)then
+            self.game.mainMenu = MainMenu:new(nil, self.game)
             self.game.currentScreen = Constants.PAGES.MAIN_MENU
             return
         end
@@ -345,6 +342,47 @@ end
 function Run:goToDiceCustomization()
         self.customizationScreen = DiceCustomization:new(self.currentRound, self.facesInventory)
         self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION
+end
+
+function Run:cleanup()
+    -- Cleanup shop screen
+    if self.shop then
+        if self.shop.shopCanvas then
+            self.shop.shopCanvas:release()
+            self.shop.shopCanvas = nil
+        end
+        self.shop = nil
+    end
+
+    -- Cleanup desk choice screen
+    if self.deskChoice then
+        self.deskChoice = nil
+    end
+
+    -- Cleanup current round
+    if self.currentRound then
+        if self.currentRound.terrain and self.currentRound.terrain.canvas then
+            self.currentRound.terrain.canvas:release()
+            self.currentRound.terrain.canvas = nil
+        end
+        self.currentRound = nil
+    end
+
+    -- Cleanup customization screen
+    if self.customizationScreen then
+        self.customizationScreen = nil
+    end
+
+    -- Cleanup game over screen
+    if self.gameOver then
+        self.gameOver = nil
+    end
+
+    -- Clear large tables
+    self.diceObjects = {}
+    self.facesInventory = {}
+    self.facesRewardsInventory = {}
+    self.ciggiesObjects = {}
 end
 
 return Run

@@ -127,4 +127,23 @@ function Button:isHovered() --Check if mouse is above the face
         )
 end
 
+function Button:cleanup()
+    -- Release UI canvas
+    if self.uiCanvas then
+        self.uiCanvas:release()
+        self.uiCanvas = nil
+    end
+
+    -- Release sprite if loaded
+    if self.sprite then
+        self.sprite:release()
+        self.sprite = nil
+    end
+
+    -- Clear animator
+    if self.animator then
+        self.animator = nil
+    end
+end
+
 return Button
