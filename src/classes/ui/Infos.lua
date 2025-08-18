@@ -113,6 +113,10 @@ function Infos:update(dt)
 end
 
 function Infos:updateCanvas(dt)
+    self:getCurrentlyHoveredFace()
+    self:getCurrentlyHoveredCiggie()
+    self:getCurrentlyHoveredObject()
+
     self.animator:update(dt)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
@@ -159,9 +163,9 @@ function Infos:updateCanvas(dt)
     self:drawCiggiesTrayFront()
     self:getCurrentlyHoveredFace()
     
-    if(self.currentlyHoveredFace)then
+    if(self.currentlyHoveredObject)then
         --Info bubble (wip)
-        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x + self.currentlyHoveredFace.absoluteX , self.currentlyHoveredFace.y + self.currentlyHoveredFace.absoluteY
+        self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX , self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
         --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
         self.infoBubble:update(dt)
         self.infoBubble:draw()
@@ -470,19 +474,6 @@ function Infos:getCurrentlyHoveredCiggie()
     end
 end
 
-function Infos:getCurrentlyHoveredObject()
-    self:getCurrentlyHoveredCiggie()
-    self:getCurrentlyHoveredFace()
-
-    if(self.currentlyHoveredFace) then
-        return self.currentlyHoveredFace.representedObject
-    elseif(self.currentlyHoveredCiggie)then
-        return self.currentlyHoveredCiggie.representedObject
-    else
-        return nil
-    end
-end
-
 
 
 --Start/END
@@ -556,6 +547,16 @@ end
 
 function Infos:fadeOut()
     self.animator:add('opacity', self.opacity, self.baseOpacity, 0.1, nil, function()self.run:toggleInfoScreen()end)
+end
+
+function Infos:getCurrentlyHoveredObject()
+    if(self.currentlyHoveredCiggie)then self.currentlyHoveredObject = self.currentlyHoveredCiggie
+    elseif(self.currentlyHoveredFace)then self.currentlyHoveredObject = self.currentlyHoveredFace
+    else self.currentlyHoveredObject = nil end
+
+    if(self.currentlyHoveredObject) then
+        print(self.currentlyHoveredObject.representedObject.name)
+    end
 end
 
 --UTILS
