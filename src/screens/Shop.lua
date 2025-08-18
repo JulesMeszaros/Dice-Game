@@ -4,16 +4,13 @@ local AnimationUtils = require("src.utils.scripts.Animations")
 local Sprites = require("src.utils.Sprites")
 local Ciggie = require("src.classes.ui.Ciggie")
 local DiceFace = require("src.classes.ui.DiceFace")
-local FaceObject = require("src.classes.FaceObject")
 local Screen = require("src.classes.GameScreen")
-local DiceCustomization = require("src.screens.DiceCustomization")
 local FaceTypes = require("src.classes.FaceTypes")
 local Fonts = require("src.utils.Fonts")
 local CiggieTypes = require("src.classes.CiggieTypes")
-local CiggieObject = require("src.classes.CiggieObject")
-local Button = require("src.classes.ui.Button")
 local CoffeeButton = require("src.classes.ui.CoffeeButton")
 local UI = require("src.utils.scripts.UI")
+local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 
 local Shop = setmetatable({}, {__index = Screen})
 Shop.__index = Shop
@@ -741,10 +738,11 @@ function Shop:generateNewShop()
 
 
     --Coffee
+    local randomFigures = GenerateRandom.generateUniqueNumbers(1, 13, 4)
     self.availableCoffeesUI = {}
 
     for i=1, 4 do
-        self:generateRandomCoffee(i)
+        self:generateRandomCoffee(i, randomFigures[i])
     end
 
     --Generate the price tags
@@ -779,10 +777,7 @@ function Shop:generateAvailableCiggies()
 end
 
 --Coffee
-function Shop:generateRandomCoffee(i)
-    local randomFigureIndex = math.random(1,13)
-    local spritePath = Constants.COFFEE_PATHS[randomFigureIndex]
-
+function Shop:generateRandomCoffee(i, randomFigureIndex)
     local x = (205+(1-i%2)*370)
     local y = (300+(math.floor(i/3))*70)
 

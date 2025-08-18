@@ -148,7 +148,7 @@ Constants.ROUND_STATES = {
     TRIGGERING_DICE = 3,
     RECALLING = 4,
     END_ROUND = 5,
-    GAME_OVER = 6
+    GAME_OVER = 6,
 }
 
 Constants.ROUND_TYPES = {

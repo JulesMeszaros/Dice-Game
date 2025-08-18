@@ -18,4 +18,19 @@ function GenerateRandom.CiggieObject()
     return randomCiggieObject
 end
 
+function GenerateRandom.generateUniqueNumbers(min, max, n)
+    local numbers = {}
+    local pool = {}
+    for i = min, max do
+        table.insert(pool, i)
+    end
+    for i = 1, n do
+        if #pool == 0 then break end
+        local idx = math.random(1, #pool)
+        table.insert(numbers, pool[idx])
+        table.remove(pool, idx)
+    end
+    return numbers
+end
+
 return GenerateRandom
