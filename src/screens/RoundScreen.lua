@@ -209,8 +209,9 @@ function RoundScreen:updateCanvas(dt)
 
     --Dice Details
     self:updateDiceNet(dt)
+    
     for k,df in next,self.infoFaces do --éventuellement à bouger dans la fonction drawDescription
-        df.targetedScale = self.diceDetailsTimer/self.diceDetailsTime
+        --df.targetedScale = self.diceDetailsTimer/self.diceDetailsTime
         df:updateCanvas(dt) 
         df:update(dt)
     end
@@ -661,6 +662,7 @@ function RoundScreen:getCurrentlyHoveredDice()
     self.previouslyHoveredFace = self.currentlyHoveredFace
     self.currentlyHoveredFace = nil
 
+    self.previouslyHoveredDice = self.currentlyHoveredDice
 
     --Dés dans le terrain de jeu
     for key,diceface in next,self.diceFaces do
@@ -706,19 +708,28 @@ end
 
 -- Updates the dice net
 function RoundScreen:updateDiceNet(dt)
+
+    if(self.currentlyHoveredDice~=self.previouslyHoveredDice)then
+        for i = 1, 6 do
+            self.infoFaces[i].animator:finishAll()
+            self.infoFaces[i].baseTargetedScale = 0
+            self.infoFaces[i].scaleX = 0
+            self.infoFaces[i].scaleY = 0
+
+            self.infoFaces[i].animator:addDelay((i-1)*0.05)
+            self.infoFaces[i].animator:addGroup({
+                {property="baseTargetedScale", from=0, targetValue=1, duration=0.4, easing=AnimationUtils.Easing.easeOutBack},
+                {property="scale", from=0, targetValue=1, duration=0.4, easing=AnimationUtils.Easing.easeOutBack}
+            })
+        end
+    end
+
     if(self.currentlyHoveredDice) then
         for i = 1, 6 do
             self.infoFaces[i]:setRepresentedFace(self.currentlyHoveredDice:getFace(i))
             self.infoFaces[i]:updateSprite()
             self.infoFaces[i]:update(dt)
         end
-        if(self.diceDetailsTimer+100*dt<self.diceDetailsTime)then
-            self.diceDetailsTimer = self.diceDetailsTimer+100*dt
-        else
-            self.diceDetailsTimer = self.diceDetailsTime
-        end
-    else
-        self.diceDetailsTimer = 0
     end
 end
 

@@ -73,4 +73,24 @@ function Animator:isBusy()
     return #self.active > 0 or #self.queue > 0
 end
 
+function Animator:finishAll()
+    -- Complete all active animations
+    for _, a in ipairs(self.active) do
+        self.target[a.property] = a.to
+        if a.onComplete then a.onComplete() end
+    end
+    
+    -- Complete all queued animations
+    for _, group in ipairs(self.queue) do
+        for _, a in ipairs(group) do
+            self.target[a.property] = a.to
+            if a.onComplete then a.onComplete() end
+        end
+    end
+    
+    -- Clear all animations
+    self.active = {}
+    self.queue = {}
+end
+
 return Animator
