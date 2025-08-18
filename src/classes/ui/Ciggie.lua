@@ -178,8 +178,10 @@ function Ciggie:releaseEvent() --S'active lorsqu'un click est complété
     end
 
     self.isBeingClicked = false
-    self.targetX = self.anchorX
-    self.targetY = self.anchorY
+    if(self.anchorX and self.anchorY) then
+        self.targetX = self.anchorX
+        self.targetY = self.anchorY
+    end
     return wasReleased
 end
 

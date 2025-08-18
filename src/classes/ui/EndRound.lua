@@ -199,8 +199,10 @@ function EndRound:mousereleased(x, y, button, istouch, presses)
         local wasReleased = diceface:releaseEvent()
 
         diceface.isBeingDragged = false
-        diceface.targetX = diceface.anchorX
-        diceface.targetY = diceface.anchorY
+        if(diceface.anchorX and diceface.anchorY) then
+            diceface.targetX = diceface.anchorX
+            diceface.targetY = diceface.anchorY
+        end
     end
 
     self.ciggieReward:releaseEvent()
@@ -302,6 +304,11 @@ end
 
 --==Animation==--
 function EndRound:outAnimation()
+
+    self.ciggieReward.anchorX, self.ciggieReward.anchorY = nil, nil
+    for i, face in next,self.faceRewards do
+        face.anchorX, face.anchorY = nil, nil
+    end
 
     --Ajoute la cigarette gagnée à l'inventaire si possible
     if(table.getn(self.round.run.ciggiesObjects)<Constants.BASE_MAX_CIGGIES) then
