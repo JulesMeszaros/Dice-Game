@@ -695,9 +695,13 @@ end
 function RoundScreen:getCurrentlyHoveredObject()
     local object = nil
 
-    if(self.currentlyHoveredCiggie)then self.currentlyHoveredObject = self.currentlyHoveredCiggie
-    elseif(self.currentlyHoveredFace)then self.currentlyHoveredObject = self.currentlyHoveredFace
-    else self.currentlyHoveredObject = nil end
+    if(self.endRoundPopUp) then
+        self.currentlyHoveredObject = self.endRoundPopUp.currentlyHoveredFace
+    else
+        if(self.currentlyHoveredCiggie)then self.currentlyHoveredObject = self.currentlyHoveredCiggie
+        elseif(self.currentlyHoveredFace)then self.currentlyHoveredObject = self.currentlyHoveredFace
+        else self.currentlyHoveredObject = nil end
+    end
 end
 
 -- Updates the dice net

@@ -77,7 +77,7 @@ end
 
 function EndRound:update(dt)
     self.animator:update(dt)
-    self:getCurrentlyHoveredFace()
+    self:getCurrentlyHoveredObject()
 end
 
 function EndRound:updateCanvas(dt)
@@ -289,7 +289,7 @@ function EndRound:generateRewards()
 end
 
 --==Hovered Object==--
-function EndRound:getCurrentlyHoveredFace()
+function EndRound:getCurrentlyHoveredObject()
     self.currentlyHoveredFace = nil
     --Face rewards
     for i,face in next,self.faceRewards do
