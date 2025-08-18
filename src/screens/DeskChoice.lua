@@ -348,7 +348,23 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
         if(wasReleased)then --On sélectionne la face a switcher
             self:resetSelectedDices()
             face:setSelected(true)
+            self.previouslySelectedDice = self.currentlySelectedDice
             self.currentlySelectedDice = face
+
+            if(self.currentlySelectedDice~=self.previouslySelectedDice) then
+                for i = 1, 6 do
+                    self.infoFaces[i].animator:finishAll()
+                    self.infoFaces[i].baseTargetedScale = 0
+                    self.infoFaces[i].scaleX = 0
+                    self.infoFaces[i].scaleY = 0
+
+                    self.infoFaces[i].animator:addDelay((i-1)*0.05)
+                    self.infoFaces[i].animator:addGroup({
+                        {property="baseTargetedScale", from=0, targetValue=1, duration=0.2, easing=AnimationUtils.Easing.easeOutBack},
+                        {property="scale", from=0, targetValue=1, duration=0.2, easing=AnimationUtils.Easing.easeOutBack}
+                    })
+                end
+            end
         end
     end
 

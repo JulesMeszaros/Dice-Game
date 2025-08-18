@@ -209,13 +209,6 @@ function RoundScreen:updateCanvas(dt)
 
     --Dice Details
     self:updateDiceNet(dt)
-    
-    for k,df in next,self.infoFaces do --éventuellement à bouger dans la fonction drawDescription
-        --df.targetedScale = self.diceDetailsTimer/self.diceDetailsTime
-        df:updateCanvas(dt) 
-        df:update(dt)
-    end
-    
     self:drawDiceDetails()
     
     --ROUND DETAILS
@@ -718,8 +711,8 @@ function RoundScreen:updateDiceNet(dt)
 
             self.infoFaces[i].animator:addDelay((i-1)*0.05)
             self.infoFaces[i].animator:addGroup({
-                {property="baseTargetedScale", from=0, targetValue=1, duration=0.4, easing=AnimationUtils.Easing.easeOutBack},
-                {property="scale", from=0, targetValue=1, duration=0.4, easing=AnimationUtils.Easing.easeOutBack}
+                {property="baseTargetedScale", from=0, targetValue=1, duration=0.2, easing=AnimationUtils.Easing.easeOutBack},
+                {property="scale", from=0, targetValue=1, duration=0.2, easing=AnimationUtils.Easing.easeOutBack}
             })
         end
     end
