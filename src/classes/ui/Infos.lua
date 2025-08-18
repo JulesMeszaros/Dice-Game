@@ -76,7 +76,7 @@ function Infos:new(run)
         180,
         80,
         self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
+        function()return Inputs.getMouseInCanvas(0, 0, 2)end
     )
 
     self.uiElements.buttons["planButton"] = Button:new(
@@ -87,8 +87,11 @@ function Infos:new(run)
         180,
         80,
         self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0)end
+        function()return Inputs.getMouseInCanvas(0, 0, 2)end
     )
+
+    self.uiElements.buttons["menuButton"].layer = 2
+    self.uiElements.buttons["planButton"].layer = 2
 
     --
 
@@ -306,10 +309,14 @@ function Infos:drawGridLarge()
 
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.gridLarge, self.gridLX, self.gridLY)
+
+    local px, py = G.calculateParalaxeOffset(1)
+    love.graphics.draw(self.gridLarge, self.gridLX + px, self.gridLY + py)
 end
 
 function Infos:drawInventoryLarge()
+    local px, py = G.calculateParalaxeOffset(2)
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.inventoryLarge)
     love.graphics.clear()
@@ -317,10 +324,11 @@ function Infos:drawInventoryLarge()
     love.graphics.draw(Sprites.INVENTORY_MEDIUM, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.inventoryLarge, self.inventoryLX, self.inventoryLY)
+    love.graphics.draw(self.inventoryLarge, self.inventoryLX+px, self.inventoryLY+py)
 end
 
 function Infos:drawBadgeHorizontal()
+    local px, py = G.calculateParalaxeOffset(2)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.badgeHorizontal)
     love.graphics.clear()
@@ -342,10 +350,12 @@ function Infos:drawBadgeHorizontal()
     end
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.badgeHorizontal, self.badgeHorizontalX, self.badgeHorizontalY)
+    love.graphics.draw(self.badgeHorizontal, self.badgeHorizontalX+px, self.badgeHorizontalY+py)
 end
 
 function Infos:drawPlayerBadge()
+    local px, py = G.calculateParalaxeOffset(2)
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.playerBadge)
     love.graphics.clear()
@@ -353,10 +363,11 @@ function Infos:drawPlayerBadge()
     love.graphics.draw(Sprites.PLAYER_BADGE, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.playerBadge, self.playerBadgeX, self.playerBadgeY)
+    love.graphics.draw(self.playerBadge, self.playerBadgeX+px, self.playerBadgeY+py)
 end
 
 function Infos:drawProgression()
+    local px, py = G.calculateParalaxeOffset(2)
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.progression)
     love.graphics.clear()
@@ -364,10 +375,11 @@ function Infos:drawProgression()
     love.graphics.draw(Sprites.PROGRESSION, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.progression, self.progressionX, self.progressionY)
+    love.graphics.draw(self.progression, self.progressionX+px, self.progressionY+py)
 end
 
 function Infos:drawRoundDetails(dt)
+    local px, py = G.calculateParalaxeOffset(1)
     local currentCanvas = love.graphics.getCanvas()
     --Create the texts
     local rerollText = love.graphics.newText(Fonts.soraBig, '-')
@@ -419,30 +431,34 @@ function Infos:drawRoundDetails(dt)
 
     --DRAW ALL THE CANVAS
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.roundNumberCanvas, self.floorX, self.floorY)
-    love.graphics.draw(self.handsCanvas, self.turnsX, self.turnsY)
-    love.graphics.draw(self.rerollsCanvas, self.rerollsX, self.rerollsY)
-    love.graphics.draw(self.moneyCanvas, self.moneyX, self.moneyY)
+    love.graphics.draw(self.roundNumberCanvas, self.floorX +px, self.floorY + py)
+    love.graphics.draw(self.handsCanvas, self.turnsX + px, self.turnsY +py)
+    love.graphics.draw(self.rerollsCanvas, self.rerollsX + px, self.rerollsY+py)
+    love.graphics.draw(self.moneyCanvas, self.moneyX + px, self.moneyY + py)
 end
 
 function Infos:drawCiggiesTray()
+    local px, py = G.calculateParalaxeOffset(1)
+
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.ciggiesTray)
 
     love.graphics.draw(Sprites.MAGIC_WANDS, 0, 0)
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1)
+    love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX + px, self.ciggiesTrayY + py, 0, 1, 1)
 end
 
 function Infos:drawCiggiesTrayFront()
+    
     local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.ciggiesTrayFront)
 
     love.graphics.draw(Sprites.MAGIC_WANDS_FRONT, 0, self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, Sprites.MAGIC_WANDS_FRONT:getHeight())
 
     love.graphics.setCanvas(currentCanvas)
-    love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX, self.ciggiesTrayY + self.ciggiesTray:getHeight() -self.ciggiesTrayFront:getHeight(), 0, 1, 1, 0, 0)
+    local px, py = G.calculateParalaxeOffset(1)
+    love.graphics.draw(self.ciggiesTrayFront, self.ciggiesTrayX + px, self.ciggiesTrayY + self.ciggiesTray:getHeight() -self.ciggiesTrayFront:getHeight() + py, 0, 1, 1, 0, 0)
 end
 
 --Hovered objects
@@ -517,13 +533,14 @@ function Infos:createInventory()
                 120,
                 false,
                 true,
-                function()return Inputs.getMouseInCanvas(0, 0)end,
+                function()return Inputs.getMouseInCanvas(0, 0, 2)end,
                 nil
             )
 
         faceUI.anchorX = xPos[i] + 60+ self.inventoryLX
         faceUI.anchorY = yPos[i] + 60+ self.inventoryLY
-
+        faceUI.layer = 2
+        
         table.insert(self.uiElements.inventoryFaces, faceUI)
     end
 end
@@ -543,12 +560,13 @@ local xPos = {350, 500}
                 120,
                 false,
                 true,
-                function()return Inputs.getMouseInCanvas(0, 0)end,
+                function()return Inputs.getMouseInCanvas(0, 0, 2)end,
                 nil
             )
 
         faceUI.anchorX = xPos[i] + 60+ self.badgeHorizontalX
         faceUI.anchorY = yPos[i] + 60+ self.badgeHorizontalY
+        faceUI.layer = 2
 
         table.insert(self.uiElements.rewardFaces, faceUI)
     end
