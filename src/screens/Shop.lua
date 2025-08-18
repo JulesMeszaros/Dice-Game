@@ -344,7 +344,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
         if(wasReleased)then --On sélectionne la face a switcher
             self:resetSelectedDices()
             face:setSelected(true)
-            
+
             self.previouslySelectedDice = self.currentlySelectedDice
             self.currentlySelectedDice = face
 
@@ -536,7 +536,7 @@ function Shop:buyDiceFace(face, faceUI, key)
     if(table.getn(self.run.facesInventory)<8 and self.run.money>=5)then
 
         --Remove the money
-        self.run.money = self.run.money-5
+        self:setMoneyTo(self.run.money - 5)
 
         --Add face to inventory
         table.insert(self.run.facesInventory, face)
@@ -557,7 +557,7 @@ end
 
 function Shop:buyCiggie(ciggie, ciggieUI, key)
     if(table.getn(self.run.ciggiesObjects)<Constants.BASE_MAX_CIGGIES and self.run.money>=Constants.BASE_CIGGIE_PRICE)then
-        self.run.money = self.run.money - Constants.BASE_CIGGIE_PRICE
+        self:setMoneyTo(self.run.money - Constants.BASE_CIGGIE_PRICE)
         --Add the ciggie to the inventory
         table.insert(self.run.ciggiesObjects, ciggie)
         --Remove the ciggie from the shop
