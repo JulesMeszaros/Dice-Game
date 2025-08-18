@@ -553,10 +553,6 @@ function Infos:getCurrentlyHoveredObject()
     if(self.currentlyHoveredCiggie)then self.currentlyHoveredObject = self.currentlyHoveredCiggie
     elseif(self.currentlyHoveredFace)then self.currentlyHoveredObject = self.currentlyHoveredFace
     else self.currentlyHoveredObject = nil end
-
-    if(self.currentlyHoveredObject) then
-        print(self.currentlyHoveredObject.representedObject.name)
-    end
 end
 
 --UTILS

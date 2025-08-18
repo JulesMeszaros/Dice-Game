@@ -528,7 +528,6 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
 end
 
 function Shop:keypressed(key)
-    print(key)
 end
 
 --==Shop Functions==--
@@ -595,7 +594,7 @@ end
 
 function Shop:sellReward(face, faceUI, key)
     --Add money to bank account
-    self.run.money = self.run.money + 3
+    self:setMoneyTo(self.run.money + 3)
 
     --Remove dice face object from inventory
 
@@ -773,9 +772,26 @@ function Shop:generateAvailableFaces()
         self.availableFaceObjects[k] = nil
     end
     
+    --On créée une liste des clés de facetype à retirer de la génération
+    local forbiddenFaces = {}
+    for key, _ in pairs(FaceTypes) do
+        --Si c'est le WhiteDice on retire
+        if(key == "WhiteDice") then
+            table.insert(forbiddenFaces, key)
+        end
+        --Maintenant on parcoure l'inventaire
+        local dummyFace = FaceTypes[key]:new(1, 0)
+
+        for k,d in next,self.run.facesInventory do
+            if d.name == dummyFace.name then
+                table.insert(forbiddenFaces, key)
+            end
+        end
+    end
+
     self.availableFaceObjects = {}
     for i=1, 4 do
-        local f = self:getRandomFaceObject()
+        local f = self:getRandomFaceObject(forbiddenFaces)
         table.insert(self.availableFaceObjects, f)
     end
 end
@@ -785,10 +801,23 @@ function Shop:generateAvailableCiggies()
     for k = #self.availableCiggies, 1, -1 do
         self.availableCiggies[k] = nil
     end
+
+    --On créée une liste des clés de ciggies à retirer de la génération
+    local forbiddenCiggies = {}
+    for key, _ in pairs(CiggieTypes) do
+        --Maintenant on parcoure l'inventaire
+        local dummyCiggie = CiggieTypes[key]:new()
+
+        for k,c in next,self.run.ciggiesObjects do
+            if c.name == dummyCiggie.name then
+                table.insert(forbiddenCiggies, key)
+            end
+        end
+    end
     
     self.availableCiggies = {}
     for i=1, 4 do
-        local c = self:generateRandomCiggie()
+        local c = self:generateRandomCiggie(forbiddenCiggies)
         table.insert(self.availableCiggies, c)
     end
 end
@@ -860,11 +889,16 @@ function Shop:resetSelectedDices()
     end
 end
 
-function Shop:getRandomFaceObject()
+function Shop:getRandomFaceObject(forbiddenKeys)
     --Get the list of keys
     local keys = {}
     for key, _ in pairs(FaceTypes) do
-        if(key ~= "WhiteFace") then
+        local isForbidden = false
+        for i,fk in next,forbiddenKeys do
+            if(fk==key) then isForbidden = true end
+        end
+        
+        if(isForbidden == false) then
             table.insert(keys, key)
         end
     end
@@ -878,11 +912,18 @@ function Shop:getRandomFaceObject()
     return randomFaceObject 
 end
 
-function Shop:generateRandomCiggie()
+function Shop:generateRandomCiggie(forbiddenKeys)
     --Get the list of keys
     local keys = {}
     for key, _ in pairs(CiggieTypes) do
-        table.insert(keys, key)
+        local isForbidden = false
+        for i,fk in next,forbiddenKeys do
+            if(fk==key) then isForbidden = true end
+        end
+        
+        if(isForbidden == false) then
+            table.insert(keys, key)
+        end
     end
 
     local randomCiggieKey = keys[math.random(#keys)]

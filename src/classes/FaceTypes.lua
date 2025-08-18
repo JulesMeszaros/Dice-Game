@@ -967,11 +967,9 @@ function DataDice:triggerEffect(round)
     --Complementary effect triggered by the face
     if round.playedFigure < 7 then
         upgradeStat(self, 'pointsValue', 10)
-        print("upgrade")
     else
         if(self.pointsValue>=10)then
             upgradeStat(self, 'pointsValue', -10)
-            print("downgrade")
         end
     end
     addScore(round, self.pointsValue)
@@ -1294,7 +1292,6 @@ function InsomniacDice:new(faceValue, pointsValue)
 end
 
 function InsomniacDice:triggerEffect(round)
-    print(round.run.totalUsedCoffees)
     addScore(round, 10+(15*round.run.totalUsedCoffees))
 end
 
@@ -1372,7 +1369,6 @@ end
 function FaxMachine:triggerEffect(round)
     local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
 
-    print(dicesOrder[1]:getCurrentFaceObject().faceValue)
     --On vérifie que le premier dé joué n'est pas celui-là
     if(dicesOrder[1] ~= self.diceObject)then
         table.insert(round.dicesTriggerQueue, 1, dicesOrder[1])

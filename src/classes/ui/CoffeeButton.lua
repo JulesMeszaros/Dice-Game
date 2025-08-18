@@ -95,7 +95,7 @@ end
 function CoffeeButton:clickAction()
     if(self.run.money >= Constants.BASE_COFFEE_PRICE and self.used==false) then
         --Retirer l'argent
-        self.run.money = self.run.money - Constants.BASE_COFFEE_PRICE
+        self:setMoneyTo(self.run.money - Constants.BASE_COFFEE_PRICE)
 
         --Level Up la figure
         self.run.totalUsedCoffees = self.run.totalUsedCoffees + 1

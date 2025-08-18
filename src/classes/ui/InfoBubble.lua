@@ -55,7 +55,6 @@ function InfoBubble:update(dt)
     --print(self.screen.currentlyHoveredObject.representedObject.name)
 
     if(self.previousObject ~= self.object)then
-        print(self.object.representedObject.objectType)
         if(self.object.representedObject.objectType == "Dice Face")then
             --rint(self.object.representedObject.name)
 
