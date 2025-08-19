@@ -8,7 +8,7 @@ local Constants = {
 
     --Game base stats
     BASE_REROLLS = 2,
-    DESKS_BY_FLOOR = 0,
+    DESKS_BY_FLOOR = 2,
     FLOORS_BY_RUN = 8,
     BASE_MAX_CIGGIES = 3,
     BASE_TURNS = 3,
