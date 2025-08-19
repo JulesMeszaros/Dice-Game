@@ -1,11 +1,24 @@
 local Animator = require("src.utils.Animator")
 local Shaders = require("src.utils.Shaders")
+local Inputs = require("src.utils.scripts.Inputs")
+local Constants = require("src.utils.Constants")
+
 G = {
     backgroundR = 40/255,
     backgroundG = 40/255,
     backgroundB = 43/255,
+
+    --screen shake
+    --Screen target position
+    rx = 0,
+    ry = 0,
+    --Screen position (relative) 
     ox = 0,
     oy = 0,
+    --Wave
+    waveX = 0,
+    waveY = 0
+
 }
 
 G.animator = Animator:new(G)
@@ -59,6 +72,12 @@ function love.update(dt)
     if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
         print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
     end
+
+    local vx,vy = Inputs.getVirtualMousePosition()
+    --relative x/y mouse position (0-1)
+    G.rx, G.ry = (vx/Constants.VIRTUAL_GAME_WIDTH)-0.5, (vy/Constants.VIRTUAL_GAME_HEIGHT)-0.5
+    
+
     G.animator:update(dt)
     game:update(dt)
     delta = love.timer.getFPS()

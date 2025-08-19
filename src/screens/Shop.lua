@@ -777,11 +777,9 @@ function Shop:generateAvailableFaces()
     
     --On créée une liste des clés de facetype à retirer de la génération
     local forbiddenFaces = {}
+    table.insert(forbiddenFaces, "WhiteDice")
+    
     for key, _ in pairs(FaceTypes) do
-        --Si c'est le WhiteDice on retire
-        if(key == "WhiteDice") then
-            table.insert(forbiddenFaces, key)
-        end
         --Maintenant on parcoure l'inventaire
         local dummyFace = FaceTypes[key]:new(1, 0)
 

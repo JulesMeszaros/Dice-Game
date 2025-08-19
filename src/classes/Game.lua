@@ -49,12 +49,9 @@ function Game:update(dt)
         self.run:update(dt)     
     end
 
-    local vx,vy = Inputs.getVirtualMousePosition()
-    --relative x/y mouse position (0-1)
-    self.rx, self.ry = (vx/Constants.VIRTUAL_GAME_WIDTH)-0.5, (vy/Constants.VIRTUAL_GAME_HEIGHT)-0.5
     --damped offset
-    G.ox = Animations.dampLerp(G.ox, self.rx, 1.5, dt)
-    G.oy = Animations.dampLerp(G.oy, self.ry, 1.5, dt) / 1.2
+    G.ox = Animations.dampLerp(G.ox, G.rx+G.waveX, 1.5, dt)
+    G.oy = Animations.dampLerp(G.oy, G.ry+G.waveY, 1.5, dt) / 1.2
 end
 
 function Game:draw()

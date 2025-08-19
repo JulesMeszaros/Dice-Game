@@ -41,6 +41,14 @@ function AnimationUtils.dampLerp(current, target, speed, dt)
     return current + (target - current) * (1 - math.exp(-speed * dt))
 end
 
+function AnimationUtils.randomInRange(lower, upper)
+        if math.random() < 0.5 then
+            return -upper - math.random() * (upper - lower)
+        else
+            return lower + math.random() * (upper - lower)
+        end
+    end
+
 --Easings
 local Easing = {}
 

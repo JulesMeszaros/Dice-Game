@@ -3,6 +3,8 @@
     It is used as the default class for every dice faces, who inherits
     from this one.
 ]]
+local UI = require("src.utils.scripts.ui")
+local AnimationUtils = require("src.utils.scripts.Animations")
 
 local FaceObject = {}
 FaceObject.__index = FaceObject
@@ -59,6 +61,13 @@ function FaceObject:resetStats()
 end
 
 function FaceObject:trigger(round)
+
+    local rx = AnimationUtils.randomInRange(4, 5)
+    local ry = AnimationUtils.randomInRange(7, 8)
+
+    -- randomValue is now in the requested range
+    UI.ScreenWave(rx, ry)
+    
     --Incrémente les variables numériques
     self.totalTriggered = self.totalTriggered + 1
     self.roundTriggered = self.roundTriggered + 1

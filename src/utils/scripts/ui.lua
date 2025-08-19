@@ -380,4 +380,18 @@ UI.Text.drawFormattedText = drawFormattedText
 UI.Text.drawWavyText = drawWavyText
 UI.Text.TextWavy = TextWavy
 
+UI.ScreenWave = function(rx, ry)
+    --Fonction qui permet de faire bouger le paralaxe de l'écran de manière smooth.
+    --Prend en parametre le ratio de paralaxe voulu (donc pas une valeur en pixels, mais une valeur
+    --Généralement entre -1 et 1 qui permet de calculer le paralaxe pour tous les layers)
+
+    local ratiox = rx or 0
+    local ratioy = ry or 0
+    G.animator:finishAll()
+    G.animator:addGroup({
+        {property = "waveX", from = rx, targetValue = 0, duration = 0.3},
+        {property = "waveY", from = ry, targetValue = 0, duration = 0.3},
+    })
+end
+
 return UI
