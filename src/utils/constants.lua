@@ -194,7 +194,7 @@ Constants.EMPLOIS = {
     "Responsable",
     "Fraudeur Fiscal",
     "Streamer",
-    "Employé fantôme",
+    "Employe fantome",
     "Expert"
 }
 
