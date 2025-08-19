@@ -62,8 +62,8 @@ end
 
 function FaceObject:trigger(round)
 
-    local rx = AnimationUtils.randomInRange(4, 5)
-    local ry = AnimationUtils.randomInRange(7, 8)
+    local rx = AnimationUtils.randomInRange(0, 3)
+    local ry = math.abs(AnimationUtils.randomInRange(7, 8))
 
     -- randomValue is now in the requested range
     UI.ScreenWave(rx, ry)
