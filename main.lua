@@ -31,7 +31,12 @@ local baseStats = {
     usedRerolls = 0,
     triggeredDices = 0,
     usedWands = 0,
-    playedHands = 0
+    playedHands = 0,
+    usedCoffees = 0,
+    --Type specific stats
+    triggeredDiceTypes = {},
+    TriggeredCoffeeTypes = {},
+    UsedCoffeeTypes = {}
 }
 
 --Stats for Dice Faces

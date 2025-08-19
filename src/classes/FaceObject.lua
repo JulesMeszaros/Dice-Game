@@ -15,10 +15,10 @@ function FaceObject:new()
     self.objectType = "Dice Face"
 
     --Metadatas about the FaceObject
-    self.name = "FACE OBJECT"
+    self.name = "Face Object"
     self.id = 0
-    self.tier = "??"
-    self.description = "???"
+    self.tier = "Common"
+    self.description = "No description"
 
     --Metadatas about the graphics of the FaceObject
     self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")

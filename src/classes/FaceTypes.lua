@@ -15,6 +15,7 @@ function WhiteDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), WhiteDice)
 
     --Metadatas about the WhiteDice
+    self.className = "WhiteDice"
     self.name = "White Face"
     self.id = 1
     self.tier = "Common"
@@ -50,6 +51,7 @@ function ChunkyDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), ChunkyDice)
 
     --Metadatas about the ChunkyDice
+    self.className = "ChunkyDice"
     self.name = "Chunky Dice"
     self.id = 2
     self.tier = "Common"
@@ -84,6 +86,7 @@ function MassiveDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), MassiveDice)
 
     --Metadatas about the ChunkyDice
+    self.className = "MassiveDice"
     self.name = "Massive Dice"
     self.id = 3
     self.tier = "Common"
@@ -120,6 +123,7 @@ function BlueDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), BlueDice)
 
     --Metadatas about the BlackStar
+    self.className = "BlueDice"
     self.name = "Blue Dice"
     self.tier = "Uncommon"
     self.id = 4
@@ -165,6 +169,7 @@ function GoldDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), GoldDice)
 
     --Metadatas about the BlackStar
+    self.className = "GoldDice"
     self.name = "Gold Face"
     self.tier = "Common"
     self.id = 5
@@ -203,7 +208,8 @@ function DeluxeDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), DeluxeDice)
 
     --Metadatas about the BlackStar
-    self.name = "Deluxe Face"
+    self.className = "DeluxeDice"
+    self.name = "Deluxe Dice"
     self.tier = "Common"
     self.id = 6
     self.description = "Scoring: This Face adds the Point Value of every other scoring Face to the Total Score."
@@ -249,6 +255,7 @@ function StrikeOfLuck:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), StrikeOfLuck)
 
     --Metadatas about the BlackStar
+    self.className = "StrikeOfLuck"
     self.name = "Strike Of Luck"
     self.tier = "Common"
     self.id = 7
@@ -292,6 +299,7 @@ function Copyprinter:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), Copyprinter)
 
     --Metadatas about the BlackStar
+    self.className = "Copyprinter"
     self.name = "Copyprinter"
     self.tier = "Uncommon"
     self.id = 8
@@ -351,6 +359,7 @@ function BasketOfEggs:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), BasketOfEggs)
 
     --Metadatas about the BlackStar
+    self.className = "BasketOfEggs"
     self.name = "Basket Of Eggs"
     self.tier = "Uncommon"
     self.id = 9
@@ -393,6 +402,7 @@ function Apparition:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), Apparition)
 
     --Metadatas about the BlackStar
+    self.className = "Apparition"
     self.name = "Apparition"
     self.tier = "Uncommon"
     self.id = 10
@@ -430,6 +440,7 @@ function BlackStar:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), BlackStar)
 
     --Metadatas about the BlackStar
+    self.className = "BlackStar"
     self.name = "Black Star"
     self.id = 11
     self.tier = "Common"
@@ -465,6 +476,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), ClockWorkDice)
 
     --Metadatas about the ClockWorkDice
+    self.className = "ClockWorkDice"
     self.name = "Clockwork Dice"
     self.id = 12
     self.tier = "Common"
@@ -506,6 +518,7 @@ function AshtrayDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), AshtrayDice)
 
     --Metadatas about the AshtrayDice
+    self.className = "AshtrayDice"
     self.name = "Ashtray Dice"
     self.id = 13
     self.tier = "Common"
@@ -544,6 +557,7 @@ function SteelDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), SteelDice)
 
     --Metadatas about the SteelDice
+    self.className = "SteelDice"
     self.name = "Steel Dice"
     self.id = 14
     self.tier = "Common"
@@ -582,6 +596,7 @@ function DoubleDown:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), DoubleDown)
 
     --Metadatas about the DoubleDown
+    self.className = "DoubleDown"
     self.name = "Double Down"
     self.id = 16
     self.tier = "Common"
@@ -626,6 +641,7 @@ function OddJob:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), OddJob)
 
     --Metadatas about the OddJob
+    self.className = "OddJob"
     self.name = "Odd Job"
     self.id = 15
     self.tier = "Common"
@@ -671,6 +687,7 @@ function MusicDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), MusicDice)
 
     --Metadatas about the MusicDice
+    self.className = "MusicDice"
     self.name = "Music Dice"
     self.id = 17
     self.tier = "Common"
@@ -712,6 +729,7 @@ function Signature:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), Signature)
 
     --Metadatas about the Signature
+    self.className = "Signature"
     self.name = "Signature"
     self.id = 18
     self.tier = "Common"
@@ -753,6 +771,7 @@ function SniperDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), SniperDice)
 
     --Metadatas about the SniperDice
+    self.className = "SniperDice"
     self.name = "SniperDice"
     self.id = 19
     self.tier = "Common"
@@ -798,6 +817,7 @@ function Spotlight:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), Spotlight)
 
     --Metadatas about the Spotlight
+    self.className = "Spotlight"
     self.name = "Spotlight"
     self.id = 20
     self.tier = "Common"
@@ -837,6 +857,7 @@ function RiskyBusiness:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), RiskyBusiness)
 
     --Metadatas about the RiskyBusiness
+    self.className = "RiskyBusiness"
     self.name = "Risky Business"
     self.id = 21
     self.tier = "Common"
@@ -871,6 +892,7 @@ function CryptoDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), CryptoDice)
 
     --Metadatas about the CryptoDice
+    self.className = "CryptoDice"
     self.name = "Crypto Dice"
     self.id = 22
     self.tier = "Common"
@@ -907,6 +929,7 @@ function Patience:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), Patience)
 
     --Metadatas about the Patience
+    self.className = "Patience"
     self.name = "Patience"
     self.id = 23
     self.tier = "Common"
@@ -945,6 +968,7 @@ function DataDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), DataDice)
 
     --Metadatas about the DataDice
+    self.className = "DataDice"
     self.name = "Data Dice"
     self.id = 24
     self.tier = "Common"
@@ -989,6 +1013,7 @@ function StockOption:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), StockOption)
 
     --Metadatas about the StockOption
+    self.className = "StockOption"
     self.name = "Stock Option"
     self.id = 25
     self.tier = "Common"
@@ -1031,6 +1056,7 @@ function RainbowDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), RainbowDice)
 
     --Metadatas about the RainbowDice
+    self.className = "RainbowDice"
     self.name = "Rainbow Dice"
     self.id = 26
     self.tier = "Common"
@@ -1074,6 +1100,7 @@ function MagicDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), MagicDice)
 
     --Metadatas about the MagicDice
+    self.className = "MagicDice"
     self.name = "Magic Dice"
     self.id = 27
     self.tier = "Common"
@@ -1110,6 +1137,7 @@ function ReturnOnInvestment:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), ReturnOnInvestment)
 
     --Metadatas about the ReturnOnInvestment
+    self.className = "ReturnOnInvestment"
     self.name = "Return On Invenstment"
     self.id = 28
     self.tier = "Common"
@@ -1152,7 +1180,8 @@ function RoyaltyCard:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), RoyaltyCard)
 
     --Metadatas about the RoyaltyCard
-    self.name = "Royalty Card"
+    self.className = "RoyaltyCard"
+    self.name = "Loyalty Card"
     self.id = 29
     self.tier = "Common"
 
@@ -1187,6 +1216,7 @@ function MirrorDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), MirrorDice)
 
     --Metadatas about the MirrorDice
+    self.className = "MirrorDice"
     self.name = "Mirror Dice"
     self.id = 30
     self.tier = "Common"
@@ -1234,6 +1264,7 @@ function CookieDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), CookieDice)
 
     --Metadatas about the CookieDice
+    self.className = "CookieDice"
     self.name = "Lucky Cookie"
     self.id = 31
     self.tier = "Common"
@@ -1273,6 +1304,7 @@ function InsomniacDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), InsomniacDice)
 
     --Metadatas about the InsomniacDice
+    self.className = "InsomniacDice"
     self.name = "Insomniac Dice"
     self.id = 32
     self.tier = "Common"
@@ -1309,6 +1341,7 @@ function TwinFlame:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), TwinFlame)
 
     --Metadatas about the TwinFlame
+    self.className = "TwinFlame"
     self.name = "Twin Flame"
     self.id = 33
     self.tier = "Rare"
@@ -1347,6 +1380,7 @@ function FaxMachine:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), FaxMachine)
 
     --Metadatas about the FaxMachine
+    self.className = "FaxMachine"
     self.name = "Fax Machine"
     self.id = 34
     self.tier = "Rare"
@@ -1387,6 +1421,7 @@ function Necromancer:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), Necromancer)
 
     --Metadatas about the Necromancer
+    self.className = "Necromancer"
     self.name = "Necromancer Dice"
     self.id = 35
     self.tier = "Rare"
@@ -1430,6 +1465,7 @@ function SixthSense:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), SixthSense)
 
     --Metadatas about the SixthSense
+    self.className = "SixthSense"
     self.name = "Sixth Sense"
     self.id = 36
     self.tier = "Uncommon"
@@ -1488,6 +1524,7 @@ function Sacrifice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), Sacrifice)
 
     --Metadatas about the Sacrifice
+    self.className = "Sacrifice"
     self.name = "Sacrifice"
     self.id = 37
     self.tier = "Rare"
@@ -1538,6 +1575,7 @@ function CheckeredDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), CheckeredDice)
 
     --Metadatas about the CheckeredDice
+    self.className = "CheckeredDice"
     self.name = "Checkered Dice"
     self.id = 1
     self.tier = "Common"
@@ -1572,6 +1610,7 @@ function StarDice:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), StarDice)
 
     --Metadatas about the StarDice
+    self.className = "StarDice"
     self.name = "Star Dice"
     self.id = 1
     self.tier = "Rare"
@@ -1605,6 +1644,7 @@ function Resurection:new(faceValue, pointsValue)
     local self = setmetatable(FaceObject:new(), Resurection)
 
     --Metadatas about the Resurection
+    self.className = "Resurection"
     self.name = "Resurection"
     self.id = 1
     self.tier = "Rare"
