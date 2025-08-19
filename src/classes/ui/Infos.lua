@@ -77,6 +77,7 @@ function Infos:new(run)
         80,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0, 2)end
+        function()return Inputs.getMouseInCanvas(0, 0, 2)end
     )
 
     self.uiElements.buttons["planButton"] = Button:new(
@@ -88,7 +89,11 @@ function Infos:new(run)
         80,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0, 2)end
+        function()return Inputs.getMouseInCanvas(0, 0, 2)end
     )
+
+    self.uiElements.buttons["menuButton"].layer = 2
+    self.uiElements.buttons["planButton"].layer = 2
 
     self.uiElements.buttons["menuButton"].layer = 2
     self.uiElements.buttons["planButton"].layer = 2
@@ -173,7 +178,7 @@ function Infos:updateCanvas(dt)
         self.infoBubble:update(dt)
         self.infoBubble:draw()
         
-    end ]]
+    end
 
     love.graphics.setCanvas(currentCanvas)
 end
