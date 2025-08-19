@@ -54,6 +54,22 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.roundType = roundType
     self.availableRerolls = Constants.BASE_REROLLS
 
+    --Disabled figures (for bosses)
+    self.disabledFigures = {}
+    for i=1,13 do table.insert(self.disabledFigures, false) end --De base, aucune figure n'est désactivée.
+
+    if(self.roundType == Constants.ROUND_TYPES.BOSS) then
+        --Boss Project Manager : on désactive les figures numériques
+        if(self.bossType == Constants.BOSS_TYPES.CHEF_DE_PROJET) then
+            for i=1,6 do self.disabledFigures[i] = true end
+        end
+
+        --Boss Chef comptable : on désactive les figures non numériques
+        if(self.bossType == Constants.BOSS_TYPES.CHEF_COMPTABLE)then
+            for i=7,13 do self.disabledFigures[i] = true end
+        end
+    end
+
     --Choix du type de manager
     if(self.roundType == Constants.ROUND_TYPES.BOSS)then
         self.bossType = Constants.BOSS_TYPES.CHEF_COMPTABLE
@@ -365,6 +381,8 @@ function Round:endTriggeringPhase()
         if(self.handScore > self.run.bestHand)then
             self.run.bestHand = self.handScore
         end
+
+        print("Best run hand : ", self.run.bestHand)
 
         self.handScore = 0
     end
