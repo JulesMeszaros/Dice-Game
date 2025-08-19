@@ -21,6 +21,7 @@ local Constants = {
     SHOP_EVERY_DESK = true,
     
     --Prices
+    BASE_FACE_PRICE = 5,
     BASE_FACE_SELL_PRICE = 3,
     BASE_CIGGIE_SELL_PRICE = 1,
     BASE_COFFEE_PRICE = 5,
