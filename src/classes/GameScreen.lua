@@ -198,7 +198,7 @@ function GameScreen:new(floor, run, screenType, round)
             {property = "enemyX", from = self.enemyX, targetValue = self.enemyTX, duration = AnimationUtils.EntryDuration},
         })
         --Shake
-        AnimationUtils.shake(self, 0, 10, 0.1)
+        self.animator:addDelay(0, function()G.animator:add("waveY", 9, 0, 2)end)
     end
 
     self.uiElements.buttons["menuButton"] = Button:new(
