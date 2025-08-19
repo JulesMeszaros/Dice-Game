@@ -191,7 +191,11 @@ Constants.EMPLOIS = {
     "Data analyst",
     "Juriste",
     "Assistant admin.",
-    "Responsable"
+    "Responsable",
+    "Fraudeur Fiscal",
+    "Streamer",
+    "Employé fantôme",
+    "Expert"
 }
 
 Constants.PARALAXE_MAX_OFFSET = {
