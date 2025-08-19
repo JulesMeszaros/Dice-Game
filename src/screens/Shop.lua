@@ -41,9 +41,10 @@ function Shop:new(run)
 
     self.buyCiggieText = UI.Text.TextWavy:new(
         "Buy ("..tostring(Constants.BASE_CIGGIE_PRICE).."$)",
-        1690, 1000,
+        self.ciggiesTrayTX + self.ciggiesTray:getWidth()/2, 
+        self.ciggiesTrayTY + self.ciggiesTray:getHeight()/2,
         {
-            font = Fonts.SoraBig,
+            font = Fonts.soraMedium,
             centered = true,
             amplitude = 5,
             speed = 2,
@@ -53,7 +54,7 @@ function Shop:new(run)
     )
 
     self.buyText = UI.Text.TextWavy:new(
-        "Buy face (5$)",
+        "Buy (5$)",
         self.inventorySMTX + self.inventoryCanvasSmall:getWidth()/2,
         self.inventorySMTY + self.inventoryCanvasSmall:getHeight()/2,
         {
