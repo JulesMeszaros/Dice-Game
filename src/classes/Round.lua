@@ -9,7 +9,6 @@ local GameOver = require("src.classes.ui.GameOver")
 local Lion = require("src.classes.ui.Lion")
 local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 
-
 local Round = {}
 Round.__index = Round
 
@@ -37,14 +36,13 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.dicesBackupQueue = {}  --Same but for the dices
     
     self.currentlyTriggeredDice = nil
-    self.diceFaces = {}
+    self.diceFaces = {} -- Objets visuels
     self.baseReward = baseReward
     self.ciggieReward = GenerateRandom.CiggieObject()
     self.triggerDiceHistory = {}
     self.triggerFaceHistory = {}
 
     self.run = run
-    self.gameCanvas = gameCanvas
 
     --Current Round Parameters
     self.firstRoll = false
@@ -60,7 +58,13 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 
     --Choix du type de manager
     if(self.roundType == Constants.ROUND_TYPES.BOSS)then
-        self.bossType = Constants.BOSS_TYPES.CHEF_COMPTABLE
+        -- Pick a random key from Constants.BOSS_TYPES
+        local bossKeys = {}
+        for k, _ in pairs(Constants.BOSS_TYPES) do
+            table.insert(bossKeys, k)
+        end
+        local randomKey = bossKeys[math.random(#bossKeys)]
+        self.bossType = Constants.BOSS_TYPES[randomKey]
     end
 
     if(self.roundType == Constants.ROUND_TYPES.BOSS) then
@@ -368,7 +372,6 @@ end
 
 function Round:endTriggeringPhase()
     self.phase = Constants.ROUND_STATES.PLAYING
-    print("done triggering!!!")
 
     if(self.remainingHands>=1)then
         self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles

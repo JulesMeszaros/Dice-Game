@@ -37,6 +37,7 @@ function Game:start()
     --Create a main menu
     self.mainMenu = MainMenu:new(self.gameCanvas, self)
 
+    G.game = self
 
     return self
 end
@@ -111,6 +112,8 @@ function Game:startNewRun()
 
     self.currentScreen = Constants.PAGES.GAME
     self.run = Run:new(diceObjects, self.gameCanvas, self, self.diceObjects)
+
+    G.currentRun = self.run
 end
 
 --==INPUTS FUNCTIONS==--
