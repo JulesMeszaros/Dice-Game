@@ -58,6 +58,11 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
     self.disabledFigures = {}
     for i=1,13 do table.insert(self.disabledFigures, false) end --De base, aucune figure n'est désactivée.
 
+    --Choix du type de manager
+    if(self.roundType == Constants.ROUND_TYPES.BOSS)then
+        self.bossType = Constants.BOSS_TYPES.CHEF_COMPTABLE
+    end
+
     if(self.roundType == Constants.ROUND_TYPES.BOSS) then
         --Boss Project Manager : on désactive les figures numériques
         if(self.bossType == Constants.BOSS_TYPES.CHEF_DE_PROJET) then
@@ -70,10 +75,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
         end
     end
 
-    --Choix du type de manager
-    if(self.roundType == Constants.ROUND_TYPES.BOSS)then
-        self.bossType = Constants.BOSS_TYPES.CHEF_COMPTABLE
-    end
+    
 
     if(self.bossType==Constants.BOSS_TYPES.CHEF_RD) then
         self.remainingHands = self.remainingHands + self.availableRerolls
@@ -305,7 +307,7 @@ function Round:startBackupPhase()
 
 end
 
-function Round:triggerNextBackupDice()
+function Round:triggerNextBackupDice(disabled)
     if(table.getn(self.dicesBackupQueue)>=1)then --Si il reste au moins un dé non à backup
         if(self.diceFacesBackupQueue[1].representedObject.disabled == false) then
             self.diceFacesBackupQueue[1]:triggerBackup(self) --On trigger l'effer backup depuis l'objet UI
@@ -376,6 +378,7 @@ function Round:endTriggeringPhase()
         else
             self.availableRerolls = Constants.BASE_REROLLS
         end
+        
         self.roundScore = self.roundScore + self.handScore
         
         if(self.handScore > self.run.bestHand)then
@@ -537,14 +540,48 @@ function Round:playFigure(points, usedDices, figure) --Function that triggers th
         self.terrain:setMoneyTo(self.run.money - table.getn(usedDices))
     end
 
-    self:startTriggeringPhase(usedDices, figure)
+    if(self.disabledFigures[figure] == false) then
+        self:startTriggeringPhase(usedDices, figure)
 
-    --Add one to the playcount
-    self.run.figuresInfos[figure].playcount = self.run.figuresInfos[figure].playcount+1
+        --Add one to the playcount
+        self.run.figuresInfos[figure].playcount = self.run.figuresInfos[figure].playcount+1
 
-    --Ajouter le score de base de la figure à la main
-    self.handScore = self.handScore+points -- On ajoute les points au score
-    self.terrain.handScoreDisplay = self.handScore
+        --Ajouter le score de base de la figure à la main
+        self.handScore = self.handScore+points -- On ajoute les points au score
+        self.terrain.handScoreDisplay = self.handScore
+    else
+        --On termine la phase de trigger
+
+        --Désactiver les dés ghosts qui ne sont pas utilisés dans la figure.
+        --Liste des dés non utilisés (tous)
+        local unusedDices = {}
+        for i,d in next,self.diceObjects do
+            table.insert(unusedDices, d)
+        end
+
+        --On désactive les dés ghosts qui ne sont pas utilisés
+        for i,d in next,unusedDices do
+            if(d:getCurrentFaceObject().ghost == true and d:getCurrentFaceObject().wasJustReenabled ~= true) then
+                self.terrain.diceFaces[d]:disable(self.run)
+            end
+        end
+
+        --On rollback
+        local j = 0
+        for i,diceface in next,self.terrain.diceFaces do
+            j = j+1
+            diceface.representedObject.wasJustReenabled = false
+            if(j==5)then
+                diceface.animator:add("y", diceface.y, diceface.y-20, 0.1)
+                diceface.animator:add("y", diceface.y-20, 1000, 0.2)
+                diceface.animator:addDelay(0.2, function()self:endTriggeringPhase()end) --On termine le round mais uniquement quand le dernier dé a terminé son animation
+            else
+                diceface.animator:add("y", diceface.y, diceface.y-20, 0.1)
+                diceface.animator:add("y", diceface.y-20, 1000, 0.2)
+                diceface.animator:addDelay(0.2)
+            end
+        end
+    end
 end
 
 --==UTILS==--
