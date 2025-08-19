@@ -65,6 +65,8 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
         end
         local randomKey = bossKeys[math.random(#bossKeys)]
         self.bossType = Constants.BOSS_TYPES[randomKey]
+
+        print(self.bossType)
     end
 
     if(self.roundType == Constants.ROUND_TYPES.BOSS) then

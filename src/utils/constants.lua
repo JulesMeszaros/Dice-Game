@@ -8,7 +8,7 @@ local Constants = {
 
     --Game base stats
     BASE_REROLLS = 2,
-    DESKS_BY_FLOOR = 2,
+    DESKS_BY_FLOOR = 0,
     FLOORS_BY_RUN = 8,
     BASE_MAX_CIGGIES = 3,
     BASE_TURNS = 3,
@@ -169,8 +169,8 @@ Constants.BOSS_TYPES = {
 Constants.BOSS_TYPES_DESC = {
     {"Project Manager", "Cannot play numbered figures (ones, twos, threes...)"},
     {"Chief Accountant", "Cannot play non-numbered figures"},
-    {"Trésorier", "Playing a dice costs 1$"},
-    {"R&D Manager", "Rerolls are added to the numbers of turns, and is set to 0"},
+    {"Tresorier", "Playing a dice costs 1$"},
+    {"R/D Manager", "Rerolls are added to the numbers of turns, and is set to 0"},
     {"Safety Advisor", "Cannot use magic wands this round"}
 }
 
