@@ -72,8 +72,15 @@ function FaceObject:trigger(round)
     self.totalTriggered = self.totalTriggered + 1
     self.roundTriggered = self.roundTriggered + 1
 
+    --Ajout dans le save manager
     G.saveManager.data.triggeredDices = G.saveManager.data.triggeredDices + 1
     
+    if(G.saveManager.data.triggeredDiceTypes[self.className])then
+        G.saveManager.data.triggeredDiceTypes[self.className] = G.saveManager.data.triggeredDiceTypes[self.className] +1
+    else
+        G.saveManager.data.triggeredDiceTypes[self.className] = 1
+    end
+
     --Déclenche l'effet first si possible
     if(self.first == true) then
         local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
