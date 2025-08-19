@@ -77,7 +77,6 @@ function Infos:new(run)
         80,
         self.gameCanvas,
         function()return Inputs.getMouseInCanvas(0, 0, 2)end
-        function()return Inputs.getMouseInCanvas(0, 0, 2)end
     )
 
     self.uiElements.buttons["planButton"] = Button:new(
@@ -88,7 +87,6 @@ function Infos:new(run)
         180,
         80,
         self.gameCanvas,
-        function()return Inputs.getMouseInCanvas(0, 0, 2)end
         function()return Inputs.getMouseInCanvas(0, 0, 2)end
     )
 
