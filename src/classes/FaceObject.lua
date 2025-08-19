@@ -71,6 +71,8 @@ function FaceObject:trigger(round)
     --Incrémente les variables numériques
     self.totalTriggered = self.totalTriggered + 1
     self.roundTriggered = self.roundTriggered + 1
+
+    G.saveManager.data.triggeredDices = G.saveManager.data.triggeredDices + 1
     
     --Déclenche l'effet first si possible
     if(self.first == true) then
