@@ -445,8 +445,16 @@ function Round:rerollDices() --Triggers the makeRoll function after clicking the
     end
 
     local dicesToReroll = {}
+    
     --Add 1 to the total rerolls used this run
     self.run.usedRerolls = self.run.usedRerolls+1
+    --On ajoute 1 aux stats de session
+    if(G.saveManager.data.usedRerolls) then
+        G.saveManager.data.usedRerolls = G.saveManager.data.usedRerolls + 1
+    else
+        G.saveManager.data.usedRerolls = 1
+    end
+
     --On créée la liste des dés à reroll
     for k,d in next,self.diceObjects do
         if not self:containsDice(self.selectedDices, d) then
@@ -538,6 +546,13 @@ end
 
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
+    
+    if(G.saveManager.data.playedHands) then
+        G.saveManager.data.playedHands = G.saveManager.data.playedHands + 1
+    else
+        G.saveManager.data.playedHands = 1
+    end
+
     --Commencer la phase de déclenchement
 
     --Si boss trésorier : on retire de l'argent selon le nombre de dés

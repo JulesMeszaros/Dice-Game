@@ -3,6 +3,8 @@ local Shaders = require("src.utils.Shaders")
 local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
 local SaveManager = require("src.utils.SaveManager")
+local Fonts = require("src.utils.Fonts")
+local Game = require("src.classes.Game")
 
 G = {
     
@@ -21,7 +23,22 @@ G = {
     --Wave
     waveX = 0,
     waveY = 0
+
 }
+
+--Some stats for the session
+local baseStats = {
+    usedRerolls = 0,
+    triggeredDices = 0,
+    usedWands = 0,
+    playedHands = 0
+}
+
+--Stats for Dice Faces
+
+--Stats for Wands
+
+--Stats for coffees
 
 G.animator = Animator:new(G)
 
@@ -32,9 +49,6 @@ function G.calculateParalaxeOffset(layer)
     return G.ox * Constants.PARALAXE_MAX_OFFSET[layer], G.oy * Constants.PARALAXE_MAX_OFFSET[layer]
 end
 
-local Fonts = require("src.utils.Fonts")
-local Game = require("src.classes.Game")
-
 local delta = 0
 local fpstext = nil -- Cache the FPS text object
 
@@ -44,11 +58,9 @@ local currentFpsIndex = 1
 
 local backgroundCanvas = nil
 
-
-
 function love.load()
     --Save Manager
-    G.saveManager = SaveManager:new("save.lua")
+    G.saveManager = SaveManager:new("save.lua", baseStats)
     
     --bien randomiser le jeu
     math.randomseed(os.clock() * 1000000)
@@ -61,7 +73,7 @@ function love.load()
     local sys = love.system.getOS()
 
     if(sys=="OS X" or sys=="Windows")then
-        cursor = love.mouse.newCursor("src/assets/sprites/ui/cursor.png", 0, 0)
+        local cursor = love.mouse.newCursor("src/assets/sprites/ui/cursor.png", 0, 0)
         love.mouse.setCursor(cursor)
     end
 
@@ -107,24 +119,10 @@ function love.draw()
     -- Update the cached FPS text object
     fpstext:set("fps:"..delta)
     love.graphics.draw(fpstext, love.graphics.getWidth()-5, 5, 0, 1, 1, fpstext:getWidth(), 0)
-    
-    --dimtext = love.graphics.newText(Fonts.soraSmall, tostring(love.graphics.getWidth()).."x"..tostring(love.graphics.getHeight()))
-    --love.graphics.draw(dimtext, love.graphics.getWidth()-5, 30, 0, 1, 1, dimtext:getWidth(), 0)
-
 end
 
 function love.keypressed(key)
     game:keypressed(key)
-
-    if key == "f" then
-        currentFpsIndex = currentFpsIndex % #fpsOptions + 1
-        fpsLimit = fpsOptions[currentFpsIndex]
-        if fpsLimit then
-            print("FPS limité à " .. fpsLimit)
-        else
-            print("FPS illimité")
-        end
-    end
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
@@ -161,4 +159,8 @@ function drawBackground()
     Shaders.diagonalCircles:send("darkness", -0.4)
     love.graphics.draw(backgroundCanvas, 0, 0)
     love.graphics.setShader()
+end
+
+function love.quit()
+    G.saveManager:save()
 end

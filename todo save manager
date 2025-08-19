@@ -1,0 +1,14 @@
+Données à enregistrer (stats générales)
+
+Nombre de parties lancées
+Nombre de parties gagnées
+Nombre de rerolls total
+Nombre de dés triggers total
+Nombre de magic wands utilisées
+
+Nombre de dés trigger par type (utiliser l'ID/Nom du dé pour stocker l'indormation)
+
+Enregistrer les stats :
+- à la fin de chaque round
+- Quand le jeu se ferme si possible
+- Des que le menu est mis sur pause (info screen ou menu)
