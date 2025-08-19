@@ -205,4 +205,16 @@ Constants.PARALAXE_MAX_OFFSET = {
     0
 }
 
+--TODO
+Constants.BACKGROUND_COLORS = {
+    BASE = {},
+    WIN = {},
+    LOOSE = {},
+    BOSS = {},
+    TRIGGER = {},
+    SHOP = {},
+    DICE_CUSTOMIZATION = {},
+    DESK_CHOICE = {}
+}
+
 return Constants
