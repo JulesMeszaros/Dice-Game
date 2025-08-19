@@ -2,8 +2,11 @@ local Animator = require("src.utils.Animator")
 local Shaders = require("src.utils.Shaders")
 local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
+local SaveManager = require("src.utils.SaveManager")
 
 G = {
+    
+    --Background color
     backgroundR = 40/255,
     backgroundG = 40/255,
     backgroundB = 43/255,
@@ -18,10 +21,10 @@ G = {
     --Wave
     waveX = 0,
     waveY = 0
-
 }
 
 G.animator = Animator:new(G)
+
 
 -- Function to calculate parallax offset
 function G.calculateParalaxeOffset(layer)
@@ -44,6 +47,9 @@ local backgroundCanvas = nil
 
 
 function love.load()
+    --Save Manager
+    G.saveManager = SaveManager:new("save.lua")
+    
     --bien randomiser le jeu
     math.randomseed(os.clock() * 1000000)
     for i=0,os.clock() * 1000000 do
