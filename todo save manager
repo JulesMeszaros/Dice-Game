@@ -12,3 +12,42 @@ Enregistrer les stats :
 - à la fin de chaque round
 - Quand le jeu se ferme si possible
 - Des que le menu est mis sur pause (info screen ou menu)
+
+
+Enregistrer la partie : 
+
+Enregistrer une face:
+-Type
+-Numéro
+-TriggerHistory
+
+General (Run)
+-Inventaire
+-Deck (dice objects)
+-Cigarettes
+-Inventaire de rewards
+-Figures : niveau, playcount (table figures info)
+-Money
+-BaseAvailableHands
+-CurrentFloor (ca ca va etre compliqué pcq c'est une table déjà) mdr
+-FloorNumber
+-FloorDeskNumber
+-CurrentState
+
+
+~~~Stats~~~
+-TotalUsedCiggies
+-TotalUsedCoffees
+-TotalDisabled
+-UsedRerolls
+-RoundNumber
+-BestHand
+
+Round
+
+
+Dice customization
+
+Shop
+
+Desk choice

@@ -41,7 +41,6 @@ function Run:new(dices, gameCanvas, game, diceObjects)
     self.shop = nil
 
     --Dices variables
-    self.drawedDices = {} --Current Drawed Dices
     --Drag variables (should rather be located in the Game class i guess...)
     self.isDragging = false
     self.dragOriginX = nil
