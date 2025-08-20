@@ -6,6 +6,7 @@ local Inputs = require("src.utils.scripts.Inputs")
 local Animator = require("src.utils.Animator")
 local EndRound = require("src.classes.ui.EndRound")
 local GameOver = require("src.classes.ui.GameOver")
+local RunEnd = require("src.classes.ui.RunEnd")
 local Lion = require("src.classes.ui.Lion")
 local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 
@@ -123,9 +124,16 @@ function Round:endRound()
     end
         
     if(self.roundScore >= self.targetScore)then
-        --CREATE A END ROUND SCREEN
-        self.terrain.endRoundPopUp = EndRound:new(self.run, self)
-        self.phase = Constants.ROUND_STATES.END_ROUND
+        --Cas ou on vient de battre le dernier manager
+        if(self.floorNumber == Constants.FLOORS_BY_RUN and self.roundType == Constants.ROUND_TYPES.BOSS) then
+            print("You win the run!!!")
+            self.terrain.runWinPopup = RunEnd:new(self.run, self)
+            self.phase = Constants.ROUND_STATES.RUN_END
+        else
+            --CREATE A END ROUND SCREEN
+            self.terrain.endRoundPopUp = EndRound:new(self.run, self)
+            self.phase = Constants.ROUND_STATES.END_ROUND
+        end
     else
         --CREATE A GAME OVER SCREEN
         self.terrain.gameOverPopup = GameOver:new(self.run, self)
