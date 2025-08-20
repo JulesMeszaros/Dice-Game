@@ -18,7 +18,7 @@ local Constants = {
     BASE_TRIGGER_ANIMATION_TIME = 0.15,--secondes
     
     --Debug
-    SHOP_EVERY_DESK = true,
+    SHOP_EVERY_DESK = false,
     
     --Prices
     BASE_FACE_PRICE = 5,
