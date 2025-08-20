@@ -8,8 +8,8 @@ local Constants = {
 
     --Game base stats
     BASE_REROLLS = 2,
-    DESKS_BY_FLOOR = 2,
-    FLOORS_BY_RUN = 8,
+    DESKS_BY_FLOOR = 0,
+    FLOORS_BY_RUN = 1,
     BASE_MAX_CIGGIES = 3,
     BASE_TURNS = 3,
     BASE_AVAILABLE_HANDS = 1,
@@ -140,13 +140,14 @@ Constants.RUN_STATES = {
     ROUND_CHOICE = 3, --Choix du prochain round à jouer
     GAME_OVER = 4, --Ecran de game over
     MAP = 5, --Map du batiment, et infos de run
-    DICE_CUSTOMIZATION = 6
+    DICE_CUSTOMIZATION = 6,
+    RUN_END = 7
 }
 
 Constants.ROUND_STATES = {
     REROLLING = 1,
     PLAYING = 2,
-    TRIGGERING_DICE = 3,
+    TRIGGERING = 3,
     RECALLING = 4,
     END_ROUND = 5,
     GAME_OVER = 6,

@@ -1,5 +1,4 @@
 local Round = require("src.classes.Round")
-local GameOverScreen = require("src.screens.GameOverScreen")
 local Shop = require("src.screens.Shop")
 local DeskChoice = require("src.screens.DeskChoice")
 local DiceCustomization = require("src.screens.DiceCustomization")

@@ -268,8 +268,6 @@ function RoundScreen:updateCanvas(dt)
 
     self:drawCiggiesTrayFront()
     
-    
-
     --EndRoundScreen
     if(self.endRoundPopUp)then
         self.endRoundPopUp:update(dt)
@@ -281,6 +279,12 @@ function RoundScreen:updateCanvas(dt)
         self.gameOverPopup:update(dt)
         self.gameOverPopup:updateCanvas(dt)
         self.gameOverPopup:draw(dt)
+    end
+
+    if(self.runWinPopup) then
+        self.runWinPopup:update(dt)
+        self.runWinPopup:updateCanvas(dt)
+        self.runWinPopup:draw(dt)
     end
 
     --Face Details
@@ -305,7 +309,7 @@ end
 
 --==INPUT FUNCTIONS==--
 function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
-    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER and self.run.runPaused == false) then
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER and self.round.phase ~= Constants.ROUND_STATES.RUN_END and self.run.runPaused == false) then
         --Drag and drop dice
         if(isDragging == true)then
             for key,diceui in next, self.diceFaces do
@@ -369,7 +373,7 @@ function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
 end
 
 function RoundScreen:mousepressed(x, y, button, istouch, presses)
-    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER) then
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER and self.round.phase ~= Constants.ROUND_STATES.RUN_END) then
         
         if self.round.phase~=Constants.ROUND_STATES.TRIGGERING then
             --DiceFaces
@@ -397,12 +401,14 @@ function RoundScreen:mousepressed(x, y, button, istouch, presses)
             self.endRoundPopUp:mousepressed(x, y, button, istouch, pressed)
         elseif(self.gameOverPopup)then
             self.gameOverPopup:mousepressed(x, y, button, istouch, presses)
+        elseif(self.runWinPopup)then
+            self.runWinPopup:mousepressed(x, y, button, istouch, presses)
         end
     end
 end
 
 function RoundScreen:mousereleased(x, y, button, istouch, presses)
-    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER)then
+    if(self.round.phase ~= Constants.ROUND_STATES.END_ROUND and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER and self.round.phase ~= Constants.ROUND_STATES.RUN_END)then
 
         self.dragAndDroppedCiggie = nil
         self.dragAndDroppedFace = nil
@@ -453,8 +459,8 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
         end
     elseif(self.endRoundPopUp)then
         self.endRoundPopUp:mousereleased(x, y, button, istouch, presses)
-    elseif(self.gameOverPopup)then
-        self.gameOverPopup:mousereleased(x, y, button, istouch, presses)
+    elseif(self.runWinPopup)then
+        self.runWinPopup:mousereleased(x, y, button, istouch, presses)
     end
 end
 
