@@ -3,7 +3,7 @@
     It is used as the default class for every dice faces, who inherits
     from this one.
 ]]
-local UI = require("src.utils.scripts.ui")
+local UI = require("src.utils.scripts.UI")
 local AnimationUtils = require("src.utils.scripts.Animations")
 
 local FaceObject = {}
