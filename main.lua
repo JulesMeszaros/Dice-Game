@@ -66,6 +66,7 @@ local backgroundCanvas = nil
 function love.load()
     --Save Manager
     G.saveManager = SaveManager:new("save.lua", baseStats)
+    G.runSaveManager = SaveManager:new("run.lua")
     
     --bien randomiser le jeu
     math.randomseed(os.clock() * 1000000)

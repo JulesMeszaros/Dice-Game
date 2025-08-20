@@ -231,6 +231,10 @@ function Run:keypressed(key)
     if(key=="f") then
         self:resetAvailableFigures()
     end
+
+    if(key=="s")then
+        G.runSaveManager:saveRun(self)
+    end
 end
 
 function Run:mousepressed(x, y, button, istouch, presses)

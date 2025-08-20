@@ -1,3 +1,5 @@
+local serpent = require("src.utils.serpent")
+
 local SaveManager = {}
 SaveManager.__index = SaveManager
 
@@ -39,6 +41,12 @@ end
 function SaveManager:save()
     local data = "return " .. serializeTable(self.data)
     love.filesystem.write(self.filename, data)
+end
+
+function SaveManager:saveRun(run)
+    local dump = serpent.dump(run, { indent = "  ", comment = false })
+    local chunk = "return " .. dump
+    love.filesystem.write(self.filename, chunk)
 end
 
 function SaveManager:load()
