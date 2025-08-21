@@ -257,4 +257,59 @@ Shaders.diagonalCircles = love.graphics.newShader([[
     }
 ]])
 
+-- Dynamic CRT with wobbling scanlines and configurable parameters
+Shaders.dynamicCRT = love.graphics.newShader([[
+    extern number time;
+    extern vec2  screenSize;
+    extern number warp;               // barrel/pincushion distortion strength
+    extern number scanIntensity;      // overall darkness of scanlines (0..1)
+    extern number scanFreq;           // number of scanlines (in cycles per screen height)
+    extern number wobbleAmp;          // wobble amplitude (how much each scanline bends)
+    extern number wobbleSpeed;        // wobble speed
+    extern number lineThickness;      // thickness of scan line edge (0..0.5)
+    extern number vignette;           // vignette intensity (0..1)
+    extern number chroma;             // chromatic aberration amount (0..1)
+
+    float hash(float x) {
+        return fract(sin(x) * 43758.5453);
+    }
+
+    vec4 effect(vec4 color, Image texture, vec2 tc, vec2 sc) {
+        // tc = [0..1] texture coords, sc = screen coords in pixels
+        vec2 c = tc - 0.5;
+
+        // radial distortion
+        float r2 = dot(c, c);
+        c *= 1.0 + warp * r2;
+        vec2 uv = c + 0.5;
+
+        if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+            return vec4(0.0, 0.0, 0.0, 1.0);
+        }
+
+        // per-scanline wobble based on screen Y (so it stays aligned to pixels)
+        float y = sc.y;
+        float base = sin(y * (scanFreq / screenSize.y * 6.2831853));
+        float wob = sin((uv.x * 50.0) + time * wobbleSpeed + hash(floor(y)) * 6.2831853) * wobbleAmp;
+
+        float scanShift = wob * (1.0 / screenSize.x);
+        vec2 sampleUV = uv + vec2(scanShift, 0.0);
+
+        float ca = chroma * 0.003;
+        vec4 colR = Texel(texture, sampleUV + vec2(-ca, 0.0));
+        vec4 colG = Texel(texture, sampleUV);
+        vec4 colB = Texel(texture, sampleUV + vec2(ca, 0.0));
+        vec3 tex = vec3(colR.r, colG.g, colB.b);
+
+        float line = 0.5 + 0.5 * base;
+        float edge = smoothstep(0.5 - lineThickness, 0.5 + lineThickness, line);
+        float scanAtt = mix(1.0, edge, scanIntensity);
+
+        float vig = 1.0 - vignette * smoothstep(0.5, 0.9, length(c));
+
+        vec3 finalColor = tex * scanAtt * vig;
+        return vec4(finalColor, 1.0) * color;
+    }
+]])
+
 return Shaders
