@@ -10,7 +10,6 @@ local Shaders = require("src.utils.Shaders")
 local DiceObject = require("src.classes.DiceObject") 
 local FaceTypes = require("src.classes.FaceTypes")
 
-local applyCRT = false
 
 local Game = {}
 Game.__index = Game
@@ -74,11 +73,7 @@ function Game:draw()
     local offsetX = (screenWidth - scaledWidth) / 2
     local offsetY = (screenHeight - scaledHeight) / 2
     
-    if(applyCRT)then
-        love.graphics.setShader(Shaders.aChrom)
-    end
     love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
-    love.graphics.setShader()
 
 end
 

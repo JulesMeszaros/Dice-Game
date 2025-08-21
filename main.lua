@@ -8,6 +8,8 @@ G = {
 
 G.animator = Animator:new(G)
 
+local applyCRT = false
+
 local Fonts = require("src.utils.Fonts")
 local Game = require("src.classes.Game")
 
@@ -48,6 +50,7 @@ function love.load()
 end
 
 function love.update(dt)
+    print(applyCRT)
     if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
         print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
     end
@@ -68,9 +71,16 @@ function love.update(dt)
 end
 
 function love.draw()
+    
+
     drawBackground()
     
+    Shaders.aChrom:send("amount", 1)
+    if(applyCRT)then
+        love.graphics.setShader(Shaders.aChrom)
+    end
     game:draw()
+    love.graphics.setShader()
     -- Update the cached FPS text object
     fpstext:set("fps:"..delta)
     love.graphics.draw(fpstext, love.graphics.getWidth()-5, 5, 0, 1, 1, fpstext:getWidth(), 0)
@@ -81,6 +91,11 @@ function love.draw()
 end
 
 function love.keypressed(key)
+    if(key=="c")then
+        applyCRT = not applyCRT
+
+    end
+
     game:keypressed(key)
 
     if key == "f" then
