@@ -114,10 +114,7 @@ end
 --==INPUTS FUNCTIONS==--
 
 function Game:keypressed(key)
-    if(key=="c")then
-        applyCRT = not applyCRT
-
-    end
+    
 
     if(self.currentScreen == Constants.PAGES.MAIN_MENU)then
 
