@@ -57,8 +57,6 @@ function UIElement:renderSprite(gameCanvas)
     local canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
 
     --General settings
-    canvas:setFilter("nearest", "nearest")
-    love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(canvas)
 
     local widthRatio = self.width/self.sprite:getWidth()

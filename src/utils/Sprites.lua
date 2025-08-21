@@ -73,6 +73,10 @@ Sprites.OFFICE_DESCRIPTION_EMPTY = love.graphics.newImage("src/assets/sprites/ui
 
 Sprites.PROGRESSION = love.graphics.newImage("src/assets/sprites/ui/Progression.png")
 
+for i,sprite in next,Sprites do
+    sprite:setFilter("nearest", "nearest")
+end
+
 --COFFE
 Sprites.COFFEE_SPRITES = {
     love.graphics.newImage("src/assets/sprites/coffee/Ristretto.png"),
@@ -89,5 +93,7 @@ Sprites.COFFEE_SPRITES = {
     love.graphics.newImage("src/assets/sprites/coffee/Mazagran.png"),
     love.graphics.newImage("src/assets/sprites/coffee/Coffee Deluxe.png")
 }
+
+
 
 return Sprites

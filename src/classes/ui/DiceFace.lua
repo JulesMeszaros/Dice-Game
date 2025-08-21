@@ -135,6 +135,8 @@ function DiceFace:draw()
     love.graphics.setColor(1, 1, 1, 1) ]]
 
     --Dé
+    love.graphics.setBlendMode("alpha", "premultiplied")
+
     love.graphics.draw(self.diceCanvas, self.x+px, self.y+py, self.rotation, self.scaleX, self.scaleY, self.diceCanvas:getWidth()/2, self.diceCanvas:getHeight()/2)
 end
 
