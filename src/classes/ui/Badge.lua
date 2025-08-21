@@ -56,7 +56,7 @@ function Badge:new(
 
     --Create the canvas ONCE
     self.uiCanvas = self:createCanvas()
-    self.uiCanvas:setFilter("linear", "linear")
+    --self.uiCanvas:setFilter("nearest", "nearest")
 
     self:createFaceRewards(y)
 
@@ -96,7 +96,7 @@ function Badge:createCanvas(gameCanvas)
     local canvas = love.graphics.newCanvas(self.width, self.height)
 
     --General settings
-    canvas:setFilter("linear", "linear")
+    --canvas:setFilter("nearest", "nearest")
     love.graphics.setBlendMode("alpha")
     love.graphics.setCanvas(canvas)
 

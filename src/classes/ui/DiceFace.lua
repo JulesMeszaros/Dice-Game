@@ -132,8 +132,18 @@ function DiceFace:draw()
     love.graphics.setShader()
     love.graphics.setColor(1, 1, 1, 1) ]]
 
-    --Dé
-    love.graphics.draw(self.diceCanvas, self.x, self.y, self.rotation, self.scaleX, self.scaleY, self.diceCanvas:getWidth()/2, self.diceCanvas:getHeight()/2)
+    -- Draw the dice canvas with premultiplied alpha to avoid black halo on edges
+    love.graphics.setBlendMode("alpha", "premultiplied")
+    love.graphics.draw(
+        self.diceCanvas,
+        self.x, self.y,
+        self.rotation,
+        self.scaleX, self.scaleY,
+        self.diceCanvas:getWidth() / 2,
+        self.diceCanvas:getHeight() / 2
+    )
+    -- Restore default blend mode
+    love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 --==INTERACTION==--

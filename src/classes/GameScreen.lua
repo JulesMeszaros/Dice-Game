@@ -612,7 +612,10 @@ function GameScreen:drawDiceDetails(dt)
 
     love.graphics.setCanvas(currentCanvas)
 
+    -- Draw dice details canvas with premultiplied alpha to avoid black fringe on rounded corners
+    love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, 0, 0)
+    love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 function GameScreen:drawInventoryBackGroundMedium()

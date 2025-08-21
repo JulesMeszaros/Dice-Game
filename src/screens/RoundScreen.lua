@@ -526,8 +526,10 @@ function RoundScreen:drawDiceDetails()
     end
 
     love.graphics.setCanvas(currentCanvas)
-
+    -- Draw dice details canvas with premultiplied alpha to avoid black fringe on rounded corners
+    love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, 0, 0)
+    love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 function RoundScreen:drawPlayersInfos(dt)
@@ -559,8 +561,11 @@ function RoundScreen:drawPlayersInfos(dt)
     self.round.enemyCharacter:draw(390+130, 125, 250, 250)
 
     love.graphics.setCanvas(currentCanvas)
+    -- Draw player/enemy infos with premultiplied alpha to prevent dark outlines on rounded corners
+    love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(self.playerInfos, self.playerX, self.playerY+playerYOffset)
     love.graphics.draw(self.enemyInfos, self.enemyX, self.enemyY+enemyYOffset)
+    love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 --==CREATE CANVAS FUNCTIONS==--

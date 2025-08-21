@@ -18,7 +18,7 @@ Game.__index = Game
 local virtualWidth, virtualHeight = Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT
 
 local gameCanvas = love.graphics.newCanvas(virtualWidth, virtualHeight)
-gameCanvas:setFilter("linear", "linear")
+--gameCanvas:setFilter("nearest", "nearest")
 
 function Game:start()
     local self = setmetatable({}, Game)
@@ -73,7 +73,11 @@ function Game:draw()
     local offsetX = (screenWidth - scaledWidth) / 2
     local offsetY = (screenHeight - scaledHeight) / 2
     
+    -- Draw the game canvas using premultiplied alpha to prevent black halos around sprites
+    love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
+    -- Restore default blend mode (alpha blending)
+    love.graphics.setBlendMode("alpha", "alphamultiply")
 
 end
 
