@@ -87,6 +87,49 @@ Shaders.glitteryRainbow = love.graphics.newShader([[
     }
 ]])
 
+Shaders.holoDice = love.graphics.newShader([[
+    extern number time;
+    extern number intensity; // force de l’effet holographique (0-1)
+    extern number scale;     // taille des fragments (ex: 40.0)
+
+    // simple hash pour pseudo bruit
+    float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+    }
+
+    vec4 effect(vec4 color, Image texture, vec2 uv, vec2 sc) {
+        vec4 texColor = Texel(texture, uv);
+        if (texColor.a == 0.0) return vec4(0.0);
+
+        // coordonnées fragmentées façon carreaux
+        vec2 grid = floor(uv * scale);
+
+        // offset unique par carreau
+        float rnd = hash(grid);
+        float shift = rnd * 2.0 - 1.0; // entre -1 et 1
+
+        // créer un "hue" arc-en-ciel avec variation par fragment
+        float hue = mod(time * 0.2 + (uv.x + uv.y) * 0.5 + shift, 1.0);
+
+        // conversion hue -> arc-en-ciel RGB
+        vec3 rainbow = vec3(
+            abs(hue * 6.0 - 3.0) - 1.0,
+            2.0 - abs(hue * 6.0 - 2.0),
+            2.0 - abs(hue * 6.0 - 4.0)
+        );
+        rainbow = clamp(rainbow, 0.0, 1.0);
+
+        // ajouter un peu de "scintillement" (comme sur tes dés)
+        float sparkle = hash(grid + floor(time * 10.0));
+        rainbow *= mix(0.8, 1.3, sparkle);
+
+        // mélange texture originale + effet holographique
+        vec3 finalColor = mix(texColor.rgb, rainbow, intensity);
+
+        return vec4(finalColor, texColor.a);
+    }
+]])
+
 Shaders.aChrom = love.graphics.newShader([[
 extern number amount;
 

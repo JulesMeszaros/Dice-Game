@@ -81,7 +81,7 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
     self.isTriggering = false
 
     --Shader
-    self.rainbowShader = Shaders.glitteryRainbow
+    self.rainbowShader = Shaders.holoDice
     return self
 end
 
@@ -207,10 +207,11 @@ function DiceFace:createCanvas()
 end
 
 function DiceFace:updateCanvas(dt)
-    self.rainbowShader:send("time", self.rotation+self.scaleX*2)
-    self.rainbowShader:send("frequency", 0.9)
-    self.rainbowShader:send("intensity", 0.3)
-    self.rainbowShader:send("gridSize", 150)
+    self.rainbowShader:send("time", self.rotation*10+self.scaleX*5)
+    --self.rainbowShader:send("frequency", 0.9)
+    self.rainbowShader:send("intensity", 0.2)
+    self.rainbowShader:send("scale", 130)
+    --self.rainbowShader:send("gridSize", 150)
 
     local currentCanvas = love.graphics.getCanvas()
     
