@@ -66,11 +66,7 @@ function EndRound:new(run, round)
     })
     self.animator:addDelay(0.1, function()self:generateRewards()end)
 
-    G.animator:addGroup({
-                {property = "backgroundR", from=G.backgroundR, targetValue = 81/255, duration = 0.6},
-                {property = "backgroundG", from=G.backgroundG, targetValue = 126/255, duration = 0.6},
-                {property = "backgroundB", from=G.backgroundB, targetValue = 84/255, duration = 0.6},
-            })
+    G.backgroundChange(Constants.BACKGROUND_COLORS.GREEN, 0.5)
 
     return self
 end

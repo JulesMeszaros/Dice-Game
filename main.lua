@@ -4,9 +4,9 @@ local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
 
 G = {
-    backgroundR = 40/255,
-    backgroundG = 40/255,
-    backgroundB = 43/255,
+    backgroundR = 0/255,
+    backgroundG = 0/255,
+    backgroundB = 0/255,
 
     --screen shake
     --Screen target position
@@ -22,6 +22,15 @@ G = {
 }
 
 G.animator = Animator:new(G)
+G.bgAnimator = Animator:new(G)
+
+function G.backgroundChange(color, time)
+    G.bgAnimator:addGroup({
+                    {property = "backgroundR", from=G.backgroundR, targetValue = color[1], duration = 0.6},
+                    {property = "backgroundG", from=G.backgroundG, targetValue = color[2], duration = 0.6},
+                    {property = "backgroundB", from=G.backgroundB, targetValue = color[3], duration = 0.6},
+                })
+end
 
 -- Function to calculate parallax offset
 function G.calculateParalaxeOffset(layer)
@@ -77,8 +86,10 @@ function love.update(dt)
     --relative x/y mouse position (0-1)
     G.rx, G.ry = (vx/Constants.VIRTUAL_GAME_WIDTH)-0.5, (vy/Constants.VIRTUAL_GAME_HEIGHT)-0.5
     
-
+    --Game animators
     G.animator:update(dt)
+    G.bgAnimator:update(dt)
+    
     game:update(dt)
     delta = love.timer.getFPS()
     

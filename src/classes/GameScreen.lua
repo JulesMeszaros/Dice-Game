@@ -149,17 +149,9 @@ function GameScreen:new(floor, run, screenType, round)
     --Background animation TODO: à modifier un peu plus tard pour rendre le truc modulable
     self.animator:addDelay(0.0, function() 
         if(self.screenType==Constants.RUN_STATES.ROUND and self.round.roundType==Constants.ROUND_TYPES.BOSS) then
-            G.animator:addGroup({
-                {property = "backgroundR", from=G.backgroundR, targetValue = 163/255, duration = 0.6},
-                {property = "backgroundG", from=G.backgroundG, targetValue = 149/255, duration = 0.6},
-                {property = "backgroundB", from=G.backgroundB, targetValue = 219/255, duration = 0.6},
-            })
+            G.backgroundChange(Constants.BACKGROUND_COLORS.PURPLE, 0.5)
         else
-            G.animator:addGroup({
-                {property = "backgroundR", from=G.backgroundR, targetValue = 40/255, duration = 0.6},
-                {property = "backgroundG", from=G.backgroundG, targetValue = 40/255, duration = 0.6},
-                {property = "backgroundB", from=G.backgroundB, targetValue = 43/255, duration = 0.6},
-            })
+            G.backgroundChange(Constants.BACKGROUND_COLORS.DARK_GRAY, 0.5)
         end
     end)
 

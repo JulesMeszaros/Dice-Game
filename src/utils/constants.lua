@@ -212,13 +212,13 @@ Constants.PARALAXE_MAX_OFFSET = {
 
 --TODO
 Constants.BACKGROUND_COLORS = {
-    BASE = {},
-    WIN = {},
-    LOOSE = {},
-    BOSS = {},
+    DARK_GRAY = {40/255, 40/255, 43/255},
+    GREEN = {81/255, 126/255, 84/255},
+    RED = {208/255, 67/255, 67/255},
+    PURPLE = {163/255, 149/255, 219/255},
     TRIGGER = {},
-    SHOP = {},
-    DICE_CUSTOMIZATION = {},
+    ORANGE = {},
+    BLUE = {},
     DESK_CHOICE = {}
 }
 
