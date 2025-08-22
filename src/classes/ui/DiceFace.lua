@@ -79,6 +79,9 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
 
     --Triggering variables
     self.isTriggering = false
+
+    --Shader
+    self.rainbowShader = Shaders.glitteryRainbow
     return self
 end
 
@@ -204,24 +207,31 @@ function DiceFace:createCanvas()
 end
 
 function DiceFace:updateCanvas(dt)
+    self.rainbowShader:send("time", self.rotation+self.scaleX*2)
+    self.rainbowShader:send("frequency", 0.9)
+    self.rainbowShader:send("intensity", 0.3)
+    self.rainbowShader:send("gridSize", 150)
+
     local currentCanvas = love.graphics.getCanvas()
     
     local canvasSize = self.size --sets the base face of the canvas
     local ratio = canvasSize/self.dim --ratio between the image size and the canvas size
+    --love.graphics.setShader(self.rainbowShader)
 
-    local currentCanvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.diceCanvas)
+
     love.graphics.clear()
 
     love.graphics.draw(self.spriteSheet, self.quad, 0, 0, 0, ratio, ratio) -- add the image
+    love.graphics.setShader()
     
     --If disabled, draw the red sign
     if(self.representedObject.disabled==true) then
         love.graphics.draw(Sprites.DISABLED, 0, 0, 0, 1, 1)
     end
 
-    love.graphics.setShader()
     love.graphics.setCanvas(currentCanvas)
+
 end
 
 function DiceFace:updateSprite(n)

@@ -38,6 +38,55 @@ Shaders.rainbowShader = love.graphics.newShader([[
     }
 ]])
 
+Shaders.glitteryRainbow = love.graphics.newShader([[
+    extern number time;
+    extern number frequency;
+    extern number intensity; // 0 = pas d'effet, 1 = effet complet
+    extern number gridSize;  // taille de la grille (ex: 20.0)
+
+    float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+    }
+
+    vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+        vec4 texColor = Texel(texture, texture_coords);
+        if (texColor.a == 0.0) {
+            return vec4(0.0);
+        }
+
+        // grille de base
+        vec2 gridUV = texture_coords * gridSize;
+
+        // offset horizontal sur une ligne sur deux (effet "briques")
+        float row = floor(gridUV.y);
+        if (mod(row, 2.0) == 1.0) {
+            gridUV.x += 0.5; // décale d’une demi-cellule
+        }
+
+        // identifiant de cellule
+        vec2 cell = floor(gridUV);
+
+        // décalage unique par cellule
+        float rnd = hash(cell);
+        float offset = (rnd - 0.5) * 0.3;
+
+        // calcul du hue avec ce décalage
+        number hue = mod(time + (texture_coords.x + texture_coords.y) * frequency + offset, 1.0);
+
+        // rainbow -> RGB
+        vec3 rainbowColor = vec3(
+            abs(hue * 6.0 - 3.0) - 1.0,
+            2.0 - abs(hue * 6.0 - 2.0),
+            2.0 - abs(hue * 6.0 - 4.0)
+        );
+        rainbowColor = clamp(rainbowColor, 0.0, 1.0);
+
+        vec3 finalColor = mix(texColor.rgb, rainbowColor, intensity);
+
+        return vec4(finalColor, texColor.a);
+    }
+]])
+
 Shaders.aChrom = love.graphics.newShader([[
 extern number amount;
 
