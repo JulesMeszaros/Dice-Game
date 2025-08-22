@@ -81,7 +81,7 @@ function DiceFace:new(diceObject, representedFace, x, y, size, isSelectable, isH
     self.isTriggering = false
 
     --Shader
-    self.rainbowShader = Shaders.holoDice
+    self.rainbowShader = Shaders.glitteryRainbow
     return self
 end
 
@@ -135,8 +135,16 @@ function DiceFace:draw()
     love.graphics.setShader()
     love.graphics.setColor(1, 1, 1, 1) ]]
 
+    self.rainbowShader:send("time", self.rotation+self.scaleX*2+30)
+    self.rainbowShader:send("frequency", 0.3)
+    self.rainbowShader:send("intensity", 0.2)
+    --self.rainbowShader:send("scale", 50)
+    self.rainbowShader:send("gridSize", 50)
+
     -- Draw the dice canvas with premultiplied alpha to avoid black halo on edges
     love.graphics.setBlendMode("alpha", "premultiplied")
+    --love.graphics.setShader(self.rainbowShader)
+
     love.graphics.draw(
         self.diceCanvas,
         self.x, self.y,
@@ -145,6 +153,8 @@ function DiceFace:draw()
         self.diceCanvas:getWidth() / 2,
         self.diceCanvas:getHeight() / 2
     )
+
+    love.graphics.setShader()
     -- Restore default blend mode
     love.graphics.setBlendMode("alpha", "alphamultiply")
 end
@@ -213,17 +223,12 @@ function DiceFace:createCanvas()
 end
 
 function DiceFace:updateCanvas(dt)
-    self.rainbowShader:send("time", self.rotation*10+self.scaleX*5)
-    --self.rainbowShader:send("frequency", 0.9)
-    self.rainbowShader:send("intensity", 0.2)
-    self.rainbowShader:send("scale", 130)
-    --self.rainbowShader:send("gridSize", 150)
+    
 
     local currentCanvas = love.graphics.getCanvas()
     
     local canvasSize = self.size --sets the base face of the canvas
     local ratio = canvasSize/self.dim --ratio between the image size and the canvas size
-    --love.graphics.setShader(self.rainbowShader)
 
     love.graphics.setCanvas(self.diceCanvas)
 
