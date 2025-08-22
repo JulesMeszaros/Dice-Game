@@ -4,9 +4,17 @@ local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
 
 G = {
+    --Background color
     backgroundR = 40/255,
     backgroundG = 40/255,
     backgroundB = 43/255,
+
+    --Background animation properties
+    circleRad = 0.06,
+    circleSpeed = 0.1,
+    circleSpacing = 0.2,
+    circleDarkness = -0.3,
+
 
     --screen shake
     --Screen target position
@@ -21,8 +29,10 @@ G = {
 
 }
 
+--Animators
 G.animator = Animator:new(G)
 G.bgAnimator = Animator:new(G)
+G.circleAnimator = Animator:new(G)
 
 function G.backgroundChange(color, time)
     G.bgAnimator:addGroup({
@@ -87,6 +97,7 @@ function love.update(dt)
     G.rx, G.ry = (vx/Constants.VIRTUAL_GAME_WIDTH)-0.5, (vy/Constants.VIRTUAL_GAME_HEIGHT)-0.5
     
     --Game animators
+    G.circleAnimator:update(dt)
     G.animator:update(dt)
     G.bgAnimator:update(dt)
     
@@ -160,10 +171,10 @@ function drawBackground()
     love.graphics.setCanvas()
     love.graphics.setShader(Shaders.diagonalCircles)
     Shaders.diagonalCircles:send("time", love.timer.getTime())
-    Shaders.diagonalCircles:send("circle_size", 0.06)
-    Shaders.diagonalCircles:send("spacing", 0.2)
-    Shaders.diagonalCircles:send("speed", 0.1)
-    Shaders.diagonalCircles:send("darkness", -0.4)
+    Shaders.diagonalCircles:send("circle_size",G.circleRad)
+    Shaders.diagonalCircles:send("spacing", G.circleSpacing)
+    Shaders.diagonalCircles:send("speed", G.circleSpeed)
+    Shaders.diagonalCircles:send("darkness",G.circleDarkness)
     love.graphics.draw(backgroundCanvas, 0, 0)
     love.graphics.setShader()
 end

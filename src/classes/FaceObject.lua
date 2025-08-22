@@ -65,8 +65,15 @@ function FaceObject:trigger(round)
     local rx = AnimationUtils.randomInRange(0, 3)
     local ry = math.abs(AnimationUtils.randomInRange(7, 8))
 
+    --Animations
     -- randomValue is now in the requested range
     UI.ScreenWave(rx, ry)
+    
+    --[[ G.circleAnimator:finishAll()
+    G.circleAnimator:addGroup({
+        {property = "circleDarkness", from = -1.7, targetValue=-0.3, duration=0.6, easing = AnimationUtils.Easing.outQuad},
+        {property = "circleRad", from = 0.1, targetValue=0.06, duration=0.6, easing = AnimationUtils.Easing.outQuad}
+    }) ]]
     
     --Incrémente les variables numériques
     self.totalTriggered = self.totalTriggered + 1
