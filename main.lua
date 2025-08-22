@@ -73,7 +73,7 @@ function love.load()
 
     love.graphics.setBackgroundColor(G.backgroundR, G.backgroundG, G.backgroundB)
     -- Use nearest neighbor filtering for crisp pixel art
-    love.graphics.setDefaultFilter("nearest", "nearest")
+    love.graphics.setDefaultFilter("linear", "linear")
     
     local sys = love.system.getOS()
 
@@ -85,7 +85,7 @@ function love.load()
     game = Game:start()
     -- Ensure the game canvas uses nearest filtering to avoid artifacts when scaling
     if game.gameCanvas then
-        game.gameCanvas:setFilter("nearest", "nearest")
+        game.gameCanvas:setFilter("linear", "linear")
     end
     
     -- Create the FPS text object once
