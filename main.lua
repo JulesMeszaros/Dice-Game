@@ -4,9 +4,9 @@ local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
 
 G = {
-    backgroundR = 0/255,
-    backgroundG = 0/255,
-    backgroundB = 0/255,
+    backgroundR = 40/255,
+    backgroundG = 40/255,
+    backgroundB = 43/255,
 
     --screen shake
     --Screen target position
