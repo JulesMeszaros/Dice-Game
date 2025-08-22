@@ -175,26 +175,22 @@ function love.resize(w, h)
 end
 
 function drawBackground()
-	-- Draw background to canvas with shader
-	love.graphics.setCanvas(backgroundCanvas)
-	love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
-	love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
-	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-	love.graphics.setColor(1, 1, 1)
-
-	-- Set main canvas and draw background with shader
-	love.graphics.setCanvas()
-	love.graphics.setShader(Shaders.diagonalCircles)
-	Shaders.diagonalCircles:send("time", love.timer.getTime())
-	Shaders.diagonalCircles:send("circle_size", 0.06)
-	Shaders.diagonalCircles:send("spacing", 0.2)
-	Shaders.diagonalCircles:send("speed", 0.1)
-	Shaders.diagonalCircles:send("darkness", 0.1)
-	-- Draw the background canvas with premultiplied alpha to ensure correct blending
-	love.graphics.setBlendMode("alpha", "premultiplied")
-	love.graphics.draw(backgroundCanvas, 0, 0)
-	-- Restore default blend mode
-	love.graphics.setBlendMode("alpha", "alphamultiply")
-	love.graphics.setShader()
+    -- Draw background to canvas with shader
+    love.graphics.setCanvas(backgroundCanvas)
+    love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
+    love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
+    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+    love.graphics.setColor(1, 1, 1)
+    
+    -- Set main canvas and draw background with shader
+    love.graphics.setCanvas()
+    love.graphics.setShader(Shaders.diagonalCircles)
+    Shaders.diagonalCircles:send("time", love.timer.getTime())
+    Shaders.diagonalCircles:send("circle_size",G.circleRad)
+    Shaders.diagonalCircles:send("spacing", G.circleSpacing)
+    Shaders.diagonalCircles:send("speed", G.circleSpeed)
+    Shaders.diagonalCircles:send("darkness",G.circleDarkness)
+    love.graphics.draw(backgroundCanvas, 0, 0)
+    love.graphics.setShader()
 end
 
