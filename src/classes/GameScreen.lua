@@ -741,18 +741,16 @@ function GameScreen:drawFigureGrid()
 	--Draw the table
 	love.graphics.draw(Sprites.GRID, 0, 0)
 
-	-- Update cached text objects if scores changed
-	if self.scoresChanged then
-		if self.screenType == Constants.RUN_STATES.ROUND then
-			for i = 1, 13 do
-				self.scoreTexts[i]:set(self.calcBasePoints[i]()[1])
-			end
-		end
-		for i = 1, 13 do
-			self.handTexts[i]:set(self.run.availableFigures[i])
-		end
-		self.scoresChanged = false
-	end
+    -- Update cached text objects if scores changed
+    if self.scoresChanged then
+        if(self.screenType == Constants.RUN_STATES.ROUND)then
+            for i=1, 13 do
+                self.scoreTexts[i]:set(self.calcBasePoints[i]()[1])
+            end
+        end
+        
+        self.scoresChanged = false
+    end
 
 	if self.screenType == Constants.RUN_STATES.ROUND then
 		--Draw the scores
@@ -772,30 +770,35 @@ function GameScreen:drawFigureGrid()
 		end
 	end
 
-	--Write the remaining possible hands
-	love.graphics.setColor(0, 0, 0, 1)
+    --Write the remaining possible hands as dots
+    for i=1, 13 do
+        if(self.run.availableFigures[i]>0) then
 
-	for i = 1, 13 do
-		love.graphics.draw(
-			self.handTexts[i],
-			360,
-			70 * (i - 1) + 125,
-			0,
-			1,
-			1,
-			self.handTexts[i]:getWidth() / 2,
-			self.handTexts[i]:getHeight() / 2
-		)
+            local xPos = self:getCenteredPositions(
+                self.run.availableFigures[i],
+                30,
+                10,
+                360
+            )
 
-		--if no hands remaining, grey out the line
-		if self.run.availableFigures[i] <= 0 then
-			love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
-			love.graphics.rectangle("fill", 20, 70 * (i - 1) + 90, 410, 70)
-			love.graphics.setColor(0, 0, 0, 1)
-		end
-	end
+            for _,p in next,xPos do
+                love.graphics.draw(Sprites.PLAYCOUNT_DOT, p, 70*(i-1)+125, 0, 1, 1, 0, Sprites.PLAYCOUNT_DOT:getHeight()/2)
+            end
 
-	love.graphics.setColor(1, 1, 1, 1)
+        else
+        --love.graphics.draw(self.handTexts[i], 360, 70*(i-1)+125, 0, 1, 1, self.handTexts[i]:getWidth()/2, self.handTexts[i]:getHeight()/2)
+        
+        --if no hands remaining, grey out the line
+            love.graphics.draw(Sprites.PLAYCOUNT_CROSS, 360, 70*(i-1)+125, 0, 1, 1, Sprites.PLAYCOUNT_CROSS:getWidth()/2, Sprites.PLAYCOUNT_CROSS:getHeight()/2)
+
+            love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
+            love.graphics.rectangle("fill", 20, 70*(i-1)+90, 410, 70)
+            love.graphics.setColor(1, 1, 1, 1)
+
+        end
+        love.graphics.setColor(1, 1, 1, 1)
+    end
+
 
 	local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
 	local i = math.floor((mv.y - 90) / 70) + 1
