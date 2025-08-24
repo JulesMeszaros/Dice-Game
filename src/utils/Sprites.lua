@@ -27,6 +27,8 @@ Sprites.REROLLS= love.graphics.newImage("src/assets/sprites/ui/Rerolls.png")
 
 Sprites.GRID= love.graphics.newImage("src/assets/sprites/ui/Grid.png")
 Sprites.DICE_MAT = love.graphics.newImage("src/assets/sprites/ui/Dice Mat.png")
+Sprites.PLAYCOUNT_DOT = love.graphics.newImage("src/assets/sprites/ui/Playcount.png")
+Sprites.PLAYCOUNT_CROSS = love.graphics.newImage("src/assets/sprites/ui/Playcount Cross.png")
 
 Sprites.REWARDS = love.graphics.newImage("src/assets/sprites/ui/Rewards.png")
 Sprites.CUSTOMIZATION_MAT = love.graphics.newImage("src/assets/sprites/ui/DiceComposition New.png")
