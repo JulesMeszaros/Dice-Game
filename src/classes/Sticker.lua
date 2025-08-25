@@ -16,6 +16,8 @@ function Sticker:startRoundEffect() end
 
 function Sticker:endRoundEffect() end
 
+function Sticker:figurePlayedEffect() end
+
 function Sticker:startTriggerEffect() end
 
 function Sticker:endTriggerEffect() end
@@ -29,5 +31,10 @@ function Sticker:caseEffect() end
 function Sticker:ciggieUsedEffect() end
 
 function Sticker:coffeeUsedEffect() end
+
+function Sticker:diceFaceBoughtEffect() end
+
+--Effet qui se déclenche une seule fois, au moment ou le sticker est acheté et placé sur le badge
+function Sticker:buyEffect() end
 
 return Sticker
