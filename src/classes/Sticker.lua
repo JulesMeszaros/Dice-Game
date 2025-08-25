@@ -20,6 +20,14 @@ function Sticker:startTriggerEffect() end
 
 function Sticker:endTriggerEffect() end
 
+function Sticker:diceTriggeredEffect() end
+
 function Sticker:rerollEffect() end
+
+function Sticker:caseEffect() end
+
+function Sticker:ciggieUsedEffect() end
+
+function Sticker:coffeeUsedEffect() end
 
 return Sticker
