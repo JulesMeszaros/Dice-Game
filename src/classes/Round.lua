@@ -68,8 +68,6 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 		end
 		local randomKey = bossKeys[math.random(#bossKeys)]
 		self.bossType = Constants.BOSS_TYPES[randomKey]
-
-		print(self.bossType)
 	end
 
 	if self.roundType == Constants.ROUND_TYPES.BOSS then
@@ -122,28 +120,28 @@ end
 
 --==ROUND FUNCTION==--
 function Round:endRound()
-    for i,d in next,self.diceObjects do
-        for j,f in next,d:getAllFaces() do
-            f:resetStats()
-        end
-    end
-        
-    if(self.roundScore >= self.targetScore)then
-        --Cas ou on vient de battre le dernier manager
-        if(self.floorNumber == Constants.FLOORS_BY_RUN and self.roundType == Constants.ROUND_TYPES.BOSS) then
-            print("You win the run!!!")
-            self.terrain.runWinPopup = RunEnd:new(self.run, self)
-            self.phase = Constants.ROUND_STATES.RUN_END
-        else
-            --CREATE A END ROUND SCREEN
-            self.terrain.endRoundPopUp = EndRound:new(self.run, self)
-            self.phase = Constants.ROUND_STATES.END_ROUND
-        end
-    else
-        --CREATE A GAME OVER SCREEN
-        self.terrain.gameOverPopup = GameOver:new(self.run, self)
-        self.phase = Constants.ROUND_STATES.GAME_OVER
-    end
+	for i, d in next, self.diceObjects do
+		for j, f in next, d:getAllFaces() do
+			f:resetStats()
+		end
+	end
+
+	if self.roundScore >= self.targetScore then
+		--Cas ou on vient de battre le dernier manager
+		if self.floorNumber == Constants.FLOORS_BY_RUN and self.roundType == Constants.ROUND_TYPES.BOSS then
+			print("You win the run!!!")
+			self.terrain.runWinPopup = RunEnd:new(self.run, self)
+			self.phase = Constants.ROUND_STATES.RUN_END
+		else
+			--CREATE A END ROUND SCREEN
+			self.terrain.endRoundPopUp = EndRound:new(self.run, self)
+			self.phase = Constants.ROUND_STATES.END_ROUND
+		end
+	else
+		--CREATE A GAME OVER SCREEN
+		self.terrain.gameOverPopup = GameOver:new(self.run, self)
+		self.phase = Constants.ROUND_STATES.GAME_OVER
+	end
 
 	--self.terrain:outAnimation()
 end
@@ -420,13 +418,26 @@ function Round:updateselectedDices(uiFace)
 
 	if uiFace:getIsSelected() then -- Dé sélectionné
 		if not self:containsDice(self.selectedDices, uiFace:getDiceObject()) then
-			table.insert(self.selectedDices, uiFace:getDiceObject()) -- Ajoute le dé à la fin-
+			table.insert(self.selectedDices, uiFace:getDiceObject()) -- Ajoute le dé à la fin
+
+			for i, f in next, self.terrain.unselectedDices do
+				if f == uiFace then
+					table.remove(self.terrain.unselectedDices, i)
+				end
+			end
 		end
 	else
 		if self:containsDice(self.selectedDices, uiFace:getDiceObject()) then -- Dé non sélectionné
 			for i, dice in ipairs(self.selectedDices) do
 				if dice == uiFace:getDiceObject() then
 					table.remove(self.selectedDices, i) --Trouve le dé dans la liste et le supprime
+					--On l'ajoute à la liste des dés non sélectionnés
+					if self.terrain.unselectedDices then
+						table.insert(self.terrain.unselectedDices, uiFace)
+					else
+						self.terrain.unselectedDices = {}
+						table.insert(self.terrain.unselectedDices, uiFace)
+					end
 					break
 				end
 			end
@@ -436,7 +447,7 @@ function Round:updateselectedDices(uiFace)
 	--Update the selected dices position
 	self.terrain:updateSelectedPosDices()
 	--Update the unselected dices position
-	self.terrain:reorganiseDiceFaces(self:getUnSelectedDices())
+	self.terrain:updateUnselectedPosDices()
 
 	local us = self:getUnSelectedDices()
 end
@@ -444,9 +455,6 @@ end
 --==REROLL FUNCTIONS==--
 function Round:rerollDices() --Triggers the makeRoll function after clicking the reroll button
 	self.terrain.rerollingTimer = 2
-	G.animator:finishAll()
-	G.animator:add("waveY", -6, 0, 1.0, AnimationUtils.Easing.outQuad)
-
 	if self.firstRoll == false then
 		self:makeRoll(self.diceObjects)
 		self.firstRoll = true
@@ -575,8 +583,10 @@ function Round:makeRoll(dices)
 			self.terrain.diceFaces[dice].displayedNumber = nil
 			self.terrain.diceFaces[dice]:updateSprite()
 		end)
+		--On stock tous les dés non sélectionnés dans la liste unselectedDiceFaces
+		--self.terrain.unselectedDices = rerolledDiceFaces
 		self.terrain.diceFaces[dice].animator:addDelay(0.6, function()
-			self.terrain:reorganiseDiceFaces(rerolledDiceFaces)
+			self.terrain:sortUnselectedDices(rerolledDiceFaces)
 		end)
 	end
 end
