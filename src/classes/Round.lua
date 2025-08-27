@@ -454,15 +454,15 @@ end
 
 --==REROLL FUNCTIONS==--
 function Round:rerollDices() --Triggers the makeRoll function after clicking the reroll button
-    self.terrain.rerollingTimer = 2
-    G.animator:finishAll()
-    G.animator:add("waveY", -6, 0, 1.5, AnimationUtils.Easing.outQuad)
+	self.terrain.rerollingTimer = 2
+	G.animator:finishAll()
+	G.animator:add("waveY", -6, 0, 1.0, AnimationUtils.Easing.outQuad)
 
-    if(self.firstRoll == false) then
-        self:makeRoll(self.diceObjects);
-        self.firstRoll = true
-        return
-    end
+	if self.firstRoll == false then
+		self:makeRoll(self.diceObjects)
+		self.firstRoll = true
+		return
+	end
 
 	local dicesToReroll = {}
 	--Add 1 to the total rerolls used this run

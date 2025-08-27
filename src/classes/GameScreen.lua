@@ -1235,6 +1235,5 @@ function GameScreen:setMoneyTo(m)
 	self.run.animator:add("money", self.run.money, m, d)
 end
 
-
 return GameScreen
 
