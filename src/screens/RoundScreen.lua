@@ -296,10 +296,11 @@ function RoundScreen:updateCanvas(dt)
 	--Check if a ciggie is being dragged to the screen
 	self:checkForDraggedCiggie()
 
-	--PlayersInfos
-	self:drawPlayersInfos(dt)
-	--Dice Tray
-	self:drawDiceTray(self.diceMatx, self.diceMaty, self.diceFaces)
+    --PlayersInfos
+    self:drawPlayersInfos(dt)
+    --Dice Tray
+    local px, py = G.calculateParalaxeOffset(3)
+    self:drawDiceTray(self.diceMatx+px, self.diceMaty+py, self.diceFaces)
 
 	--Bouttouns de round
 	for k, b in next, self.uiElements.buttons do
@@ -657,11 +658,12 @@ function RoundScreen:drawDiceDetails()
 		end
 	end
 
-	love.graphics.setCanvas(currentCanvas)
-	-- Draw dice details canvas with premultiplied alpha to avoid black fringe on rounded corners
-	love.graphics.setBlendMode("alpha", "premultiplied")
-	love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, 0, 0)
-	love.graphics.setBlendMode("alpha", "alphamultiply")
+    love.graphics.setCanvas(currentCanvas)
+    -- Draw dice details canvas with premultiplied alpha to avoid black fringe on rounded corners
+    love.graphics.setBlendMode("alpha", "premultiplied")    
+	local px, py = G.calculateParalaxeOffset(1)
+    love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX + px, self.diceDetailsY + py, 0, 1, 1, 0, 0)
+    love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 function RoundScreen:drawPlayersInfos(dt)
@@ -687,16 +689,16 @@ function RoundScreen:drawPlayersInfos(dt)
 	self.enemyScoreWavyText:update(dt)
 	self.enemyScoreWavyText:draw(dt)
 
-	--Lion
-	self.round.enemyCharacter:update()
-	self.round.enemyCharacter:draw(390 + 130, 125, 250, 250)
-
-	love.graphics.setCanvas(currentCanvas)
-	-- Draw player/enemy infos with premultiplied alpha to prevent dark outlines on rounded corners
-	love.graphics.setBlendMode("alpha", "premultiplied")
-	love.graphics.draw(self.playerInfos, self.playerX, self.playerY + playerYOffset)
-	love.graphics.draw(self.enemyInfos, self.enemyX, self.enemyY + enemyYOffset)
-	love.graphics.setBlendMode("alpha", "alphamultiply")
+    --Lion
+    self.round.enemyCharacter:update()
+    self.round.enemyCharacter:draw(390+130, 125, 250, 250)
+    local px, py = G.calculateParalaxeOffset(2)
+    love.graphics.setCanvas(currentCanvas)
+    -- Draw player/enemy infos with premultiplied alpha to prevent dark outlines on rounded corners
+    love.graphics.setBlendMode("alpha", "premultiplied")
+    love.graphics.draw(self.playerInfos, self.playerX+px, self.playerY+py)
+    love.graphics.draw(self.enemyInfos, self.enemyX+px, self.enemyY+py)
+    love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 --==CREATE CANVAS FUNCTIONS==--

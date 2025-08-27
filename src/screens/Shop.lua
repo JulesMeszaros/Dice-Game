@@ -675,12 +675,13 @@ function Shop:generateNewShop()
             120,
             false,
             true,
-            function() return Inputs.getMouseInCanvas(0, 0) end,
+            function() return Inputs.getMouseInCanvas(0, 0, 3) end,
             nil
         )
         --Add them an anchor
         faceUI.anchorX = 180*i + self.shopBGTX - 60
         faceUI.anchorY = 190
+        faceUI.layer = 3
 
         --Add an animation for their apparition
         local apparitionDuration = 0.3
@@ -729,13 +730,14 @@ function Shop:generateNewShop()
             y,
             false,
             true,
-            function()return Inputs.getMouseInCanvas(0, 0)end,
+            function()return Inputs.getMouseInCanvas(0, 0, 3)end,
             nil
         )
         --Set an anchor
         ciggieUI.anchorX = x
         ciggieUI.anchorY = y
         --Insert in the table
+        ciggieUI.layer = 3
         table.insert(self.availableCiggieObjectsUI, ciggieUI)
         
         --Add them an animation
@@ -775,11 +777,9 @@ function Shop:generateAvailableFaces()
     
     --On créée une liste des clés de facetype à retirer de la génération
     local forbiddenFaces = {}
+    table.insert(forbiddenFaces, "WhiteDice")
+    
     for key, _ in pairs(FaceTypes) do
-        --Si c'est le WhiteDice on retire
-        if(key == "WhiteDice") then
-            table.insert(forbiddenFaces, key)
-        end
         --Maintenant on parcoure l'inventaire
         local dummyFace = FaceTypes[key]:new(1, 0)
 
@@ -832,12 +832,14 @@ function Shop:generateRandomCoffee(i, randomFigureIndex)
     local coffeeButton = CoffeeButton:new(
         x,
         y,
-        function()return Inputs.getMouseInCanvas(self.shopBGX, self.shopBGY)end,
+        function()return Inputs.getMouseInCanvas(self.shopBGX, self.shopBGY, 3)end,
         randomFigureIndex,
         self.run
     )
 
+
     coffeeButton.absoluteX, coffeeButton.absoluteY = self.shopBGX, self.shopBGY
+    coffeeButton.layer = 4
 
     table.insert(self.availableCoffeesUI, coffeeButton)
 
@@ -979,6 +981,7 @@ function Shop:createInventoryFaces()
 
         faceUI.anchorX = xPos[i] + 60+ self.inventorySMTX
         faceUI.anchorY = yPos[i] + self.inventorySMTY + 60
+        faceUI.layer = 3
 
         local apparitionDuration = 0.3
         faceUI.animator:addGroup({
@@ -1018,6 +1021,7 @@ function Shop:createRewardFaces()
 
         faceUI.anchorX = xPos[i] + 60+ self.rewardsSMTX
         faceUI.anchorY = yPos[i] + self.rewardsSMTY + 60
+        faceUI.layer = 3
 
         local apparitionDuration = 0.3
         faceUI.animator:addGroup({
@@ -1087,9 +1091,9 @@ function Shop:drawDeck(dt)
         face:update(dt)
         face:draw()
     end
-
+    local px, py = G.calculateParalaxeOffset(2)
     love.graphics.setCanvas(targetCanvas)
-    love.graphics.draw(self.deckCanvas, self.deckX, self.deckY)
+    love.graphics.draw(self.deckCanvas, self.deckX + px, self.deckY + py)
 end
 
 function Shop:drawInventoryFaces(dt)
@@ -1138,6 +1142,8 @@ end
 
 function Shop:drawFacesPriceTags()
     local currentCanvas = love.graphics.getCanvas()
+    local px, py = G.calculateParalaxeOffset(2)
+
     for i,c in next,self.facesPriceTags do
         love.graphics.setCanvas(c)
         love.graphics.clear()
@@ -1151,7 +1157,8 @@ function Shop:drawFacesPriceTags()
         love.graphics.setColor(1, 1, 1, 1)
 
         love.graphics.setCanvas(currentCanvas)
-        love.graphics.draw(c, 180*i + self.shopBGTX - 60, self.shopBGTY+200, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth()/2, 0)
+
+        love.graphics.draw(c, 180*i + self.shopBGTX - 60 + px, self.shopBGTY+200 + py, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth()/2, 0)
     end
 
     --Ciggies
@@ -1168,7 +1175,7 @@ function Shop:drawFacesPriceTags()
         love.graphics.setColor(1, 1, 1, 1)
 
         love.graphics.setCanvas(currentCanvas)
-        love.graphics.draw(c, self.shopBGTX+(205+(1-i%2)*370), self.shopBGTY+(455+(math.floor(i/3))*60)-10, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth()/2, 0)
+        love.graphics.draw(c, self.shopBGTX+(205+(1-i%2)*370)+px, self.shopBGTY+(455+(math.floor(i/3))*60)-10+py, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth()/2, 0)
 
     end
 end

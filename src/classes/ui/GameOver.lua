@@ -29,11 +29,7 @@ function GameOver:new(run, round)
     self.contentCanvas = love.graphics.newCanvas(930,760)
 
 
-    G.animator:addGroup({
-                {property = "backgroundR", from=G.backgroundR, targetValue = 208/255, duration = 0.6},
-                {property = "backgroundG", from=G.backgroundG, targetValue = 67/255, duration = 0.6},
-                {property = "backgroundB", from=G.backgroundB, targetValue = 67/255, duration = 0.6},
-            })
+    G.backgroundChange(Constants.BACKGROUND_COLORS.RED, 0.5)
 
     --You Won Text
     self.youLoose = UI.Text.TextWavy:new(

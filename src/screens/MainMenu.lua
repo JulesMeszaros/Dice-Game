@@ -38,11 +38,7 @@ function MainMenu:new(gameCanvas, game)
         function()return Inputs.getMouseInCanvas(0, 0)end
     )
 
-    G.animator:addGroup({
-                {property = "backgroundR", from=G.backgroundR, targetValue = 40/255, duration = 0.6},
-                {property = "backgroundG", from=G.backgroundG, targetValue = 40/255, duration = 0.6},
-                {property = "backgroundB", from=G.backgroundB, targetValue = 43/255, duration = 0.6},
-            })
+    G.backgroundChange(Constants.BACKGROUND_COLORS.DARK_GRAY, 0.5)
 
     return self
 end

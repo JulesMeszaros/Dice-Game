@@ -2,7 +2,7 @@ local Constants = require("src.utils.Constants")
 
 local Inputs = {}
 
-function Inputs.getVirtualMousePosition()
+function Inputs.getVirtualMousePosition(layer)
     local mouseX, mouseY = love.mouse.getPosition()
     local screenWidth, screenHeight = love.graphics.getDimensions()
     local scale = math.min(screenWidth /Constants.VIRTUAL_GAME_WIDTH, screenHeight / Constants.VIRTUAL_GAME_HEIGHT)
@@ -13,6 +13,13 @@ function Inputs.getVirtualMousePosition()
     local virtualX = (mouseX - offsetX) / scale
     local virtualY = (mouseY - offsetY) / scale
 
+    -- Apply parallax offset if layer is specified
+    if layer then
+        local px, py = G.calculateParalaxeOffset(layer)
+        virtualX = virtualX - px
+        virtualY = virtualY - py
+    end
+
     return virtualX, virtualY
 end
 
@@ -22,8 +29,8 @@ function Inputs.getCanvasScale()
     return scale
 end
 
-function Inputs.getMouseInCanvas(canvasX, canvasY)
-    local virtualX, virtualY = Inputs.getVirtualMousePosition()
+function Inputs.getMouseInCanvas(canvasX, canvasY, layer)
+    local virtualX, virtualY = Inputs.getVirtualMousePosition(layer)
     return {x = virtualX - canvasX, y=virtualY - canvasY}
 end
 

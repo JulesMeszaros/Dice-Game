@@ -5,7 +5,7 @@ local MainMenu = require("src.screens.MainMenu")
 local Constants = require("src.utils.Constants")
 local Inputs = require("src.utils.scripts.Inputs")
 local Shaders = require("src.utils.Shaders")
-
+local Animations = require("src.utils.scripts.Animations")
 --Dice Face Types
 local DiceObject = require("src.classes.DiceObject")
 local FaceTypes = require("src.classes.FaceTypes")
@@ -41,11 +41,15 @@ function Game:start()
 end
 
 function Game:update(dt)
-	if self.currentScreen == Constants.PAGES.MAIN_MENU then
-		self.mainMenu:update(dt)
-	elseif self.currentScreen == Constants.PAGES.GAME then
-		self.run:update(dt)
-	end
+    if self.currentScreen == Constants.PAGES.MAIN_MENU then
+        self.mainMenu:update(dt)
+    elseif self.currentScreen == Constants.PAGES.GAME then
+        self.run:update(dt)     
+    end
+
+    --damped offset
+    G.ox = Animations.dampLerp(G.ox, G.rx+G.waveX, 1.5, dt)
+    G.oy = Animations.dampLerp(G.oy, G.ry+G.waveY, 1.5, dt) / 1.2
 end
 
 function Game:draw()
@@ -68,14 +72,15 @@ function Game:draw()
 	local scaledWidth = virtualWidth * scale
 	local scaledHeight = virtualHeight * scale
 
-	local offsetX = (screenWidth - scaledWidth) / 2
-	local offsetY = (screenHeight - scaledHeight) / 2
+    local offsetX = (screenWidth - scaledWidth) / 2 --+ (G.ox*30)
+    local offsetY = (screenHeight - scaledHeight) / 2 --+ (G.oy*30)
+    
+    -- Draw the game canvas using premultiplied alpha to prevent black halos around sprites
+    love.graphics.setBlendMode("alpha", "premultiplied")
+    love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
+    -- Restore default blend mode (alpha blending)
+    love.graphics.setBlendMode("alpha", "alphamultiply")
 
-	-- Draw the game canvas using premultiplied alpha to prevent black halos around sprites
-	love.graphics.setBlendMode("alpha", "premultiplied")
-	love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
-	-- Restore default blend mode (alpha blending)
-	love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 --==GAME FUNCTION==--

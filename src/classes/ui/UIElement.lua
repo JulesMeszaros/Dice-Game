@@ -44,9 +44,9 @@ function UIElement:update(dt)
 end
 
 function UIElement:draw(gameCanvas)
-    local shadow = self:renderShadow(gameCanvas)
+    --local shadow = self:renderShadow(gameCanvas)
     local render = self:renderSprite(gameCanvas)
-    love.graphics.draw(shadow, self.x+10, self.y+10, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
+    --love.graphics.draw(shadow, self.x+10, self.y+10, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
     love.graphics.draw(render, self.x, self.y, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
 end
 

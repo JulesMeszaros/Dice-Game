@@ -136,8 +136,10 @@ function DiceFace:update(dt)
 end
 
 function DiceFace:draw()
-	--Si activé : ombre au drag and drop
-	--[[ love.graphics.setShader(Shaders.black)
+    local layer = self.layer or 4
+    local px, py = G.calculateParalaxeOffset(layer)
+    --Si activé : ombre au drag and drop
+    --[[ love.graphics.setShader(Shaders.black)
 
     love.graphics.setColor(1, 1, 1, 0.7)
     
@@ -146,26 +148,19 @@ function DiceFace:draw()
     love.graphics.setShader()
     love.graphics.setColor(1, 1, 1, 1) ]]
 
-	self.rainbowShader:send("time", self.rotation + self.scaleX * 2 + 30)
+    --Dé
+
+    self.rainbowShader:send("time", self.rotation + self.scaleX * 2 + 30)
 	self.rainbowShader:send("frequency", 0.3)
 	self.rainbowShader:send("intensity", 0.2)
 	--self.rainbowShader:send("scale", 50)
 	self.rainbowShader:send("gridSize", 50)
 
-	-- Draw the dice canvas with premultiplied alpha to avoid black halo on edges
-	love.graphics.setBlendMode("alpha", "premultiplied")
-	--	love.graphics.setShader(self.rainbowShader)
+    --Dé
+    love.graphics.setBlendMode("alpha", "premultiplied")
+    --love.graphics.setShader(self.rainbowShader)
 
-	love.graphics.draw(
-		self.diceCanvas,
-		self.x,
-		self.y,
-		self.rotation,
-		self.scaleX,
-		self.scaleY,
-		self.diceCanvas:getWidth() / 2,
-		self.diceCanvas:getHeight() / 2
-	)
+    love.graphics.draw(self.diceCanvas, self.x+px, self.y+py, self.rotation, self.scaleX, self.scaleY, self.diceCanvas:getWidth()/2, self.diceCanvas:getHeight()/2)
 
 	love.graphics.setShader()
 	-- Restore default blend mode

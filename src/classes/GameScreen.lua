@@ -32,7 +32,7 @@ function GameScreen:new(floor, run, screenType, round)
 	--Events
 	self.addingAvailableHand = false
 
-	--Canvases
+	--Canvas
 	self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 	self.x, self.y = 0, 0 --Canvas position in screen
 
@@ -159,17 +159,9 @@ function GameScreen:new(floor, run, screenType, round)
 	--Background animation TODO: à modifier un peu plus tard pour rendre le truc modulable
 	self.animator:addDelay(0.0, function()
 		if self.screenType == Constants.RUN_STATES.ROUND and self.round.roundType == Constants.ROUND_TYPES.BOSS then
-			G.animator:addGroup({
-				{ property = "backgroundR", from = G.backgroundR, targetValue = 163 / 255, duration = 0.6 },
-				{ property = "backgroundG", from = G.backgroundG, targetValue = 149 / 255, duration = 0.6 },
-				{ property = "backgroundB", from = G.backgroundB, targetValue = 219 / 255, duration = 0.6 },
-			})
+			G.backgroundChange(Constants.BACKGROUND_COLORS.PURPLE, 0.5)
 		else
-			G.animator:addGroup({
-				{ property = "backgroundR", from = G.backgroundR, targetValue = 40 / 255, duration = 0.6 },
-				{ property = "backgroundG", from = G.backgroundG, targetValue = 40 / 255, duration = 0.6 },
-				{ property = "backgroundB", from = G.backgroundB, targetValue = 43 / 255, duration = 0.6 },
-			})
+			G.backgroundChange(Constants.BACKGROUND_COLORS.DARK_GRAY, 0.5)
 		end
 	end)
 
@@ -332,7 +324,9 @@ function GameScreen:new(floor, run, screenType, round)
 			},
 		})
 		--Shake
-		AnimationUtils.shake(self, 0, 10, 0.1)
+		self.animator:addDelay(0, function()
+			G.animator:add("waveY", 6, 0, 1.0, AnimationUtils.Easing.outQuad)
+		end)
 	end
 
 	self.uiElements.buttons["menuButton"] = Button:new(
@@ -346,9 +340,11 @@ function GameScreen:new(floor, run, screenType, round)
 		80,
 		self.gameCanvas,
 		function()
-			return Inputs.getMouseInCanvas(0, 0)
+			return Inputs.getMouseInCanvas(0, 0, 1)
 		end
 	)
+
+	self.uiElements.buttons["menuButton"].layer = 1
 
 	self.uiElements.buttons["planButton"] = Button:new(
 		function()
@@ -361,9 +357,11 @@ function GameScreen:new(floor, run, screenType, round)
 		80,
 		self.gameCanvas,
 		function()
-			return Inputs.getMouseInCanvas(0, 0)
+			return Inputs.getMouseInCanvas(0, 0, 1)
 		end
 	)
+
+	self.uiElements.buttons["planButton"].layer = 1
 
 	--Buttons animation
 	self.uiElements.buttons["menuButton"].animator:add(
@@ -404,6 +402,8 @@ function GameScreen:new(floor, run, screenType, round)
 			AnimationUtils.EntryDuration * 2,
 			AnimationUtils.Easing.outCubic
 		)
+
+		self.uiElements.buttons["rerollButton"].layer = 3
 	end
 
 	--Cas particulier du shop
@@ -419,9 +419,10 @@ function GameScreen:new(floor, run, screenType, round)
 			60,
 			self.gameCanvas,
 			function()
-				return Inputs.getMouseInCanvas(0, 0)
+				return Inputs.getMouseInCanvas(0, 0, 3)
 			end
 		)
+		self.uiElements.buttons["rerollShopButton"].layer = 3
 		self.uiElements.buttons["rerollShopButton"].animator:addDelay(0.2)
 		self.uiElements.buttons["rerollShopButton"].animator:add(
 			"y",
@@ -442,9 +443,10 @@ function GameScreen:new(floor, run, screenType, round)
 			60,
 			self.gameCanvas,
 			function()
-				return Inputs.getMouseInCanvas(0, 0)
+				return Inputs.getMouseInCanvas(0, 0, 3)
 			end
 		)
+		self.uiElements.buttons["nextRoundSmallBtn"].layer = 3
 		self.uiElements.buttons["nextRoundSmallBtn"].animator:addDelay(0.2)
 		self.uiElements.buttons["nextRoundSmallBtn"].animator:add(
 			"y",
@@ -684,11 +686,12 @@ function GameScreen:drawRoundDetails(dt)
 	--love.graphics.draw(moneyText, self.moneyCanvas:getWidth()/2, self.moneyCanvas:getHeight()/2-7, 0, 1, 1, moneyText:getWidth()/2, moneyText:getHeight()/2-10)
 
 	--DRAW ALL THE CANVAS
+	local px, py = G.calculateParalaxeOffset(1)
 	love.graphics.setCanvas(currentCanvas)
-	love.graphics.draw(self.roundNumberCanvas, self.floorX, self.floorY)
-	love.graphics.draw(self.handsCanvas, self.turnsX, self.turnsY)
-	love.graphics.draw(self.rerollsCanvas, self.rerollsX, self.rerollsY)
-	love.graphics.draw(self.moneyCanvas, self.moneyX, self.moneyY)
+	love.graphics.draw(self.roundNumberCanvas, self.floorX + px, self.floorY + py)
+	love.graphics.draw(self.handsCanvas, self.turnsX + px, self.turnsY + py)
+	love.graphics.draw(self.rerollsCanvas, self.rerollsX + px, self.rerollsY + py)
+	love.graphics.draw(self.moneyCanvas, self.moneyX + px, self.moneyY + py)
 end
 
 function GameScreen:drawCiggiesTray()
@@ -696,9 +699,10 @@ function GameScreen:drawCiggiesTray()
 	love.graphics.setCanvas(self.ciggiesTray)
 
 	love.graphics.draw(Sprites.MAGIC_WANDS, 0, 0)
+	local px, py = G.calculateParalaxeOffset(1)
 
 	love.graphics.setCanvas(currentCanvas)
-	love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX, self.ciggiesTrayY, 0, 1, 1)
+	love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX + px, self.ciggiesTrayY + py, 0, 1, 1)
 end
 
 function GameScreen:drawCiggiesTrayFront()
@@ -715,12 +719,13 @@ function GameScreen:drawCiggiesTrayFront()
 		0,
 		Sprites.MAGIC_WANDS_FRONT:getHeight()
 	)
+	local px, py = G.calculateParalaxeOffset(1)
 
 	love.graphics.setCanvas(currentCanvas)
 	love.graphics.draw(
 		self.ciggiesTrayFront,
-		self.ciggiesTrayX,
-		self.ciggiesTrayY + self.ciggiesTray:getHeight() - self.ciggiesTrayFront:getHeight(),
+		self.ciggiesTrayX + px,
+		self.ciggiesTrayY + self.ciggiesTray:getHeight() - self.ciggiesTrayFront:getHeight() + py,
 		0,
 		1,
 		1,
@@ -825,8 +830,8 @@ function GameScreen:drawFigureGrid()
 	end
 
 	love.graphics.setCanvas(targetCanvas)
-
-	love.graphics.draw(self.figureButtonsCanvas, self.gridX, self.gridY)
+	local px, py = G.calculateParalaxeOffset(1)
+	love.graphics.draw(self.figureButtonsCanvas, self.gridX + px, self.gridY + py)
 end
 
 function GameScreen:drawShopBackground()
@@ -841,9 +846,9 @@ function GameScreen:drawShopBackground()
 			btn:draw()
 		end
 	end
-
+	local px, py = G.calculateParalaxeOffset(3)
 	love.graphics.setCanvas(currentCanvas)
-	love.graphics.draw(self.shopCanvas, self.shopBGX, self.shopBGY)
+	love.graphics.draw(self.shopCanvas, self.shopBGX + px, self.shopBGY + py)
 end
 
 function GameScreen:drawInventoryBackGround()
@@ -851,21 +856,25 @@ function GameScreen:drawInventoryBackGround()
 end
 
 function GameScreen:drawInventoryBackGroundSmall()
+	local px, py = G.calculateParalaxeOffset(3)
+
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.inventoryCanvasSmall)
 	love.graphics.clear()
 	love.graphics.draw(Sprites.INVENTORY_SMALL, 0, 0)
 	love.graphics.setCanvas(currentCanvas)
-	love.graphics.draw(self.inventoryCanvasSmall, self.inventorySMX, self.inventorySMY)
+	love.graphics.draw(self.inventoryCanvasSmall, self.inventorySMX + px, self.inventorySMY + py)
 end
 
 function GameScreen:drawRewardsSmall()
+	local px, py = G.calculateParalaxeOffset(3)
+
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.rewardsSmallCanvas)
 	love.graphics.clear()
 	love.graphics.draw(Sprites.REWARDS_SMALL, 0, 0)
 	love.graphics.setCanvas(currentCanvas)
-	love.graphics.draw(self.rewardsSmallCanvas, self.rewardsSMX, self.rewardsSMY)
+	love.graphics.draw(self.rewardsSmallCanvas, self.rewardsSMX + px, self.rewardsSMY + py)
 end
 
 function GameScreen:drawDiceDetails(dt)
@@ -881,30 +890,35 @@ function GameScreen:drawDiceDetails(dt)
 		self:updateDiceNet(dt)
 	end
 
-	love.graphics.setCanvas(currentCanvas)
+    love.graphics.setCanvas(currentCanvas)
+	local px, py = G.calculateParalaxeOffset(1)
 
-	-- Draw dice details canvas with premultiplied alpha to avoid black fringe on rounded corners
-	love.graphics.setBlendMode("alpha", "premultiplied")
-	love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX, self.diceDetailsY, 0, 1, 1, 0, 0)
-	love.graphics.setBlendMode("alpha", "alphamultiply")
+    -- Draw dice details canvas with premultiplied alpha to avoid black fringe on rounded corners
+    love.graphics.setBlendMode("alpha", "premultiplied")
+	love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX + px, self.diceDetailsY + py, 0, 1, 1, 0, 0)
+    love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 function GameScreen:drawInventoryBackGroundMedium()
+	local px, py = G.calculateParalaxeOffset(3)
+
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.inventoryCanvasMedium)
 	love.graphics.clear()
 	love.graphics.draw(Sprites.INVENTORY_MEDIUM, 0, 0)
 	love.graphics.setCanvas(currentCanvas)
-	love.graphics.draw(self.inventoryCanvasMedium, self.inventoryMDX, self.inventoryMDY)
+	love.graphics.draw(self.inventoryCanvasMedium, self.inventoryMDX + px, self.inventoryMDY + py)
 end
 
 function GameScreen:drawRewardsMedium()
+	local px, py = G.calculateParalaxeOffset(3)
+
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.rewardsMediumCanvas)
 	love.graphics.clear()
 	love.graphics.draw(Sprites.REWARDS_MEDIUM, 0, 0)
 	love.graphics.setCanvas(currentCanvas)
-	love.graphics.draw(self.rewardsMediumCanvas, self.rewardsMDX, self.rewardsMDY)
+	love.graphics.draw(self.rewardsMediumCanvas, self.rewardsMDX + px, self.rewardsMDY + py)
 end
 
 --==Initialization functions==--

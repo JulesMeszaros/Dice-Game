@@ -104,7 +104,9 @@ function Button:updateCanvas()
 end
 
 function Button:draw()
-    love.graphics.draw(self.uiCanvas, self.x, self.y, 0, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
+    local layer = self.layer or 4
+    local px, py = G.calculateParalaxeOffset(layer)
+    love.graphics.draw(self.uiCanvas, self.x+px, self.y+py, 0, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
 end
 
 function Button:getCallback()

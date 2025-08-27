@@ -324,23 +324,31 @@ Shaders.diagonalCircles = love.graphics.newShader([[
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
         vec4 texColor = Texel(texture, texture_coords);
         
-        // Coordonnées avec ratio d'aspect
-        vec2 uv = texture_coords;
-        uv.x *= love_ScreenSize.x / love_ScreenSize.y;
-        
+        // Correct aspect-correct coordinates (scale around center) to keep circles round
+        float aspect = love_ScreenSize.x / love_ScreenSize.y;
+        vec2 uv = (texture_coords - 0.5) * vec2(aspect, 1.0) + 0.5;
+
         // Animation diagonale
         vec2 movement = vec2(time * speed, time * speed * 0.7);
         vec2 animatedUV = uv + movement;
-        
-        // Grille de répétition
-        vec2 grid = mod(animatedUV, spacing);
-        
-        // Distance au centre de chaque cellule
-        vec2 cellCenter = vec2(spacing * 0.5);
+
+        // Scale spacing on X to match aspect-correct coordinates
+        vec2 spacingScaled = vec2(spacing * aspect, spacing);
+
+        // Grid cell and center
+        vec2 grid = mod(animatedUV, spacingScaled);
+        vec2 cellCenter = spacingScaled * 0.5;
+
+        // Distance in the same scaled space
         float dist = distance(grid, cellCenter);
-        
-        // Création du rond avec bords lisses
-        float circle = 1.0 - smoothstep(circle_size * 0.8, circle_size, dist);
+
+        // Anti-aliased edge: compute screen-space derivative to adapt smoothing width
+        float aa = fwidth(dist);
+        // fallback tiny aa if fwidth returns 0 on some drivers
+        aa = max(aa, 0.0005);
+
+        // Circle with smooth/antialiased edge
+        float circle = 1.0 - smoothstep(circle_size - aa, circle_size + aa, dist);
         
         // Application de l'assombrissement
         vec3 darkenedColor = texColor.rgb * (1.0 - circle * darkness);

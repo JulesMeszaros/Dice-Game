@@ -1,14 +1,52 @@
 local Animator = require("src.utils.Animator")
 local Shaders = require("src.utils.Shaders")
+local Inputs = require("src.utils.scripts.Inputs")
+local Constants = require("src.utils.Constants")
+
 G = {
-	backgroundR = 40 / 255,
-	backgroundG = 40 / 255,
-	backgroundB = 43 / 255,
+    --Background color
+    backgroundR = 40/255,
+    backgroundG = 40/255,
+    backgroundB = 43/255,
+
+    --Background animation properties
+    circleRad = 0.06,
+    circleSpeed = 0.1,
+    circleSpacing = 0.2,
+    circleDarkness = -0.3,
+
+
+    --screen shake
+    --Screen target position
+    rx = 0,
+    ry = 0,
+    --Screen position (relative) 
+    ox = 0,
+    oy = 0,
+    --Wave
+    waveX = 0,
+    waveY = 0
+
 }
 
+--Animators
 G.animator = Animator:new(G)
+G.bgAnimator = Animator:new(G)
+G.circleAnimator = Animator:new(G)
 
-local applyCRT = false
+function G.backgroundChange(color, time)
+    G.bgAnimator:addGroup({
+                    {property = "backgroundR", from=G.backgroundR, targetValue = color[1], duration = 0.6},
+                    {property = "backgroundG", from=G.backgroundG, targetValue = color[2], duration = 0.6},
+                    {property = "backgroundB", from=G.backgroundB, targetValue = color[3], duration = 0.6},
+                })
+end
+
+-- Function to calculate parallax offset
+function G.calculateParalaxeOffset(layer)
+    local Constants = require("src.utils.Constants")
+    return G.ox * Constants.PARALAXE_MAX_OFFSET[layer], G.oy * Constants.PARALAXE_MAX_OFFSET[layer]
+end
 
 local Fonts = require("src.utils.Fonts")
 local Game = require("src.classes.Game")
@@ -56,22 +94,33 @@ function love.load()
 end
 
 function love.update(dt)
-	if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
-		print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
-	end
-	G.animator:update(dt)
-	game:update(dt)
-	delta = love.timer.getFPS()
+    print(applyCRT)
+    if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
+        print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
+    end
 
-	-- Simulation de FPS faible
-	if fpsLimit then
-		local desiredFrameTime = 1 / fpsLimit
-		local frameTime = love.timer.getDelta()
-		local sleepTime = desiredFrameTime - frameTime
-		if sleepTime > 0 then
-			love.timer.sleep(sleepTime)
-		end
-	end
+    local vx,vy = Inputs.getVirtualMousePosition()
+    --relative x/y mouse position (0-1)
+    G.rx, G.ry = (vx/Constants.VIRTUAL_GAME_WIDTH)-0.5, (vy/Constants.VIRTUAL_GAME_HEIGHT)-0.5
+    
+    --Game animators
+    G.circleAnimator:update(dt)
+    G.animator:update(dt)
+    G.bgAnimator:update(dt)
+    
+    game:update(dt)
+    delta = love.timer.getFPS()
+    
+    -- Simulation de FPS faible
+    if fpsLimit then
+        local desiredFrameTime = 1 / fpsLimit
+        local frameTime = love.timer.getDelta()
+        local sleepTime = desiredFrameTime - frameTime
+        if sleepTime > 0 then
+            love.timer.sleep(sleepTime)
+        end
+    end
+
 end
 
 function love.draw()
@@ -126,52 +175,24 @@ function love.resize(w, h)
 end
 
 function drawBackground()
-	-- Draw background to canvas with shader
-	love.graphics.setCanvas(backgroundCanvas)
-	love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
-	love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
-	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-	love.graphics.setColor(1, 1, 1)
-
-	-- Set main canvas and draw background with shader
-	love.graphics.setCanvas()
-	love.graphics.setShader(Shaders.diagonalCircles)
-	Shaders.diagonalCircles:send("time", love.timer.getTime())
-	Shaders.diagonalCircles:send("circle_size", 0.05)
-	Shaders.diagonalCircles:send("spacing", 0.2)
-	Shaders.diagonalCircles:send("speed", 0.2)
-	Shaders.diagonalCircles:send("darkness", 0.1)
-	-- Draw the background canvas with premultiplied alpha to ensure correct blending
-	love.graphics.setBlendMode("alpha", "premultiplied")
-	love.graphics.draw(backgroundCanvas, 0, 0)
-	-- Restore default blend mode
-	love.graphics.setBlendMode("alpha", "alphamultiply")
-	love.graphics.setShader()
-end
-
---[[ function drawBackground()
     -- Draw background to canvas with shader
     love.graphics.setCanvas(backgroundCanvas)
-    love.graphics.clear()
+    love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
+    love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
+    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     love.graphics.setColor(1, 1, 1)
     
     -- Set main canvas and draw background with shader
     love.graphics.setCanvas()
-    love.graphics.setShader(bgShader)
-    
-    bgShader:send("time", love.timer.getTime())
-    bgShader:send("spin_time", 1)
-    bgShader:send("colour_1", {0.5, 0.0, 0.2, 1})
-    bgShader:send("colour_2", {0.1, 0.1, 0.9, 1})
-    bgShader:send("colour_3", {0.0, 0.1, 0.2, 1})
-    bgShader:send("contrast", 0.8)
-    bgShader:send("spin_amount", 0.9)
-
-    -- Draw the background canvas with premultiplied alpha to ensure correct blending
-    love.graphics.setBlendMode("alpha", "premultiplied")
+    love.graphics.setShader(Shaders.diagonalCircles)
+    Shaders.diagonalCircles:send("time", love.timer.getTime())
+    Shaders.diagonalCircles:send("circle_size",G.circleRad)
+    Shaders.diagonalCircles:send("spacing", G.circleSpacing)
+    Shaders.diagonalCircles:send("speed", G.circleSpeed)
+    Shaders.diagonalCircles:send("darkness",G.circleDarkness)
     love.graphics.draw(backgroundCanvas, 0, 0)
     -- Restore default blend mode
     love.graphics.setBlendMode("alpha", "alphamultiply")
     love.graphics.setShader()
-end ]]
+end
 

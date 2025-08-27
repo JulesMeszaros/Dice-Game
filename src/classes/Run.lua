@@ -307,14 +307,9 @@ function Run:resetAvailableFigures()
 end
 
 function Run:levelUpFigure(index)
-	if index >= 1 and index <= 13 then
-		print(
-			"level up figure : " .. tostring(index),
-			self.figuresInfos[index].level,
-			self.figuresInfos[index].level + 1
-		)
-		self.figuresInfos[index].level = self.figuresInfos[index].level + 1
-	end
+    if(index>=1 and index <=13) then
+        self.figuresInfos[index].level = self.figuresInfos[index].level+1
+    end
 end
 
 --==Change screen==--
