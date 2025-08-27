@@ -20,30 +20,30 @@ function FaceObject:new()
 	self.tier = "??"
 	self.description = "???"
 
-    --Metadatas about the graphics of the FaceObject
-    self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
-    self.spriteSheet:setFilter("nearest", "nearest")
-    self.faceDimmension = 120 --sets the dimmensions for a face of the FaceObject in px (in the png)
-    self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-        {120, 120}, -- 1
-        {0, 120}, -- 2
-        {120, 240}, -- 3
-        {120, 0}, -- 4
-        {240, 120}, -- 5
-        {120, 360} -- 6
-    }
-    
-    --Booleans status
-    self.disabled = false
-    --About the type of effects the dice has
-    self.backup = false
-    self.ghost = false
-    self.replay = false
-    self.blank = false
-    self.fullHand = false
-    self.fullDice = false
-    self.first = false
-    self.unique = false
+	--Metadatas about the graphics of the FaceObject
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+	self.faceDimmension = 120 --sets the dimmensions for a face of the FaceObject in px (in the png)
+	self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+		{ 120, 120 }, -- 1
+		{ 0, 120 }, -- 2
+		{ 120, 240 }, -- 3
+		{ 120, 0 }, -- 4
+		{ 240, 120 }, -- 5
+		{ 120, 360 }, -- 6
+	}
+
+	--Booleans status
+	self.disabled = false
+	--About the type of effects the dice has
+	self.backup = false
+	self.ghost = false
+	self.replay = false
+	self.blank = false
+	self.fullHand = false
+	self.fullDice = false
+	self.first = false
+	self.unique = false
 
 	--Numbered status
 	self.faceValue = 1 --This is the face represented by the face (the number shown)
