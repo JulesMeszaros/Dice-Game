@@ -22,7 +22,7 @@ function WhiteDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the WhiteDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteDice in px (in the png)
 
 	--Numbered status
@@ -53,7 +53,7 @@ function ChunkyDice:new(faceValue, pointsValue)
 	self.description = "Scoring : [[+20pts]]"
 
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Chunky Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120
 
 	--Numbered status
@@ -84,7 +84,7 @@ function MassiveDice:new(faceValue, pointsValue)
 	self.description = "Scoring : [[+50pts]]"
 
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Massive Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120
 
 	--Numbered status
@@ -118,7 +118,7 @@ function BlueDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Blue Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 
 	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -130,12 +130,12 @@ function BlueDice:new(faceValue, pointsValue)
 	return self
 end
 
-function BlueDice:triggerEffect(round)
-	addScore(round, self:getPointsValue(round.run))
+function BlueDice:update(dt, run)
+	self.pointsValue = 1 + (2 * run.usedRerolls)
 end
 
-function BlueDice:getPointsValue(run)
-	return 2 * run.usedRerolls
+function BlueDice:triggerEffect(round)
+	addScore(round, self.pointsValue)
 end
 
 function BlueDice:getDescription(run)
@@ -162,7 +162,7 @@ function GoldDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Gold Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 
 	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -198,7 +198,7 @@ function DeluxeDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Deluxe Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 
 	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -240,7 +240,7 @@ function StrikeOfLuck:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Strike of Luck.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 
 	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -279,7 +279,7 @@ function Copyprinter:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Copyprinter.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 
 	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -334,7 +334,7 @@ function BasketOfEggs:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Milk Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 
 	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -373,7 +373,7 @@ function Apparition:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Apparition.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 
 	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -408,7 +408,7 @@ function BlackStar:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Black Star.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
 	self.blank = true
@@ -443,7 +443,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the ClockWorkDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Clockwork Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the ClockWorkDice in px (in the png)
 
 	--Numbered status
@@ -483,7 +483,7 @@ function AshtrayDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the AshtrayDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ashtray Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the AshtrayDice in px (in the png)
 
 	--Numbered status
@@ -521,7 +521,7 @@ function SteelDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the SteelDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Steel Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the SteelDice in px (in the png)
 
 	--Numbered status
@@ -559,7 +559,7 @@ function DoubleDown:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the DoubleDown
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Double Down.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the DoubleDown in px (in the png)
 
 	--Numbered status
@@ -601,7 +601,7 @@ function OddJob:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the OddJob
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Odd Job.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the OddJob in px (in the png)
 
 	--Numbered status
@@ -643,7 +643,7 @@ function MusicDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the MusicDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Tempo Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the MusicDice in px (in the png)
 
 	--Numbered status
@@ -681,7 +681,7 @@ function Signature:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the Signature
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Signature Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the Signature in px (in the png)
 
 	self.unique = true
@@ -719,7 +719,7 @@ function SniperDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the SniperDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crosshairs Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the SniperDice in px (in the png)
 
 	self.backup = true
@@ -764,7 +764,7 @@ function Spotlight:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the Spotlight
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Spotlight Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "First : Multiplies the hand score by ((2)). Scoring: [[+10pts]]"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the Spotlight in px (in the png)
 
@@ -802,7 +802,7 @@ function RiskyBusiness:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the RiskyBusiness
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Risky Business.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "Scoring : [[+100pts]], -10$."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the RiskyBusiness in px (in the png)
 
@@ -835,7 +835,7 @@ function CryptoDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the CryptoDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crypto Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "Scoring : Multiplies the hand score by ((2)), lowers the money to 0$"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the CryptoDice in px (in the png)
 
@@ -870,7 +870,7 @@ function Patience:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the Patience
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Patience.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "Scoring : [[+10pts]], increase this value by [[5pts]]"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the Patience in px (in the png)
 
@@ -907,7 +907,7 @@ function DataDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the DataDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Number Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description =
 		"Scoring : [[+10pts]], increases by [[10pts]] if figure is a numbered figure (1, 2, 3,...) decreases by [[10pts]] if not."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the DataDice in px (in the png)
@@ -953,7 +953,7 @@ function StockOption:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the StockOption
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Stock Option.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "Scoring : [[+10pts]], 1/2 Chances of giving 10$, or loosing 5$."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the StockOption in px (in the png)
 
@@ -994,7 +994,7 @@ function RainbowDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the RainbowDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Straight Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "Scoring : [[+10pts]], goes up by 30pts if played in a small or large straight."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the RainbowDice in px (in the png)
 
@@ -1038,7 +1038,7 @@ function MagicDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the MagicDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Magic Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description =
 		"Scoring : Multiplies the score by the ((number or magic wands held)), if the number is at least 2."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the MagicDice in px (in the png)
@@ -1074,7 +1074,7 @@ function ReturnOnInvestment:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the ReturnOnInvestment
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Return On Invenstment.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "Backup : Multiplies the score by ((1.5)) for each 10$ in bank."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the ReturnOnInvestment in px (in the png)
 
@@ -1102,23 +1102,23 @@ end
 
 FaceTypes.ReturnOnInvestment = ReturnOnInvestment
 
---==Royalty Card==--
-local RoyaltyCard = setmetatable({}, { __index = FaceObject })
-RoyaltyCard.__index = RoyaltyCard
+--==Loyalty Card==--
+local LoyaltyCard = setmetatable({}, { __index = FaceObject })
+LoyaltyCard.__index = LoyaltyCard
 
-function RoyaltyCard:new(faceValue, pointsValue)
-	local self = setmetatable(FaceObject:new(), RoyaltyCard)
+function LoyaltyCard:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), LoyaltyCard)
 
-	--Metadatas about the RoyaltyCard
-	self.name = "Royalty Card"
+	--Metadatas about the LoyaltyCard
+	self.name = "Loyalty Card"
 	self.id = 29
 	self.tier = "Common"
 
-	--Metadatas about the graphics of the RoyaltyCard
+	--Metadatas about the graphics of the LoyaltyCard
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Royalty Card.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "Scoring : Gives the level of the played figure in $. [[+10pts]]"
-	self.faceDimmension = 120 --sets the dimmensions for a face of the RoyaltyCard in px (in the png)
+	self.faceDimmension = 120 --sets the dimmensions for a face of the LoyaltyCard in px (in the png)
 
 	--Numbered status
 	self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1127,14 +1127,14 @@ function RoyaltyCard:new(faceValue, pointsValue)
 	return self
 end
 
-function RoyaltyCard:triggerEffect(round)
+function LoyaltyCard:triggerEffect(round)
 	local level = round.run.figuresInfos[round.playedFigure].level
 
 	addMoney(round, level)
 	addScore(round, self.pointsValue)
 end
 
-FaceTypes.RoyaltyCard = RoyaltyCard
+FaceTypes.LoyaltyCard = LoyaltyCard
 
 --==Mirror Dice==--
 local MirrorDice = setmetatable({}, { __index = FaceObject })
@@ -1150,7 +1150,7 @@ function MirrorDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the MirrorDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Mirror Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "Scoring : [[+10pts]], gains [[5pts]] by played dice with the same number as this one"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the MirrorDice in px (in the png)
 
@@ -1199,7 +1199,7 @@ function CookieDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the CookieDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Cookie Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "Scoring : [[+10pts]], 1/3 chances of upgrading the played figure by one level"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the CookieDice in px (in the png)
 
@@ -1236,7 +1236,7 @@ function InsomniacDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the InsomniacDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Eclipse Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = " "
 	self.faceDimmension = 120 --sets the dimmensions for a face of the InsomniacDice in px (in the png)
 
@@ -1273,7 +1273,7 @@ function TwinFlame:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the TwinFlame
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Twin Flame.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "[[+10pts]], clones a random magic wand in hand."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the TwinFlame in px (in the png)
 
@@ -1314,7 +1314,7 @@ function FaxMachine:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the FaxMachine
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Fax Machine.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = "Retriggers the first scored dice"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the FaxMachine in px (in the png)
 
@@ -1353,7 +1353,7 @@ function Necromancer:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the Necromancer
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Necromancer Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.description = " "
 	self.faceDimmension = 120 --sets the dimmensions for a face of the Necromancer in px (in the png)
 
@@ -1397,7 +1397,7 @@ function SixthSense:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the SixthSense
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ghost Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the SixthSense in px (in the png)
 
 	--Numbered status
@@ -1462,7 +1462,7 @@ function Sacrifice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the Sacrifice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Marble Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the Sacrifice in px (in the png)
 
 	--Numbered status
@@ -1512,7 +1512,7 @@ function CheckeredDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the CheckeredDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Checkered Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the CheckeredDice in px (in the png)
 	self.description = "Scoring : +100pts if the played figure has exactly one remaining hand left."
 	--Numbered status
@@ -1546,7 +1546,7 @@ function StarDice:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the StarDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Star Dice.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the StarDice in px (in the png)
 	self.description = "Scoring : [[+20pts]]. Can be counted as any number for numbered figures."
 	--Numbered status
@@ -1565,7 +1565,7 @@ end
 
 FaceTypes.StarDice = StarDice
 
---==Resurection==--
+--==Star Dice==--
 local Resurection = setmetatable({}, { __index = FaceObject })
 Resurection.__index = Resurection
 
@@ -1579,7 +1579,7 @@ function Resurection:new(faceValue, pointsValue)
 
 	--Metadatas about the graphics of the Resurection
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Resurection.png")
-	self.spriteSheet:setFilter("nearest", "nearest")
+	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the Resurection in px (in the png)
 	--Numbered status
 	self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -1636,4 +1636,3 @@ function upgradeStat(object, stat, v)
 end
 
 return FaceTypes
-
