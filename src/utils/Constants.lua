@@ -202,11 +202,11 @@ Constants.EMPLOIS = {
 
 Constants.PARALAXE_MAX_OFFSET = {
     --Layer 1 (front)
-    60,
+    40,
     --Layer 2 (middle)
-    45,
-    --Layer 3 (back)
     30,
+    --Layer 3 (back)
+    20,
     --Aucun layer
     0
 }
