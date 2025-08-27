@@ -17,15 +17,15 @@ Sprites.BLANK = love.graphics.newImage("src/assets/sprites/ui/Blank.png")
 Sprites.COFFEE = love.graphics.newImage("src/assets/sprites/ui/Coffee.png")
 Sprites.MAGICWAND = love.graphics.newImage("src/assets/sprites/ui/Magic Wand.png")
 
-Sprites.ENEMY_INFOS= love.graphics.newImage("src/assets/sprites/ui/Enemy.png")
+Sprites.ENEMY_INFOS = love.graphics.newImage("src/assets/sprites/ui/Enemy.png")
 Sprites.PLAYER_INFOS = love.graphics.newImage("src/assets/sprites/ui/Player.png")
 
-Sprites.FLOOR_INFOS= love.graphics.newImage("src/assets/sprites/ui/Office.png")
-Sprites.TURNS= love.graphics.newImage("src/assets/sprites/ui/Turns.png")
-Sprites.MONEY= love.graphics.newImage("src/assets/sprites/ui/Money.png")
-Sprites.REROLLS= love.graphics.newImage("src/assets/sprites/ui/Rerolls.png")
+Sprites.FLOOR_INFOS = love.graphics.newImage("src/assets/sprites/ui/Office.png")
+Sprites.TURNS = love.graphics.newImage("src/assets/sprites/ui/Turns.png")
+Sprites.MONEY = love.graphics.newImage("src/assets/sprites/ui/Money.png")
+Sprites.REROLLS = love.graphics.newImage("src/assets/sprites/ui/Rerolls.png")
 
-Sprites.GRID= love.graphics.newImage("src/assets/sprites/ui/Grid.png")
+Sprites.GRID = love.graphics.newImage("src/assets/sprites/ui/Grid.png")
 Sprites.DICE_MAT = love.graphics.newImage("src/assets/sprites/ui/Dice Mat.png")
 Sprites.PLAYCOUNT_DOT = love.graphics.newImage("src/assets/sprites/ui/Playcount.png")
 Sprites.PLAYCOUNT_CROSS = love.graphics.newImage("src/assets/sprites/ui/Playcount Cross.png")
@@ -42,6 +42,7 @@ Sprites.BOSS_DESC = love.graphics.newImage("src/assets/sprites/ui/Boss Desc.png"
 
 Sprites.SHOP_BG = love.graphics.newImage("src/assets/sprites/ui/Shop.png")
 Sprites.BUY_POPUP = love.graphics.newImage("src/assets/sprites/ui/Buy Popup.png")
+Sprites.USE_NOW = love.graphics.newImage("src/assets/sprites/ui/Use Now.png")
 Sprites.ADD_TO_INVENTORY = love.graphics.newImage("src/assets/sprites/ui/Add To Inventory Popup.png")
 Sprites.ADD_TO_INVENTORY_L = love.graphics.newImage("src/assets/sprites/ui/Add To Inventory Popup Large.png")
 Sprites.BUY_CIGGIE = love.graphics.newImage("src/assets/sprites/ui/Buy Ciggie.png")
@@ -75,27 +76,26 @@ Sprites.OFFICE_DESCRIPTION_EMPTY = love.graphics.newImage("src/assets/sprites/ui
 
 Sprites.PROGRESSION = love.graphics.newImage("src/assets/sprites/ui/Progression.png")
 
-for i,sprite in next,Sprites do
-    sprite:setFilter("nearest", "nearest")
+for i, sprite in next, Sprites do
+	sprite:setFilter("nearest", "nearest")
 end
 
 --COFFE
 Sprites.COFFEE_SPRITES = {
-    love.graphics.newImage("src/assets/sprites/coffee/Ristretto.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Piccolo.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Espresso.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Doppio.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Lungo.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Americano.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Rapido Y Sucio.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Macchiato.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Capuccino.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Mocaccino.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Corretto.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Mazagran.png"),
-    love.graphics.newImage("src/assets/sprites/coffee/Coffee Deluxe.png")
+	love.graphics.newImage("src/assets/sprites/coffee/Ristretto.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Piccolo.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Espresso.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Doppio.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Lungo.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Americano.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Rapido Y Sucio.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Macchiato.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Capuccino.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Mocaccino.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Corretto.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Mazagran.png"),
+	love.graphics.newImage("src/assets/sprites/coffee/Coffee Deluxe.png"),
 }
 
-
-
 return Sprites
+
