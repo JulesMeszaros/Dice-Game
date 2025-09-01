@@ -7,11 +7,11 @@ local Constants = {
 	GAME_VERSION = "0.7.0",
 
 	--Game base stats
-	BASE_REROLLS = 3,
+	BASE_REROLLS = 2,
 	DESKS_BY_FLOOR = 2,
 	FLOORS_BY_RUN = 8,
 	BASE_MAX_CIGGIES = 3,
-	BASE_TURNS = 3,
+	BASE_TURNS = 1,
 	BASE_AVAILABLE_HANDS = 1,
 
 	--Animations
