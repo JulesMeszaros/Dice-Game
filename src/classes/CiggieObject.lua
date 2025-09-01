@@ -39,6 +39,7 @@ function CiggieObject:triggerInShop(screen, key)
 		and self:usageCondition(screen) == true
 	then
 		screen:setMoneyTo(screen.run.money - Constants.BASE_CIGGIE_PRICE)
+		screen.run.totalspent = screen.run.totalspent + Constants.BASE_CIGGIE_PRICE
 		screen.run.totalUsedCiggie = screen.run.totalUsedCiggie + 1
 		self:effect(screen)
 		table.remove(screen.availableCiggieObjectsUI, key)
@@ -103,4 +104,3 @@ function isList(t)
 end
 
 return CiggieObject
-

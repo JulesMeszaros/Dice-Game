@@ -1774,7 +1774,7 @@ function Ectoplasm:new(faceValue, pointsValue)
 
 	--Metadatas about the Resurection
 	self.name = "Ectoplasm"
-	self.id = 44
+	self.id = 45
 	self.tier = "Uncommon"
 
 	--Metadatas about the graphics of the Ectoplasm
@@ -1810,7 +1810,7 @@ function UndeadDice:new(faceValue, pointsValue)
 
 	--Metadatas about the Resurection
 	self.name = "Undead Dice"
-	self.id = 44
+	self.id = 46
 	self.tier = "Uncommon"
 
 	--Metadatas about the graphics of the UndeadDice
@@ -1838,6 +1838,42 @@ function UndeadDice:getDescription(run)
 end
 
 FaceTypes.UndeadDice = UndeadDice
+
+--==InvisibleHand==--
+local InvisibleHand = setmetatable({}, { __index = FaceObject })
+InvisibleHand.__index = InvisibleHand
+
+function InvisibleHand:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), InvisibleHand)
+
+	--Metadatas about the Resurection
+	self.name = "Invisible Hand"
+	self.id = 47
+	self.tier = "Uncommon"
+
+	--Metadatas about the graphics of the InvisibleHand
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Invisible Hand Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+	self.faceDimmension = 120 --sets the dimmensions for a face of the InvisibleHand in px (in the png)
+	--Numbered status
+	self.faceValue = faceValue --This is the face represented by the face (the number shown)
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.ghost = true
+
+	return self
+end
+
+function InvisibleHand:triggerEffect(round)
+	addScore(round, round.run.totalspent)
+end
+
+function InvisibleHand:getDescription(run)
+	return "Adds [[+1pts]] per 1$ spent this building (currently : [[" .. tostring(run.totalspent) .. "]])"
+end
+
+FaceTypes.InvisibleHand = InvisibleHand
 
 --UTILS--
 function multiplyScore(round, f)

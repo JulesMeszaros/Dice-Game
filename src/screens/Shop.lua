@@ -571,6 +571,7 @@ function Shop:buyDiceFace(face, faceUI, key)
 	if table.getn(self.run.facesInventory) < 8 and self.run.money >= 5 then
 		--Remove the money
 		self:setMoneyTo(self.run.money - 5)
+		self.run.totalspent = self.run.totalspent + 5
 
 		--Add face to inventory
 		table.insert(self.run.facesInventory, face)
@@ -595,6 +596,7 @@ function Shop:buyCiggie(ciggie, ciggieUI, key)
 		and self.run.money >= Constants.BASE_CIGGIE_PRICE
 	then
 		self:setMoneyTo(self.run.money - Constants.BASE_CIGGIE_PRICE)
+		self.run.totalspent = self.run.totalspent + Constants.BASE_CIGGIE_PRICE
 		--Add the ciggie to the inventory
 		table.insert(self.run.ciggiesObjects, ciggie)
 		--Remove the ciggie from the shop
@@ -610,6 +612,7 @@ end
 function Shop:sellDiceFace(face, faceUI, key)
 	--Add money to bank account
 	self:setMoneyTo(self.run.money + 3)
+	self.run.totalspent = self.run.totalspent + 3
 	--Remove dice face object from inventory
 
 	table.remove(self.run.facesInventory, key)
@@ -733,6 +736,7 @@ end
 function Shop:rerollShop()
 	if self.run.money >= self.rerollShopPrice then
 		self.run.money = self.run.money - self.rerollShopPrice
+		self.run.totalspent = self.run.totalspent + self.rerollShopPrice
 		self:generateNewShop()
 		self.rerollShopPrice = self.rerollShopPrice --+Constants.BASE_SHOP_REROLL_PRINCE_INCREMENT
 	end

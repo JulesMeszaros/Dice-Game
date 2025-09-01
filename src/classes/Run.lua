@@ -53,6 +53,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 
 	--Money
 	self.money = 5
+	self.totalspent = 0
 
 	--Figures playcount and level
 	self.figuresInfos = {}
