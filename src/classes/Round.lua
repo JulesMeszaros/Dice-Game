@@ -52,6 +52,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 	self.deskNumber = desk
 	self.roundType = roundType
 	self.availableRerolls = Constants.BASE_REROLLS
+	self.bountyHunterFigure = math.random(1, 13)
 
 	--Disabled figures (for bosses)
 	self.disabledFigures = {}
@@ -406,6 +407,8 @@ function Round:endTriggeringPhase()
 		self.firstRoll = false
 		self.terrain.timers.firstRerollTime = 0
 	end
+
+	self.bountyHunterFigure = math.random(1, 13)
 end
 
 --==DICE FUNCTIONS==--
@@ -704,4 +707,3 @@ function Round:containsDice(diceList, targetDice)
 end
 
 return Round
-

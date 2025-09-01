@@ -1647,6 +1647,90 @@ end
 
 FaceTypes.Adrenaline = Adrenaline
 
+--==NegativeDice==--
+local NegativeDice = setmetatable({}, { __index = FaceObject })
+NegativeDice.__index = NegativeDice
+
+function NegativeDice:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), NegativeDice)
+
+	--Metadatas about the Resurection
+	self.name = "Negative Dice"
+	self.id = 42
+	self.tier = "Uncommon"
+
+	--Metadatas about the graphics of the NegativeDice
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Negative Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+	self.faceDimmension = 120 --sets the dimmensions for a face of the NegativeDice in px (in the png)
+	--Numbered status
+	self.faceValue = faceValue --This is the face represented by the face (the number shown)
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	return self
+end
+
+function NegativeDice:triggerEffect(round)
+	multiplyScore(round, math.max(1, 5 - table.getn(round.selectedDices)))
+end
+
+function NegativeDice:getDescription(run)
+	return "Scoring : Multiplies the hand score for each empty space in played hand"
+end
+
+FaceTypes.NegativeDice = NegativeDice
+
+--==BountyHunter==--
+local BountyHunter = setmetatable({}, { __index = FaceObject })
+BountyHunter.__index = BountyHunter
+
+function BountyHunter:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), BountyHunter)
+
+	--Metadatas about the Resurection
+	self.name = "BountyHunter"
+	self.id = 43
+	self.tier = "Uncommon"
+
+	--Metadatas about the graphics of the BountyHunter
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Bounty Hunter Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BountyHunter in px (in the png)
+	--Numbered status
+	self.faceValue = faceValue --This is the face represented by the face (the number shown)
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	return self
+end
+
+function BountyHunter:triggerEffect(round)
+	addScore(round, self:getPointsValue(run))
+
+	if round.playedFigure <= 6 then
+		if round.playedFigure <= 6 then
+			addMoney(round, 5)
+		end
+	else
+		if round.playedFigure == round.bountyHunterFigure then
+			addMoney(round, 5)
+		end
+	end
+end
+
+function BountyHunter:getDescription(run)
+	if run.currentState == Constants.RUN_STATES.ROUND then
+		return "Scoring : Adds 5$ if scored in a "
+			.. Constants.FIGURES_LABELS[run.currentRound.bountyHunterFigure]
+			.. "."
+	else
+		return "Scoring : Adds 5$ if scored in a selected figure (selected figure changes each hand)"
+	end
+end
+
+FaceTypes.BountyHunter = BountyHunter
+
 --UTILS--
 function multiplyScore(round, f)
 	round.handScore = round.handScore * f
