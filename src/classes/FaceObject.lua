@@ -45,6 +45,8 @@ function FaceObject:new()
 	self.first = false
 	self.unique = false
 
+	self.totaldisabled = 0
+
 	--Numbered status
 	self.faceValue = 1 --This is the face represented by the face (the number shown)
 	self.pointsValue = 0 --This is the points scored by the dice
@@ -202,4 +204,3 @@ function FaceObject:getPointsValue(run)
 end
 
 return FaceObject
-

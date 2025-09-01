@@ -369,6 +369,7 @@ end
 
 function DiceFace:disable(run)
 	run.totalDisabled = run.totalDisabled + 1
+	self.representedObject.totaldisabled = self.representedObject.totaldisabled + 1
 	self.representedObject.disabled = true
 end
 
