@@ -1657,7 +1657,7 @@ function NegativeDice:new(faceValue, pointsValue)
 	--Metadatas about the Resurection
 	self.name = "Negative Dice"
 	self.id = 42
-	self.tier = "Uncommon"
+	self.tier = "Rare"
 
 	--Metadatas about the graphics of the NegativeDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Negative Dice.png")
@@ -1672,7 +1672,16 @@ function NegativeDice:new(faceValue, pointsValue)
 end
 
 function NegativeDice:triggerEffect(round)
-	multiplyScore(round, math.max(1, 5 - table.getn(round.selectedDices)))
+	local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
+
+	local i = 5
+	for _, face in next, facesOrder do
+		if face.representedObject.name ~= "Negative Dice" then
+			i = i - 1
+		end
+	end
+
+	multiplyScore(round, math.max(1, i))
 end
 
 function NegativeDice:getDescription(run)
