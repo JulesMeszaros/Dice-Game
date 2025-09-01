@@ -27,9 +27,23 @@ Sprites.REROLLS = love.graphics.newImage("src/assets/sprites/ui/Rerolls.png")
 
 Sprites.GRID = love.graphics.newImage("src/assets/sprites/ui/Grid.png")
 Sprites.DICE_MAT = love.graphics.newImage("src/assets/sprites/ui/Dice Mat.png")
-Sprites.PLAYCOUNT_DOT = love.graphics.newImage("src/assets/sprites/ui/Playcount.png")
 Sprites.PLAYCOUNT_CROSS = love.graphics.newImage("src/assets/sprites/ui/Playcount Cross.png")
 
+Sprites.PLAYCOUNT_DOTS = {
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-0.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-1.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-2.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-3.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-4.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-5.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-6.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-7.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-8.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-9.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-10.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-11.png"),
+	love.graphics.newImage("src/assets/sprites/ui/Playcount-12.png"),
+}
 Sprites.REWARDS = love.graphics.newImage("src/assets/sprites/ui/Rewards.png")
 Sprites.CUSTOMIZATION_MAT = love.graphics.newImage("src/assets/sprites/ui/DiceComposition New.png")
 
@@ -62,6 +76,8 @@ Sprites.DISABLED = love.graphics.newImage("src/assets/sprites/ui/Disabled.png")
 --End round
 Sprites.END_ROUND_BG = love.graphics.newImage("src/assets/sprites/ui/End Round BG.png")
 Sprites.CASH_REWARD = love.graphics.newImage("src/assets/sprites/ui/Cash Reward.png")
+Sprites.PLAYCOUNT_GRAY = love.graphics.newImage("src/assets/sprites/ui/Playcount_Gray.png")
+Sprites.PLAYCOUNT_LGRAY = love.graphics.newImage("src/assets/sprites/ui/Playcount_LGray.png")
 Sprites.END_ROUND_REWARDS = love.graphics.newImage("src/assets/sprites/ui/End Round Rewards.png")
 Sprites.YOU_WON = love.graphics.newImage("src/assets/sprites/ui/You Won.png")
 
@@ -75,10 +91,6 @@ Sprites.OFFICE_DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Badge
 Sprites.OFFICE_DESCRIPTION_EMPTY = love.graphics.newImage("src/assets/sprites/ui/Office Description Empty.png")
 
 Sprites.PROGRESSION = love.graphics.newImage("src/assets/sprites/ui/Progression.png")
-
-for i, sprite in next, Sprites do
-	sprite:setFilter("nearest", "nearest")
-end
 
 --COFFE
 Sprites.COFFEE_SPRITES = {
@@ -98,4 +110,3 @@ Sprites.COFFEE_SPRITES = {
 }
 
 return Sprites
-

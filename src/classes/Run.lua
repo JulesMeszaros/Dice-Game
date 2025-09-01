@@ -26,7 +26,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 	self.caseStickers = {}
 
 	--Ciggies
-	self.ciggiesObjects = {}
+	self.ciggiesObjects = { CiggieTypes.Time:new(), CiggieTypes.Time:new(), CiggieTypes.Time:new() }
 	--Run stats
 	self.totalUsedCiggie = 0
 	self.totalUsedCoffees = 0

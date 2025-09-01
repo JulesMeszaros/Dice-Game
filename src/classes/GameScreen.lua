@@ -770,22 +770,62 @@ function GameScreen:drawFigureGrid()
 		end
 	end
 
+	love.graphics.setColor(1, 1, 1)
 	--Write the remaining possible hands as dots
 	for i = 1, 13 do
 		if self.run.availableFigures[i] > 0 then
-			local xPos = self:getCenteredPositions(self.run.availableFigures[i], 30, 10, 360)
+			local xPos = self:getCenteredPositions(self.run.baseAvailableHands[i], 30, 10, 360)
 
 			for _, p in next, xPos do
-				love.graphics.draw(
-					Sprites.PLAYCOUNT_DOT,
-					p,
-					70 * (i - 1) + 125,
-					0,
-					1,
-					1,
-					0,
-					Sprites.PLAYCOUNT_DOT:getHeight() / 2
-				)
+				if _ <= self.run.availableFigures[i] then
+					if self.screenType == Constants.RUN_STATES.ROUND then
+						if self.calcBasePoints[i]()[1] > 0 then
+							love.graphics.draw(
+								Sprites.PLAYCOUNT_DOTS[i],
+								p,
+								70 * (i - 1) + 125,
+								0,
+								1,
+								1,
+								0,
+								Sprites.PLAYCOUNT_DOTS[i]:getHeight() / 2
+							)
+						else
+							love.graphics.draw(
+								Sprites.PLAYCOUNT_LGRAY,
+								p,
+								70 * (i - 1) + 125,
+								0,
+								1,
+								1,
+								0,
+								Sprites.PLAYCOUNT_DOTS[i]:getHeight() / 2
+							)
+						end
+					else
+						love.graphics.draw(
+							Sprites.PLAYCOUNT_DOTS[i],
+							p,
+							70 * (i - 1) + 125,
+							0,
+							1,
+							1,
+							0,
+							Sprites.PLAYCOUNT_DOTS[i]:getHeight() / 2
+						)
+					end
+				else
+					love.graphics.draw(
+						Sprites.PLAYCOUNT_GRAY,
+						p,
+						70 * (i - 1) + 125,
+						0,
+						1,
+						1,
+						0,
+						Sprites.PLAYCOUNT_DOTS[i]:getHeight() / 2
+					)
+				end
 			end
 		else
 			--love.graphics.draw(self.handTexts[i], 360, 70*(i-1)+125, 0, 1, 1, self.handTexts[i]:getWidth()/2, self.handTexts[i]:getHeight()/2)
@@ -890,13 +930,13 @@ function GameScreen:drawDiceDetails(dt)
 		self:updateDiceNet(dt)
 	end
 
-    love.graphics.setCanvas(currentCanvas)
+	love.graphics.setCanvas(currentCanvas)
 	local px, py = G.calculateParalaxeOffset(1)
 
-    -- Draw dice details canvas with premultiplied alpha to avoid black fringe on rounded corners
-    love.graphics.setBlendMode("alpha", "premultiplied")
+	-- Draw dice details canvas with premultiplied alpha to avoid black fringe on rounded corners
+	love.graphics.setBlendMode("alpha", "premultiplied")
 	love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX + px, self.diceDetailsY + py, 0, 1, 1, 0, 0)
-    love.graphics.setBlendMode("alpha", "alphamultiply")
+	love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 function GameScreen:drawInventoryBackGroundMedium()
@@ -1236,4 +1276,3 @@ function GameScreen:setMoneyTo(m)
 end
 
 return GameScreen
-
