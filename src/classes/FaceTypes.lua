@@ -1801,20 +1801,20 @@ end
 
 FaceTypes.Ectoplasm = Ectoplasm
 
---==UndeadDice==--
-local UndeadDice = setmetatable({}, { __index = FaceObject })
-UndeadDice.__index = UndeadDice
+--==Die And Retry==--
+local DieAndRetry = setmetatable({}, { __index = FaceObject })
+DieAndRetry.__index = DieAndRetry
 
-function UndeadDice:new(faceValue, pointsValue)
-	local self = setmetatable(FaceObject:new(), UndeadDice)
+function DieAndRetry:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), DieAndRetry)
 
 	--Metadatas about the Resurection
-	self.name = "Undead Dice"
+	self.name = "Die And Retry"
 	self.id = 46
 	self.tier = "Uncommon"
 
 	--Metadatas about the graphics of the UndeadDice
-	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Undead Dice.png")
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Die And Retry.png")
 	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the UndeadDice in px (in the png)
 	--Numbered status
@@ -1827,17 +1827,17 @@ function UndeadDice:new(faceValue, pointsValue)
 	return self
 end
 
-function UndeadDice:triggerEffect(round)
+function DieAndRetry:triggerEffect(round)
 	multiplyScore(round, math.max(1, 2 * self.totaldisabled))
 end
 
-function UndeadDice:getDescription(run)
-	return "Scoring : Multiplies the hand by ((2)), multiplied by the current number of disabled dices in deck (currently : (("
+function DieAndRetry:getDescription(run)
+	return "Scoring : Multiplies the hand by ((2)), multiplied by the number of times this dice was disabled (currently : ((x"
 		.. math.max(1, 2 * self.totaldisabled)
 		.. "))"
 end
 
-FaceTypes.UndeadDice = UndeadDice
+FaceTypes.DieAndRetry = DieAndRetry
 
 --==InvisibleHand==--
 local InvisibleHand = setmetatable({}, { __index = FaceObject })
@@ -1874,7 +1874,96 @@ function InvisibleHand:getDescription(run)
 end
 
 FaceTypes.InvisibleHand = InvisibleHand
+--Undead Dice--
+local UndeadDice = setmetatable({}, { __index = FaceObject })
 
+UndeadDice.__index = UndeadDice
+function UndeadDice:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), UndeadDice)
+
+	--Metadatas about the Resurection
+	self.name = "Undead Dice"
+	self.id = 48
+	self.tier = "Uncommon"
+
+	--Metadatas about the graphics of the
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Undead Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+	self.faceDimmension = 120 --sets the dimmensions for a face of the UndeadDice in px (in the png)
+	--Numbered status
+	self.faceValue = faceValue --This is the face represented by the face (the number shown)
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	return self
+end
+
+function UndeadDice:triggerEffect(round)
+	local i = 0
+	for _, dice in next, round.run.diceObjects do
+		for __, face in next, dice:getAllFaces() do
+			if face.disabled == true then
+				i = i + 1
+			end
+		end
+	end
+	multiplyScore(round, math.max(1, 2 * i))
+end
+
+function UndeadDice:getDescription(run)
+	local i = 0
+	for _, dice in next, run.diceObjects do
+		for __, face in next, dice:getAllFaces() do
+			if face.disabled == true then
+				i = i + 1
+			end
+		end
+	end
+
+	return "Scoring : Multiplies the hand by ((2)), multiplied by the current number of disabled dices in deck (currently : (("
+		.. math.max(1, 2 * i)
+		.. "))"
+end
+
+FaceTypes.UndeadDice = UndeadDice
+
+--Undead Dice--
+local AllIn = setmetatable({}, { __index = FaceObject })
+
+AllIn.__index = AllIn
+function AllIn:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), AllIn)
+
+	--Metadatas about the Resurection
+	self.name = "All In"
+	self.id = 49
+	self.tier = "Uncommon"
+
+	--Metadatas about the graphics of the
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/All In.png")
+	self.spriteSheet:setFilter("linear", "linear")
+	self.faceDimmension = 120 --sets the dimmensions for a face of the AllIn in px (in the png)
+	--Numbered status
+	self.faceValue = faceValue --This is the face represented by the face (the number shown)
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.ghost = true
+
+	return self
+end
+
+function AllIn:triggerEffect(round)
+	local i = round.run.availableFigures[round.playedFigure] + 1
+	round.run.availableFigures[round.playedFigure] = 0
+	multiplyScore(round, math.max(1, 2 * i))
+end
+
+function AllIn:getDescription(run)
+	return "Every Figure Use of the played Figure is spent. ((X2)) for each spent Figure Use."
+end
+
+FaceTypes.AllIn = AllIn
 --UTILS--
 function multiplyScore(round, f)
 	round.handScore = round.handScore * f
