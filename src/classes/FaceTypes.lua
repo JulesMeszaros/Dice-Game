@@ -1764,6 +1764,43 @@ function Upcycling:getDescription(run)
 end
 
 FaceTypes.Upcycling = Upcycling
+
+--==Ectoplasm==--
+local Ectoplasm = setmetatable({}, { __index = FaceObject })
+Ectoplasm.__index = Ectoplasm
+
+function Ectoplasm:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), Ectoplasm)
+
+	--Metadatas about the Resurection
+	self.name = "Ectoplasm"
+	self.id = 44
+	self.tier = "Uncommon"
+
+	--Metadatas about the graphics of the Ectoplasm
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ectoplasm.png")
+	self.spriteSheet:setFilter("linear", "linear")
+	self.faceDimmension = 120 --sets the dimmensions for a face of the Ectoplasm in px (in the png)
+	--Numbered status
+	self.faceValue = faceValue --This is the face represented by the face (the number shown)
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.ghost = true
+
+	return self
+end
+
+function Ectoplasm:triggerEffect(round)
+	addScore(round, 200)
+end
+
+function Ectoplasm:getDescription(run)
+	return "((+200pts))"
+end
+
+FaceTypes.Ectoplasm = Ectoplasm
+
 --UTILS--
 function multiplyScore(round, f)
 	round.handScore = round.handScore * f
