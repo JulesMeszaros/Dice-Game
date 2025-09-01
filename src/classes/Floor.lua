@@ -85,7 +85,7 @@ function Floor:generateReward()
 	--Generate faceType reward
 	local keys = {}
 	for key, _ in pairs(FaceTypes) do
-		if key ~= "WhiteFace" then
+		if key ~= "WhiteDice" then
 			table.insert(keys, key)
 		end
 	end
@@ -104,4 +104,3 @@ function Floor:generateReward()
 end
 
 return Floor
-

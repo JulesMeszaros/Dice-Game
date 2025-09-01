@@ -7,7 +7,7 @@ local Constants = {
 	GAME_VERSION = "0.7.0",
 
 	--Game base stats
-	BASE_REROLLS = 2,
+	BASE_REROLLS = 3,
 	DESKS_BY_FLOOR = 2,
 	FLOORS_BY_RUN = 8,
 	BASE_MAX_CIGGIES = 3,
@@ -18,7 +18,7 @@ local Constants = {
 	BASE_TRIGGER_ANIMATION_TIME = 0.15, --secondes
 
 	--Debug
-	SHOP_EVERY_DESK = true,
+	SHOP_EVERY_DESK = false,
 
 	--Prices
 	BASE_FACE_PRICE = 5,

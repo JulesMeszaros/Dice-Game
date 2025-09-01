@@ -26,7 +26,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 	self.caseStickers = {}
 
 	--Ciggies
-	self.ciggiesObjects = { CiggieTypes.Time:new(), CiggieTypes.Time:new(), CiggieTypes.Time:new() }
+	self.ciggiesObjects = {}
 	--Run stats
 	self.totalUsedCiggie = 0
 	self.totalUsedCoffees = 0
@@ -307,9 +307,9 @@ function Run:resetAvailableFigures()
 end
 
 function Run:levelUpFigure(index)
-    if(index>=1 and index <=13) then
-        self.figuresInfos[index].level = self.figuresInfos[index].level+1
-    end
+	if index >= 1 and index <= 13 then
+		self.figuresInfos[index].level = self.figuresInfos[index].level + 1
+	end
 end
 
 --==Change screen==--
@@ -377,4 +377,3 @@ function Run:cleanup()
 end
 
 return Run
-
