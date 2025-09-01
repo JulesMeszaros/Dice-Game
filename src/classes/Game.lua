@@ -41,15 +41,15 @@ function Game:start()
 end
 
 function Game:update(dt)
-    if self.currentScreen == Constants.PAGES.MAIN_MENU then
-        self.mainMenu:update(dt)
-    elseif self.currentScreen == Constants.PAGES.GAME then
-        self.run:update(dt)     
-    end
+	if self.currentScreen == Constants.PAGES.MAIN_MENU then
+		self.mainMenu:update(dt)
+	elseif self.currentScreen == Constants.PAGES.GAME then
+		self.run:update(dt)
+	end
 
-    --damped offset
-    G.ox = Animations.dampLerp(G.ox, G.rx+G.waveX, 1.5, dt)
-    G.oy = Animations.dampLerp(G.oy, G.ry+G.waveY, 1.5, dt) / 1.2
+	--damped offset
+	G.ox = Animations.dampLerp(G.ox, G.rx + G.waveX, 1.5, dt)
+	G.oy = Animations.dampLerp(G.oy, G.ry + G.waveY, 1.5, dt) / 1.2
 end
 
 function Game:draw()
@@ -72,15 +72,14 @@ function Game:draw()
 	local scaledWidth = virtualWidth * scale
 	local scaledHeight = virtualHeight * scale
 
-    local offsetX = (screenWidth - scaledWidth) / 2 --+ (G.ox*30)
-    local offsetY = (screenHeight - scaledHeight) / 2 --+ (G.oy*30)
-    
-    -- Draw the game canvas using premultiplied alpha to prevent black halos around sprites
-    love.graphics.setBlendMode("alpha", "premultiplied")
-    love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
-    -- Restore default blend mode (alpha blending)
-    love.graphics.setBlendMode("alpha", "alphamultiply")
+	local offsetX = (screenWidth - scaledWidth) / 2 --+ (G.ox*30)
+	local offsetY = (screenHeight - scaledHeight) / 2 --+ (G.oy*30)
 
+	-- Draw the game canvas using premultiplied alpha to prevent black halos around sprites
+	love.graphics.setBlendMode("alpha", "premultiplied")
+	love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
+	-- Restore default blend mode (alpha blending)
+	love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 --==GAME FUNCTION==--
@@ -103,7 +102,7 @@ function Game:startNewRun()
 	for i = 1, 5 do
 		local fs = {}
 		for j = 1, 6 do
-			local f = FaceTypes.WhiteDice:new(j, 10)
+			local f = FaceTypes.Adrenaline:new(j, 10)
 			table.insert(fs, f)
 		end
 		table.insert(diceObjects, DiceObject:new(fs))
@@ -161,4 +160,3 @@ end
 function Game:cleanup() end
 
 return Game
-

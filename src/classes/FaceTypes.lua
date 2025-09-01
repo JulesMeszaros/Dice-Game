@@ -1507,7 +1507,7 @@ function CheckeredDice:new(faceValue, pointsValue)
 
 	--Metadatas about the CheckeredDice
 	self.name = "Checkered Dice"
-	self.id = 1
+	self.id = 38
 	self.tier = "Common"
 
 	--Metadatas about the graphics of the CheckeredDice
@@ -1541,7 +1541,7 @@ function StarDice:new(faceValue, pointsValue)
 
 	--Metadatas about the StarDice
 	self.name = "Star Dice"
-	self.id = 1
+	self.id = 39
 	self.tier = "Rare"
 
 	--Metadatas about the graphics of the StarDice
@@ -1565,7 +1565,7 @@ end
 
 FaceTypes.StarDice = StarDice
 
---==Star Dice==--
+--==Resurection==--
 local Resurection = setmetatable({}, { __index = FaceObject })
 Resurection.__index = Resurection
 
@@ -1574,7 +1574,7 @@ function Resurection:new(faceValue, pointsValue)
 
 	--Metadatas about the Resurection
 	self.name = "Resurection"
-	self.id = 1
+	self.id = 40
 	self.tier = "Rare"
 
 	--Metadatas about the graphics of the Resurection
@@ -1609,6 +1609,43 @@ function Resurection:getDescription(run)
 end
 
 FaceTypes.Resurection = Resurection
+
+--==Adrenaline==--
+local Adrenaline = setmetatable({}, { __index = FaceObject })
+Adrenaline.__index = Adrenaline
+
+function Adrenaline:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), Adrenaline)
+
+	--Metadatas about the Resurection
+	self.name = "Adrenaline"
+	self.id = 41
+	self.tier = "Common"
+
+	--Metadatas about the graphics of the Adrenaline
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Cheese Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+	self.faceDimmension = 120 --sets the dimmensions for a face of the Resurection in px (in the png)
+	--Numbered status
+	self.faceValue = faceValue --This is the face represented by the face (the number shown)
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	return self
+end
+
+function Adrenaline:triggerEffect(round)
+	addScore(round, self:getPointsValue(run))
+	if round.remainingHands <= 1 then
+		multiplyScore(round, 3)
+	end
+end
+
+function Adrenaline:getDescription(run)
+	return "Scoring : [[+" .. self:getPointsValue(run) .. "]]. If this is the last turn, ((x3))."
+end
+
+FaceTypes.Adrenaline = Adrenaline
 
 --UTILS--
 function multiplyScore(round, f)
