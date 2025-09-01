@@ -148,4 +148,43 @@ function getRandomExcluding(list, excluded)
 	return filtered[math.random(#filtered)]
 end
 
+--Ebb--
+
+local Ebb = setmetatable({}, { __index = CiggieObject })
+Ebb.__index = Ebb
+
+function Ebb:new()
+	local self = setmetatable(CiggieObject.new(), Ebb)
+
+	self.usableIn = { Constants.RUN_STATES.ROUND, Constants.RUN_STATES.SHOP, Constants.RUN_STATES.ROUND_CHOICE }
+
+	self.name = "Ebb"
+	self.description = "Restores your available hands for every figures."
+
+	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Ebb Cigarette.png")
+	return self
+end
+
+function Ebb:effect(screen)
+	screen.run:resetAvailableFigures()
+end
+
+CiggieTypes.Ebb = Ebb
+
+--UTILS--
+function getRandomExcluding(list, excluded)
+	local filtered = {}
+	for _, value in ipairs(list) do
+		if value ~= excluded then
+			table.insert(filtered, value)
+		end
+	end
+
+	if #filtered == 0 then
+		return nil
+	end -- aucun choix possible
+
+	return filtered[math.random(#filtered)]
+end
+
 return CiggieTypes
