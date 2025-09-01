@@ -10,7 +10,6 @@ Shaders.grayscaleShader = love.graphics.newShader([[
     }
 ]])
 
-
 Shaders.rainbowShader = love.graphics.newShader([[
     extern number time;
     extern number frequency;
@@ -248,7 +247,7 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
     return vec4(shifted, texColor.a) * color;
 }]])
 
-Shaders.glossy =  love.graphics.newShader([[
+Shaders.glossy = love.graphics.newShader([[
 extern number scale;
 
 vec4 effect(vec4 color, Image texture, vec2 uv, vec2 screen_coords) {
@@ -323,41 +322,189 @@ Shaders.diagonalCircles = love.graphics.newShader([[
 
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
         vec4 texColor = Texel(texture, texture_coords);
-        
-        // Correct aspect-correct coordinates (scale around center) to keep circles round
+
+        // Aspect ratio correction pour garder les cercles ronds
         float aspect = love_ScreenSize.x / love_ScreenSize.y;
         vec2 uv = (texture_coords - 0.5) * vec2(aspect, 1.0) + 0.5;
 
-        // Animation diagonale
+        // Animation diagonale globale
         vec2 movement = vec2(time * speed, time * speed * 0.7);
-        vec2 animatedUV = uv + movement;
 
-        // Scale spacing on X to match aspect-correct coordinates
+        // Décalage par ligne (row index)
+        float rowIndex = floor(uv.y / spacing);
+        float rowOffset = mod(rowIndex, 2.0) * (spacing * 0.5); 
+        // 👆 alterne une ligne sur deux, décalée de la moitié de spacing
+
+        vec2 animatedUV = uv + movement + vec2(rowOffset, 0.0);
+
+        // Échelle du spacing (aspect-correct)
         vec2 spacingScaled = vec2(spacing * aspect, spacing);
 
-        // Grid cell and center
+        // Cellule et centre
         vec2 grid = mod(animatedUV, spacingScaled);
         vec2 cellCenter = spacingScaled * 0.5;
 
-        // Distance in the same scaled space
+        // Distance
         float dist = distance(grid, cellCenter);
 
-        // Anti-aliased edge: compute screen-space derivative to adapt smoothing width
+        // Anti-aliasing
         float aa = fwidth(dist);
-        // fallback tiny aa if fwidth returns 0 on some drivers
         aa = max(aa, 0.0005);
 
-        // Circle with smooth/antialiased edge
-        float circle = 1.0 - smoothstep(circle_size - aa, circle_size + aa, dist);
-        
-        // Application de l'assombrissement
+        // Taille des cercles, avec variation sur X si tu veux garder ton effet
+        float circle_s = circle_size + 0.5 * (circle_size) * texture_coords.x;
+
+        // Cercle lissé
+        float circle = 1.0 - smoothstep(circle_s - aa, circle_s + aa, dist);
+
+        // Assombrissement
         vec3 darkenedColor = texColor.rgb * (1.0 - circle * darkness);
-        
+
         return vec4(darkenedColor, texColor.a);
     }
 ]])
 
--- Dynamic CRT with wobbling scanlines and configurable parameters
+Shaders.diagonalCircles = love.graphics.newShader([[
+    extern number time;          // temps global
+    extern number spacing;       // espacement entre les points
+    extern number base_size;     // taille de base
+    extern number amplitude;     // oscillation
+    extern number speed;         // vitesse oscillation
+    extern number waveScale;     // facteur d'offset sinusoïdal
+    extern number moveSpeed;     // vitesse du déplacement de la grille
+
+    vec4 effect(vec4 color, Image tex, vec2 uv, vec2 screen_coords) {
+        // corrige l’aspect
+        float aspect = love_ScreenSize.x / love_ScreenSize.y;
+        vec2 uv_scaled = (uv - 0.5) * vec2(aspect, 1.0) + 0.5;
+
+        // déplacement global vers haut-gauche
+        vec2 movement = vec2(1.0, 1.0) * time * moveSpeed;
+        vec2 uv_moved = uv_scaled + movement;
+
+        // calcul cellule de la grille
+        vec2 spacingScaled = vec2(spacing * aspect, spacing);
+        vec2 grid = mod(uv_moved, spacingScaled);
+        vec2 cellCenter = spacingScaled * 0.5;
+
+        // distance pixel → centre
+        float dist = distance(grid, cellCenter);
+
+        // offset spatio-temporel
+        float offset = sin(uv_moved.x * waveScale + uv_moved.y * waveScale);
+
+        // oscillation de taille
+        float osc = sin(time * speed + offset);
+        float radius = base_size + amplitude * osc;
+
+        // anti-aliasing
+        float aa = fwidth(dist);
+        aa = max(aa, 0.0005);
+
+        float circle = 1.0 - smoothstep(radius - aa, radius + aa, dist);
+
+        return vec4(vec3(circle), circle);
+    }
+]]) -- Dynamic CRT with wobbling scanlines and configurable parameters
+
+Shaders.diagonalCircles = love.graphics.newShader([[
+extern number time;
+extern number circle_size;    // Taille des ronds (0.01 à 0.1)
+extern number spacing;        // Espacement entre les ronds (0.1 à 0.5)
+extern number speed;          // Vitesse d'animation (0.1 à 2.0)
+extern number darkness;       // Intensité de l'assombrissement (0.1 à 0.8)
+
+vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+    // Couleur de fond = couleur courante
+    vec3 baseColor = color.rgb;
+
+    // Correct aspect ratio pour garder les cercles ronds
+    float aspect = love_ScreenSize.x / love_ScreenSize.y;
+    vec2 uv = (texture_coords - 0.5) * vec2(aspect, 1.0) + 0.5;
+
+    // Animation diagonale
+    vec2 movement = vec2(time * speed, time * speed * 0.7);
+    vec2 animatedUV = uv + movement;
+
+    // Échelle de la grille
+    vec2 spacingScaled = vec2(spacing * aspect, spacing);
+
+    // Position dans la cellule et centre de cellule
+    vec2 grid = mod(animatedUV, spacingScaled);
+    vec2 cellCenter = spacingScaled * 0.5;
+
+    // Distance jusqu'au centre
+    float dist = distance(grid, cellCenter);
+
+    // Anti-aliasing
+    float aa = fwidth(dist);
+    aa = max(aa, 0.0005);
+
+    // Taille du cercle
+    float circle_s = circle_size;
+
+    // Cercle lissé
+    float circle = 1.0 - smoothstep(circle_s - aa, circle_s + aa, dist);
+
+    // Assombrissement relatif à la couleur de fond
+    vec3 finalColor = baseColor * (1.0 - circle * darkness);
+
+    return vec4(finalColor, color.a);
+}
+]])
+Shaders.diagonalCircles = love.graphics.newShader([[
+    extern number time;          // temps global
+    extern number spacing;       // espacement entre les points (en fraction de la hauteur écran)
+    extern number base_size;     // taille de base
+    extern number amplitude;     // oscillation
+    extern number speed;         // vitesse oscillation
+    extern number waveScale;     // facteur d'offset sinusoïdal
+    extern number moveSpeed;     // vitesse du déplacement de la grille
+    extern number darkness;      // intensité de l'assombrissement des cercles (0 à 1)
+
+    vec4 effect(vec4 color, Image tex, vec2 uv, vec2 screen_coords) {
+        // couleur de fond = couleur définie par setColor
+        vec3 baseColor = color.rgb;
+
+        // garder uv normalisé mais corriger l'aspect pour avoir des carrés
+        float aspect = love_ScreenSize.x / love_ScreenSize.y;
+        vec2 uv_corrected = (uv - 0.5) * vec2(aspect, 1.0) + 0.5;
+
+        // déplacement global vers haut-gauche
+        vec2 movement = vec2(-1.0, -1.0) * time * moveSpeed;
+        vec2 uv_moved = uv_corrected + movement;
+
+        // spacing basé sur la hauteur → carré garanti
+        vec2 spacingScaled = vec2(spacing * aspect, spacing);
+
+        // calcul cellule de la grille
+        vec2 grid = mod(uv_moved, spacingScaled);
+        vec2 cellCenter = spacingScaled * 0.5;
+
+        // distance pixel → centre (dans espace corrigé)
+        float dist = distance(grid, cellCenter);
+
+        // offset spatio-temporel
+        float offset = sin(uv_moved.x * waveScale + uv_moved.y * waveScale);
+
+        // oscillation de taille
+        float osc = sin(time * speed + offset);
+        float radius = base_size + amplitude * osc;
+
+        // anti-aliasing
+        float aa = fwidth(dist);
+        aa = max(aa, 0.0005);
+
+        // cercle lissé
+        float circle = 1.0 - smoothstep(radius - aa, radius + aa, dist);
+
+        // appliquer assombrissement sur baseColor
+        vec3 finalColor = baseColor * (1.0 - circle * darkness);
+
+        return vec4(finalColor, color.a);
+    }
+]])
+
 Shaders.dynamicCRT = love.graphics.newShader([[
     extern number time;
     extern vec2  screenSize;
@@ -413,3 +560,4 @@ Shaders.dynamicCRT = love.graphics.newShader([[
 ]])
 
 return Shaders
+

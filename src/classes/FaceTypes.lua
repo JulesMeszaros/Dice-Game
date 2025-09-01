@@ -80,7 +80,7 @@ function MassiveDice:new(faceValue, pointsValue)
 	--Metadatas about the ChunkyDice
 	self.name = "Massive Dice"
 	self.id = 3
-	self.tier = "Common"
+	self.tier = "Uncommon"
 	self.description = "Scoring : [[+50pts]]"
 
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Massive Dice.png")
@@ -111,7 +111,7 @@ function BlueDice:new(faceValue, pointsValue)
 
 	--Metadatas about the BlackStar
 	self.name = "Blue Dice"
-	self.tier = "Uncommon"
+	self.tier = "Common"
 	self.id = 4
 	self.description =
 		"Scoring : [[+10pts]]. \n Passive : Adds [[2pts]] per used rerolls this building to its points value (currently : 0)"
@@ -192,7 +192,7 @@ function DeluxeDice:new(faceValue, pointsValue)
 
 	--Metadatas about the BlackStar
 	self.name = "Deluxe Face"
-	self.tier = "Common"
+	self.tier = "Uncommon"
 	self.id = 6
 	self.description = "Scoring: This Face adds the Point Value of every other scoring Face to the Total Score."
 
@@ -273,7 +273,7 @@ function Copyprinter:new(faceValue, pointsValue)
 
 	--Metadatas about the BlackStar
 	self.name = "Copyprinter"
-	self.tier = "Uncommon"
+	self.tier = "Rare"
 	self.id = 8
 	self.description = "Scoring: Triggers the scoring dice to its left again. \n Blank"
 
@@ -676,7 +676,7 @@ function Signature:new(faceValue, pointsValue)
 	--Metadatas about the Signature
 	self.name = "Signature"
 	self.id = 18
-	self.tier = "Common"
+	self.tier = "Uncommon"
 	self.description = "Unique : Multiplies the hand score by ((3)). Scoring: [[+10pts]]."
 
 	--Metadatas about the graphics of the Signature
@@ -798,7 +798,7 @@ function RiskyBusiness:new(faceValue, pointsValue)
 	--Metadatas about the RiskyBusiness
 	self.name = "Risky Business"
 	self.id = 21
-	self.tier = "Common"
+	self.tier = "Uncommon"
 
 	--Metadatas about the graphics of the RiskyBusiness
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Risky Business.png")
@@ -831,7 +831,7 @@ function CryptoDice:new(faceValue, pointsValue)
 	--Metadatas about the CryptoDice
 	self.name = "Crypto Dice"
 	self.id = 22
-	self.tier = "Common"
+	self.tier = "Uncommon"
 
 	--Metadatas about the graphics of the CryptoDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crypto Dice.png")
@@ -1034,7 +1034,7 @@ function MagicDice:new(faceValue, pointsValue)
 	--Metadatas about the MagicDice
 	self.name = "Magic Dice"
 	self.id = 27
-	self.tier = "Common"
+	self.tier = "Rare"
 
 	--Metadatas about the graphics of the MagicDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Magic Dice.png")
@@ -1070,7 +1070,7 @@ function ReturnOnInvestment:new(faceValue, pointsValue)
 	--Metadatas about the ReturnOnInvestment
 	self.name = "Return On Invenstment"
 	self.id = 28
-	self.tier = "Common"
+	self.tier = "Uncommon"
 
 	--Metadatas about the graphics of the ReturnOnInvestment
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Return On Invenstment.png")
@@ -1195,7 +1195,7 @@ function CookieDice:new(faceValue, pointsValue)
 	--Metadatas about the CookieDice
 	self.name = "Lucky Cookie"
 	self.id = 31
-	self.tier = "Common"
+	self.tier = "Uncommon"
 
 	--Metadatas about the graphics of the CookieDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Cookie Dice.png")
@@ -1232,7 +1232,7 @@ function InsomniacDice:new(faceValue, pointsValue)
 	--Metadatas about the InsomniacDice
 	self.name = "Insomniac Dice"
 	self.id = 32
-	self.tier = "Common"
+	self.tier = "Uncommon"
 
 	--Metadatas about the graphics of the InsomniacDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Eclipse Dice.png")
@@ -1253,7 +1253,7 @@ end
 
 function InsomniacDice:getDescription(run)
 	return "Scoring : [[+"
-		.. tostring(10 + (15 * run.totalUsedCoffees))
+		.. tostring(10 + (10 * run.totalUsedCoffees))
 		.. "pts]], goes up by [[15pts]] for each coffee used in this building."
 end
 

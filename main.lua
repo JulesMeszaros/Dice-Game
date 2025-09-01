@@ -2,31 +2,29 @@ local Animator = require("src.utils.Animator")
 local Shaders = require("src.utils.Shaders")
 local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
-
+local AnimationUtils = require("src.utils.scripts.Animations")
 G = {
-    --Background color
-    backgroundR = 40/255,
-    backgroundG = 40/255,
-    backgroundB = 43/255,
+	--Background color
+	backgroundR = 40 / 255,
+	backgroundG = 40 / 255,
+	backgroundB = 43 / 255,
 
-    --Background animation properties
-    circleRad = 0.06,
-    circleSpeed = 0.1,
-    circleSpacing = 0.2,
-    circleDarkness = -0.3,
+	--Background animation properties
+	circleRad = 0.06,
+	circleSpeed = 0.05,
+	circleSpacing = 0.15,
+	circleDarkness = -0.3,
 
-
-    --screen shake
-    --Screen target position
-    rx = 0,
-    ry = 0,
-    --Screen position (relative) 
-    ox = 0,
-    oy = 0,
-    --Wave
-    waveX = 0,
-    waveY = 0
-
+	--screen shake
+	--Screen target position
+	rx = 0,
+	ry = 0,
+	--Screen position (relative)
+	ox = 0,
+	oy = 0,
+	--Wave
+	waveX = 0,
+	waveY = 0,
 }
 
 --Animators
@@ -35,17 +33,17 @@ G.bgAnimator = Animator:new(G)
 G.circleAnimator = Animator:new(G)
 
 function G.backgroundChange(color, time)
-    G.bgAnimator:addGroup({
-                    {property = "backgroundR", from=G.backgroundR, targetValue = color[1], duration = 0.6},
-                    {property = "backgroundG", from=G.backgroundG, targetValue = color[2], duration = 0.6},
-                    {property = "backgroundB", from=G.backgroundB, targetValue = color[3], duration = 0.6},
-                })
+	G.bgAnimator:addGroup({
+		{ property = "backgroundR", from = G.backgroundR, targetValue = color[1], duration = 0.6 },
+		{ property = "backgroundG", from = G.backgroundG, targetValue = color[2], duration = 0.6 },
+		{ property = "backgroundB", from = G.backgroundB, targetValue = color[3], duration = 0.6 },
+	})
 end
 
 -- Function to calculate parallax offset
 function G.calculateParalaxeOffset(layer)
-    local Constants = require("src.utils.Constants")
-    return G.ox * Constants.PARALAXE_MAX_OFFSET[layer], G.oy * Constants.PARALAXE_MAX_OFFSET[layer]
+	local Constants = require("src.utils.Constants")
+	return G.ox * Constants.PARALAXE_MAX_OFFSET[layer], G.oy * Constants.PARALAXE_MAX_OFFSET[layer]
 end
 
 local Fonts = require("src.utils.Fonts")
@@ -94,33 +92,34 @@ function love.load()
 end
 
 function love.update(dt)
-    print(applyCRT)
-    if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
-        print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
-    end
+	print(applyCRT)
+	if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
+		print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
+	end
 
-    local vx,vy = Inputs.getVirtualMousePosition()
-    --relative x/y mouse position (0-1)
-    G.rx, G.ry = (vx/Constants.VIRTUAL_GAME_WIDTH)-0.5, (vy/Constants.VIRTUAL_GAME_HEIGHT)-0.5
-    
-    --Game animators
-    G.circleAnimator:update(dt)
-    G.animator:update(dt)
-    G.bgAnimator:update(dt)
-    
-    game:update(dt)
-    delta = love.timer.getFPS()
-    
-    -- Simulation de FPS faible
-    if fpsLimit then
-        local desiredFrameTime = 1 / fpsLimit
-        local frameTime = love.timer.getDelta()
-        local sleepTime = desiredFrameTime - frameTime
-        if sleepTime > 0 then
-            love.timer.sleep(sleepTime)
-        end
-    end
+	G.circleRad = 0.06 --+ AnimationUtils.osccilate(love.timer.getTime(), 4, 0.01)
 
+	local vx, vy = Inputs.getVirtualMousePosition()
+	--relative x/y mouse position (0-1)
+	G.rx, G.ry = (vx / Constants.VIRTUAL_GAME_WIDTH) - 0.5, (vy / Constants.VIRTUAL_GAME_HEIGHT) - 0.5
+
+	--Game animators
+	G.circleAnimator:update(dt)
+	G.animator:update(dt)
+	G.bgAnimator:update(dt)
+
+	game:update(dt)
+	delta = love.timer.getFPS()
+
+	-- Simulation de FPS faible
+	if fpsLimit then
+		local desiredFrameTime = 1 / fpsLimit
+		local frameTime = love.timer.getDelta()
+		local sleepTime = desiredFrameTime - frameTime
+		if sleepTime > 0 then
+			love.timer.sleep(sleepTime)
+		end
+	end
 end
 
 function love.draw()
@@ -175,24 +174,27 @@ function love.resize(w, h)
 end
 
 function drawBackground()
-    -- Draw background to canvas with shader
-    love.graphics.setCanvas(backgroundCanvas)
-    love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
-    love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
-    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-    love.graphics.setColor(1, 1, 1)
-    
-    -- Set main canvas and draw background with shader
-    love.graphics.setCanvas()
-    love.graphics.setShader(Shaders.diagonalCircles)
-    Shaders.diagonalCircles:send("time", love.timer.getTime())
-    Shaders.diagonalCircles:send("circle_size",G.circleRad)
-    Shaders.diagonalCircles:send("spacing", G.circleSpacing)
-    Shaders.diagonalCircles:send("speed", G.circleSpeed)
-    Shaders.diagonalCircles:send("darkness",G.circleDarkness)
-    love.graphics.draw(backgroundCanvas, 0, 0)
-    -- Restore default blend mode
-    love.graphics.setBlendMode("alpha", "alphamultiply")
-    love.graphics.setShader()
-end
+	-- Draw background to canvas with shader
+	love.graphics.setCanvas(backgroundCanvas)
+	love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
+	love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
+	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 
+	-- Set main canvas and draw background with shader
+	love.graphics.setCanvas()
+	love.graphics.setShader(Shaders.diagonalCircles)
+	Shaders.diagonalCircles:send("time", love.timer.getTime())
+	Shaders.diagonalCircles:send("base_size", 0.05)
+	Shaders.diagonalCircles:send("amplitude", 0.03)
+	Shaders.diagonalCircles:send("spacing", 0.15)
+	Shaders.diagonalCircles:send("speed", 0.8)
+	Shaders.diagonalCircles:send("waveScale", 5.0)
+	Shaders.diagonalCircles:send("moveSpeed", 0.03)
+	Shaders.diagonalCircles:send("darkness", 0.3)
+	love.graphics.draw(backgroundCanvas, 0, 0)
+	-- Restore default blend mode
+	love.graphics.setBlendMode("alpha", "alphamultiply")
+	love.graphics.setShader()
+
+	love.graphics.setColor(1, 1, 1)
+end
