@@ -477,7 +477,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 	end
 
 	--Figure buttons
-	if self.clickedFigure then
+	if self.clickedFigure and self.clickedFigure ~= 7 then
 		if self.clickedFigure == self:getCurrentlyHoveredLine() then
 			if self.addingAvailableHand == true then
 				self:addAvailableHand(self.clickedFigure)

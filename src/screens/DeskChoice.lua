@@ -232,9 +232,9 @@ function DeskChoice:drawDeck(dt)
 		face:draw()
 	end
 
-    love.graphics.setCanvas(targetCanvas)
-    local px, py = G.calculateParalaxeOffset(2)
-    love.graphics.draw(self.deckCanvas, self.deckX + px, self.deckY + py)
+	love.graphics.setCanvas(targetCanvas)
+	local px, py = G.calculateParalaxeOffset(2)
+	love.graphics.draw(self.deckCanvas, self.deckX + px, self.deckY + py)
 end
 
 --TODO: move in gamescreen.lua
@@ -390,7 +390,7 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
 	end
 
 	--Figure buttons
-	if self.clickedFigure then
+	if self.clickedFigure and self.clickedFigure ~= 7 then
 		if self.clickedFigure == self:getCurrentlyHoveredLine() then
 			if self.addingAvailableHand == true then
 				self:addAvailableHand(self.clickedFigure)

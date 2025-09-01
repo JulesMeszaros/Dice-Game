@@ -1265,8 +1265,10 @@ function GameScreen:drawUpgradingFigurePopup(dt)
 end
 
 function GameScreen:addAvailableHand(i)
-	self.run.baseAvailableHands[i] = self.run.baseAvailableHands[i] + 1
-	self.run.availableFigures[i] = self.run.availableFigures[i] + 1
+	if i ~= 7 then
+		self.run.baseAvailableHands[i] = self.run.baseAvailableHands[i] + 1
+		self.run.availableFigures[i] = self.run.availableFigures[i] + 1
+	end
 end
 
 --==State modification functions==--
