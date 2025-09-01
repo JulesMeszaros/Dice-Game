@@ -11,7 +11,7 @@ local Constants = {
 	DESKS_BY_FLOOR = 2,
 	FLOORS_BY_RUN = 8,
 	BASE_MAX_CIGGIES = 3,
-	BASE_TURNS = 1,
+	BASE_TURNS = 3,
 	BASE_AVAILABLE_HANDS = 1,
 
 	--Animations
