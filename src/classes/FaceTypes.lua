@@ -1730,7 +1730,40 @@ function BountyHunter:getDescription(run)
 end
 
 FaceTypes.BountyHunter = BountyHunter
+--
+--==Upcycling==--
+local Upcycling = setmetatable({}, { __index = FaceObject })
+Upcycling.__index = Upcycling
 
+function Upcycling:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), Upcycling)
+
+	--Metadatas about the Resurection
+	self.name = "Upcycling"
+	self.id = 44
+	self.tier = "Uncommon"
+
+	--Metadatas about the graphics of the Upcycling
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Upcycling Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+	self.faceDimmension = 120 --sets the dimmensions for a face of the Upcycling in px (in the png)
+	--Numbered status
+	self.faceValue = faceValue --This is the face represented by the face (the number shown)
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	return self
+end
+
+function Upcycling:triggerEffect(round)
+	addScore(round, 50 * round.availableRerolls)
+end
+
+function Upcycling:getDescription(run)
+	return "Adds [[50pts]] per remaining reroll."
+end
+
+FaceTypes.Upcycling = Upcycling
 --UTILS--
 function multiplyScore(round, f)
 	round.handScore = round.handScore * f
