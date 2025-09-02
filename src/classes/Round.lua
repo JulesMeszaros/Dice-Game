@@ -54,6 +54,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 	self.availableRerolls = Constants.BASE_REROLLS
 	self.bountyHunterFigure = math.random(1, 13)
 	self.handRefunded = false --utilisée pour annuler l'utilisation d'une main
+	self.usedCiggiesRound = 0
 
 	--Disabled figures (for bosses)
 	self.disabledFigures = {}
@@ -114,6 +115,8 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 end
 
 function Round:update(dt)
+	print(self.usedCiggiesRound)
+
 	self.animator:update(dt)
 
 	--update le terrain

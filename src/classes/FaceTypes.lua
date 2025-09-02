@@ -1978,7 +1978,7 @@ function Poltergeist:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Poltergeist)
 
 	--Metadatas about the Resurection
-	self.name = "All In"
+	self.name = "Poltergeist"
 	self.id = 50
 	self.tier = "Uncommon"
 
@@ -2087,6 +2087,229 @@ end
 
 FaceTypes.DimeDice = DimeDice
 FaceTypes.FortuneDice = FortuneDice
+
+--==Capitalist Dice==--
+local CapitalistDice = setmetatable({}, { __index = FaceObject })
+CapitalistDice.__index = CapitalistDice
+
+function CapitalistDice:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), CapitalistDice)
+
+	--Metadatas about the BlackStar
+	self.name = "Capitalist Dice"
+	self.tier = "Uncommon"
+	self.id = 53
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Capitalist Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	return self
+end
+
+function CapitalistDice:triggerEffect(round)
+	local m = math.floor(round.run.money * 2)
+	addScore(round, m)
+end
+
+function CapitalistDice:getDescription(run)
+	return "Scoring : [[+2pts]] par $ in bank (currently : [[+" .. tostring(math.floor(run.money * 2)) .. "pts]])"
+end
+
+FaceTypes.CapitalistDice = CapitalistDice
+
+--==Lucky Star==--
+local LuckyStar = setmetatable({}, { __index = FaceObject })
+LuckyStar.__index = LuckyStar
+
+function LuckyStar:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), LuckyStar)
+
+	--Metadatas about the BlackStar
+	self.name = "Lucky Star"
+	self.tier = "Common"
+	self.id = 54
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Lucky Star.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.description = "Scoring : [[+10pts]], ((x3)) if played hand is a Chance"
+
+	return self
+end
+
+function LuckyStar:triggerEffect(round)
+	addScore(round, 10)
+	if round.playedFigure == Constants.FIGURES.CHANCE then
+		multiplyScore(round, 3)
+	end
+end
+
+FaceTypes.LuckyStar = LuckyStar
+
+--==Lucky Star==--
+local Doom = setmetatable({}, { __index = FaceObject })
+Doom.__index = Doom
+
+function Doom:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), Doom)
+
+	--Metadatas about the BlackStar
+	self.name = "Doom"
+	self.tier = "Uncommon"
+	self.id = 55
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Doom Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.description = "Scoring : [[+100pts]], Backup : ((x3))."
+
+	self.backup = true
+	self.ghost = true
+
+	return self
+end
+
+function Doom:triggerEffect(round)
+	addScore(round, 100)
+end
+
+function Doom:backupEffect(round)
+	multiplyScore(round, 3)
+end
+
+FaceTypes.Doom = Doom
+
+--==Godspeed==--
+local Godspeed = setmetatable({}, { __index = FaceObject })
+Godspeed.__index = Godspeed
+
+function Godspeed:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), Godspeed)
+
+	--Metadatas about the BlackStar
+	self.name = "Godspeed"
+	self.tier = "Rare"
+	self.id = 56
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Godspeed.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.description = "Scoring : [[+100pts]], Backup : ((x3))."
+
+	return self
+end
+
+function Godspeed:triggerEffect(round)
+	local nbTurns = round.remainingHands
+	round.remainingHands = 1
+	multiplyScore(round, 5 * nbTurns)
+end
+
+function Godspeed:getDescription(run)
+	return "Lowers your turns left to 0. Multiplies the score ((by 5)) for each turn discarded."
+end
+
+FaceTypes.Godspeed = Godspeed
+
+--==WitchDice==--
+local WitchDice = setmetatable({}, { __index = FaceObject })
+WitchDice.__index = WitchDice
+
+function WitchDice:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), WitchDice)
+
+	--Metadatas about the BlackStar
+	self.name = "Witch Dice"
+	self.tier = "Rare"
+	self.id = 57
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Witch Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.description = "Scoring : [[+50pts]] for each Magic Wand Used in this office."
+
+	return self
+end
+
+function WitchDice:triggerEffect(round)
+	addScore(round, round.usedCiggiesRound * 50)
+end
+
+FaceTypes.WitchDice = WitchDice
+
+--==WizardDice==--
+local WizardDice = setmetatable({}, { __index = FaceObject })
+WizardDice.__index = WizardDice
+
+function WizardDice:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), WizardDice)
+
+	--Metadatas about the BlackStar
+	self.name = "Wizard Dice"
+	self.tier = "Rare"
+	self.id = 58
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Wizard Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.description = "Scoring : ((x2)) for each Magic Wand Used in this office."
+
+	return self
+end
+
+function WizardDice:triggerEffect(round)
+	multiplyScore(round, round.usedCiggiesRound * 2)
+end
+
+FaceTypes.WizardDice = WizardDice
 --UTILS--
 function multiplyScore(round, f)
 	round.handScore = round.handScore * f

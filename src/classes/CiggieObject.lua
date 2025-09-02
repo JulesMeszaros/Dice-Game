@@ -24,6 +24,9 @@ function CiggieObject:trigger(screen, screenType)
 		and self:usageCondition(screen) == true
 	then
 		screen.run.totalUsedCiggie = screen.run.totalUsedCiggie + 1
+		if screenType == Constants.RUN_STATES.ROUND then
+			screen.round.usedCiggiesRound = screen.round.usedCiggiesRound + 1
+		end
 		self:effect(screen)
 		self:destruct(screen)
 		screen:generateCiggiesUI()
