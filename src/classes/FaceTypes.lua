@@ -158,7 +158,7 @@ function GoldDice:new(faceValue, pointsValue)
 	self.name = "Gold Face"
 	self.tier = "Common"
 	self.id = 5
-	self.description = "[[+10pts]]. When triggered, adds 2€ to the balance"
+	self.description = "[[+10pts]]. When triggered, adds 3€ to the balance"
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Gold Dice.png")
@@ -176,7 +176,7 @@ end
 
 function GoldDice:triggerEffect(round)
 	--Ajoute 1€ au solde banquaire
-	addMoney(round, 2)
+	addMoney(round, 3)
 	addScore(round, self.pointsValue)
 end
 
@@ -2006,6 +2006,87 @@ function Poltergeist:triggerEffect(round)
 end
 
 FaceTypes.Poltergeist = Poltergeist
+
+--==Fortune Dice==--
+local FortuneDice = setmetatable({}, { __index = FaceObject })
+FortuneDice.__index = FortuneDice
+
+function FortuneDice:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), FortuneDice)
+
+	--Metadatas about the BlackStar
+	self.name = "Fortune Dice"
+	self.tier = "Rare"
+	self.id = 51
+	self.description = "Scoring : [[+10pts]], adds a Fortune Magic Wand to the inventory"
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Fortune Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.blank = true
+
+	return self
+end
+
+function FortuneDice:triggerEffect(round)
+	if table.getn(round.run.ciggiesObjects) < Constants.BASE_MAX_CIGGIES then
+		local c = CiggieTypes.Fortune:new()
+		table.insert(round.run.ciggiesObjects, c)
+		round.terrain:generateCiggiesUI()
+	end
+
+	addScore(round, self.pointsValue)
+end
+
+--==Dime Dice==--
+local DimeDice = setmetatable({}, { __index = FaceObject })
+DimeDice.__index = DimeDice
+
+function DimeDice:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), DimeDice)
+
+	--Metadatas about the BlackStar
+	self.name = "Dime Dice"
+	self.tier = "Common"
+	self.id = 53
+	self.description = "Scoring : [[+10pts]], +1$ per played dice with the same number as this one."
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Dime Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	return self
+end
+
+function DimeDice:triggerEffect(round)
+	local i = 0
+
+	for _, dice in next, round.selectedDices do
+		if dice:getCurrentFaceObject().faceValue == self.faceValue then
+			i = i + 1
+		end
+	end
+	addMoney(round, i)
+	addScore(round, self.pointsValue)
+end
+
+FaceTypes.DimeDice = DimeDice
+FaceTypes.FortuneDice = FortuneDice
 --UTILS--
 function multiplyScore(round, f)
 	round.handScore = round.handScore * f
