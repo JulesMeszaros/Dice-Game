@@ -2277,20 +2277,20 @@ end
 
 FaceTypes.WitchDice = WitchDice
 
---==WizardDice==--
-local WizardDice = setmetatable({}, { __index = FaceObject })
-WizardDice.__index = WizardDice
+--==RecursiveDice==--
+local RecursiveDice = setmetatable({}, { __index = FaceObject })
+RecursiveDice.__index = RecursiveDice
 
-function WizardDice:new(faceValue, pointsValue)
-	local self = setmetatable(FaceObject:new(), WizardDice)
+function RecursiveDice:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), RecursiveDice)
 
 	--Metadatas about the BlackStar
-	self.name = "Wizard Dice"
+	self.name = "Recursive Dice"
 	self.tier = "Rare"
-	self.id = 58
+	self.id = 59
 
 	--Metadatas about the graphics of the BlackStar
-	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Wizard Dice.png")
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Recursive Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
 
 	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -2300,16 +2300,115 @@ function WizardDice:new(faceValue, pointsValue)
 	self.pointsValue = 10 --This is the points scored by the dice
 	self.totalTriggered = 0
 
-	self.description = "Scoring : ((x2)) for each Magic Wand Used in this office."
+	return self
+end
+
+function RecursiveDice:triggerEffect(round)
+	local i = round.run.figuresInfos[round.playedFigure].playcount
+	addScore(round, i * 20)
+end
+
+function RecursiveDice:getDescription(run)
+	return "Scoring : adds [[20pts]] for each time the played figure was used this run."
+end
+FaceTypes.RecursiveDice = RecursiveDice
+
+--==Echo==--
+local Echo = setmetatable({}, { __index = FaceObject })
+Echo.__index = Echo
+
+function Echo:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), Echo)
+
+	--Metadatas about the BlackStar
+	self.name = "Echo"
+	self.tier = "Common"
+	self.id = 60
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Echo.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.currentFigure = 0
+	self.consecutiveCount = 0
+	return self
+end
+
+function Echo:triggerEffect(round)
+	if round.playedFigure == self.currentFigure then
+		self.consecutiveCount = self.consecutiveCount + 1
+	else
+		self.currentFigure = round.playedFigure
+		self.consecutiveCount = 1
+	end
+	addScore(round, 50 * self.consecutiveCount)
+end
+
+function Echo:getDescription(run)
+	return "Scoring : adds [[50pts]] for each consecutive times this dice was scored in the played figure."
+end
+
+FaceTypes.Echo = Echo
+
+--==CrossedOut==--
+local CrossedOut = setmetatable({}, { __index = FaceObject })
+CrossedOut.__index = CrossedOut
+
+function CrossedOut:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), CrossedOut)
+
+	--Metadatas about the BlackStar
+	self.name = "Crossed Out"
+	self.tier = "Common"
+	self.id = 61
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crossed Out.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.blank = true
 
 	return self
 end
 
-function WizardDice:triggerEffect(round)
-	multiplyScore(round, round.usedCiggiesRound * 2)
+function CrossedOut:triggerEffect(round)
+	local i = 0
+	for j = 1, 13 do
+		if round.run.availableFigures[j] == 0 then
+			i = i + 1
+		end
+	end
+
+	addScore(round, i * 50)
 end
 
-FaceTypes.WizardDice = WizardDice
+function CrossedOut:getDescription(run)
+	local i = 0
+	for j = 1, 13 do
+		if run.availableFigures[j] == 0 then
+			i = i + 1
+		end
+	end
+
+	return "Scoring : adds [[50pts]] for each currently unplayable figure (currently: [["
+		.. tostring(50 * i)
+		.. "pts]])"
+end
+FaceTypes.CrossedOut = CrossedOut
 --UTILS--
 function multiplyScore(round, f)
 	round.handScore = round.handScore * f
