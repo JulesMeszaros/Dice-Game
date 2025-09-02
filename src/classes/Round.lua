@@ -53,6 +53,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 	self.roundType = roundType
 	self.availableRerolls = Constants.BASE_REROLLS
 	self.bountyHunterFigure = math.random(1, 13)
+	self.handRefunded = false --utilisée pour annuler l'utilisation d'une main
 
 	--Disabled figures (for bosses)
 	self.disabledFigures = {}
@@ -408,6 +409,8 @@ function Round:endTriggeringPhase()
 		self.terrain.timers.firstRerollTime = 0
 	end
 
+	--Reset des stats de trigger phase
+	self.handRefunded = false
 	self.bountyHunterFigure = math.random(1, 13)
 end
 

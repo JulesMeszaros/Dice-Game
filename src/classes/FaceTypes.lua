@@ -723,7 +723,7 @@ function SniperDice:new(faceValue, pointsValue)
 	self.faceDimmension = 120 --sets the dimmensions for a face of the SniperDice in px (in the png)
 
 	self.backup = true
-	self.backupScoreValue = 10
+	self.backupScoreValue = 1
 	self.description = "Backup : Adds [[10pts]] to the score. Value goes up by [[5]]. Currently : [["
 		.. tostring(self.backupScoreValue)
 		.. " pts]]"
@@ -740,12 +740,12 @@ function SniperDice:triggerEffect(round)
 end
 
 function SniperDice:backupEffect(round)
-	addScore(round, self.backupScoreValue)
-	self.backupScoreValue = self.backupScoreValue + 5
+	self.backupScoreValue = self.backupScoreValue + 0.1
+	multiplyScore(round, self.backupScoreValue)
 end
 
 function SniperDice:getDescription(run)
-	return "Backup : Adds [[" .. self.backupScoreValue .. "pts]] to the score. Value goes up by [[5pts]]"
+	return "Backup : ((x" .. self.backupScoreValue .. ")). Value goes up by ((0.1pts))"
 end
 
 FaceTypes.SniperDice = SniperDice
@@ -1869,8 +1869,6 @@ function InvisibleHand:new(faceValue, pointsValue)
 	self.pointsValue = 10 --This is the points scored by the dice
 	self.totalTriggered = 0
 
-	self.ghost = true
-
 	return self
 end
 
@@ -1936,7 +1934,7 @@ end
 
 FaceTypes.UndeadDice = UndeadDice
 
---Undead Dice--
+--All In--
 local AllIn = setmetatable({}, { __index = FaceObject })
 
 AllIn.__index = AllIn
@@ -1957,8 +1955,6 @@ function AllIn:new(faceValue, pointsValue)
 	self.pointsValue = 10 --This is the points scored by the dice
 	self.totalTriggered = 0
 
-	self.ghost = true
-
 	return self
 end
 
@@ -1973,6 +1969,43 @@ function AllIn:getDescription(run)
 end
 
 FaceTypes.AllIn = AllIn
+
+--All In--
+local Poltergeist = setmetatable({}, { __index = FaceObject })
+
+Poltergeist.__index = Poltergeist
+function Poltergeist:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), Poltergeist)
+
+	--Metadatas about the Resurection
+	self.name = "All In"
+	self.id = 50
+	self.tier = "Uncommon"
+
+	--Metadatas about the graphics of the
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Poltergeist.png")
+	self.spriteSheet:setFilter("linear", "linear")
+	self.faceDimmension = 120 --sets the dimmensions for a face of the Poltergeist in px (in the png)
+	--Numbered status
+	self.faceValue = faceValue --This is the face represented by the face (the number shown)
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+	self.description = "Scoring : [[+20pts]]. Refunds the figure use."
+
+	self.ghost = true
+
+	return self
+end
+
+function Poltergeist:triggerEffect(round)
+	addScore(round, 20)
+	if round.handRefunded == false then
+		round.handRefunded = true
+		round.run.availableFigures[round.playedFigure] = round.run.availableFigures[round.playedFigure] + 1
+	end
+end
+
+FaceTypes.Poltergeist = Poltergeist
 --UTILS--
 function multiplyScore(round, f)
 	round.handScore = round.handScore * f
