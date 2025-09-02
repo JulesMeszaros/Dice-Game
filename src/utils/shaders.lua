@@ -181,34 +181,44 @@ Shaders.crt = love.graphics.newShader([[
     extern vec2 iResolution;
     extern number warp;
     extern number scan;
+    extern number amount; // intensité de l’aberration chromatique
 
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
-        vec2 uv = texture_coords;
-        vec2 dc = abs(0.5 - uv);
-        dc *= dc;
+    vec2 uv = texture_coords;
+    vec2 dc = abs(0.5 - uv);
+    dc *= dc;
 
-        // Courbure
-        uv.x -= 0.5;
-        uv.x *= 1.0 + (dc.y * (0.3 * warp));
-        uv.x += 0.5;
+    // Courbure
+    uv.x -= 0.5;
+    uv.x *= 1.0 + (dc.y * (0.3 * warp));
+    uv.x += 0.5;
 
-        uv.y -= 0.5;
-        uv.y *= 1.0 + (dc.x * (0.4 * warp));
-        uv.y += 0.5;
+    uv.y -= 0.5;
+    uv.y *= 1.0 + (dc.x * (0.4 * warp));
+    uv.y += 0.5;
 
-        // Hors limites
-        if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
-            return vec4(0.0, 0.0, 0.0, 1.0);
-        }
-
-        // Scanlines
-        float apply = abs(sin(screen_coords.y) * 0.5 * scan);
-        vec4 texColor = Texel(texture, uv);
-        vec3 finalColor = mix(texColor.rgb, vec3(0.0), apply);
-
-        return vec4(finalColor, texColor.a) * color;
+    // Hors limites
+    if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+        return vec4(0.0, 0.0, 0.0, 1.0);
     }
-]])
+
+    // Aberration chromatique
+    vec2 offset = (uv - 0.4) * amount;
+    float r = Texel(texture, uv + offset).r;
+    float g = Texel(texture, uv).g;
+    float b = Texel(texture, uv - offset).b;
+    vec3 texColor = vec3(r, g, b);
+
+    // Scanlines épaisses qui suivent la déformation
+    float lineWidth = 6.0; // épaisseur en pixels
+    float scanY = screen_coords.y + (uv.y - texture_coords.y) * iResolution.y; // décalage pour suivre la déformation
+    float scanFactor = abs(sin(scanY * 3.1415 / lineWidth)) * scan;
+    scanFactor = clamp(scanFactor, 0.0, 1.0);
+
+    vec3 finalColor = mix(texColor, vec3(0.0), scanFactor);
+
+    return vec4(finalColor, 1.0) * color;
+}]])
 
 Shaders.silver = love.graphics.newShader([[extern number time;
 extern number rotation; // Rotation en radians
@@ -560,4 +570,3 @@ Shaders.dynamicCRT = love.graphics.newShader([[
 ]])
 
 return Shaders
-

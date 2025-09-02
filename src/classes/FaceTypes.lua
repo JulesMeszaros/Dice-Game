@@ -2018,7 +2018,7 @@ function FortuneDice:new(faceValue, pointsValue)
 	self.name = "Fortune Dice"
 	self.tier = "Rare"
 	self.id = 51
-	self.description = "Scoring : [[+10pts]], adds a Fortune Magic Wand to the inventory"
+	self.description = "Scoring : Adds a Fortune Magic Wand to the inventory"
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Fortune Dice.png")
@@ -2043,9 +2043,16 @@ function FortuneDice:triggerEffect(round)
 		round.terrain:generateCiggiesUI()
 	end
 
+	multiplyScore(round, math.max(1, 1.5 * math.floor(round.run.money / 10)))
+
 	addScore(round, self.pointsValue)
 end
 
+function FortuneDice:getDescription(run)
+	return "Adds a Fortune Magic Wand to inventory. Adds ((X0.5)) for each 10$ in bank (currently : ((X"
+		.. tostring(math.max(1, 1.5 * math.floor(run.money / 10)))
+		.. ")))"
+end
 --==Dime Dice==--
 local DimeDice = setmetatable({}, { __index = FaceObject })
 DimeDice.__index = DimeDice
@@ -2409,6 +2416,62 @@ function CrossedOut:getDescription(run)
 		.. "pts]])"
 end
 FaceTypes.CrossedOut = CrossedOut
+
+--==Time Dice==--
+local TimeDice = setmetatable({}, { __index = FaceObject })
+TimeDice.__index = TimeDice
+
+function TimeDice:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), TimeDice)
+
+	--Metadatas about the BlackStar
+	self.name = "Time Dice"
+	self.tier = "Rare"
+	self.id = 52
+	self.description = "Scoring : Adds a Time Magic Wand to the inventory"
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Time Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.blank = true
+
+	return self
+end
+
+function TimeDice:triggerEffect(round)
+	if table.getn(round.run.ciggiesObjects) < Constants.BASE_MAX_CIGGIES then
+		local c = CiggieTypes.Time:new()
+		table.insert(round.run.ciggiesObjects, c)
+		round.terrain:generateCiggiesUI()
+	end
+
+	local i = 0
+	for j = 1, 13 do
+		i = i + round.run.baseAvailableHands[j]
+	end
+
+	multiplyScore(round, math.max(1, 1.1 * i))
+end
+
+function TimeDice:getDescription(run)
+	local i = 0
+	for j = 1, 13 do
+		i = i + run.baseAvailableHands[j]
+	end
+	return "Adds a Time Magic Wand to inventory. Adds ((X0.1)) for each 10$ in bank (currently : ((X"
+		.. tostring(i * 0.1)
+		.. ")))"
+end
+
+FaceTypes.TimeDice = TimeDice
 --UTILS--
 function multiplyScore(round, f)
 	round.handScore = round.handScore * f

@@ -50,9 +50,10 @@ function Game:update(dt)
 	--damped offset
 	G.ox = Animations.dampLerp(G.ox, G.rx + G.waveX, 1.5, dt)
 	G.oy = Animations.dampLerp(G.oy, G.ry + G.waveY, 1.5, dt) / 1.2
-end
 
-function Game:draw()
+	self:updateCanvas(dt)
+end
+function Game:updateCanvas(dt)
 	love.graphics.setCanvas(self.gameCanvas)
 	love.graphics.clear()
 	--Rendu du jeu dans le game canvas--
@@ -63,7 +64,8 @@ function Game:draw()
 	end
 
 	love.graphics.setCanvas()
-
+end
+function Game:draw()
 	--Affichage du jeu--
 	-- Calcule le scale pour garder le ratio
 	local screenWidth, screenHeight = love.graphics.getDimensions()
@@ -102,7 +104,7 @@ function Game:startNewRun()
 	for i = 1, 5 do
 		local fs = {}
 		for j = 1, 6 do
-			local f = FaceTypes.CrossedOut:new(j, 10)
+			local f = FaceTypes.WhiteDice:new(j, 10)
 			table.insert(fs, f)
 		end
 		table.insert(diceObjects, DiceObject:new(fs))

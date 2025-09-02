@@ -92,7 +92,6 @@ function love.load()
 end
 
 function love.update(dt)
-	print(applyCRT)
 	if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
 		print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
 	end
@@ -123,12 +122,18 @@ function love.update(dt)
 end
 
 function love.draw()
-	drawBackground()
-
-	Shaders.aChrom:send("amount", 1)
+	Shaders.crt:send("amount", 0.0025)
+	Shaders.crt:send("warp", 0.2)
+	Shaders.crt:send("scan", 0.2)
 	if applyCRT then
-		love.graphics.setShader(Shaders.aChrom)
+		love.graphics.setShader(Shaders.crt)
 	end
+
+	-- drawBackground()
+	love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
+	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+	love.graphics.setColor(1, 1, 1)
+
 	game:draw()
 	love.graphics.setShader()
 	-- Update the cached FPS text object
@@ -182,7 +187,7 @@ function drawBackground()
 
 	-- Set main canvas and draw background with shader
 	love.graphics.setCanvas()
-	love.graphics.setShader(Shaders.diagonalCircles)
+	-- love.graphics.setShader(Shaders.diagonalCircles)
 	Shaders.diagonalCircles:send("time", love.timer.getTime())
 	Shaders.diagonalCircles:send("base_size", 0.05)
 	Shaders.diagonalCircles:send("amplitude", 0.03)
@@ -194,7 +199,6 @@ function drawBackground()
 	love.graphics.draw(backgroundCanvas, 0, 0)
 	-- Restore default blend mode
 	love.graphics.setBlendMode("alpha", "alphamultiply")
-	love.graphics.setShader()
 
 	love.graphics.setColor(1, 1, 1)
 end
