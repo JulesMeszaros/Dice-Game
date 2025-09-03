@@ -2427,7 +2427,7 @@ function TimeDice:new(faceValue, pointsValue)
 	--Metadatas about the BlackStar
 	self.name = "Time Dice"
 	self.tier = "Rare"
-	self.id = 52
+	self.id = 62
 	self.description = "Scoring : Adds a Time Magic Wand to the inventory"
 
 	--Metadatas about the graphics of the BlackStar
