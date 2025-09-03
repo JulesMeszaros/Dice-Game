@@ -32,6 +32,8 @@ G.animator = Animator:new(G)
 G.bgAnimator = Animator:new(G)
 G.circleAnimator = Animator:new(G)
 
+applyCRT = true
+
 function G.backgroundChange(color, time)
 	G.bgAnimator:addGroup({
 		{ property = "backgroundR", from = G.backgroundR, targetValue = color[1], duration = 0.6 },

@@ -2540,11 +2540,13 @@ end
 
 function DiamondDice:triggerEffect(round)
 	addScore(round, 10)
-	addMoney(round, math.floor(round.run.money / 3))
+	addMoney(round, math.min(20, math.floor(round.run.money / 3)))
 end
 
 function DiamondDice:getDescription(run)
-	return "[[+10pts]]. Adds 1$ for every 3$ in bank. Currently : +" .. tostring(math.floor(run.money / 3)) .. "$."
+	return "[[+10pts]]. Adds 1$ for every 3$ in bank. Currently : +"
+		.. tostring(math.min(20, math.floor(run.money / 3)))
+		.. "$ (max : 20$)."
 end
 
 FaceTypes.DiamondDice = DiamondDice
