@@ -2458,7 +2458,7 @@ function TimeDice:triggerEffect(round)
 		i = i + round.run.baseAvailableHands[j]
 	end
 
-	multiplyScore(round, math.max(1, 1.1 * i))
+	multiplyScore(round, math.max(1, 0.1 * i))
 end
 
 function TimeDice:getDescription(run)
