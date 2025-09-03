@@ -105,6 +105,9 @@ FaceTypes.MassiveDice = MassiveDice
 
 local BlueDice = setmetatable({}, { __index = FaceObject })
 BlueDice.__index = BlueDice
+        BlueDice.tier = "Common"
+        BlueDice.tier = "Common"
+        BlueDice.tier = "Common"
 
 function BlueDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), BlueDice)
@@ -150,6 +153,9 @@ FaceTypes.BlueDice = BlueDice
 
 local GoldDice = setmetatable({}, { __index = FaceObject })
 GoldDice.__index = GoldDice
+        GoldDice.tier = "Common"
+        GoldDice.tier = "Common"
+        GoldDice.tier = "Common"
 
 function GoldDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), GoldDice)
@@ -186,6 +192,9 @@ FaceTypes.GoldDice = GoldDice
 
 local DeluxeDice = setmetatable({}, { __index = FaceObject })
 DeluxeDice.__index = DeluxeDice
+        DeluxeDice.tier = "Uncommon"
+        DeluxeDice.tier = "Uncommon"
+        DeluxeDice.tier = "Uncommon"
 
 function DeluxeDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), DeluxeDice)
@@ -228,6 +237,9 @@ FaceTypes.DeluxeDice = DeluxeDice
 --==STRIKE OF LUCK==--
 local StrikeOfLuck = setmetatable({}, { __index = FaceObject })
 StrikeOfLuck.__index = StrikeOfLuck
+        StrikeOfLuck.tier = "Common"
+        StrikeOfLuck.tier = "Common"
+        StrikeOfLuck.tier = "Common"
 
 function StrikeOfLuck:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), StrikeOfLuck)
@@ -267,6 +279,9 @@ FaceTypes.StrikeOfLuck = StrikeOfLuck
 --==Copyprinter==--
 local Copyprinter = setmetatable({}, { __index = FaceObject })
 Copyprinter.__index = Copyprinter
+        Copyprinter.tier = "Rare"
+        Copyprinter.tier = "Rare"
+        Copyprinter.tier = "Rare"
 
 function Copyprinter:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Copyprinter)
@@ -322,6 +337,9 @@ FaceTypes.Copyprinter = Copyprinter
 --==BasketOfEggs==--
 local BasketOfEggs = setmetatable({}, { __index = FaceObject })
 BasketOfEggs.__index = BasketOfEggs
+        BasketOfEggs.tier = "Uncommon"
+        BasketOfEggs.tier = "Uncommon"
+        BasketOfEggs.tier = "Uncommon"
 
 function BasketOfEggs:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), BasketOfEggs)
@@ -361,6 +379,9 @@ FaceTypes.BasketOfEggs = BasketOfEggs
 --==Apparition==--
 local Apparition = setmetatable({}, { __index = FaceObject })
 Apparition.__index = Apparition
+        Apparition.tier = "Uncommon"
+        Apparition.tier = "Uncommon"
+        Apparition.tier = "Uncommon"
 
 function Apparition:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Apparition)
@@ -396,14 +417,16 @@ FaceTypes.Apparition = Apparition
 --==Black Star==--
 local BlackStar = setmetatable({}, { __index = FaceObject })
 BlackStar.__index = BlackStar
+        BlackStar.tier = "Common"
+        BlackStar.tier = "Common"
 
 function BlackStar:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), BlackStar)
 
 	--Metadatas about the BlackStar
 	self.name = "Black Star"
-	self.id = 11
 	self.tier = "Common"
+	self.id = 11
 	self.description = "Scoring : [[+30pts]]\n Blank"
 
 	--Metadatas about the graphics of the BlackStar
@@ -430,14 +453,16 @@ FaceTypes.BlackStar = BlackStar
 --==Clockwork Dice==--
 local ClockWorkDice = setmetatable({}, { __index = FaceObject })
 ClockWorkDice.__index = ClockWorkDice
+        ClockWorkDice.tier = "Common"
+        ClockWorkDice.tier = "Common"
 
 function ClockWorkDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), ClockWorkDice)
 
 	--Metadatas about the ClockWorkDice
 	self.name = "Clockwork Dice"
-	self.id = 12
 	self.tier = "Common"
+	self.id = 12
 	self.description =
 		"Scoring : Adds [[20pts]] multiplied by this face's number to the score. Passive : decreases the face number by one the first time you score this Face in the Office."
 
@@ -470,14 +495,16 @@ FaceTypes.ClockWorkDice = ClockWorkDice
 --==Ashtray Dice==--
 local AshtrayDice = setmetatable({}, { __index = FaceObject })
 AshtrayDice.__index = AshtrayDice
+        AshtrayDice.tier = "Common"
+        AshtrayDice.tier = "Common"
 
 function AshtrayDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), AshtrayDice)
 
 	--Metadatas about the AshtrayDice
 	self.name = "Ashtray Dice"
-	self.id = 13
 	self.tier = "Common"
+	self.id = 13
 	self.description =
 		"Scoring : Multiplies the total score by ((1)). This factor is upgraded by ((0.1)) each time a cigarette is smoked"
 
@@ -509,14 +536,16 @@ FaceTypes.AshtrayDice = AshtrayDice
 --==Steel Dice==--
 local SteelDice = setmetatable({}, { __index = FaceObject })
 SteelDice.__index = SteelDice
+        SteelDice.tier = "Common"
+        SteelDice.tier = "Common"
 
 function SteelDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), SteelDice)
 
 	--Metadatas about the SteelDice
 	self.name = "Steel Dice"
-	self.id = 14
 	self.tier = "Common"
+	self.id = 14
 	self.description = "Scoring : Adds [[10pts]] per € under 10€"
 
 	--Metadatas about the graphics of the SteelDice
@@ -547,14 +576,16 @@ FaceTypes.SteelDice = SteelDice
 --==Double Down==--
 local DoubleDown = setmetatable({}, { __index = FaceObject })
 DoubleDown.__index = DoubleDown
+        DoubleDown.tier = "Common"
+        DoubleDown.tier = "Common"
 
 function DoubleDown:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), DoubleDown)
 
 	--Metadatas about the DoubleDown
 	self.name = "Double Down"
-	self.id = 16
 	self.tier = "Common"
+	self.id = 16
 	self.description = "Scoring : Adds [[10pts]] per even dices in scored hand"
 
 	--Metadatas about the graphics of the DoubleDown
@@ -589,14 +620,16 @@ FaceTypes.DoubleDown = DoubleDown
 --==Odd Job==--
 local OddJob = setmetatable({}, { __index = FaceObject })
 OddJob.__index = OddJob
+        OddJob.tier = "Common"
+        OddJob.tier = "Common"
 
 function OddJob:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), OddJob)
 
 	--Metadatas about the OddJob
 	self.name = "Odd Job"
-	self.id = 15
 	self.tier = "Common"
+	self.id = 15
 	self.description = "Scoring : Adds [[10pts]] per odd dices in scored hand"
 
 	--Metadatas about the graphics of the OddJob
@@ -631,14 +664,16 @@ FaceTypes.OddJob = OddJob
 --==Music Dice==--
 local MusicDice = setmetatable({}, { __index = FaceObject })
 MusicDice.__index = MusicDice
+        MusicDice.tier = "Common"
+        MusicDice.tier = "Common"
 
 function MusicDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), MusicDice)
 
 	--Metadatas about the MusicDice
 	self.name = "Music Dice"
-	self.id = 17
 	self.tier = "Common"
+	self.id = 17
 	self.description = "Scoring : [[+10pts]], multiplies the score by ((2)) if played hand contains exactly 4 dices"
 
 	--Metadatas about the graphics of the MusicDice
@@ -669,14 +704,15 @@ FaceTypes.MusicDice = MusicDice
 --==Signature==--
 local Signature = setmetatable({}, { __index = FaceObject })
 Signature.__index = Signature
+        Signature.tier = "Uncommon"
 
 function Signature:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Signature)
 
 	--Metadatas about the Signature
 	self.name = "Signature"
-	self.id = 18
 	self.tier = "Uncommon"
+	self.id = 18
 	self.description = "Unique : Multiplies the hand score by ((3)). Scoring: [[+10pts]]."
 
 	--Metadatas about the graphics of the Signature
@@ -708,14 +744,16 @@ FaceTypes.Signature = Signature
 --==Sniper Dice==--
 local SniperDice = setmetatable({}, { __index = FaceObject })
 SniperDice.__index = SniperDice
+        SniperDice.tier = "Common"
+        SniperDice.tier = "Common"
 
 function SniperDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), SniperDice)
 
 	--Metadatas about the SniperDice
 	self.name = "SniperDice"
-	self.id = 19
 	self.tier = "Common"
+	self.id = 19
 
 	--Metadatas about the graphics of the SniperDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crosshairs Dice.png")
@@ -759,8 +797,8 @@ function Spotlight:new(faceValue, pointsValue)
 
 	--Metadatas about the Spotlight
 	self.name = "Spotlight"
-	self.id = 20
 	self.tier = "Common"
+	self.id = 20
 
 	--Metadatas about the graphics of the Spotlight
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Spotlight Dice.png")
@@ -791,14 +829,16 @@ FaceTypes.Spotlight = Spotlight
 --==RiskyBusiness==--
 local RiskyBusiness = setmetatable({}, { __index = FaceObject })
 RiskyBusiness.__index = RiskyBusiness
+        RiskyBusiness.tier = "Uncommon"
+        RiskyBusiness.tier = "Uncommon"
 
 function RiskyBusiness:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), RiskyBusiness)
 
 	--Metadatas about the RiskyBusiness
 	self.name = "Risky Business"
-	self.id = 21
 	self.tier = "Uncommon"
+	self.id = 21
 
 	--Metadatas about the graphics of the RiskyBusiness
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Risky Business.png")
@@ -824,14 +864,15 @@ FaceTypes.RiskyBusiness = RiskyBusiness
 --==CryptoDice==--
 local CryptoDice = setmetatable({}, { __index = FaceObject })
 CryptoDice.__index = CryptoDice
+        CryptoDice.tier = "Uncommon"
 
 function CryptoDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), CryptoDice)
 
 	--Metadatas about the CryptoDice
 	self.name = "Crypto Dice"
-	self.id = 22
 	self.tier = "Uncommon"
+	self.id = 22
 
 	--Metadatas about the graphics of the CryptoDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crypto Dice.png")
@@ -859,14 +900,16 @@ FaceTypes.CryptoDice = CryptoDice
 --==Patience==--
 local Patience = setmetatable({}, { __index = FaceObject })
 Patience.__index = Patience
+        Patience.tier = "Common"
+        Patience.tier = "Common"
 
 function Patience:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Patience)
 
 	--Metadatas about the Patience
 	self.name = "Patience"
-	self.id = 23
 	self.tier = "Common"
+	self.id = 23
 
 	--Metadatas about the graphics of the Patience
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Patience.png")
@@ -896,14 +939,16 @@ FaceTypes.Patience = Patience
 --==Data Dice==--
 local DataDice = setmetatable({}, { __index = FaceObject })
 DataDice.__index = DataDice
+        DataDice.tier = "Common"
+        DataDice.tier = "Common"
 
 function DataDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), DataDice)
 
 	--Metadatas about the DataDice
 	self.name = "Data Dice"
-	self.id = 24
 	self.tier = "Common"
+	self.id = 24
 
 	--Metadatas about the graphics of the DataDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Number Dice.png")
@@ -942,14 +987,16 @@ FaceTypes.DataDice = DataDice
 --==Stock Option==--
 local StockOption = setmetatable({}, { __index = FaceObject })
 StockOption.__index = StockOption
+        StockOption.tier = "Common"
+        StockOption.tier = "Common"
 
 function StockOption:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), StockOption)
 
 	--Metadatas about the StockOption
 	self.name = "Stock Option"
-	self.id = 25
 	self.tier = "Common"
+	self.id = 25
 
 	--Metadatas about the graphics of the StockOption
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Stock Option.png")
@@ -983,14 +1030,16 @@ FaceTypes.StockOption = StockOption
 --==Rainbow Dice==--
 local RainbowDice = setmetatable({}, { __index = FaceObject })
 RainbowDice.__index = RainbowDice
+        RainbowDice.tier = "Common"
+        RainbowDice.tier = "Common"
 
 function RainbowDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), RainbowDice)
 
 	--Metadatas about the RainbowDice
 	self.name = "Rainbow Dice"
-	self.id = 26
 	self.tier = "Common"
+	self.id = 26
 
 	--Metadatas about the graphics of the RainbowDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Straight Dice.png")
@@ -1027,14 +1076,16 @@ FaceTypes.RainbowDice = RainbowDice
 --==Magic Dice==--
 local MagicDice = setmetatable({}, { __index = FaceObject })
 MagicDice.__index = MagicDice
+        MagicDice.tier = "Rare"
+        MagicDice.tier = "Rare"
 
 function MagicDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), MagicDice)
 
 	--Metadatas about the MagicDice
 	self.name = "Magic Dice"
-	self.id = 27
 	self.tier = "Rare"
+	self.id = 27
 
 	--Metadatas about the graphics of the MagicDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Magic Dice.png")
@@ -1063,14 +1114,16 @@ FaceTypes.MagicDice = MagicDice
 --==Return On Invenstment==--
 local ReturnOnInvestment = setmetatable({}, { __index = FaceObject })
 ReturnOnInvestment.__index = ReturnOnInvestment
+        ReturnOnInvestment.tier = "Uncommon"
+        ReturnOnInvestment.tier = "Uncommon"
 
 function ReturnOnInvestment:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), ReturnOnInvestment)
 
 	--Metadatas about the ReturnOnInvestment
 	self.name = "Return On Invenstment"
-	self.id = 28
 	self.tier = "Uncommon"
+	self.id = 28
 
 	--Metadatas about the graphics of the ReturnOnInvestment
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Return On Invenstment.png")
@@ -1105,14 +1158,16 @@ FaceTypes.ReturnOnInvestment = ReturnOnInvestment
 --==Loyalty Card==--
 local LoyaltyCard = setmetatable({}, { __index = FaceObject })
 LoyaltyCard.__index = LoyaltyCard
+        LoyaltyCard.tier = "Common"
+        LoyaltyCard.tier = "Common"
 
 function LoyaltyCard:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), LoyaltyCard)
 
 	--Metadatas about the LoyaltyCard
 	self.name = "Loyalty Card"
-	self.id = 29
 	self.tier = "Common"
+	self.id = 29
 
 	--Metadatas about the graphics of the LoyaltyCard
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Royalty Card.png")
@@ -1139,14 +1194,16 @@ FaceTypes.LoyaltyCard = LoyaltyCard
 --==Mirror Dice==--
 local MirrorDice = setmetatable({}, { __index = FaceObject })
 MirrorDice.__index = MirrorDice
+        MirrorDice.tier = "Common"
+        MirrorDice.tier = "Common"
 
 function MirrorDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), MirrorDice)
 
 	--Metadatas about the MirrorDice
 	self.name = "Mirror Dice"
-	self.id = 30
 	self.tier = "Common"
+	self.id = 30
 
 	--Metadatas about the graphics of the MirrorDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Mirror Dice.png")
@@ -1188,14 +1245,16 @@ FaceTypes.MirrorDice = MirrorDice
 --==Lucky Cookie==--
 local CookieDice = setmetatable({}, { __index = FaceObject })
 CookieDice.__index = CookieDice
+        CookieDice.tier = "Uncommon"
+        CookieDice.tier = "Uncommon"
 
 function CookieDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), CookieDice)
 
 	--Metadatas about the CookieDice
 	self.name = "Lucky Cookie"
-	self.id = 31
 	self.tier = "Uncommon"
+	self.id = 31
 
 	--Metadatas about the graphics of the CookieDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Cookie Dice.png")
@@ -1225,14 +1284,16 @@ FaceTypes.CookieDice = CookieDice
 --==Insomniac Dice==--
 local InsomniacDice = setmetatable({}, { __index = FaceObject })
 InsomniacDice.__index = InsomniacDice
+        InsomniacDice.tier = "Uncommon"
+        InsomniacDice.tier = "Uncommon"
 
 function InsomniacDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), InsomniacDice)
 
 	--Metadatas about the InsomniacDice
 	self.name = "Insomniac Dice"
-	self.id = 32
 	self.tier = "Uncommon"
+	self.id = 32
 
 	--Metadatas about the graphics of the InsomniacDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Eclipse Dice.png")
@@ -1262,14 +1323,16 @@ FaceTypes.InsomniacDice = InsomniacDice
 --==Twin Flame==--
 local TwinFlame = setmetatable({}, { __index = FaceObject })
 TwinFlame.__index = TwinFlame
+        TwinFlame.tier = "Rare"
+        TwinFlame.tier = "Rare"
 
 function TwinFlame:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), TwinFlame)
 
 	--Metadatas about the TwinFlame
 	self.name = "Twin Flame"
-	self.id = 33
 	self.tier = "Rare"
+	self.id = 33
 
 	--Metadatas about the graphics of the TwinFlame
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Twin Flame.png")
@@ -1303,14 +1366,16 @@ FaceTypes.TwinFlame = TwinFlame
 --==Fax Machine==--
 local FaxMachine = setmetatable({}, { __index = FaceObject })
 FaxMachine.__index = FaxMachine
+        FaxMachine.tier = "Rare"
+        FaxMachine.tier = "Rare"
 
 function FaxMachine:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), FaxMachine)
 
 	--Metadatas about the FaxMachine
 	self.name = "Fax Machine"
-	self.id = 34
 	self.tier = "Rare"
+	self.id = 34
 
 	--Metadatas about the graphics of the FaxMachine
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Fax Machine.png")
@@ -1342,14 +1407,16 @@ FaceTypes.FaxMachine = FaxMachine
 --==Necromancer==--
 local Necromancer = setmetatable({}, { __index = FaceObject })
 Necromancer.__index = Necromancer
+        Necromancer.tier = "Rare"
+        Necromancer.tier = "Rare"
 
 function Necromancer:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Necromancer)
 
 	--Metadatas about the Necromancer
 	self.name = "Necromancer Dice"
-	self.id = 35
 	self.tier = "Rare"
+	self.id = 35
 
 	--Metadatas about the graphics of the Necromancer
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Necromancer Dice.png")
@@ -1386,14 +1453,16 @@ FaceTypes.Necromancer = Necromancer
 --==SixthSense==--
 local SixthSense = setmetatable({}, { __index = FaceObject })
 SixthSense.__index = SixthSense
+        SixthSense.tier = "Uncommon"
+        SixthSense.tier = "Uncommon"
 
 function SixthSense:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), SixthSense)
 
 	--Metadatas about the SixthSense
 	self.name = "Sixth Sense"
-	self.id = 36
 	self.tier = "Uncommon"
+	self.id = 36
 
 	--Metadatas about the graphics of the SixthSense
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ghost Dice.png")
@@ -1451,14 +1520,16 @@ FaceTypes.SixthSense = SixthSense
 --==Sacrifice==--
 local Sacrifice = setmetatable({}, { __index = FaceObject })
 Sacrifice.__index = Sacrifice
+        Sacrifice.tier = "Rare"
+        Sacrifice.tier = "Rare"
 
 function Sacrifice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Sacrifice)
 
 	--Metadatas about the Sacrifice
 	self.name = "Sacrifice"
-	self.id = 37
 	self.tier = "Rare"
+	self.id = 37
 
 	--Metadatas about the graphics of the Sacrifice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Marble Dice.png")
@@ -1501,14 +1572,16 @@ FaceTypes.Sacrifice = Sacrifice
 --==CheckeredDice==--
 local CheckeredDice = setmetatable({}, { __index = FaceObject })
 CheckeredDice.__index = CheckeredDice
+        CheckeredDice.tier = "Common"
+        CheckeredDice.tier = "Common"
 
 function CheckeredDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), CheckeredDice)
 
 	--Metadatas about the CheckeredDice
 	self.name = "Checkered Dice"
-	self.id = 38
 	self.tier = "Common"
+	self.id = 38
 
 	--Metadatas about the graphics of the CheckeredDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Checkered Dice.png")
@@ -1535,14 +1608,16 @@ FaceTypes.CheckeredDice = CheckeredDice
 --==Star Dice==--
 local StarDice = setmetatable({}, { __index = FaceObject })
 StarDice.__index = StarDice
+        StarDice.tier = "Rare"
+        StarDice.tier = "Rare"
 
 function StarDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), StarDice)
 
 	--Metadatas about the StarDice
 	self.name = "Star Dice"
-	self.id = 39
 	self.tier = "Rare"
+	self.id = 39
 
 	--Metadatas about the graphics of the StarDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Star Dice.png")
@@ -1568,14 +1643,16 @@ FaceTypes.StarDice = StarDice
 --==Resurection==--
 local Resurection = setmetatable({}, { __index = FaceObject })
 Resurection.__index = Resurection
+        Resurection.tier = "Rare"
+        Resurection.tier = "Rare"
 
 function Resurection:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Resurection)
 
 	--Metadatas about the Resurection
 	self.name = "Resurection"
-	self.id = 40
 	self.tier = "Rare"
+	self.id = 40
 
 	--Metadatas about the graphics of the Resurection
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Resurection.png")
@@ -1613,14 +1690,16 @@ FaceTypes.Resurection = Resurection
 --==Adrenaline==--
 local Adrenaline = setmetatable({}, { __index = FaceObject })
 Adrenaline.__index = Adrenaline
+        Adrenaline.tier = "Common"
+        Adrenaline.tier = "Common"
 
 function Adrenaline:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Adrenaline)
 
 	--Metadatas about the Resurection
 	self.name = "Adrenaline"
-	self.id = 41
 	self.tier = "Common"
+	self.id = 41
 
 	--Metadatas about the graphics of the Adrenaline
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Adrenaline.png")
@@ -1650,14 +1729,16 @@ FaceTypes.Adrenaline = Adrenaline
 --==NegativeDice==--
 local NegativeDice = setmetatable({}, { __index = FaceObject })
 NegativeDice.__index = NegativeDice
+        NegativeDice.tier = "Rare"
+        NegativeDice.tier = "Rare"
 
 function NegativeDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), NegativeDice)
 
 	--Metadatas about the Resurection
 	self.name = "Negative Dice"
-	self.id = 42
 	self.tier = "Rare"
+	self.id = 42
 
 	--Metadatas about the graphics of the NegativeDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Negative Dice.png")
@@ -1693,14 +1774,16 @@ FaceTypes.NegativeDice = NegativeDice
 --==BountyHunter==--
 local BountyHunter = setmetatable({}, { __index = FaceObject })
 BountyHunter.__index = BountyHunter
+        BountyHunter.tier = "Uncommon"
+        BountyHunter.tier = "Uncommon"
 
 function BountyHunter:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), BountyHunter)
 
 	--Metadatas about the Resurection
 	self.name = "BountyHunter"
-	self.id = 43
 	self.tier = "Uncommon"
+	self.id = 43
 
 	--Metadatas about the graphics of the BountyHunter
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Bounty Hunter Dice.png")
@@ -1743,14 +1826,16 @@ FaceTypes.BountyHunter = BountyHunter
 --==Upcycling==--
 local Upcycling = setmetatable({}, { __index = FaceObject })
 Upcycling.__index = Upcycling
+        Upcycling.tier = "Uncommon"
+        Upcycling.tier = "Uncommon"
 
 function Upcycling:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Upcycling)
 
 	--Metadatas about the Resurection
 	self.name = "Upcycling"
-	self.id = 44
 	self.tier = "Uncommon"
+	self.id = 44
 
 	--Metadatas about the graphics of the Upcycling
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Upcycling Dice.png")
@@ -1777,14 +1862,16 @@ FaceTypes.Upcycling = Upcycling
 --==Ectoplasm==--
 local Ectoplasm = setmetatable({}, { __index = FaceObject })
 Ectoplasm.__index = Ectoplasm
+        Ectoplasm.tier = "Uncommon"
+        Ectoplasm.tier = "Uncommon"
 
 function Ectoplasm:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Ectoplasm)
 
 	--Metadatas about the Resurection
 	self.name = "Ectoplasm"
-	self.id = 45
 	self.tier = "Uncommon"
+	self.id = 45
 
 	--Metadatas about the graphics of the Ectoplasm
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ectoplasm.png")
@@ -1813,14 +1900,16 @@ FaceTypes.Ectoplasm = Ectoplasm
 --==Die And Retry==--
 local DieAndRetry = setmetatable({}, { __index = FaceObject })
 DieAndRetry.__index = DieAndRetry
+        DieAndRetry.tier = "Uncommon"
+        DieAndRetry.tier = "Uncommon"
 
 function DieAndRetry:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), DieAndRetry)
 
 	--Metadatas about the Resurection
 	self.name = "Die And Retry"
-	self.id = 46
 	self.tier = "Uncommon"
+	self.id = 46
 
 	--Metadatas about the graphics of the UndeadDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Die And Retry.png")
@@ -1851,14 +1940,16 @@ FaceTypes.DieAndRetry = DieAndRetry
 --==InvisibleHand==--
 local InvisibleHand = setmetatable({}, { __index = FaceObject })
 InvisibleHand.__index = InvisibleHand
+        InvisibleHand.tier = "Uncommon"
+        InvisibleHand.tier = "Uncommon"
 
 function InvisibleHand:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), InvisibleHand)
 
 	--Metadatas about the Resurection
 	self.name = "Invisible Hand"
-	self.id = 47
 	self.tier = "Uncommon"
+	self.id = 47
 
 	--Metadatas about the graphics of the InvisibleHand
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Invisible Hand Dice.png")
@@ -1885,13 +1976,15 @@ FaceTypes.InvisibleHand = InvisibleHand
 local UndeadDice = setmetatable({}, { __index = FaceObject })
 
 UndeadDice.__index = UndeadDice
+        UndeadDice.tier = "Uncommon"
+        UndeadDice.tier = "Uncommon"
 function UndeadDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), UndeadDice)
 
 	--Metadatas about the Resurection
 	self.name = "Undead Dice"
-	self.id = 48
 	self.tier = "Uncommon"
+	self.id = 48
 
 	--Metadatas about the graphics of the
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Undead Dice.png")
@@ -1938,13 +2031,15 @@ FaceTypes.UndeadDice = UndeadDice
 local AllIn = setmetatable({}, { __index = FaceObject })
 
 AllIn.__index = AllIn
+        AllIn.tier = "Uncommon"
+        AllIn.tier = "Uncommon"
 function AllIn:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), AllIn)
 
 	--Metadatas about the Resurection
 	self.name = "All In"
-	self.id = 49
 	self.tier = "Uncommon"
+	self.id = 49
 
 	--Metadatas about the graphics of the
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/All In.png")
@@ -1974,13 +2069,15 @@ FaceTypes.AllIn = AllIn
 local Poltergeist = setmetatable({}, { __index = FaceObject })
 
 Poltergeist.__index = Poltergeist
+        Poltergeist.tier = "Uncommon"
+        Poltergeist.tier = "Uncommon"
 function Poltergeist:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Poltergeist)
 
 	--Metadatas about the Resurection
 	self.name = "Poltergeist"
-	self.id = 50
 	self.tier = "Uncommon"
+	self.id = 50
 
 	--Metadatas about the graphics of the
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Poltergeist.png")
@@ -2010,6 +2107,9 @@ FaceTypes.Poltergeist = Poltergeist
 --==Fortune Dice==--
 local FortuneDice = setmetatable({}, { __index = FaceObject })
 FortuneDice.__index = FortuneDice
+        FortuneDice.tier = "Rare"
+        FortuneDice.tier = "Rare"
+        FortuneDice.tier = "Rare"
 
 function FortuneDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), FortuneDice)
@@ -2056,6 +2156,9 @@ end
 --==Dime Dice==--
 local DimeDice = setmetatable({}, { __index = FaceObject })
 DimeDice.__index = DimeDice
+        DimeDice.tier = "Common"
+        DimeDice.tier = "Common"
+        DimeDice.tier = "Common"
 
 function DimeDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), DimeDice)
@@ -2098,6 +2201,9 @@ FaceTypes.FortuneDice = FortuneDice
 --==Capitalist Dice==--
 local CapitalistDice = setmetatable({}, { __index = FaceObject })
 CapitalistDice.__index = CapitalistDice
+        CapitalistDice.tier = "Uncommon"
+        CapitalistDice.tier = "Uncommon"
+        CapitalistDice.tier = "Uncommon"
 
 function CapitalistDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), CapitalistDice)
@@ -2135,6 +2241,9 @@ FaceTypes.CapitalistDice = CapitalistDice
 --==Lucky Star==--
 local LuckyStar = setmetatable({}, { __index = FaceObject })
 LuckyStar.__index = LuckyStar
+        LuckyStar.tier = "Common"
+        LuckyStar.tier = "Common"
+        LuckyStar.tier = "Common"
 
 function LuckyStar:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), LuckyStar)
@@ -2172,6 +2281,9 @@ FaceTypes.LuckyStar = LuckyStar
 --==Lucky Star==--
 local Doom = setmetatable({}, { __index = FaceObject })
 Doom.__index = Doom
+        Doom.tier = "Uncommon"
+        Doom.tier = "Uncommon"
+        Doom.tier = "Uncommon"
 
 function Doom:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Doom)
@@ -2213,6 +2325,9 @@ FaceTypes.Doom = Doom
 --==Godspeed==--
 local Godspeed = setmetatable({}, { __index = FaceObject })
 Godspeed.__index = Godspeed
+        Godspeed.tier = "Rare"
+        Godspeed.tier = "Rare"
+        Godspeed.tier = "Rare"
 
 function Godspeed:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Godspeed)
@@ -2253,6 +2368,9 @@ FaceTypes.Godspeed = Godspeed
 --==WitchDice==--
 local WitchDice = setmetatable({}, { __index = FaceObject })
 WitchDice.__index = WitchDice
+        WitchDice.tier = "Rare"
+        WitchDice.tier = "Rare"
+        WitchDice.tier = "Rare"
 
 function WitchDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), WitchDice)
@@ -2287,6 +2405,9 @@ FaceTypes.WitchDice = WitchDice
 --==RecursiveDice==--
 local RecursiveDice = setmetatable({}, { __index = FaceObject })
 RecursiveDice.__index = RecursiveDice
+        RecursiveDice.tier = "Rare"
+        RecursiveDice.tier = "Rare"
+        RecursiveDice.tier = "Rare"
 
 function RecursiveDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), RecursiveDice)
@@ -2323,6 +2444,9 @@ FaceTypes.RecursiveDice = RecursiveDice
 --==Echo==--
 local Echo = setmetatable({}, { __index = FaceObject })
 Echo.__index = Echo
+        Echo.tier = "Common"
+        Echo.tier = "Common"
+        Echo.tier = "Common"
 
 function Echo:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), Echo)
@@ -2367,6 +2491,9 @@ FaceTypes.Echo = Echo
 --==CrossedOut==--
 local CrossedOut = setmetatable({}, { __index = FaceObject })
 CrossedOut.__index = CrossedOut
+        CrossedOut.tier = "Common"
+        CrossedOut.tier = "Common"
+        CrossedOut.tier = "Common"
 
 function CrossedOut:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), CrossedOut)
@@ -2420,6 +2547,9 @@ FaceTypes.CrossedOut = CrossedOut
 --==Time Dice==--
 local TimeDice = setmetatable({}, { __index = FaceObject })
 TimeDice.__index = TimeDice
+        TimeDice.tier = "Rare"
+        TimeDice.tier = "Rare"
+        TimeDice.tier = "Rare"
 
 function TimeDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), TimeDice)
@@ -2472,82 +2602,6 @@ function TimeDice:getDescription(run)
 end
 
 FaceTypes.TimeDice = TimeDice
-
---==Hivemind==--
-local Hivemind = setmetatable({}, { __index = FaceObject })
-Hivemind.__index = Hivemind
-
-function Hivemind:new(faceValue, pointsValue)
-	local self = setmetatable(FaceObject:new(), Hivemind)
-
-	--Metadatas about the BlackStar
-	self.name = "Hivemind"
-	self.tier = "Common"
-	self.id = 63
-
-	--Metadatas about the graphics of the BlackStar
-	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Hivemind.png")
-	self.spriteSheet:setFilter("linear", "linear")
-
-	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
-
-	--Round status
-	self.faceValue = faceValue --Le numéro de face que le dé représente
-	self.pointsValue = 10 --This is the points scored by the dice
-	self.totalTriggered = 0
-
-	return self
-end
-
-function Hivemind:triggerEffect(round)
-	round.run.hivemindTriggers = round.run.hivemindTriggers + 1
-	addScore(round, round.run.hivemindTriggers * 20)
-end
-
-function Hivemind:getDescription(run)
-	return "[[+20pts]] for each time this dice type was triggering this run (currently : [[+"
-		.. tostring(20 * run.hivemindTriggers)
-		.. "pts]]."
-end
-
-FaceTypes.Hivemind = Hivemind
-
---==DiamondDice==--
-local DiamondDice = setmetatable({}, { __index = FaceObject })
-DiamondDice.__index = DiamondDice
-
-function DiamondDice:new(faceValue, pointsValue)
-	local self = setmetatable(FaceObject:new(), DiamondDice)
-
-	--Metadatas about the BlackStar
-	self.name = "Diamond Dice"
-	self.tier = "Uncommon"
-	self.id = 64
-
-	--Metadatas about the graphics of the BlackStar
-	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Diamond Dice.png")
-	self.spriteSheet:setFilter("linear", "linear")
-
-	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
-
-	--Round status
-	self.faceValue = faceValue --Le numéro de face que le dé représente
-	self.pointsValue = 10 --This is the points scored by the dice
-	self.totalTriggered = 0
-
-	return self
-end
-
-function DiamondDice:triggerEffect(round)
-	addScore(round, 10)
-	addMoney(round, math.floor(round.run.money / 3))
-end
-
-function DiamondDice:getDescription(run)
-	return "[[+10pts]]. Adds 1$ for every 3$ in bank. Currently : +" .. tostring(math.floor(run.money / 3)) .. "$."
-end
-
-FaceTypes.DiamondDice = DiamondDice
 --UTILS--
 function multiplyScore(round, f)
 	round.handScore = round.handScore * f
@@ -2570,7 +2624,8 @@ function setMoney(round, m)
 end
 
 function upgradeStat(object, stat, v)
-	object[stat] = object[stat] + v
+    object[stat] = object[stat] + v
 end
+-- Remove dynamic tier injection; tiers will be set manually per class
 
 return FaceTypes

@@ -179,9 +179,10 @@ Shaders.grayRainbowShader = love.graphics.newShader([[
 
 Shaders.crt = love.graphics.newShader([[
     extern vec2 iResolution;
-    extern number warp;
-    extern number scan;
-    extern number amount; // intensité de l’aberration chromatique
+    extern number warp;          // barrel/pincushion distortion strength
+    extern number scan;          // darkness/intensity of scanlines (0..1)
+    extern number scanOpacity;   // opacity of scanline overlay (0..1)
+    extern number amount;        // chromatic aberration strength
 
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     vec2 uv = texture_coords;
@@ -212,7 +213,8 @@ Shaders.crt = love.graphics.newShader([[
     // Scanlines épaisses qui suivent la déformation
     float lineWidth = 6.0; // épaisseur en pixels
     float scanY = screen_coords.y + (uv.y - texture_coords.y) * iResolution.y; // décalage pour suivre la déformation
-    float scanFactor = abs(sin(scanY * 3.1415 / lineWidth)) * scan;
+    // compute scanline factor and apply opacity
+    float scanFactor = abs(sin(scanY * 3.1415 / lineWidth)) * scan * scanOpacity;
     scanFactor = clamp(scanFactor, 0.0, 1.0);
 
     vec3 finalColor = mix(texColor, vec3(0.0), scanFactor);
@@ -520,6 +522,7 @@ Shaders.dynamicCRT = love.graphics.newShader([[
     extern vec2  screenSize;
     extern number warp;               // barrel/pincushion distortion strength
     extern number scanIntensity;      // overall darkness of scanlines (0..1)
+    extern number scanOpacity;        // opacity of scanline effect (0..1)
     extern number scanFreq;           // number of scanlines (in cycles per screen height)
     extern number wobbleAmp;          // wobble amplitude (how much each scanline bends)
     extern number wobbleSpeed;        // wobble speed
@@ -560,7 +563,10 @@ Shaders.dynamicCRT = love.graphics.newShader([[
 
         float line = 0.5 + 0.5 * base;
         float edge = smoothstep(0.5 - lineThickness, 0.5 + lineThickness, line);
-        float scanAtt = mix(1.0, edge, scanIntensity);
+        // base scanline attenuation based on intensity
+        float rawScanAtt = mix(1.0, edge, scanIntensity);
+        // apply scanline opacity (0 = no effect, 1 = full effect)
+        float scanAtt = mix(1.0, rawScanAtt, scanOpacity);
 
         float vig = 1.0 - vignette * smoothstep(0.5, 0.9, length(c));
 

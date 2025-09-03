@@ -26,12 +26,14 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 	self.caseStickers = {}
 
 	--Ciggies
-	self.ciggiesObjects = { CiggieTypes.Ebb:new(), CiggieTypes.Ebb:new(), CiggieTypes.Time:new() }
+	self.ciggiesObjects = {}
 	--Run stats
 	self.totalUsedCiggie = 0
 	self.totalUsedCoffees = 0
 	self.totalDisabled = 0
 	self.bestHand = 0
+	self.lastLeveledUpFigure = 0
+	self.hivemindTriggers = 0
 
 	self.shop = nil
 
@@ -308,6 +310,7 @@ function Run:resetAvailableFigures()
 end
 
 function Run:levelUpFigure(index)
+	self.lastLeveledUpFigure = index
 	if index >= 1 and index <= 13 then
 		self.figuresInfos[index].level = self.figuresInfos[index].level + 1
 	end

@@ -171,6 +171,31 @@ end
 
 CiggieTypes.Ebb = Ebb
 
+local Channel = setmetatable({}, { __index = CiggieObject })
+
+Channel.__index = Channel
+
+function Channel:new()
+	local self = setmetatable(CiggieObject.new(), Channel)
+
+	self.usableIn = "any"
+
+	self.name = "Channel"
+	self.description = "Level Up your last leveled up figure."
+
+	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Channel Cigarette.png")
+	return self
+end
+
+function Channel:usageCondition(round)
+	return round.run.lastLeveledUpFigure ~= 0
+end
+
+function Channel:effect(screen)
+	screen.run:levelUpFigure(screen.run.lastLeveledUpFigure)
+end
+
+CiggieTypes.Channel = Channel
 --UTILS--
 function getRandomExcluding(list, excluded)
 	local filtered = {}

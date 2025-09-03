@@ -123,8 +123,10 @@ end
 
 function love.draw()
 	Shaders.crt:send("amount", 0.0025)
-	Shaders.crt:send("warp", 0.2)
+	Shaders.crt:send("warp", 0.15)
 	Shaders.crt:send("scan", 0.2)
+	-- set scanline opacity (0 = no scanlines, 1 = full effect)
+	Shaders.crt:send("scanOpacity", 0.5)
 	if applyCRT then
 		love.graphics.setShader(Shaders.crt)
 	end
