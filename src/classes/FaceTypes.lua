@@ -816,7 +816,7 @@ end
 function RiskyBusiness:triggerEffect(round)
 	--Complementary effect triggered by the face
 	addScore(round, self.pointsValue)
-	removeMoney(round, 10)
+	removeMoney(round, 5)
 end
 
 FaceTypes.RiskyBusiness = RiskyBusiness
@@ -2064,7 +2064,7 @@ function DimeDice:new(faceValue, pointsValue)
 	self.name = "Dime Dice"
 	self.tier = "Common"
 	self.id = 53
-	self.description = "Scoring : [[+10pts]], +1$ per played dice with the same number as this one."
+	self.description = "Scoring : [[+10pts]], +2$ per played dice with the same number as this one."
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Dime Dice.png")
@@ -2088,7 +2088,7 @@ function DimeDice:triggerEffect(round)
 			i = i + 1
 		end
 	end
-	addMoney(round, i)
+	addMoney(round, i * 2)
 	addScore(round, self.pointsValue)
 end
 
