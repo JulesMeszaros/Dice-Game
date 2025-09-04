@@ -130,12 +130,8 @@ function BlueDice:new(faceValue, pointsValue)
 	return self
 end
 
-function BlueDice:update(dt, run)
-	self.pointsValue = 1 + (2 * run.usedRerolls)
-end
-
 function BlueDice:triggerEffect(round)
-	addScore(round, self.pointsValue)
+	addScore(round, 2 * round.run.sedRerolls)
 end
 
 function BlueDice:getDescription(run)
