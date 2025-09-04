@@ -2283,7 +2283,39 @@ function WitchDice:triggerEffect(round)
 end
 
 FaceTypes.WitchDice = WitchDice
+--==WizardDice==--
+local WizardDice = setmetatable({}, { __index = FaceObject })
+WizardDice.__index = WizardDice
 
+function WizardDice:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), WizardDice)
+
+	--Metadatas about the BlackStar
+	self.name = "Wizard Dice"
+	self.tier = "Rare"
+	self.id = 58
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Wizard Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	self.description = "Scoring : [[X1.5pts]] for each Magic Wand Used in this office."
+
+	return self
+end
+
+function WizardDice:triggerEffect(round)
+	multiplyScore(round, math.max(1, round.usedCiggiesRound * 1.5))
+end
+
+FaceTypes.WizardDice = WizardDice
 --==RecursiveDice==--
 local RecursiveDice = setmetatable({}, { __index = FaceObject })
 RecursiveDice.__index = RecursiveDice
