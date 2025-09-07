@@ -35,12 +35,17 @@ function GenerateRandom.generateUniqueNumbers(min, max, n)
 	return numbers
 end
 
-function GenerateRandom.faceObject(forbiddenKeys)
+function GenerateRandom.faceObject(forbiddenKeys, c, u, r) --Les parametres c u r representent respectivement la proba d'avoir une face common, uncommon, ou rare.
+	local commonRate = c or 75
+	local uncommonRate = u or 20
+	local rareRate = r or 5
+	local totalRate = commonRate + uncommonRate + rareRate
+
 	local randomRarity = math.random(1, 100)
 	local listToPick = G.commonDices
-	if randomRarity <= 75 then
+	if randomRarity <= (commonRate / totalRate) * 100 then
 		listToPick = G.commonDices
-	elseif randomRarity <= 95 then
+	elseif randomRarity <= ((commonRate + unCommonRate) / totalRate) * 100 then
 		listToPick = G.uncommonDices
 	else
 		listToPick = G.rareDices
