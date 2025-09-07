@@ -2,7 +2,7 @@ local Constants = require("src.utils.Constants")
 local FaceTypes = require("src.classes.FaceTypes")
 local Round = require("src.classes.Round")
 local CalculateTargets = require("src.utils.scripts.CalculateTargets")
-
+local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 local Floor = {}
 Floor.__index = Floor
 
@@ -52,7 +52,7 @@ function Floor:generateDesks(deskRank)
 		targetScore,
 		self.run.diceObjects,
 		Constants.ROUND_TYPES.BASE,
-		self:generateReward(2)
+		self:generateReward()
 	)
 	r.roundType = Constants.ROUND_TYPES.BASE
 	return r
@@ -74,7 +74,7 @@ function Floor:generateBoss()
 		targetScore,
 		self.run.diceObjects,
 		Constants.ROUND_TYPES.BOSS,
-		self:generateReward(2)
+		self:generateReward()
 	)
 	r.roundType = Constants.ROUND_TYPES.BOSS
 
@@ -82,25 +82,7 @@ function Floor:generateBoss()
 end
 
 function Floor:generateReward()
-	--Generate faceType reward
-	local keys = {}
-	for key, _ in pairs(FaceTypes) do
-		if key ~= "WhiteDice" then
-			table.insert(keys, key)
-		end
-	end
-	local faceRewards = {}
-	local nbrFace = 2 --Toujours deux faces.
-	for i = 1, nbrFace do
-		local randomFaceKey = keys[math.random(#keys)]
-		local randomFaceType = FaceTypes[randomFaceKey] --On récupère une face type au hasard
-		local randomFaceValue = math.random(1, 6) --La face numérique
-
-		local randomFaceObject = randomFaceType:new(randomFaceValue, 10)
-
-		table.insert(faceRewards, randomFaceObject)
-	end
-	return faceRewards
+	return { GenerateRandom:faceObject(), GenerateRandom:faceObject() }
 end
 
 return Floor
