@@ -50,23 +50,6 @@ for key, facetype in next, FaceTypes do
 	end
 end
 
-for i, d in next, G.commonDices do
-	print(d)
-end
-
-print("-----")
-for i, d in next, G.uncommonDices do
-	print(d)
-end
-
-print("-----")
-
-for i, d in next, G.rareDices do
-	print(d)
-end
-
-print("-----")
-
 applyCRT = true
 
 function G.backgroundChange(color, time)

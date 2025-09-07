@@ -45,7 +45,7 @@ function GenerateRandom.faceObject(forbiddenKeys, c, u, r) --Les parametres c u 
 	local listToPick = G.commonDices
 	if randomRarity <= (commonRate / totalRate) * 100 then
 		listToPick = G.commonDices
-	elseif randomRarity <= ((commonRate + unCommonRate) / totalRate) * 100 then
+	elseif randomRarity <= ((commonRate + uncommonRate) / totalRate) * 100 then
 		listToPick = G.uncommonDices
 	else
 		listToPick = G.rareDices
