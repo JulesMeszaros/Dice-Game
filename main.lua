@@ -3,6 +3,8 @@ local Shaders = require("src.utils.Shaders")
 local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
 local AnimationUtils = require("src.utils.scripts.Animations")
+local FaceTypes = require("src.classes.FaceTypes")
+local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 G = {
 	--Background color
 	backgroundR = 40 / 255,
@@ -31,6 +33,39 @@ G = {
 G.animator = Animator:new(G)
 G.bgAnimator = Animator:new(G)
 G.circleAnimator = Animator:new(G)
+
+G.commonDices = {}
+G.uncommonDices = {}
+G.rareDices = {}
+G.faceTypes = FaceTypes
+
+for key, facetype in next, FaceTypes do
+	local f = facetype:new(1, 10)
+	if f.tier == "Common" then
+		table.insert(G.commonDices, key)
+	elseif f.tier == "Uncommon" then
+		table.insert(G.uncommonDices, key)
+	elseif f.tier == "Rare" then
+		table.insert(G.rareDices, key)
+	end
+end
+
+for i, d in next, G.commonDices do
+	print(d)
+end
+
+print("-----")
+for i, d in next, G.uncommonDices do
+	print(d)
+end
+
+print("-----")
+
+for i, d in next, G.rareDices do
+	print(d)
+end
+
+print("-----")
 
 applyCRT = true
 
@@ -163,6 +198,10 @@ function love.keypressed(key)
 		else
 			print("FPS illimité")
 		end
+	end
+
+	if key == "p" then
+		GenerateRandom.faceObject({})
 	end
 end
 

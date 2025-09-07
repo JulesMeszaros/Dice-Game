@@ -172,6 +172,8 @@ function InfoBubble:generateDiceBubble()
 		table.insert(tags, Sprites.UNCOMMON)
 	elseif self.object.representedObject.tier == "Rare" then
 		table.insert(tags, Sprites.RARE)
+	else
+		table.insert(tags, Sprites.RARE)
 	end
 
 	if self.object.representedObject.ghost == true then
@@ -479,4 +481,3 @@ function getMaxY(positions)
 end
 
 return InfoBubble
-
