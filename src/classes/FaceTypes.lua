@@ -2152,7 +2152,7 @@ function LuckyStar:new(faceValue, pointsValue)
 	self.totalTriggered = 0
 
 	self.description = "Scoring : [[+10pts]], ((x3)) if played hand is a Chance"
-
+	self.blank = true
 	return self
 end
 
