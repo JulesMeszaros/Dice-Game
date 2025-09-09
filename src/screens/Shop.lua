@@ -738,7 +738,7 @@ function Shop:rerollShop()
 		self.run.money = self.run.money - self.rerollShopPrice
 		self.run.totalspent = self.run.totalspent + self.rerollShopPrice
 		self:generateNewShop()
-		self.rerollShopPrice = self.rerollShopPrice --+Constants.BASE_SHOP_REROLL_PRINCE_INCREMENT
+		self.rerollShopPrice = self.rerollShopPrice + Constants.BASE_SHOP_REROLL_PRINCE_INCREMENT
 	end
 end
 
