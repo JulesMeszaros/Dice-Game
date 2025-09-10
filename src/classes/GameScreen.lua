@@ -106,7 +106,7 @@ function GameScreen:new(floor, run, screenType, round)
 	self.enemyTX, self.enemyTY, self.enemyX, self.enemyY = 790, 30, self.canvas:getWidth() + 20, 30
 	self.playerTX, self.playerTY, self.playerX, self.playerY = 510, 30, -800, 30
 
-	self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 0 - self.figureButtonsCanvas:getWidth(), 30
+	self.gridTX, self.gridTY, self.gridX, self.gridY = 30, 30, 0 - self.figureButtonsCanvas:getWidth() - 20, 30
 	self.diceDetailsTX, self.diceDetailsTY, self.diceDetailsX, self.diceDetailsY =
 		1460, 30, self.canvas:getWidth() + 200, 30
 	self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY =
@@ -773,38 +773,25 @@ function GameScreen:drawFigureGrid()
 	love.graphics.setColor(1, 1, 1)
 	--Write the remaining possible hands as dots
 	for i = 1, 13 do
-		if self.run.availableFigures[i] > 0 then
-			local xPos = self:getCenteredPositions(self.run.baseAvailableHands[i], 30, 10, 360)
+		local xPos = self:getCenteredPositions(self.run.baseAvailableHands[i], 30, 10, 360)
 
-			for _, p in next, xPos do
-				if _ <= self.run.availableFigures[i] then
-					if self.screenType == Constants.RUN_STATES.ROUND then
-						if self.calcBasePoints[i]()[1] > 0 then
-							love.graphics.draw(
-								Sprites.PLAYCOUNT_DOTS[i],
-								p,
-								70 * (i - 1) + 125,
-								0,
-								1,
-								1,
-								0,
-								Sprites.PLAYCOUNT_DOTS[i]:getHeight() / 2
-							)
-						else
-							love.graphics.draw(
-								Sprites.PLAYCOUNT_LGRAY,
-								p,
-								70 * (i - 1) + 125,
-								0,
-								1,
-								1,
-								0,
-								Sprites.PLAYCOUNT_DOTS[i]:getHeight() / 2
-							)
-						end
-					else
+		for _, p in next, xPos do
+			if _ <= self.run.availableFigures[i] then
+				if self.screenType == Constants.RUN_STATES.ROUND then
+					if self.calcBasePoints[i]()[1] > 0 then
 						love.graphics.draw(
 							Sprites.PLAYCOUNT_DOTS[i],
+							p,
+							70 * (i - 1) + 125,
+							0,
+							1,
+							1,
+							0,
+							Sprites.PLAYCOUNT_DOTS[i]:getHeight() / 2
+						)
+					else
+						love.graphics.draw(
+							Sprites.PLAYCOUNT_LGRAY,
 							p,
 							70 * (i - 1) + 125,
 							0,
@@ -816,7 +803,7 @@ function GameScreen:drawFigureGrid()
 					end
 				else
 					love.graphics.draw(
-						Sprites.PLAYCOUNT_GRAY,
+						Sprites.PLAYCOUNT_DOTS[i],
 						p,
 						70 * (i - 1) + 125,
 						0,
@@ -826,26 +813,25 @@ function GameScreen:drawFigureGrid()
 						Sprites.PLAYCOUNT_DOTS[i]:getHeight() / 2
 					)
 				end
+			else
+				love.graphics.draw(
+					Sprites.PLAYCOUNT_GRAY,
+					p,
+					70 * (i - 1) + 125,
+					0,
+					1,
+					1,
+					0,
+					Sprites.PLAYCOUNT_DOTS[i]:getHeight() / 2
+				)
 			end
-		else
-			--love.graphics.draw(self.handTexts[i], 360, 70*(i-1)+125, 0, 1, 1, self.handTexts[i]:getWidth()/2, self.handTexts[i]:getHeight()/2)
-
-			--if no hands remaining, grey out the line
-			love.graphics.draw(
-				Sprites.PLAYCOUNT_CROSS,
-				360,
-				70 * (i - 1) + 125,
-				0,
-				1,
-				1,
-				Sprites.PLAYCOUNT_CROSS:getWidth() / 2,
-				Sprites.PLAYCOUNT_CROSS:getHeight() / 2
-			)
-
+		end
+		if self.run.availableFigures[i] <= 0 then
 			love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
 			love.graphics.rectangle("fill", 20, 70 * (i - 1) + 90, 410, 70)
 			love.graphics.setColor(1, 1, 1, 1)
 		end
+
 		love.graphics.setColor(1, 1, 1, 1)
 	end
 

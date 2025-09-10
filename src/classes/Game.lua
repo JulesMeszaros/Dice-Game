@@ -29,6 +29,7 @@ function Game:start()
 	self.run = nil
 
 	self.gameCanvas = gameCanvas
+	self.backgroundCanvas = love.graphics.newCanvas(self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
 
 	self.currentScreen = Constants.PAGES.MAIN_MENU
 
@@ -56,6 +57,7 @@ end
 function Game:updateCanvas(dt)
 	love.graphics.setCanvas(self.gameCanvas)
 	love.graphics.clear()
+	self:drawBackground()
 	--Rendu du jeu dans le game canvas--
 	if self.currentScreen == Constants.PAGES.MAIN_MENU then
 		self.mainMenu:draw()
@@ -159,6 +161,32 @@ function Game:mousemoved(x, y, dx, dy)
 	end
 end
 
+function Game:drawBackground()
+	local currentCanvas = love.graphics.getCanvas()
+	-- Draw background to canvas with shader
+	love.graphics.setCanvas(self.backgroundCanvas)
+	love.graphics.clear()
+	love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
+	love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
+	love.graphics.rectangle("fill", 0, 0, self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
+
+	-- Set main canvas and draw background with shader
+	love.graphics.setCanvas(currentCanvas)
+	love.graphics.setShader(Shaders.diagonalCircles)
+	Shaders.diagonalCircles:send("time", love.timer.getTime())
+	Shaders.diagonalCircles:send("base_size", 0.05)
+	Shaders.diagonalCircles:send("amplitude", 0.03)
+	Shaders.diagonalCircles:send("spacing", 0.15)
+	Shaders.diagonalCircles:send("speed", 0.8)
+	Shaders.diagonalCircles:send("waveScale", 5.0)
+	Shaders.diagonalCircles:send("moveSpeed", 0.03)
+	Shaders.diagonalCircles:send("darkness", 0.3)
+	love.graphics.draw(self.backgroundCanvas, 0, 0)
+	love.graphics.setShader()
+	-- Restore default blend mode
+	love.graphics.setBlendMode("alpha", "alphamultiply")
+	love.graphics.setColor(1, 1, 1)
+end
 function Game:cleanup() end
 
 return Game

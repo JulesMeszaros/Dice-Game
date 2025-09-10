@@ -1673,7 +1673,7 @@ function Shop:outAnimation()
 		{
 			property = "gridX",
 			from = self.gridX,
-			targetValue = 0 - self.figureButtonsCanvas:getWidth(),
+			targetValue = 0 - self.figureButtonsCanvas:getWidth() - 40,
 			duration = outDuration,
 			easing = AnimationUtils.Easing.inOutCubic,
 		},

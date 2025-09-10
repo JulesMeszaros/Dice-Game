@@ -144,20 +144,20 @@ function EndRound:updateEarnedMoney()
 	love.graphics.clear()
 
 	--Text
-	local coworkerLabel = love.graphics.newText(
+	local coworkerLabel = love.graphics.newText(Fonts.soraReward, {
+		{ 255 / 255, 247 / 255, 160 / 255 },
+		"Coworker Reward : ",
+		{ 255 / 255, 223 / 255, 120 / 255 },
+		tostring(self.round.baseReward),
+	})
+	local turnsLabel = love.graphics.newText(
 		Fonts.soraReward,
 		{
 			{ 255 / 255, 247 / 255, 160 / 255 },
-			"Coworker Reward : ",
+			"Turn Left : ",
 			{ 255 / 255, 223 / 255, 120 / 255 },
-			tostring(self.round.baseReward),
+			tostring(self.round.remainingHands),
 		}
-	)
-	local turnsLabel = love.graphics.newText(
-		Fonts.soraReward,
-		{ { 255 / 255, 247 / 255, 160 / 255 }, "Turn Left : ", { 255 / 255, 223 / 255, 120 / 255 }, tostring(
-			self.round.remainingHands
-		) }
 	)
 
 	local coworkerDollars = love.graphics.newText(
@@ -169,17 +169,14 @@ function EndRound:updateEarnedMoney()
 		{ { 255 / 255, 178 / 255, 89 / 255 }, string.rep("$", self.round.remainingHands) }
 	)
 
-	local totalReward = love.graphics.newText(
-		Fonts.soraRewardTotal,
-		{
-			{ 255 / 255, 247 / 255, 160 / 255 },
-			"+",
-			{ 255 / 255, 223 / 255, 120 / 255 },
-			tostring(self.round.remainingHands + self.round.baseReward),
-			{ 255 / 255, 178 / 255, 89 / 255 },
-			"$",
-		}
-	)
+	local totalReward = love.graphics.newText(Fonts.soraRewardTotal, {
+		{ 255 / 255, 247 / 255, 160 / 255 },
+		"+",
+		{ 255 / 255, 223 / 255, 120 / 255 },
+		tostring(self.round.remainingHands + self.round.baseReward),
+		{ 255 / 255, 178 / 255, 89 / 255 },
+		"$",
+	})
 
 	love.graphics.draw(Sprites.CASH_REWARD, 0, 0)
 
@@ -348,6 +345,7 @@ function EndRound:generateRewards()
 	local c = Ciggie:new(self.round.ciggieReward, 1200, 880, false, true, function()
 		return Inputs.getMouseInCanvas(0, 0)
 	end, nil)
+	c.layer = 4
 
 	self.ciggieReward = c
 end
@@ -439,4 +437,3 @@ function EndRound:outAnimation()
 end
 
 return EndRound
-

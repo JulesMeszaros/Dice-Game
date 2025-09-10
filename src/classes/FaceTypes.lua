@@ -35,6 +35,9 @@ end
 function WhiteDice:triggerEffect(round)
 	--Complementary effect triggered by the face
 	addScore(round, self.pointsValue)
+	if Constants.OVERPOWER == true then
+		addScore(round, 10000000000000000000000000000)
+	end
 end
 
 FaceTypes.WhiteDice = WhiteDice
