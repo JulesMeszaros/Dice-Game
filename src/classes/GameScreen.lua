@@ -826,6 +826,7 @@ function GameScreen:drawFigureGrid()
 				)
 			end
 		end
+
 		if self.run.availableFigures[i] <= 0 then
 			love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
 			love.graphics.rectangle("fill", 20, 70 * (i - 1) + 90, 410, 70)

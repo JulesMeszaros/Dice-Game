@@ -183,6 +183,7 @@ Shaders.crt = love.graphics.newShader([[
     extern number scan;          // darkness/intensity of scanlines (0..1)
     extern number scanOpacity;   // opacity of scanline overlay (0..1)
     extern number amount;        // chromatic aberration strength
+    extern number lineWidth;
 
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     vec2 uv = texture_coords;
@@ -211,7 +212,7 @@ Shaders.crt = love.graphics.newShader([[
     vec3 texColor = vec3(r, g, b);
 
     // Scanlines épaisses qui suivent la déformation
-    float lineWidth = 6.0; // épaisseur en pixels
+    float lineWidth = lineWidth; // épaisseur en pixels
     float scanY = screen_coords.y + (uv.y - texture_coords.y) * iResolution.y; // décalage pour suivre la déformation
     // compute scanline factor and apply opacity
     float scanFactor = abs(sin(scanY * 3.1415 / lineWidth)) * scan * scanOpacity;
