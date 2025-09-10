@@ -604,20 +604,36 @@ function GameScreen:drawRoundDetails(dt)
 	--Create the texts
 	local rerollText = love.graphics.newText(Fonts.soraBig, "-")
 	local currentHands = love.graphics.newText(Fonts.soraBig, "-")
-	local currentRoundText = love.graphics.newText(
-		Fonts.soraSmall,
-		"Floor " .. tostring(self.run.floorNumber) .. "\nDesk : " .. tostring("-")
-	)
+	currentRoundText = love.graphics.newText(Fonts.soraFloorDesk, {
+		{ 108 / 255, 86 / 255, 113 / 255, 1 },
+		"FLOOR ",
+		{ 1, 104 / 255, 147 / 255, 1 },
+		tostring("-"),
+	})
+	currentDeskText = love.graphics.newText(Fonts.soraFloorDesk, {
+		{ 108 / 255, 86 / 255, 113 / 255, 1 },
+		"OFFICE ",
+		{ 176 / 255, 169 / 255, 228 / 255, 1 },
+		tostring("-"),
+	})
 	local moneyText = love.graphics.newText(Fonts.soraBig, tostring(self.run.money) .. "€")
 	local moneyText = tostring(math.floor(self.run.money)) .. "$"
 
 	if self.round then
 		rerollText = love.graphics.newText(Fonts.soraBig, tostring(self.round.availableRerolls))
 		currentHands = love.graphics.newText(Fonts.soraBig, tostring(self.round.remainingHands))
-		currentRoundText = love.graphics.newText(
-			Fonts.soraSmall,
-			"Floor " .. tostring(self.round.floorNumber) .. "\nDesk : " .. tostring(self.round.deskNumber)
-		)
+		currentRoundText = love.graphics.newText(Fonts.soraFloorDesk, {
+			{ 108 / 255, 86 / 255, 113 / 255, 1 },
+			"FLOOR ",
+			{ 1, 104 / 255, 147 / 255, 1 },
+			tostring(self.round.floorNumber),
+		})
+		currentDeskText = love.graphics.newText(Fonts.soraFloorDesk, {
+			{ 108 / 255, 86 / 255, 113 / 255, 1 },
+			"OFFICE ",
+			{ 176 / 255, 169 / 255, 228 / 255, 1 },
+			tostring(self.round.deskNumber),
+		})
 		moneyText = tostring(math.floor(self.round.run.money)) .. "$"
 	end
 
@@ -625,18 +641,26 @@ function GameScreen:drawRoundDetails(dt)
 	love.graphics.setCanvas(self.roundNumberCanvas)
 	love.graphics.clear()
 	love.graphics.draw(Sprites.FLOOR_INFOS, 0, 0)
-	love.graphics.setColor(0, 0, 0, 1)
 	love.graphics.draw(
 		currentRoundText,
 		self.roundNumberCanvas:getWidth() / 2,
-		self.roundNumberCanvas:getHeight() / 2,
+		self.roundNumberCanvas:getHeight() / 4,
 		0,
 		1,
 		1,
 		currentRoundText:getWidth() / 2,
 		currentRoundText:getHeight() / 2
 	)
-	love.graphics.setColor(1, 1, 1, 1)
+	love.graphics.draw(
+		currentDeskText,
+		self.roundNumberCanvas:getWidth() / 2,
+		3 * self.roundNumberCanvas:getHeight() / 4,
+		0,
+		1,
+		1,
+		currentDeskText:getWidth() / 2,
+		currentDeskText:getHeight() / 2
+	)
 	--HANDS
 	love.graphics.setCanvas(self.handsCanvas)
 	love.graphics.clear()
@@ -827,10 +851,22 @@ function GameScreen:drawFigureGrid()
 			end
 		end
 
-		if self.run.availableFigures[i] <= 0 then
-			love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
-			love.graphics.rectangle("fill", 20, 70 * (i - 1) + 90, 410, 70)
-			love.graphics.setColor(1, 1, 1, 1)
+		if self.screenType == Constants.RUN_STATES.ROUND then
+			if self.round.disabledFigures[i] == true then
+				love.graphics.setColor(0.4, 0.1, 0.1, 0.4)
+				love.graphics.rectangle("fill", 20, 70 * (i - 1) + 90, 410, 70)
+				love.graphics.setColor(1, 1, 1, 1)
+			elseif self.run.availableFigures[i] <= 0 then
+				love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
+				love.graphics.rectangle("fill", 20, 70 * (i - 1) + 90, 410, 70)
+				love.graphics.setColor(1, 1, 1, 1)
+			end
+		else
+			if self.run.availableFigures[i] <= 0 then
+				love.graphics.setColor(0.4, 0.4, 0.4, 0.4)
+				love.graphics.rectangle("fill", 20, 70 * (i - 1) + 90, 410, 70)
+				love.graphics.setColor(1, 1, 1, 1)
+			end
 		end
 
 		love.graphics.setColor(1, 1, 1, 1)
