@@ -290,7 +290,7 @@ end
 
 --==TRIGGER FUNCTIONS==--
 function DiceFace:trigger(round) --Lance le trigger du dé
-	self.animator:addDelay(0.2)
+	self.animator:addDelay(0.05)
 
 	--[[ self.animator:addGroup({
         {property="scaleX", from=1, targetValue=1.2, duration=0.1, easing=AnimationUtils.Easing.easeOutBack},
@@ -321,21 +321,23 @@ function DiceFace:trigger(round) --Lance le trigger du dé
 end
 
 function DiceFace:triggerBackup(round)
-	self.animator:addDelay(0.3)
+	self.animator:addDelay(0.1)
 
-	self.animator:addGroup({
-		{ property = "scaleX", from = 1.6, targetValue = 0.5, duration = 0.05 },
-		{ property = "scaleY", from = 0.8, targetValue = 1.7, duration = 0.05 },
-	})
-
-	self.animator:addDelay(0.1, function()
+	self.animator:addDelay(0.05, function()
 		self.representedObject:triggerBackup(round, self)
 		round.terrain:animateHandScore()
 	end) --On déclenche l'effet du dé ici
 
 	self.animator:addGroup({
-		{ property = "scaleX", from = 0.5, targetValue = 1, duration = 0.1 },
-		{ property = "scaleY", from = 1.3, targetValue = 1, duration = 0.1 },
+		{ property = "scaleX", from = 1.5, targetValue = 1, duration = 0.3 },
+		{ property = "scaleY", from = 1.5, targetValue = 1, duration = 0.3 },
+		{
+			property = "rotation",
+			from = 0.5,
+			targetValue = 0,
+			duration = 0.3,
+			easing = AnimationUtils.Easing.easeOutBack,
+		},
 	})
 end
 
