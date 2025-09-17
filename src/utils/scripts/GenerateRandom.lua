@@ -56,7 +56,7 @@ function GenerateRandom.faceObject(forbiddenKeys, c, u, r) --Les parametres c u 
 	for key, _ in pairs(listToPick) do
 		local isForbidden = false
 		for i, fk in next, forbiddenKeys do
-			if fk == key then
+			if fk == _ then
 				isForbidden = true
 			end
 		end
@@ -78,4 +78,3 @@ function GenerateRandom.faceObject(forbiddenKeys, c, u, r) --Les parametres c u 
 end
 
 return GenerateRandom
-

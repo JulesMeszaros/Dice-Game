@@ -34,6 +34,7 @@ G.animator = Animator:new(G)
 G.bgAnimator = Animator:new(G)
 G.circleAnimator = Animator:new(G)
 
+G.faceNames = {}
 G.commonDices = {}
 G.uncommonDices = {}
 G.rareDices = {}
@@ -48,6 +49,7 @@ for key, facetype in next, FaceTypes do
 	elseif f.tier == "Rare" then
 		table.insert(G.rareDices, key)
 	end
+	G.faceNames[key] = f.name
 end
 
 applyCRT = true

@@ -736,6 +736,8 @@ end
 
 function Shop:rerollShop()
 	if self.run.money >= self.rerollShopPrice then
+		G.animator:finishAll()
+		G.animator:add("waveY", -6, 0, 1.0, AnimationUtils.Easing.outQuad)
 		self.run.money = self.run.money - self.rerollShopPrice
 		self.run.totalspent = self.run.totalspent + self.rerollShopPrice
 		self:generateNewShop()
@@ -949,15 +951,17 @@ function Shop:generateAvailableFaces()
 	local forbiddenFaces = {}
 	table.insert(forbiddenFaces, "WhiteDice")
 
-	for key, _ in pairs(FaceTypes) do
+	for i, name in pairs(G.faceNames) do
 		--Maintenant on parcoure l'inventaire
-		local dummyFace = FaceTypes[key]:new(1, 0)
-
 		for k, d in next, self.run.facesInventory do
-			if d.name == dummyFace.name then
-				table.insert(forbiddenFaces, key)
+			if d.name == name then
+				table.insert(forbiddenFaces, i)
 			end
 		end
+	end
+
+	for _, __ in next, forbiddenFaces do
+		print(__)
 	end
 
 	self.availableFaceObjects = {}

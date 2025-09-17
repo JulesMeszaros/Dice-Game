@@ -46,7 +46,7 @@ function CalculatePoints.brelanBasePoints(dices, level)
 	if maxDistrib >= 3 then --On vérifie que le numero le plus représenté est superieur ou égal à 3
 		for k, d in next, dices do
 			if d:getCurrentFaceObject().blank == false then
-				if d:getCurrentFaceObject().faceValue == maxDistribN then
+				if d:getCurrentFaceObject().faceValue == maxDistribN and table.getn(usedDices) < 3 then
 					score = score + d:getCurrentFaceObject().faceValue
 					table.insert(usedDices, d)
 				end
@@ -88,7 +88,6 @@ end
 function CalculatePoints.carreBasePoints(dices, level)
 	local score = 0
 	local usedDices = {}
-
 	local maxDistrib = 0
 	local maxDistribN = 0
 
@@ -104,7 +103,7 @@ function CalculatePoints.carreBasePoints(dices, level)
 	if maxDistrib >= 4 then --On vérifie que le numero le plus représenté est superieur ou égal à 3
 		for dice, d in next, dices do
 			if d:getCurrentFaceObject().blank == false then
-				if d:getCurrentFaceObject().faceValue == maxDistribN then
+				if d:getCurrentFaceObject().faceValue == maxDistribN and table.getn(usedDices) < 4 then
 					score = score + d:getCurrentFaceObject().faceValue
 					table.insert(usedDices, d)
 				end
@@ -125,6 +124,7 @@ function CalculatePoints.pttSuiteBasePoints(dices, level)
 	local score = 0
 	local usedDices = {}
 	local drawedNumbers = {}
+	local usedNumbers = { false, false, false, false, false, false }
 
 	for f, n in next, dices do
 		if n:getCurrentFaceObject().blank == false then
@@ -139,8 +139,12 @@ function CalculatePoints.pttSuiteBasePoints(dices, level)
 		for dice, f in next, dices do
 			if f:getCurrentFaceObject().blank == false then
 				for i, j in next, suite do
-					if f:getCurrentFaceObject().faceValue == j then
+					if
+						f:getCurrentFaceObject().faceValue == j
+						and usedNumbers[f:getCurrentFaceObject().faceValue] == false
+					then
 						table.insert(usedDices, f)
+						usedNumbers[f:getCurrentFaceObject().faceValue] = true
 					end
 				end
 			else
@@ -298,4 +302,3 @@ function getStraight(numbers, targetLength)
 end
 
 return CalculatePoints
-
