@@ -235,7 +235,8 @@ function Shop:updateCanvas(dt)
 
 	--Buy Ciggie Popup
 	if self.dragAndDroppedShopCiggie then
-		love.graphics.draw(Sprites.BUY_CIGGIE, 1670, 590, 0, 1, 1)
+		local px, py = G.calculateParalaxeOffset(1)
+		love.graphics.draw(Sprites.BUY_CIGGIE, 1670 + px, 590 + py, 0, 1, 1)
 		love.graphics.draw(Sprites.USE_NOW, 30, self.canvas:getHeight() - 30, 0, 1, 1, 0, Sprites.USE_NOW:getHeight())
 		-- love.graphics.draw(Sprites.USE_NOW, 30, 0, 1, 1, 0, Sprites.USE_NOW:getHeight())
 		self.buyCiggieText:update(dt)
