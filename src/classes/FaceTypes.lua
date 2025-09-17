@@ -1656,7 +1656,7 @@ function NegativeDice:new(faceValue, pointsValue)
 	--Metadatas about the Resurection
 	self.name = "Negative Dice"
 	self.id = 42
-	self.tier = "Rare"
+	self.tier = "Uncommon"
 
 	--Metadatas about the graphics of the NegativeDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Negative Dice.png")
@@ -2497,7 +2497,7 @@ function TimeDice:getDescription(run)
 	for j = 1, 13 do
 		i = i + run.baseAvailableHands[j]
 	end
-	return "Adds a Time Magic Wand to inventory. Adds ((X0.1)) for each 10$ in bank (currently : ((X"
+	return "Adds a Time Magic Wand to inventory. Adds ((X0.1)) for total playable figure (currently : ((X"
 		.. tostring(i * 0.1)
 		.. ")))"
 end
