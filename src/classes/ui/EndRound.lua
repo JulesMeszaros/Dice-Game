@@ -150,15 +150,12 @@ function EndRound:updateEarnedMoney()
 		{ 255 / 255, 223 / 255, 120 / 255 },
 		tostring(self.round.baseReward),
 	})
-	local turnsLabel = love.graphics.newText(
-		Fonts.soraReward,
-		{
-			{ 255 / 255, 247 / 255, 160 / 255 },
-			"Turn Left : ",
-			{ 255 / 255, 223 / 255, 120 / 255 },
-			tostring(self.round.remainingHands),
-		}
-	)
+	local turnsLabel = love.graphics.newText(Fonts.soraReward, {
+		{ 255 / 255, 247 / 255, 160 / 255 },
+		"Turn Left : ",
+		{ 255 / 255, 223 / 255, 120 / 255 },
+		tostring(self.round.remainingHands),
+	})
 
 	local coworkerDollars = love.graphics.newText(
 		Fonts.soraReward,
@@ -370,7 +367,9 @@ end
 
 --==Animation==--
 function EndRound:outAnimation()
-	self.ciggieReward.anchorX, self.ciggieReward.anchorY = nil, nil
+	if self.ciggieReward then
+		self.ciggieReward.anchorX, self.ciggieReward.anchorY = nil, nil
+	end
 	for i, face in next, self.faceRewards do
 		face.anchorX, face.anchorY = nil, nil
 	end

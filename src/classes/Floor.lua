@@ -81,8 +81,14 @@ function Floor:generateBoss()
 	return r
 end
 
-function Floor:generateReward(c, u, r) --Les parametres représentent le pourcentage de chances d'avoir un common, uncommon, ou rare
-	return { GenerateRandom:faceObject(), GenerateRandom:faceObject() }
+function Floor:generateReward(c, u, r)
+	local common = c or 75
+	local uncommon = u or 20
+	local rare = r or 5 --Les parametres représentent le pourcentage de chances d'avoir un common, uncommon, ou rare
+	return {
+		GenerateRandom.faceObject({ "WhiteDice" }, common, uncommon, rare),
+		GenerateRandom.faceObject({ "WhiteDice" }, common, uncommon, rare),
+	}
 end
 
 return Floor
