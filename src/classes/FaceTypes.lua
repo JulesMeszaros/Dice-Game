@@ -154,10 +154,10 @@ function GoldDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), GoldDice)
 
 	--Metadatas about the BlackStar
-	self.name = "Gold Face"
+	self.name = "Gold Dice"
 	self.tier = "Common"
 	self.id = 5
-	self.description = "[[+10pts]]. When triggered, adds 3€ to the balance"
+	self.description = "[[+10pts]]. When triggered, adds 5€ to the balance"
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Gold Dice.png")
@@ -175,7 +175,7 @@ end
 
 function GoldDice:triggerEffect(round)
 	--Ajoute 1€ au solde banquaire
-	addMoney(round, 3)
+	addMoney(round, 5)
 	addScore(round, self.pointsValue)
 end
 
@@ -355,7 +355,7 @@ function BasketOfEggs:fullHandEffect(round)
 	multiplyScore(round, 1.5)
 end
 
-FaceTypes.BasketOfEggs = BasketOfEggs
+-- FaceTypes.BasketOfEggs = BasketOfEggs
 
 --==Apparition==--
 local Apparition = setmetatable({}, { __index = FaceObject })
@@ -554,7 +554,7 @@ function DoubleDown:new(faceValue, pointsValue)
 	self.name = "Double Down"
 	self.id = 16
 	self.tier = "Common"
-	self.description = "Scoring : Adds [[10pts]] per even dices in scored hand"
+	self.description = "Scoring : Adds [[50pts]] per even dices in scored hand"
 
 	--Metadatas about the graphics of the DoubleDown
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Double Down.png")
@@ -580,7 +580,7 @@ function DoubleDown:triggerEffect(round)
 		end
 	end
 
-	addScore(round, n * 10)
+	addScore(round, n * 50)
 end
 
 FaceTypes.DoubleDown = DoubleDown
@@ -596,7 +596,7 @@ function OddJob:new(faceValue, pointsValue)
 	self.name = "Odd Job"
 	self.id = 15
 	self.tier = "Common"
-	self.description = "Scoring : Adds [[10pts]] per odd dices in scored hand"
+	self.description = "Scoring : Adds [[50pts]] per odd dices in scored hand"
 
 	--Metadatas about the graphics of the OddJob
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Odd Job.png")
@@ -622,7 +622,7 @@ function OddJob:triggerEffect(round)
 		end
 	end
 
-	addScore(round, n * 10)
+	addScore(round, n * 50)
 end
 
 FaceTypes.OddJob = OddJob
@@ -722,10 +722,7 @@ function SniperDice:new(faceValue, pointsValue)
 	self.faceDimmension = 120 --sets the dimmensions for a face of the SniperDice in px (in the png)
 
 	self.backup = true
-	self.backupScoreValue = 1
-	self.description = "Backup : Adds [[10pts]] to the score. Value goes up by [[5]]. Currently : [["
-		.. tostring(self.backupScoreValue)
-		.. " pts]]"
+	self.backupScoreValue = 1.2
 
 	--Numbered status
 	self.faceValue = faceValue --This is the face represented by the face (the number shown)
@@ -739,12 +736,12 @@ function SniperDice:triggerEffect(round)
 end
 
 function SniperDice:backupEffect(round)
-	self.backupScoreValue = self.backupScoreValue + 0.1
 	multiplyScore(round, self.backupScoreValue)
+	self.backupScoreValue = self.backupScoreValue + 0.2
 end
 
 function SniperDice:getDescription(run)
-	return "Backup : ((x" .. self.backupScoreValue .. ")). Value goes up by ((0.1pts))"
+	return "Backup : ((x" .. self.backupScoreValue .. ")). Value goes up by ((0.2pts))"
 end
 
 FaceTypes.SniperDice = SniperDice
@@ -764,7 +761,7 @@ function Spotlight:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the Spotlight
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Spotlight Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "First : Multiplies the hand score by ((2)). Scoring: [[+10pts]]"
+	self.description = "First : Multiplies the hand score by ((3)). Scoring: [[+10pts]]"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the Spotlight in px (in the png)
 
 	self.first = true
@@ -782,7 +779,7 @@ function Spotlight:triggerEffect(round)
 end
 
 function Spotlight:firstEffect(round)
-	multiplyScore(round, 2)
+	multiplyScore(round, 3)
 end
 
 FaceTypes.Spotlight = Spotlight
@@ -835,7 +832,7 @@ function CryptoDice:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the CryptoDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crypto Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "Scoring : Multiplies the hand score by ((2)), lowers the money to 0$"
+	self.description = "Scoring : ((x3)), lowers the money to 0$"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the CryptoDice in px (in the png)
 
 	--Numbered status
@@ -847,7 +844,7 @@ end
 
 function CryptoDice:triggerEffect(round)
 	--Complementary effect triggered by the face
-	multiplyScore(round, 2)
+	multiplyScore(round, 3)
 	if round.run.money > 0 then
 		setMoney(round, 0)
 	end
@@ -870,7 +867,6 @@ function Patience:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the Patience
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Patience.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "Scoring : [[+10pts]], increase this value by [[5pts]]"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the Patience in px (in the png)
 
 	--Numbered status
@@ -883,11 +879,11 @@ end
 function Patience:triggerEffect(round)
 	--Complementary effect triggered by the face
 	addScore(round, self.pointsValue)
-	upgradeStat(self, "pointsValue", 5)
+	upgradeStat(self, "pointsValue", 30)
 end
 
 function Patience:getDescription(run)
-	return "Scoring : [[+" .. tostring(self.pointsValue) .. "pts]], increase this value by [[5pts]]"
+	return "Scoring : [[+" .. tostring(self.pointsValue) .. "pts]], increase this value by [[30pts]]"
 end
 
 FaceTypes.Patience = Patience
