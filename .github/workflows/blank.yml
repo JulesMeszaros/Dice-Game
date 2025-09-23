@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create .love file
         run: |
@@ -19,7 +19,7 @@ jobs:
           zip -9 -r dist/game.love . -x ".git/*" ".github/*" "dist/*"
 
       - name: Upload .love artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: love2d-game
           path: dist/game.love
