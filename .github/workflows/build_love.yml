@@ -16,7 +16,7 @@ jobs:
       - name: Create .love file
         run: |
           mkdir -p dist
-          zip -9 -r dist/game.love . -x ".git/*" ".github/*" "dist/*"
+          zip -9 -r dist/DiceDeluxe.love . -x ".git/*" ".github/*" "dist/*"
 
       - name: Upload .love artifact
         uses: actions/upload-artifact@v4
