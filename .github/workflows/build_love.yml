@@ -13,6 +13,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup love
+        uses: remarkablegames/setup-love@v1
+
+      - name: Display version
+        run: love --version
+
       - name: Create .love file
         run: |
           mkdir -p dist
