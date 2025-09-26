@@ -594,20 +594,16 @@ function DeskChoice:getCurrentlyHoveredFace()
 	local canvasX = nil
 	local canvasY = nil
 
+	--Faces de la vue de deck
+	if self.showDeck == true then
+		self.currentlyHoveredFace = self.deckScreen:getCurrentlyHoveredFace()
+		return
+	end
+
 	--Pour les faces dans le patron à droite
 	for i, face in next, self.infoFaces do
 		if face:isHovered() and self.currentlySelectedDice then
 			self.currentlyHoveredFace = face
-
-			if self.currentlyHoveredFace ~= self.previouslyHoveredFace then
-				self.hoverInfosCanvas = FaceHoverInfo:new(
-					self.currentlyHoveredFace,
-					"points",
-					self.diceDetailsX - self.diceDetailsCanvas:getWidth(),
-					30
-				)
-			end
-
 			break
 		end
 	end

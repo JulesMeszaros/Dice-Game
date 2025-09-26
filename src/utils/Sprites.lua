@@ -29,6 +29,7 @@ Sprites.GRID = love.graphics.newImage("src/assets/sprites/ui/Grid.png")
 Sprites.DICE_MAT = love.graphics.newImage("src/assets/sprites/ui/Dice Mat.png")
 Sprites.PLAYCOUNT_CROSS = love.graphics.newImage("src/assets/sprites/ui/Playcount Cross.png")
 Sprites.DECK_PANEL = love.graphics.newImage("src/assets/sprites/ui/DeckPannel.png")
+Sprites.COMPOSITION_PANEL = love.graphics.newImage("src/assets/sprites/ui/Composition Frame.png")
 Sprites.PLAYCOUNT_DOTS = {
 	love.graphics.newImage("src/assets/sprites/ui/Playcount-0.png"),
 	love.graphics.newImage("src/assets/sprites/ui/Playcount-1.png"),

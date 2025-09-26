@@ -35,7 +35,10 @@ function Deck:updateCanvas(dt)
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.canvas)
 
+	love.graphics.clear()
+
 	--love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
+	love.graphics.draw(Sprites.COMPOSITION_PANEL, 0, 30)
 	love.graphics.draw(Sprites.DECK_PANEL, self.canvas:getWidth(), 0, 0, 1, 1, Sprites.DECK_PANEL:getWidth(), 0)
 
 	--Draw the faces
@@ -50,7 +53,19 @@ function Deck:updateCanvas(dt)
 end
 
 function Deck:draw()
-	love.graphics.draw(self.canvas, 510, 30)
+	local px, py = G.calculateParalaxeOffset(2)
+	love.graphics.draw(self.canvas, 510 + px, 30 + py)
+end
+
+function Deck:getCurrentlyHoveredFace()
+	for i, dice in next, self.diceFaces do
+		for j, face in next, dice do
+			if face:isHovered() then
+				return face
+			end
+		end
+	end
+	return nil
 end
 
 return Deck
