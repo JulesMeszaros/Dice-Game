@@ -11,6 +11,7 @@ local DiceFace = require("src.classes.ui.DiceFace")
 local Screen = require("src.classes.GameScreen")
 local UI = require("src.utils.scripts.UI")
 local Fonts = require("src.utils.Fonts")
+local Deck = require("src.classes.ui.Deck")
 
 local DeskChoice = setmetatable({}, { __index = Screen })
 DeskChoice.__index = DeskChoice
@@ -95,44 +96,57 @@ function DeskChoice:update(dt)
 		self.scoresChanged = true
 	end
 
-	local currentCanvas = love.graphics.getCanvas()
-	love.graphics.setCanvas(self.canvas)
-	love.graphics.clear()
-
 	self.animator:update(dt)
+	if self.showDeck == false then
+		if self.bossWavyText and self.showText == true then
+			self.bossWavyText:update(dt)
+			self.bossWavyText:draw()
+		end
 
-	if self.bossWavyText and self.showText == true then
-		self.bossWavyText:update(dt)
-		self.bossWavyText:draw()
+		--Check if a ciggie is being dragged to the screen
+		self:checkForDraggedCiggie()
 	end
 
-	--Check if a ciggie is being dragged to the screen
-	self:checkForDraggedCiggie()
+	if self.showDeck and self.deckScreen then
+		self.deckScreen:update(dt)
+	end
 
 	--hovered objects
 	self:getCurrentlyHoveredFace()
 	self:getCurrentlyHoveredCiggie()
 	self:getCurrentlyHoveredObject()
 
+	--Update canvas
+	self:updateCanvas(dt)
+end
+
+function DeskChoice:updateCanvas(dt)
+	local currentCanvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(self.canvas)
+	love.graphics.clear()
+
 	for key, button in next, self.uiElements.buttons do
 		button:update(dt)
 		button:draw()
 	end
 
-	--UI
-	self:drawDeck(dt)
 	self:drawRoundDetails(dt)
-	self:drawDiceDetails(dt)
-	self:updateChoiceCanvas(dt)
-	if self.run.floorDeskNumber > Constants.DESKS_BY_FLOOR then
-		self:drawBossDesc(dt)
-	end
 
-	--Upgrading figure popup
-	if self.addingAvailableHand == true then
-		self:drawUpgradingFigurePopup(dt)
-	end
+	if self.showDeck == false then
+		self:drawDeck(dt)
+		self:drawDiceDetails(dt)
+		self:updateChoiceCanvas(dt)
+		if self.run.floorDeskNumber > Constants.DESKS_BY_FLOOR then
+			self:drawBossDesc(dt)
+		end
 
+		--Upgrading figure popup
+		if self.addingAvailableHand == true then
+			self:drawUpgradingFigurePopup(dt)
+		end
+	else
+		self.deckScreen:draw()
+	end
 	self:drawFigureGrid()
 
 	--Ciggie Popup
@@ -299,6 +313,12 @@ end
 
 function DeskChoice:keypressed(key)
 	print("keypressed")
+
+	if key == "d" then
+		self.deckScreen = Deck:new()
+		self.showDeck = not self.showDeck
+		print(self.showDeck)
+	end
 end
 
 function DeskChoice:mousepressed(x, y, button, istouch, presses)
@@ -307,36 +327,75 @@ function DeskChoice:mousepressed(x, y, button, istouch, presses)
 		button:clickEvent()
 	end
 
-	--Badges
-	for key, badge in next, self.badges do
-		badge:clickEvent()
-	end
+	if self.showDeck == false then
+		--Badges
+		for key, badge in next, self.badges do
+			badge:clickEvent()
+		end
 
-	--Deck faces
-	for key, uiFace in next, self.deckFaces do
-		uiFace:clickEvent()
+		--Deck faces
+		for key, uiFace in next, self.deckFaces do
+			uiFace:clickEvent()
+		end
+
+		--Figure buttons
+		self.clickedFigure = self:getCurrentlyHoveredLine()
 	end
 
 	--Ciggies
 	for key, ciggie in next, self.uiElements.ciggiesUI do
 		ciggie:clickEvent()
 	end
-
-	--Figure buttons
-	self.clickedFigure = self:getCurrentlyHoveredLine()
 end
 
 function DeskChoice:mousereleased(x, y, button, istouch, presses)
 	self.dragAndDroppedObject = nil
+	if self.showDeck == false then
+		--release event on UI elements (badges)
+		for key, badge in next, self.badges do
+			local wasReleased = badge:releaseEvent()
+			if wasReleased then --Si le click a été complété
+				self:outAnimation(badge)
+			end
+		end
 
-	--release event on UI elements (badges)
-	for key, badge in next, self.badges do
-		local wasReleased = badge:releaseEvent()
-		if wasReleased then --Si le click a été complété
-			self:outAnimation(badge)
+		for key, face in next, self.deckFaces do
+			local wasReleased = face:releaseEvent()
+			if wasReleased then --On sélectionne la face a switcher
+				self:resetSelectedDices()
+				face:setSelected(true)
+				self.previouslySelectedDice = self.currentlySelectedDice
+				self.currentlySelectedDice = face
+
+				if self.currentlySelectedDice ~= self.previouslySelectedDice then
+					for i = 1, 6 do
+						self.infoFaces[i].animator:finishAll()
+						self.infoFaces[i].baseTargetedScale = 0
+						self.infoFaces[i].scaleX = 0
+						self.infoFaces[i].scaleY = 0
+
+						self.infoFaces[i].animator:addDelay((i - 1) * 0.05)
+						self.infoFaces[i].animator:addGroup({
+							{
+								property = "baseTargetedScale",
+								from = 0,
+								targetValue = 1,
+								duration = 0.2,
+								easing = AnimationUtils.Easing.easeOutBack,
+							},
+							{
+								property = "scale",
+								from = 0,
+								targetValue = 1,
+								duration = 0.2,
+								easing = AnimationUtils.Easing.easeOutBack,
+							},
+						})
+					end
+				end
+			end
 		end
 	end
-
 	--release event on UI elements (buttons)
 	for key, button in next, self.uiElements.buttons do
 		local wasReleased = button:releaseEvent()
@@ -345,48 +404,13 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
 		end
 	end
 
-	for key, face in next, self.deckFaces do
-		local wasReleased = face:releaseEvent()
-		if wasReleased then --On sélectionne la face a switcher
-			self:resetSelectedDices()
-			face:setSelected(true)
-			self.previouslySelectedDice = self.currentlySelectedDice
-			self.currentlySelectedDice = face
-
-			if self.currentlySelectedDice ~= self.previouslySelectedDice then
-				for i = 1, 6 do
-					self.infoFaces[i].animator:finishAll()
-					self.infoFaces[i].baseTargetedScale = 0
-					self.infoFaces[i].scaleX = 0
-					self.infoFaces[i].scaleY = 0
-
-					self.infoFaces[i].animator:addDelay((i - 1) * 0.05)
-					self.infoFaces[i].animator:addGroup({
-						{
-							property = "baseTargetedScale",
-							from = 0,
-							targetValue = 1,
-							duration = 0.2,
-							easing = AnimationUtils.Easing.easeOutBack,
-						},
-						{
-							property = "scale",
-							from = 0,
-							targetValue = 1,
-							duration = 0.2,
-							easing = AnimationUtils.Easing.easeOutBack,
-						},
-					})
-				end
-			end
-		end
-	end
-
 	--Ciggies
 	for key, ciggie in next, self.uiElements.ciggiesUI do
 		ciggie:releaseEvent()
 		ciggie.isBeingDragged = false
-		self:ciggieReleaseAction(ciggie)
+		if self.showDeck == false then
+			self:ciggieReleaseAction(ciggie)
+		end
 	end
 
 	--Figure buttons

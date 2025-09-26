@@ -31,6 +31,7 @@ function GameScreen:new(floor, run, screenType, round)
 
 	--Events
 	self.addingAvailableHand = false
+	self.showDeck = false
 
 	--Canvas
 	self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
