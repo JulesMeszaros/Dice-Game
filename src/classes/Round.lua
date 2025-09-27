@@ -153,7 +153,9 @@ end
 
 --==MOUSE/KEYBOARD FUNCTIONS==--
 
-function Round:keypressed(key) --(Mainly for debug)
+function Round:keypressed(key)
+	self.terrain:keypressed(key)
+	--(Mainly for debug)
 	if key == "h" then --add 10 hands
 		self.remainingHands = self.remainingHands + 10
 	end

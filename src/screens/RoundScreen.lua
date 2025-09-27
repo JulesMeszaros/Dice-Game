@@ -8,6 +8,7 @@ local AnimationUtils = require("src.utils.scripts.Animations")
 local UI = require("src.utils.scripts.UI")
 local MainMenu = require("src.screens.MainMenu")
 --UI
+local Deck = require("src.classes.ui.Deck")
 local Sprites = require("src.utils.Sprites")
 local DiceFace = require("src.classes.ui.DiceFace")
 local InfoBubble = require("src.classes.ui.InfoBubble")
@@ -239,22 +240,28 @@ function RoundScreen:new(round)
 end
 
 function RoundScreen:update(dt)
-	self.timers.firstRerollTime = self.timers.firstRerollTime + dt
-	self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy + dt
-	self.timers.oscillationTimePlayer = self.timers.oscillationTimePlayer + dt
-	-- Mark scores as changed when needed (this ensures text is updated when data changes)
-	-- For now, we'll update every few frames to be safe, but this could be optimized further
-	if love.timer.getTime() % 0.1 < dt then
-		self.scoresChanged = true
+	if self.showDeck == false then
+		self.timers.firstRerollTime = self.timers.firstRerollTime + dt
+		self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy + dt
+		self.timers.oscillationTimePlayer = self.timers.oscillationTimePlayer + dt
+		-- Mark scores as changed when needed (this ensures text is updated when data changes)
+		-- For now, we'll update every few frames to be safe, but this could be optimized further
+		if love.timer.getTime() % 0.1 < dt then
+			self.scoresChanged = true
+		end
+
+		if self.rerollingTimer >= 0 then
+			self.rerollingTimer = self.rerollingTimer - dt
+		end
+
+		--Update dices UI
+		for key, dice in next, self.diceFaces do
+			dice:update(dt)
+		end
 	end
 
-	if self.rerollingTimer >= 0 then
-		self.rerollingTimer = self.rerollingTimer - dt
-	end
-
-	--Update dices UI
-	for key, dice in next, self.diceFaces do
-		dice:update(dt)
+	if self.showDeck == true and self.deckScreen then
+		self.deckScreen:update(dt)
 	end
 
 	--Reset Bouton de figure et Dé survolé
@@ -295,41 +302,47 @@ function RoundScreen:updateCanvas(dt)
 
 	--Check if a ciggie is being dragged to the screen
 	self:checkForDraggedCiggie()
+	if self.showDeck == false then
+		--PlayersInfos
+		self:drawPlayersInfos(dt)
+		--Dice Tray
+		local px, py = G.calculateParalaxeOffset(3)
+		self:drawDiceTray(self.diceMatx + px, self.diceMaty + py, self.diceFaces)
 
-	--PlayersInfos
-	self:drawPlayersInfos(dt)
-	--Dice Tray
-	local px, py = G.calculateParalaxeOffset(3)
-	self:drawDiceTray(self.diceMatx + px, self.diceMaty + py, self.diceFaces)
+		--Dice Details
+		self:updateDiceNet(dt)
+		self:drawDiceDetails()
+		--First round text
+		if self.showFirstRollText == true and self.round.firstRoll == false then
+			UI.Text.drawWavyText("Roll the dice!", self.canvas:getWidth() / 2, (self.canvas:getHeight() / 2) + 120, {
+				font = Fonts.soraBig,
+				time = self.timers.firstRerollTime,
+				centered = true,
+				speed = 2,
+				revealSpeed = 120, -- lettres/seconde
+				colorStart = { 176 / 255, 169 / 255, 228 / 255, 1 },
+				colorEnd = { 221 / 255, 76 / 255, 173 / 255, 1 },
+			})
+		end
 
-	--Bouttouns de round
-	for k, b in next, self.uiElements.buttons do
-		b:draw()
+		--Upgrading figure popup
+		if self.addingAvailableHand == true then
+			self:drawUpgradingFigurePopup(dt)
+		end
 	end
 
-	--Dice Details
-	self:updateDiceNet(dt)
-	self:drawDiceDetails()
+	if self.showDeck and self.deckScreen then
+		self.deckScreen:draw()
+	end
 
 	--ROUND DETAILS
 	self:drawRoundDetails(dt)
 
-	--First round text
-	if self.showFirstRollText == true and self.round.firstRoll == false then
-		UI.Text.drawWavyText("Roll the dice!", self.canvas:getWidth() / 2, (self.canvas:getHeight() / 2) + 120, {
-			font = Fonts.soraBig,
-			time = self.timers.firstRerollTime,
-			centered = true,
-			speed = 2,
-			revealSpeed = 120, -- lettres/seconde
-			colorStart = { 176 / 255, 169 / 255, 228 / 255, 1 },
-			colorEnd = { 221 / 255, 76 / 255, 173 / 255, 1 },
-		})
-	end
-
-	--Upgrading figure popup
-	if self.addingAvailableHand == true then
-		self:drawUpgradingFigurePopup(dt)
+	--Bouttouns de round
+	for k, b in next, self.uiElements.buttons do
+		if self.showDeck == false or k ~= "rerollButton" then
+			b:draw()
+		end
 	end
 
 	--Figure Buttons
@@ -337,7 +350,7 @@ function RoundScreen:updateCanvas(dt)
 	self:drawFigureGrid(self.gridX, self.gridY)
 
 	--Ciggie Popup
-	if self.previousCiggieDraggedState ~= self.draggedCiggie then
+	if self.showDeck == false and self.previousCiggieDraggedState ~= self.draggedCiggie then
 		if self.draggedCiggie then
 			self:startCiggiePopUp()
 		else
@@ -345,7 +358,7 @@ function RoundScreen:updateCanvas(dt)
 		end
 	end
 
-	if self.showCiggiePopup then
+	if self.showCiggiePopup and self.showDeck == false then
 		self:drawCiggiePopup(dt)
 	end
 
@@ -508,7 +521,7 @@ function RoundScreen:mousepressed(x, y, button, istouch, presses)
 		and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER
 		and self.round.phase ~= Constants.ROUND_STATES.RUN_END
 	then
-		if self.round.phase ~= Constants.ROUND_STATES.TRIGGERING then
+		if self.showDeck == false and self.round.phase ~= Constants.ROUND_STATES.TRIGGERING then
 			--DiceFaces
 			for key, uiFace in next, self.diceFaces do
 				uiFace:clickEvent()
@@ -525,7 +538,9 @@ function RoundScreen:mousepressed(x, y, button, istouch, presses)
 
 		--Round Buttons
 		for key, button in next, self.uiElements.buttons do
-			button:clickEvent()
+			if self.showDeck == false or key ~= "rerollButton" then
+				button:clickEvent()
+			end
 		end
 	else
 		if self.endRoundPopUp then
@@ -599,6 +614,13 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
 		self.gameOverPopup:mousereleased(x, y, button, istouch, presses)
 	elseif self.runWinPopup then
 		self.runWinPopup:mousereleased(x, y, button, istouch, presses)
+	end
+end
+
+function RoundScreen:keypressed(k)
+	if k == "d" then
+		self.showDeck = not self.showDeck
+		self.deckScreen = Deck:new()
 	end
 end
 
@@ -751,7 +773,7 @@ function RoundScreen:outAnimation(onEnd)
 		{
 			property = "gridX",
 			from = self.gridX,
-			targetValue = 0 - self.figureButtonsCanvas:getWidth() - 40,
+			targetValue = 0 - self.figureButtonsCanvas:getWidth(),
 			duration = outDuration,
 			easing = AnimationUtils.Easing.inOutCubic,
 		},
@@ -907,6 +929,11 @@ function RoundScreen:getCurrentlyHoveredDice()
 	self.currentlyHoveredFace = nil
 
 	self.previouslyHoveredDice = self.currentlyHoveredDice
+
+	if self.showDeck and self.deckScreen then
+		self.currentlyHoveredFace = self.deckScreen:getCurrentlyHoveredFace()
+		return
+	end
 
 	--Dés dans le terrain de jeu
 	for key, diceface in next, self.diceFaces do
