@@ -1,3 +1,4 @@
+local Deck = require("src.classes.ui.Deck")
 local Constants = require("src.utils.Constants")
 local Inputs = require("src.utils.scripts.Inputs")
 local AnimationUtils = require("src.utils.scripts.Animations")
@@ -127,18 +128,22 @@ function Shop:updateCanvas(dt)
 
 	--Buttons
 	for key, button in next, self.uiElements.buttons do
-		button:update(dt)
-		button:draw()
+		if self.showDeck == false or (key ~= "rerollShopButton" and key ~= "nextRoundSmallBtn") then
+			button:update(dt)
+			button:draw()
+		end
 	end
-
-	--UI
-	self:drawDeck(dt)
 	self:drawRoundDetails(dt)
-	self:drawDiceDetails(dt)
-	self:drawInventoryBackGroundSmall()
-	self:drawShopBackground()
-	self:drawRewardsSmall()
-	self:drawInventoryFaces(dt)
+
+	if self.showDeck == false then
+		self:drawDeck(dt)
+		self:drawDiceDetails(dt)
+		self:drawInventoryBackGroundSmall()
+		self:drawShopBackground()
+		self:drawRewardsSmall()
+		self:drawInventoryFaces(dt)
+	end
+	--UI
 
 	--Popup d'achat de face de dé
 	if self.dragAndDroppedShopDice then
@@ -158,28 +163,30 @@ function Shop:updateCanvas(dt)
 		self.addRewardText:reset()
 	end
 
-	--Shop faces UI
-	for i, faceUI in next, self.availableFaceObjectsUI do
-		faceUI:update(dt)
-		if faceUI ~= self.dragAndDroppedObject then
-			faceUI:draw()
+	if self.showDeck == false then
+		--Shop faces UI
+		for i, faceUI in next, self.availableFaceObjectsUI do
+			faceUI:update(dt)
+			if faceUI ~= self.dragAndDroppedObject then
+				faceUI:draw()
+			end
 		end
-	end
 
-	--Coffee UI
-	for i, coffee in next, self.availableCoffeesUI do
-		coffee:update(dt)
-	end
-
-	--Shop Ciggie UI
-	for i, ciggieUI in next, self.availableCiggieObjectsUI do
-		ciggieUI:update(dt)
-		if ciggieUI ~= self.dragAndDroppedObject then
-			ciggieUI:draw()
+		--Coffee UI
+		for i, coffee in next, self.availableCoffeesUI do
+			coffee:update(dt)
 		end
-	end
 
-	self:drawFacesPriceTags()
+		--Shop Ciggie UI
+		for i, ciggieUI in next, self.availableCiggieObjectsUI do
+			ciggieUI:update(dt)
+			if ciggieUI ~= self.dragAndDroppedObject then
+				ciggieUI:draw()
+			end
+		end
+
+		self:drawFacesPriceTags()
+	end
 
 	--Upgrade hand popup
 	if self.addingAvailableHand == true then
@@ -260,6 +267,11 @@ function Shop:updateCanvas(dt)
 		self.infoBubble:draw()
 	end
 
+	if self.showDeck and self.deckScreen then
+		self.deckScreen:update(dt)
+		self.deckScreen:draw()
+	end
+
 	love.graphics.setCanvas(currentCanvas)
 end
 
@@ -283,46 +295,49 @@ end
 function Shop:mousepressed(x, y, button, istouch, presses)
 	--Buttons
 	for key, button in next, self.uiElements.buttons do
-		button:clickEvent()
+		if self.showDeck == false or (key ~= "rerollShopButton" and key ~= "nextRoundSmallBtn") then
+			button:clickEvent()
+		end
 	end
 
 	--Ciggies
 	for key, ciggie in next, self.uiElements.ciggiesUI do
 		ciggie:clickEvent()
 	end
+	if self.showDeck == false then
+		--Deck faces
+		for key, uiFace in next, self.deckFaces do
+			uiFace:clickEvent()
+		end
 
-	--Deck faces
-	for key, uiFace in next, self.deckFaces do
-		uiFace:clickEvent()
-	end
+		--Inventory
+		for key, uiFace in next, self.inventoryFacesUI do
+			uiFace:clickEvent()
+		end
+		--Rewards
+		for key, uiFace in next, self.rewardsFacesUI do
+			uiFace:clickEvent()
+		end
 
-	--Inventory
-	for key, uiFace in next, self.inventoryFacesUI do
-		uiFace:clickEvent()
-	end
-	--Rewards
-	for key, uiFace in next, self.rewardsFacesUI do
-		uiFace:clickEvent()
-	end
+		--Coffe buttons
+		for key, coffeeBtn in next, self.availableCoffeesUI do
+			coffeeBtn:clickEvent()
+		end
 
-	--Coffe buttons
-	for key, coffeeBtn in next, self.availableCoffeesUI do
-		coffeeBtn:clickEvent()
-	end
+		--Shop elements
+		--Faces
+		for key, uiFace in next, self.availableFaceObjectsUI do
+			uiFace:clickEvent()
+		end
 
-	--Shop elements
-	--Faces
-	for key, uiFace in next, self.availableFaceObjectsUI do
-		uiFace:clickEvent()
-	end
+		--Ciggies
+		for key, ciggie in next, self.availableCiggieObjectsUI do
+			ciggie:clickEvent()
+		end
 
-	--Ciggies
-	for key, ciggie in next, self.availableCiggieObjectsUI do
-		ciggie:clickEvent()
+		--Figure buttons
+		self.clickedFigure = self:getCurrentlyHoveredLine()
 	end
-
-	--Figure buttons
-	self.clickedFigure = self:getCurrentlyHoveredLine()
 end
 
 function Shop:mousereleased(x, y, button, istouch, presses)
@@ -565,7 +580,12 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
 	end
 end
 
-function Shop:keypressed(key) end
+function Shop:keypressed(key)
+	if key == "d" then
+		self.showDeck = not self.showDeck
+		self.deckScreen = Deck:new()
+	end
+end
 
 --==Shop Functions==--
 function Shop:buyDiceFace(face, faceUI, key)
