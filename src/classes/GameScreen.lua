@@ -67,8 +67,8 @@ function GameScreen:new(floor, run, screenType, round)
 	self.moneyCanvas = love.graphics.newCanvas(220, 120)
 	self.deckCanvas = love.graphics.newCanvas(140, 860)
 	self.diceDetailsCanvas = love.graphics.newCanvas(180, 830)
-	self.ciggiesTray = love.graphics.newCanvas(220, 460)
-	self.ciggiesTrayFront = love.graphics.newCanvas(220, 390)
+	self.ciggiesTray = love.graphics.newCanvas(220, 350)
+	self.ciggiesTrayFront = love.graphics.newCanvas(220, 270)
 	self.playerInfos = love.graphics.newCanvas(650, 260)
 	self.enemyInfos = love.graphics.newCanvas(650, 260)
 	self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)
@@ -146,9 +146,9 @@ function GameScreen:new(floor, run, screenType, round)
 
 	--Btns positions
 	self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY =
-		1460 + 90, 880 + 40, self.canvas:getWidth() + 200, 880 + 40
+		1660 + 115, 960 + 45, self.canvas:getWidth() + 150, 960 + 45
 	self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY =
-		1460 + 90, 970 + 40, self.canvas:getWidth() + 200, 970 + 40
+		1460 + 95, 960 + 45, self.canvas:getWidth() + 200, 960 + 45
 	self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
 	self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY =
 		520 + 455, 890 + 75, 520 + 455, self.canvas:getHeight() + 80
@@ -337,8 +337,8 @@ function GameScreen:new(floor, run, screenType, round)
 		"src/assets/sprites/ui/Menu.png",
 		self.menuBtnX,
 		self.menuBtnY,
-		180,
-		80,
+		190,
+		90,
 		self.gameCanvas,
 		function()
 			return Inputs.getMouseInCanvas(0, 0, 1)
@@ -354,8 +354,8 @@ function GameScreen:new(floor, run, screenType, round)
 		"src/assets/sprites/ui/Infos.png",
 		self.planBtnX,
 		self.planBtnY,
-		180,
-		80,
+		230,
+		90,
 		self.gameCanvas,
 		function()
 			return Inputs.getMouseInCanvas(0, 0, 1)
