@@ -134,7 +134,7 @@ function DeskChoice:updateCanvas(dt)
 
 	if self.showDeck == false then
 		self:drawDeck(dt)
-		self:drawDiceDetails(dt)
+		--self:drawDiceDetails(dt)
 		self:updateChoiceCanvas(dt)
 		if self.run.floorDeskNumber > Constants.DESKS_BY_FLOOR then
 			self:drawBossDesc(dt)
@@ -210,16 +210,16 @@ function DeskChoice:createDeck()
 			dice,
 			dice:getFace(1),
 			self.deckCanvas:getWidth() / 2,
-			70 + ((i - 1) * 180),
+			60 + 73 + ((i - 1) * 152),
 			120,
 			true,
 			true,
 			function()
-				return Inputs.getMouseInCanvas(1300, 110)
+				return Inputs.getMouseInCanvas(1460, 30)
 			end,
 			nil,
-			1300,
-			110
+			1460,
+			30
 		)
 		deckFaces[dice] = faceUI
 	end
@@ -358,15 +358,16 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
 				self:outAnimation(badge)
 			end
 		end
-
+		--Gestion des dés dans le deck vertical à droite
 		for key, face in next, self.deckFaces do
 			local wasReleased = face:releaseEvent()
-			if wasReleased then --On sélectionne la face a switcher
+			if wasReleased then
+				--On sélectionne la face a switcher
 				self:resetSelectedDices()
 				face:setSelected(true)
 				self.previouslySelectedDice = self.currentlySelectedDice
 				self.currentlySelectedDice = face
-
+				--On créée une animation pour les faces de dé à droite (à supprimer)
 				if self.currentlySelectedDice ~= self.previouslySelectedDice then
 					for i = 1, 6 do
 						self.infoFaces[i].animator:finishAll()

@@ -65,7 +65,7 @@ function GameScreen:new(floor, run, screenType, round)
 	self.handsCanvas = love.graphics.newCanvas(220, 120)
 	self.roundNumberCanvas = love.graphics.newCanvas(220, 120)
 	self.moneyCanvas = love.graphics.newCanvas(220, 120)
-	self.deckCanvas = love.graphics.newCanvas(140, 860)
+	self.deckCanvas = love.graphics.newCanvas(180, 830)
 	self.diceDetailsCanvas = love.graphics.newCanvas(180, 830)
 	self.ciggiesTray = love.graphics.newCanvas(220, 350)
 	self.ciggiesTrayFront = love.graphics.newCanvas(220, 270)
@@ -119,7 +119,7 @@ function GameScreen:new(floor, run, screenType, round)
 	self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 1670, 450, self.canvas:getWidth() + 400, 450
 	self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY =
 		1670, 590, self.canvas:getWidth() + 400, 590
-	self.deckTX, self.deckTY, self.deckX, self.deckY = 1300, 110, self.canvas:getWidth() + 50, 110
+	self.deckTX, self.deckTY, self.deckX, self.deckY = 1460, 30, self.canvas:getWidth() + 100, 30
 
 	self.customizationMatTX, self.customizationMatTY, self.customizationMatX, self.customizationMatY =
 		820, 30, 820, -900

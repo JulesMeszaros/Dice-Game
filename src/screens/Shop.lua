@@ -136,7 +136,7 @@ function Shop:updateCanvas(dt)
 	self:drawRoundDetails(dt)
 
 	if self.showDeck == false then
-		self:drawDeck(dt)
+		--self:drawDeck(dt)
 		self:drawDiceDetails(dt)
 		self:drawInventoryBackGroundSmall()
 		self:drawShopBackground()
@@ -1145,24 +1145,24 @@ function Shop:generateRandomCiggie(forbiddenKeys)
 end
 
 --==Additionnal init functions==--
-function Shop:createDeck()
+function DeskChoice:createDeck()
 	local deckFaces = {}
 	for i, dice in next, self.diceObjects do
 		--Create the UIFaces
 		local faceUI = DiceFace:new(
 			dice,
 			dice:getFace(1),
-			self.deckCanvas:getWidth() / 2 + 1,
-			70 + ((i - 1) * 180),
+			self.deckCanvas:getWidth() / 2,
+			60 + 73 + ((i - 1) * 152),
 			120,
 			true,
 			true,
 			function()
-				return Inputs.getMouseInCanvas(1300, 110)
+				return Inputs.getMouseInCanvas(1460, 30)
 			end,
 			nil,
-			1300,
-			110
+			1460,
+			30
 		)
 		deckFaces[dice] = faceUI
 	end
