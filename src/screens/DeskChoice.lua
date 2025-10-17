@@ -27,7 +27,7 @@ function DeskChoice:new(floor, run)
 	self:createDeck()
 
 	--Créer le dice net
-	self:createDiceNet()
+	--self:createDiceNet()
 
 	self.round = run.currentRound
 
@@ -88,6 +88,8 @@ function DeskChoice:new(floor, run)
 		self:generateCiggiesUI()
 	end)
 
+	--self:createHorizontalDice()
+
 	return self
 end
 
@@ -139,7 +141,7 @@ function DeskChoice:updateCanvas(dt)
 		if self.run.floorDeskNumber > Constants.DESKS_BY_FLOOR then
 			self:drawBossDesc(dt)
 		end
-
+		self:drawHorizontalDice(dt)
 		--Upgrading figure popup
 		if self.addingAvailableHand == true then
 			self:drawUpgradingFigurePopup(dt)
@@ -237,11 +239,6 @@ function DeskChoice:drawDeck(dt)
 
 	--draw the deck faces
 	for dice, face in next, self.deckFaces do
-		if face:getIsSelected() then
-			face.selectionScale = 0.1
-		else
-			face.selectionScale = 0
-		end
 		face:update(dt)
 		face:draw()
 	end
@@ -359,41 +356,22 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
 			end
 		end
 		--Gestion des dés dans le deck vertical à droite
+		self.previouslySelectedDice = self.currentlySelectedDice
+		self.horizontalDiceNet = nil
+		self.currentlySelectedDice = nil
+		self:resetSelectedDices()
 		for key, face in next, self.deckFaces do
 			local wasReleased = face:releaseEvent()
 			if wasReleased then
 				--On sélectionne la face a switcher
-				self:resetSelectedDices()
-				face:setSelected(true)
-				self.previouslySelectedDice = self.currentlySelectedDice
-				self.currentlySelectedDice = face
-				--On créée une animation pour les faces de dé à droite (à supprimer)
-				if self.currentlySelectedDice ~= self.previouslySelectedDice then
-					for i = 1, 6 do
-						self.infoFaces[i].animator:finishAll()
-						self.infoFaces[i].baseTargetedScale = 0
-						self.infoFaces[i].scaleX = 0
-						self.infoFaces[i].scaleY = 0
-
-						self.infoFaces[i].animator:addDelay((i - 1) * 0.05)
-						self.infoFaces[i].animator:addGroup({
-							{
-								property = "baseTargetedScale",
-								from = 0,
-								targetValue = 1,
-								duration = 0.2,
-								easing = AnimationUtils.Easing.easeOutBack,
-							},
-							{
-								property = "scale",
-								from = 0,
-								targetValue = 1,
-								duration = 0.2,
-								easing = AnimationUtils.Easing.easeOutBack,
-							},
-						})
-					end
+				if face ~= self.previouslySelectedDice then
+					face:setSelected(true)
+					self.currentlySelectedDice = face
+					self:createHorizontalDice(face)
+				else
+					face:setSelected(false)
 				end
+				--On créée une animation pour les faces de dé à droite (à supprimer)
 			end
 		end
 	end
@@ -442,6 +420,57 @@ function DeskChoice:mousemoved(x, y, dx, dy, isDragging)
 end
 
 --==Utils==--
+function DeskChoice:createHorizontalDice(dice)
+	--Fonction qui créée une ligne de dé correspondant au dé du deck sélectionné pour afficher toutes ses faces
+	--Création du canvas et du fond avec les positions
+	self.horizontalDiceNet = love.graphics.newCanvas(740, 138)
+	local currentCanvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(self.horizontalDiceNet)
+	love.graphics.setCanvas(currentCanvas)
+	self.horizontalDiceX = 880
+	self.horizontalDiceY = dice.y + 30
+
+	--Creation des faces de dé à afficher
+	self.horizontalDiceFaces = {}
+	for i, f in next, dice.diceObject:getAllFaces() do
+		local diceface = DiceFace:new(dice.diceObject, f, 68 + (i - 1) * 120, 68, 120, false, true, function()
+			return Inputs.getMouseInCanvas(
+				self.horizontalDiceX,
+				self.horizontalDiceY - self.horizontalDiceNet:getHeight() / 2
+			)
+		end, nil, self.horizontalDiceX, self.horizontalDiceY)
+		table.insert(self.horizontalDiceFaces, diceface)
+	end
+end
+
+function DeskChoice:drawHorizontalDice(dt)
+	local px, py = G.calculateParalaxeOffset(2)
+	--Fonction Pour dessiner le dé horizontal
+	if self.horizontalDiceNet then
+		local currentCanvas = love.graphics.getCanvas()
+		love.graphics.setCanvas(self.horizontalDiceNet)
+		love.graphics.clear()
+
+		love.graphics.draw(Sprites.HORIZONTAL_DICE_NET, 0, 0)
+
+		for i, f in next, self.horizontalDiceFaces do
+			f:update(dt)
+			f:draw()
+		end
+
+		love.graphics.setCanvas(currentCanvas)
+		love.graphics.draw(
+			self.horizontalDiceNet,
+			self.horizontalDiceX + px,
+			self.horizontalDiceY + py,
+			0,
+			1,
+			1,
+			0,
+			self.horizontalDiceNet:getHeight() / 2
+		)
+	end
+end
 
 function DeskChoice:outAnimation(badge)
 	self.showText = false
@@ -602,12 +631,14 @@ function DeskChoice:getCurrentlyHoveredFace()
 	end
 
 	--Pour les faces dans le patron à droite
+	--[[
 	for i, face in next, self.infoFaces do
 		if face:isHovered() and self.currentlySelectedDice then
 			self.currentlyHoveredFace = face
 			break
 		end
-	end
+	end]]
+	--
 
 	--Pour les faces de badges
 	for i, badge in next, self.badges do

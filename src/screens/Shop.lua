@@ -1145,7 +1145,7 @@ function Shop:generateRandomCiggie(forbiddenKeys)
 end
 
 --==Additionnal init functions==--
-function DeskChoice:createDeck()
+function Shop:createDeck()
 	local deckFaces = {}
 	for i, dice in next, self.diceObjects do
 		--Create the UIFaces

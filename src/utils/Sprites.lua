@@ -110,4 +110,5 @@ Sprites.COFFEE_SPRITES = {
 	love.graphics.newImage("src/assets/sprites/coffee/Coffee Deluxe.png"),
 }
 
+Sprites.HORIZONTAL_DICE_NET = love.graphics.newImage("src/assets/sprites/ui/Horizontal Dice Net.png")
 return Sprites
