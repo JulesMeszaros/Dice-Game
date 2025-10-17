@@ -75,7 +75,7 @@ function GameScreen:new(floor, run, screenType, round)
 	self.inventoryCanvas = love.graphics.newCanvas(680, 410)
 	self.inventoryCanvasSmall = love.graphics.newCanvas(550, 360)
 	self.inventoryCanvasMedium = love.graphics.newCanvas(290, 600)
-	self.shopCanvas = love.graphics.newCanvas(780, 560)
+	self.shopCanvas = love.graphics.newCanvas(920, 650)
 	self.rewardsSmallCanvas = love.graphics.newCanvas(210, 360)
 	self.rewardsMediumCanvas = love.graphics.newCanvas(290, 210)
 	self.ciggiePopupCanvas = love.graphics.newCanvas(self.canvas:getWidth(), self.canvas:getHeight())
@@ -125,7 +125,7 @@ function GameScreen:new(floor, run, screenType, round)
 		820, 30, 820, -900
 	self.newFacesTX, self.newFacesTY, self.newFacesX, self.newFacesY = 500, 650, 500, self.canvas:getHeight() + 450
 
-	self.shopBGTX, self.shopBGTY, self.shopBGX, self.shopBGY = 500, 30, 500, -600
+	self.shopBGTX, self.shopBGTY, self.shopBGX, self.shopBGY = 510, 30, 510, -600
 	self.inventoryTX, self.inventoryTY, self.inventoryX, self.inventoryY = 550, 640, 550, self.canvas:getHeight() + 450
 	self.inventorySMTX, self.inventorySMTY, self.inventorySMX, self.inventorySMY =
 		730, 690, 730, self.canvas:getHeight() + 600
@@ -153,9 +153,9 @@ function GameScreen:new(floor, run, screenType, round)
 	self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY =
 		520 + 455, 890 + 75, 520 + 455, self.canvas:getHeight() + 80
 	self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY =
-		900 + (370 / 2), 640, 510 + (370 / 2), -50
+		1060 + (340 / 2), 360 + (100 / 2), 1060 + (340 / 2), -50
 	self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY =
-		900 + (370 / 2), 640, 900 + (370 / 2), -50
+		1240 + (190 / 2), 520 + (140 / 2), 1240 + (190 / 2), -50
 
 	--Background animation TODO: à modifier un peu plus tard pour rendre le truc modulable
 	self.animator:addDelay(0.0, function()
@@ -416,8 +416,8 @@ function GameScreen:new(floor, run, screenType, round)
 			"src/assets/sprites/ui/Reroll Shop.png",
 			self.rerollShopX,
 			self.rerollShopY,
-			370,
-			60,
+			340,
+			100,
 			self.gameCanvas,
 			function()
 				return Inputs.getMouseInCanvas(0, 0, 3)
@@ -440,8 +440,8 @@ function GameScreen:new(floor, run, screenType, round)
 			"src/assets/sprites/ui/Next Round Small.png",
 			self.nextRoundSMTX,
 			self.nextRoundSMTX,
-			370,
-			60,
+			190,
+			140,
 			self.gameCanvas,
 			function()
 				return Inputs.getMouseInCanvas(0, 0, 3)

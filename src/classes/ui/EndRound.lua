@@ -342,6 +342,7 @@ function EndRound:generateRewards()
 	local c = Ciggie:new(self.round.ciggieReward, 1200, 880, false, true, function()
 		return Inputs.getMouseInCanvas(0, 0)
 	end, nil)
+	c.baseHorizontal = true
 	c.layer = 4
 
 	self.ciggieReward = c

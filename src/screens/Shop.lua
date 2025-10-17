@@ -20,10 +20,7 @@ function Shop:new(run)
 	local self = setmetatable(Screen:new(run.currentFloor, run, Constants.RUN_STATES.SHOP, run.currentRound), Shop)
 
 	self.priceTagsScale = 1
-
-	self:createDiceNet()
 	self:createDeck()
-
 	self.dragAndDroppedObject = nil
 
 	--Wavy Texts
@@ -127,23 +124,23 @@ function Shop:updateCanvas(dt)
 	self:checkForDraggedCiggie()
 
 	--Buttons
-	for key, button in next, self.uiElements.buttons do
-		if self.showDeck == false or (key ~= "rerollShopButton" and key ~= "nextRoundSmallBtn") then
-			button:update(dt)
-			button:draw()
-		end
-	end
 	self:drawRoundDetails(dt)
 
 	if self.showDeck == false then
-		--self:drawDeck(dt)
-		self:drawDiceDetails(dt)
+		self:drawDeck(dt)
 		self:drawInventoryBackGroundSmall()
 		self:drawShopBackground()
 		self:drawRewardsSmall()
 		self:drawInventoryFaces(dt)
 	end
 	--UI
+	--
+	for key, button in next, self.uiElements.buttons do
+		if self.showDeck == false or (key ~= "rerollShopButton" and key ~= "nextRoundSmallBtn") then
+			button:update(dt)
+			button:draw()
+		end
+	end
 
 	--Popup d'achat de face de dé
 	if self.dragAndDroppedShopDice then
@@ -186,6 +183,7 @@ function Shop:updateCanvas(dt)
 		end
 
 		self:drawFacesPriceTags()
+		self:drawHorizontalDice(dt)
 	end
 
 	--Upgrade hand popup
@@ -359,41 +357,22 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 		local wasReleased = button:releaseEvent()
 	end
 
+	self.previouslySelectedDice = self.currentlySelectedDice
+	self.horizontalDiceNet = nil
+	self.currentlySelectedDice = nil
+	self:resetSelectedDices()
 	for key, face in next, self.deckFaces do
 		local wasReleased = face:releaseEvent()
-		if wasReleased then --On sélectionne la face a switcher
-			self:resetSelectedDices()
-			face:setSelected(true)
-
-			self.previouslySelectedDice = self.currentlySelectedDice
-			self.currentlySelectedDice = face
-
-			if self.currentlySelectedDice ~= self.previouslySelectedDice then
-				for i = 1, 6 do
-					self.infoFaces[i].animator:finishAll()
-					self.infoFaces[i].baseTargetedScale = 0
-					self.infoFaces[i].scaleX = 0
-					self.infoFaces[i].scaleY = 0
-
-					self.infoFaces[i].animator:addDelay((i - 1) * 0.05)
-					self.infoFaces[i].animator:addGroup({
-						{
-							property = "baseTargetedScale",
-							from = 0,
-							targetValue = 1,
-							duration = 0.2,
-							easing = AnimationUtils.Easing.easeOutBack,
-						},
-						{
-							property = "scale",
-							from = 0,
-							targetValue = 1,
-							duration = 0.2,
-							easing = AnimationUtils.Easing.easeOutBack,
-						},
-					})
-				end
+		if wasReleased then
+			--On sélectionne la face a switcher
+			if face ~= self.previouslySelectedDice then
+				face:setSelected(true)
+				self.currentlySelectedDice = face
+				self:createHorizontalDice(face)
+			else
+				face:setSelected(false)
 			end
+			--On créée une animation pour les faces de dé à droite (à supprimer)
 		end
 	end
 
@@ -807,12 +786,15 @@ function Shop:generateNewShop()
 
 	--Faces
 	for i, f in next, self.availableFaceObjects do
-		local faceUI = DiceFace:new(nil, f, 180 * i + self.shopBGTX - 60, 190, 120, false, true, function()
+		local xs = { 570, 720, 570, 720 }
+		local ys = { 120, 120, 300, 300 }
+
+		local faceUI = DiceFace:new(nil, f, xs[i] + 60, ys[i] + 60, 120, false, true, function()
 			return Inputs.getMouseInCanvas(0, 0, 3)
 		end, nil)
 		--Add them an anchor
-		faceUI.anchorX = 180 * i + self.shopBGTX - 60
-		faceUI.anchorY = 190
+		faceUI.anchorX = xs[i] + 60
+		faceUI.anchorY = ys[i] + 60
 		faceUI.layer = 3
 
 		--Add an animation for their apparition
@@ -886,8 +868,11 @@ function Shop:generateNewShop()
 	--Ciggies
 	--Create the UI
 	for i, c in next, self.availableCiggies do
-		local x = self.shopBGTX + (205 + (1 - i % 2) * 370)
-		local y = self.shopBGTY + (450 + (math.floor(i / 3)) * 60)
+		local xs = { 890, 970 }
+		local ys = { 120, 120 }
+
+		local x = xs[i] + 25
+		local y = ys[i] + 150
 
 		local ciggieUI = Ciggie:new(c, x, y, false, true, function()
 			return Inputs.getMouseInCanvas(0, 0, 3)
@@ -953,7 +938,7 @@ function Shop:generateNewShop()
 	local randomFigures = GenerateRandom.generateUniqueNumbers(1, 13, 4)
 	self.availableCoffeesUI = {}
 
-	for i = 1, 4 do
+	for i = 1, 3 do
 		self:generateRandomCoffee(i, randomFigures[i])
 	end
 
@@ -1011,7 +996,7 @@ function Shop:generateAvailableCiggies()
 	end
 
 	self.availableCiggies = {}
-	for i = 1, 4 do
+	for i = 1, 2 do
 		local c = self:generateRandomCiggie(forbiddenCiggies)
 		table.insert(self.availableCiggies, c)
 	end
@@ -1019,8 +1004,8 @@ end
 
 --Coffee
 function Shop:generateRandomCoffee(i, randomFigureIndex)
-	local x = (205 + (1 - i % 2) * 370)
-	local y = (300 + (math.floor(i / 3)) * 70)
+	local x = 550 + 350 / 2
+	local y = 30 + 100 + (i - 1) * 80
 
 	--Creation du bouton
 	local coffeeButton = CoffeeButton:new(x, y, function()
@@ -1037,12 +1022,6 @@ end
 function Shop:getCurrentlyHoveredFace()
 	self.currentlyHoveredFace = nil
 	--Dice Net
-	for i, face in next, self.infoFaces do
-		if face:isHovered() and self.currentlySelectedDice then
-			self.currentlyHoveredFace = face
-			return
-		end
-	end
 	--Shop faces
 	for i, face in next, self.availableFaceObjectsUI do
 		if face:isHovered() then
@@ -1345,7 +1324,7 @@ function Shop:createFacesPriceTags()
 
 	--Ciggies
 	self.ciggiesPriceTags = {}
-	for i = 1, 4 do
+	for i = 1, 2 do
 		local c = love.graphics.newCanvas(110, 40)
 		love.graphics.setBlendMode("alpha")
 		local priceText = love.graphics.newText(Fonts.soraPrice, tostring(Constants.BASE_CIGGIE_PRICE) .. "€")
@@ -1421,6 +1400,8 @@ end
 function Shop:drawFacesPriceTags()
 	local currentCanvas = love.graphics.getCanvas()
 	local px, py = G.calculateParalaxeOffset(2)
+	local xs = { 570, 720, 570, 720 }
+	local ys = { 120, 120, 300, 300 }
 
 	for i, c in next, self.facesPriceTags do
 		love.graphics.setCanvas(c)
@@ -1447,8 +1428,8 @@ function Shop:drawFacesPriceTags()
 
 		love.graphics.draw(
 			c,
-			180 * i + self.shopBGTX - 60 + px,
-			self.shopBGTY + 200 + py,
+			xs[i] + px + 60,
+			ys[i] + py + 130,
 			0,
 			self.priceTagsScale,
 			self.priceTagsScale,
@@ -1478,18 +1459,11 @@ function Shop:drawFacesPriceTags()
 			priceText:getHeight() / 2
 		)
 		love.graphics.setColor(1, 1, 1, 1)
+		local xs = { 880 + 55, 960 + 55 }
+		local ys = { 430 + 20, 430 + 20 }
 
 		love.graphics.setCanvas(currentCanvas)
-		love.graphics.draw(
-			c,
-			self.shopBGTX + (205 + (1 - i % 2) * 370) + px,
-			self.shopBGTY + (455 + (math.floor(i / 3)) * 60) - 10 + py,
-			0,
-			self.priceTagsScale,
-			self.priceTagsScale,
-			c:getWidth() / 2,
-			0
-		)
+		love.graphics.draw(c, xs[i] + px, ys[i] + py, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth() / 2, 0)
 	end
 end
 
