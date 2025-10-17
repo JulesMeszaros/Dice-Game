@@ -148,7 +148,7 @@ function GameScreen:new(floor, run, screenType, round)
 	self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY =
 		1660 + 115, 960 + 45, self.canvas:getWidth() + 150, 960 + 45
 	self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY =
-		1460 + 95, 960 + 45, self.canvas:getWidth() + 200, 960 + 45
+		1460 + 90, 960 + 45, self.canvas:getWidth() + 200, 960 + 40
 	self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
 	self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY =
 		520 + 455, 890 + 75, 520 + 455, self.canvas:getHeight() + 80

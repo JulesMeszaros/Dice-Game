@@ -888,20 +888,6 @@ function Shop:generateNewShop()
 		local apparitionDuration = 0.3
 		ciggieUI.animator:addGroup({
 			--Rotation
-			{
-				property = "rotation",
-				from = 0.5,
-				targetValue = 0,
-				duration = apparitionDuration,
-				easing = AnimationUtils.Easing.easeOutBack,
-			},
-			{
-				property = "baseRotation",
-				from = 0.5,
-				targetValue = 0,
-				duration = apparitionDuration,
-				easing = AnimationUtils.Easing.easeOutBack,
-			},
 			--Scale
 			{
 				property = "baseTargetedScale",
@@ -1315,7 +1301,7 @@ function Shop:createFacesPriceTags()
 	self.faceTextObjects = {}
 	--Faces
 	for i = 1, 4 do
-		local c = love.graphics.newCanvas(110, 40)
+		local c = love.graphics.newCanvas(80, 30)
 		love.graphics.setBlendMode("alpha")
 		local priceText = love.graphics.newText(Fonts.soraPrice, "5€")
 		table.insert(self.facesPriceTags, c)
@@ -1325,7 +1311,7 @@ function Shop:createFacesPriceTags()
 	--Ciggies
 	self.ciggiesPriceTags = {}
 	for i = 1, 2 do
-		local c = love.graphics.newCanvas(110, 40)
+		local c = love.graphics.newCanvas(80, 30)
 		love.graphics.setBlendMode("alpha")
 		local priceText = love.graphics.newText(Fonts.soraPrice, tostring(Constants.BASE_CIGGIE_PRICE) .. "€")
 		table.insert(self.ciggiesPriceTags, c)
@@ -1459,7 +1445,7 @@ function Shop:drawFacesPriceTags()
 			priceText:getHeight() / 2
 		)
 		love.graphics.setColor(1, 1, 1, 1)
-		local xs = { 880 + 55, 960 + 55 }
+		local xs = { 880 + 40, 960 + 40 }
 		local ys = { 430 + 20, 430 + 20 }
 
 		love.graphics.setCanvas(currentCanvas)

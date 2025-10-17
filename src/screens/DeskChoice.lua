@@ -265,10 +265,10 @@ function DeskChoice:generateChoiceCanvas()
 	self.badges = {}
 
 	local coords = {
-		{ 510, 30 },
-		{ 905, 30 },
-		{ 510, 550 },
-		{ 905, 550 },
+		{ 590, 30 },
+		{ 990, 30 },
+		{ 590, 550 },
+		{ 990, 550 },
 	}
 
 	if self.run.floorDeskNumber > Constants.DESKS_BY_FLOOR then
