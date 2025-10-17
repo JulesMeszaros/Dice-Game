@@ -482,6 +482,34 @@ function GameScreen:draw() end
 
 --==UI Draw functions==--
 
+function GameScreen:drawHorizontalDice(dt)
+	local px, py = G.calculateParalaxeOffset(2)
+	--Fonction Pour dessiner le dé horizontal
+	if self.horizontalDiceNet then
+		local currentCanvas = love.graphics.getCanvas()
+		love.graphics.setCanvas(self.horizontalDiceNet)
+		love.graphics.clear()
+
+		love.graphics.draw(Sprites.HORIZONTAL_DICE_NET, 0, 0)
+
+		for i, f in next, self.horizontalDiceFaces do
+			f:update(dt)
+			f:draw()
+		end
+
+		love.graphics.setCanvas(currentCanvas)
+		love.graphics.draw(
+			self.horizontalDiceNet,
+			self.horizontalDiceX + px,
+			self.horizontalDiceY + py,
+			0,
+			1,
+			1,
+			0,
+			self.horizontalDiceNet:getHeight() / 2
+		)
+	end
+end
 --CiggiePopuup
 function GameScreen:drawCiggiePopup(dt)
 	--Update le timer pour le texte
@@ -987,6 +1015,28 @@ end
 
 --==Initialization functions==--
 
+function GameScreen:createHorizontalDice(dice)
+	--Fonction qui créée une ligne de dé correspondant au dé du deck sélectionné pour afficher toutes ses faces
+	--Création du canvas et du fond avec les positions
+	self.horizontalDiceNet = love.graphics.newCanvas(740, 138)
+	local currentCanvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(self.horizontalDiceNet)
+	love.graphics.setCanvas(currentCanvas)
+	self.horizontalDiceX = 880
+	self.horizontalDiceY = dice.y + 30
+
+	--Creation des faces de dé à afficher
+	self.horizontalDiceFaces = {}
+	for i, f in next, dice.diceObject:getAllFaces() do
+		local diceface = DiceFace:new(dice.diceObject, f, 68 + (i - 1) * 120, 68, 120, false, true, function()
+			return Inputs.getMouseInCanvas(
+				self.horizontalDiceX,
+				self.horizontalDiceY - self.horizontalDiceNet:getHeight() / 2
+			)
+		end, nil, self.horizontalDiceX, self.horizontalDiceY)
+		table.insert(self.horizontalDiceFaces, diceface)
+	end
+end
 function GameScreen:createDiceNet()
 	--Create a temp dice with a temp face repeated 6 times
 	local tempFace = FaceObject:new(6)
