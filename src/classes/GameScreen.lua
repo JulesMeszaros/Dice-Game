@@ -1,3 +1,4 @@
+local Deck = require("src.classes.ui.Deck")
 local Constants = require("src.utils.Constants")
 local Inputs = require("src.utils.scripts.Inputs")
 local Fonts = require("src.utils.Fonts")
@@ -148,7 +149,7 @@ function GameScreen:new(floor, run, screenType, round)
 	self.planBtnTX, self.planBtnTY, self.planBtnX, self.planBtnY =
 		1660 + 115, 960 + 45, self.canvas:getWidth() + 150, 960 + 45
 	self.menuBtnTX, self.menuBtnTY, self.menuBtnX, self.menuBtnY =
-		1460 + 90, 960 + 45, self.canvas:getWidth() + 200, 960 + 40
+		1555, 960 + 45, self.canvas:getWidth() + 200, 960 + 45
 	self.rerollBtnTX, self.rerollBtnTY, self.rerollBtnX, self.rerollBtnY = 975, 1010, 975, 1500
 	self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY =
 		520 + 455, 890 + 75, 520 + 455, self.canvas:getHeight() + 80
@@ -345,7 +346,24 @@ function GameScreen:new(floor, run, screenType, round)
 		end
 	)
 
-	self.uiElements.buttons["menuButton"].layer = 1
+	self.uiElements.buttons["deckButton"] = Button:new(
+		function()
+			self.showDeck = not self.showDeck
+			self.deckScreen = Deck:new()
+		end,
+		"src/assets/sprites/ui/Deck Button.png",
+		1555,
+		910,
+		190,
+		75,
+		self.gameCanvas,
+		function()
+			return Inputs.getMouseInCanvas(0, 0, 1)
+		end
+	)
+
+	self.uiElements.buttons["menuButton"].layer = 2
+	self.uiElements.buttons["deckButton"].layer = 2
 
 	self.uiElements.buttons["planButton"] = Button:new(
 		function()
