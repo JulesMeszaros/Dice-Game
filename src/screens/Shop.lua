@@ -255,6 +255,10 @@ function Shop:updateCanvas(dt)
 		self.dragAndDroppedObject:draw()
 	end
 
+	if self.showDeck and self.deckScreen then
+		self.deckScreen:update(dt)
+		self.deckScreen:draw()
+	end
 	if self.currentlyHoveredObject then
 		--Info bubble (wip)
 		self.infoBubble.x, self.infoBubble.y =
@@ -263,11 +267,6 @@ function Shop:updateCanvas(dt)
 		--self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
 		self.infoBubble:update(dt)
 		self.infoBubble:draw()
-	end
-
-	if self.showDeck and self.deckScreen then
-		self.deckScreen:update(dt)
-		self.deckScreen:draw()
 	end
 
 	love.graphics.setCanvas(currentCanvas)
@@ -1007,6 +1006,12 @@ end
 --==UTILS==--
 function Shop:getCurrentlyHoveredFace()
 	self.currentlyHoveredFace = nil
+
+	if self.showDeck and self.deckScreen then
+		self.currentlyHoveredFace = self.deckScreen:getCurrentlyHoveredFace()
+		return
+	end
+
 	--Dice Net
 	--Shop faces
 	for i, face in next, self.availableFaceObjectsUI do

@@ -578,6 +578,15 @@ function DeskChoice:getCurrentlyHoveredFace()
 		self.currentlyHoveredFace = self.deckScreen:getCurrentlyHoveredFace()
 		return
 	end
+	--Deck sur le coté droit
+	if self.horizontalDiceNet then
+		for i, df in next, self.horizontalDiceFaces do
+			if df:isHovered() then
+				self.currentlyHoveredFace = df
+				return
+			end
+		end
+	end
 
 	--Pour les faces dans le patron à droite
 	--[[
@@ -596,7 +605,9 @@ function DeskChoice:getCurrentlyHoveredFace()
 			break
 		end
 	end
-
+	if self.currentlyHoveredFace then
+		print(self.currentlyHoveredFace.representedObject.name)
+	end
 	--Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
 end
 

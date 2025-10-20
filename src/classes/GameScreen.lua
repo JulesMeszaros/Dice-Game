@@ -1051,8 +1051,48 @@ function GameScreen:createHorizontalDice(dice)
 				self.horizontalDiceX,
 				self.horizontalDiceY - self.horizontalDiceNet:getHeight() / 2
 			)
-		end, nil, self.horizontalDiceX, self.horizontalDiceY)
+		end, nil, self.horizontalDiceX, self.horizontalDiceY - self.horizontalDiceNet:getHeight() / 2)
 		table.insert(self.horizontalDiceFaces, diceface)
+		local apparitionDuration = 0.3
+
+		diceface.baseTargetedScale = 0
+		diceface.scaleX = 0
+		diceface.scaleY = 0
+		diceface.targetedScale = 0
+
+		diceface.animator:addDelay(0.03 * (6 - i))
+		diceface.animator:addGroup({
+			--Rotation
+			--Scale
+			{
+				property = "baseTargetedScale",
+				from = 0,
+				targetValue = 1,
+				duration = apparitionDuration,
+				easing = AnimationUtils.Easing.easeOutBack,
+			},
+			{
+				property = "scaleX",
+				from = 0,
+				targetValue = 1,
+				duration = apparitionDuration,
+				easing = AnimationUtils.Easing.easeOutBack,
+			},
+			{
+				property = "scaleY",
+				from = 0,
+				targetValue = 1,
+				duration = apparitionDuration,
+				easing = AnimationUtils.Easing.easeOutBack,
+			},
+			{
+				property = "targetedScale",
+				from = 0,
+				targetValue = 1,
+				duration = apparitionDuration,
+				easing = AnimationUtils.Easing.easeOutBack,
+			},
+		})
 	end
 end
 function GameScreen:createDiceNet()
