@@ -154,9 +154,8 @@ function GameScreen:new(floor, run, screenType, round)
 	self.nextRoundTX, self.nextRoundTY, self.nextRoundX, self.nextRoundY =
 		520 + 455, 890 + 75, 520 + 455, self.canvas:getHeight() + 80
 	self.rerollShopTX, self.rerollShopTY, self.rerollShopX, self.rerollShopY =
-		1060 + (340 / 2), 360 + (100 / 2), 1060 + (340 / 2), -50
-	self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY =
-		1240 + (190 / 2), 520 + (140 / 2), 1240 + (190 / 2), -50
+		550 + (340 / 2), 380, 550 + (340 / 2), 380
+	self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY = 815, 560, 815, 560
 
 	--Background animation TODO: à modifier un peu plus tard pour rendre le truc modulable
 	self.animator:addDelay(0.0, function()
@@ -438,17 +437,8 @@ function GameScreen:new(floor, run, screenType, round)
 			100,
 			self.gameCanvas,
 			function()
-				return Inputs.getMouseInCanvas(0, 0, 3)
+				return Inputs.getMouseInCanvas(self.shopBGTX, self.shopBGTY)
 			end
-		)
-		self.uiElements.buttons["rerollShopButton"].layer = 3
-		self.uiElements.buttons["rerollShopButton"].animator:addDelay(0.2)
-		self.uiElements.buttons["rerollShopButton"].animator:add(
-			"y",
-			self.rerollShopY,
-			self.rerollShopTY,
-			AnimationUtils.EntryDuration * 2,
-			AnimationUtils.Easing.inOutCubic
 		)
 
 		self.uiElements.buttons["nextRoundSmallBtn"] = Button:new(
@@ -457,22 +447,13 @@ function GameScreen:new(floor, run, screenType, round)
 			end,
 			"src/assets/sprites/ui/Next Round Small.png",
 			self.nextRoundSMTX,
-			self.nextRoundSMTX,
+			self.nextRoundSMTY,
 			190,
 			140,
 			self.gameCanvas,
 			function()
-				return Inputs.getMouseInCanvas(0, 0, 3)
+				return Inputs.getMouseInCanvas(self.shopBGTX, self.shopBGTY)
 			end
-		)
-		self.uiElements.buttons["nextRoundSmallBtn"].layer = 3
-		self.uiElements.buttons["nextRoundSmallBtn"].animator:addDelay(0.2)
-		self.uiElements.buttons["nextRoundSmallBtn"].animator:add(
-			"y",
-			self.nextRoundSMY,
-			self.nextRoundSMTY,
-			AnimationUtils.EntryDuration * 2,
-			AnimationUtils.Easing.inOutCubic
 		)
 	end
 
@@ -944,7 +925,7 @@ function GameScreen:drawFigureGrid()
 	love.graphics.draw(self.figureButtonsCanvas, self.gridX + px, self.gridY + py)
 end
 
-function GameScreen:drawShopBackground()
+function GameScreen:drawShopBackground(dt)
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.shopCanvas)
 	love.graphics.clear()
@@ -956,6 +937,14 @@ function GameScreen:drawShopBackground()
 			btn:draw()
 		end
 	end
+
+	--Draw the two buttons (reroll and next)
+	self.uiElements.buttons["rerollShopButton"]:update(dt)
+	self.uiElements.buttons["rerollShopButton"]:draw()
+
+	self.uiElements.buttons["nextRoundSmallBtn"]:update(dt)
+	self.uiElements.buttons["nextRoundSmallBtn"]:draw()
+
 	local px, py = G.calculateParalaxeOffset(3)
 	love.graphics.setCanvas(currentCanvas)
 	love.graphics.draw(self.shopCanvas, self.shopBGX + px, self.shopBGY + py)

@@ -129,14 +129,14 @@ function Shop:updateCanvas(dt)
 	if self.showDeck == false then
 		self:drawDeck(dt)
 		self:drawInventoryBackGroundSmall()
-		self:drawShopBackground()
+		self:drawShopBackground(dt)
 		self:drawRewardsSmall()
 		self:drawInventoryFaces(dt)
 	end
 	--UI
 	--
 	for key, button in next, self.uiElements.buttons do
-		if self.showDeck == false or (key ~= "rerollShopButton" and key ~= "nextRoundSmallBtn") then
+		if key ~= "rerollShopButton" and key ~= "nextRoundSmallBtn" then
 			button:update(dt)
 			button:draw()
 		end
@@ -1013,6 +1013,16 @@ function Shop:getCurrentlyHoveredFace()
 	end
 
 	--Dice Net
+	--Deck sur le coté droit
+	if self.horizontalDiceNet then
+		for i, df in next, self.horizontalDiceFaces do
+			if df:isHovered() then
+				self.currentlyHoveredFace = df
+				return
+			end
+		end
+	end
+
 	--Shop faces
 	for i, face in next, self.availableFaceObjectsUI do
 		if face:isHovered() then
