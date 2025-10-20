@@ -74,10 +74,10 @@ function GameScreen:new(floor, run, screenType, round)
 	self.enemyInfos = love.graphics.newCanvas(650, 260)
 	self.handScoreCanvas = love.graphics.newCanvas(self.dice_tray:getWidth(), 170)
 	self.inventoryCanvas = love.graphics.newCanvas(680, 410)
-	self.inventoryCanvasSmall = love.graphics.newCanvas(550, 360)
+	self.inventoryCanvasSmall = love.graphics.newCanvas(690, 340)
 	self.inventoryCanvasMedium = love.graphics.newCanvas(290, 600)
 	self.shopCanvas = love.graphics.newCanvas(920, 650)
-	self.rewardsSmallCanvas = love.graphics.newCanvas(210, 360)
+	self.rewardsSmallCanvas = love.graphics.newCanvas(200, 340)
 	self.rewardsMediumCanvas = love.graphics.newCanvas(290, 210)
 	self.ciggiePopupCanvas = love.graphics.newCanvas(self.canvas:getWidth(), self.canvas:getHeight())
 	self.bossDesc = love.graphics.newCanvas(730, 140)
@@ -129,10 +129,10 @@ function GameScreen:new(floor, run, screenType, round)
 	self.shopBGTX, self.shopBGTY, self.shopBGX, self.shopBGY = 510, 30, 510, -600
 	self.inventoryTX, self.inventoryTY, self.inventoryX, self.inventoryY = 550, 640, 550, self.canvas:getHeight() + 450
 	self.inventorySMTX, self.inventorySMTY, self.inventorySMX, self.inventorySMY =
-		730, 690, 730, self.canvas:getHeight() + 600
+		740, 710, 740, self.canvas:getHeight() + 600
 	self.inventoryMDTX, self.inventoryMDTY, self.inventoryMDX, self.inventoryMDY = 510, 260, -320, 260
 
-	self.rewardsSMTX, self.rewardsSMTY, self.rewardsSMX, self.rewardsSMY = 500, 690, 500, self.canvas:getHeight() + 600
+	self.rewardsSMTX, self.rewardsSMTY, self.rewardsSMX, self.rewardsSMY = 510, 710, 510, self.canvas:getHeight() + 600
 	self.rewardsMDTX, self.rewardsMDTY, self.rewardsMDX, self.rewardsMDY = 510, 30, -320, 30
 
 	self.lighterBaseX, self.lighterBaseY, self.lighterTargetX, self.lighterTargetY =
@@ -971,7 +971,7 @@ function GameScreen:drawInventoryBackGroundSmall()
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.inventoryCanvasSmall)
 	love.graphics.clear()
-	love.graphics.draw(Sprites.INVENTORY_SMALL, 0, 0)
+	love.graphics.draw(Sprites.INVENTORY, 0, 0)
 	love.graphics.setCanvas(currentCanvas)
 	love.graphics.draw(self.inventoryCanvasSmall, self.inventorySMX + px, self.inventorySMY + py)
 end

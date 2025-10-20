@@ -1212,8 +1212,8 @@ function Shop:createInventoryFaces()
 end
 
 function Shop:createRewardFaces()
-	local xPos = { 45, 45 }
-	local yPos = { 80, 220 }
+	local xPos = { 40, 40 }
+	local yPos = { 70, 200 }
 
 	for i, face in next, self.run.facesRewardsInventory do
 		--Create the UIFaces
@@ -1360,8 +1360,8 @@ function Shop:drawInventoryFaces(dt)
 end
 
 function Shop:updateInventoryPositions()
-	local xPos = { 20, 150, 280, 410, 20, 150, 280, 410 }
-	local yPos = { 81, 81, 81, 81, 220, 220, 220, 220 }
+	local xPos = { 60, 210, 360, 510, 60, 210, 360, 510 }
+	local yPos = { 70, 70, 70, 70, 200, 200, 200, 200 }
 
 	for i, uiFace in next, self.inventoryFacesUI do
 		uiFace.anchorX = xPos[i] + 60 + self.inventorySMTX
@@ -1372,8 +1372,8 @@ function Shop:updateInventoryPositions()
 end
 
 function Shop:updateRewardsPositions()
-	local xPos = { 45, 45 }
-	local yPos = { 80, 220 }
+	local xPos = { 40, 40 }
+	local yPos = { 70, 200 }
 
 	for i, uiFace in next, self.rewardsFacesUI do
 		uiFace.anchorX = xPos[i] + 60 + self.rewardsSMTX
