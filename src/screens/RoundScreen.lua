@@ -768,7 +768,7 @@ function RoundScreen:outAnimation(onEnd)
 		{
 			property = "gridX",
 			from = self.gridX,
-			targetValue = 0 - self.figureButtonsCanvas:getWidth(),
+			targetValue = 0 - self.figureButtonsCanvas:getWidth() - 50,
 			duration = outDuration,
 			easing = AnimationUtils.Easing.inOutCubic,
 		},
@@ -796,6 +796,14 @@ function RoundScreen:outAnimation(onEnd)
 			easing = AnimationUtils.Easing.inOutCubic,
 		},
 	})
+
+	self.uiElements.buttons["rerollButton"].animator:add(
+		"y",
+		self.uiElements.buttons["rerollButton"].y,
+		self.canvas:getHeight() + 200,
+		AnimationUtils.EntryDuration,
+		AnimationUtils.Easing.inOutCubic
+	)
 
 	--Ciggarettes
 	for i, c in next, self.uiElements.ciggiesUI do
@@ -834,19 +842,19 @@ function RoundScreen:outAnimation(onEnd)
 			targetValue = self.canvas:getWidth() + 20,
 			duration = outDuration,
 			easing = AnimationUtils.Easing.inCubic,
-			onComplete = function()
-				if onEnd == nil then
-					self.round.run:goToNextRound()
-				elseif onEnd == "newRun" then
-					self.round.run.game:startNewRun()
-				else
-					self.round.run.game.mainMenu = MainMenu:new(nil, self.round.run.game)
-					self.round.run.game.currentScreen = 0
-				end
-			end,
 		},
 	})
 
+	self.animator:addDelay(0.2, function()
+		if onEnd == nil then
+			self.round.run:goToNextRound()
+		elseif onEnd == "newRun" then
+			self.round.run.game:startNewRun()
+		else
+			self.round.run.game.mainMenu = MainMenu:new(nil, self.round.run.game)
+			self.round.run.game.currentScreen = 0
+		end
+	end)
 	--Buttons animation
 	--Ajout d'un délais le temps que les objets du shop disparaissent (je crois)
 end

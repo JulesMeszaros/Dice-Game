@@ -123,7 +123,7 @@ function GameScreen:new(floor, run, screenType, round)
 		820, 30, 820, -900
 	self.newFacesTX, self.newFacesTY, self.newFacesX, self.newFacesY = 500, 650, 500, self.canvas:getHeight() + 450
 
-	self.shopBGTX, self.shopBGTY, self.shopBGX, self.shopBGY = 510, 30, 510, -600
+	self.shopBGTX, self.shopBGTY, self.shopBGX, self.shopBGY = 510, 30, 510, -900
 	self.inventoryTX, self.inventoryTY, self.inventoryX, self.inventoryY = 550, 640, 550, self.canvas:getHeight() + 450
 	self.inventorySMTX, self.inventorySMTY, self.inventorySMX, self.inventorySMY =
 		740, 710, 740, self.canvas:getHeight() + 600

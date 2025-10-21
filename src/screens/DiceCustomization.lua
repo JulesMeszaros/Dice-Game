@@ -657,6 +657,14 @@ function DiceCustomization:outAnimation()
 		},
 	})
 
+	self.uiElements.buttons["nextRound"].animator:add(
+		"y",
+		self.uiElements.buttons["nextRound"].y,
+		self.canvas:getHeight() + 200,
+		AnimationUtils.EntryDuration,
+		AnimationUtils.Easing.inOutCubic
+	)
+
 	--Ciggarettes
 	for i, c in next, self.uiElements.ciggiesUI do
 		c.animator:addGroup({
