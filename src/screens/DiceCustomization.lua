@@ -720,13 +720,6 @@ function DiceCustomization:outAnimation()
 	end
 
 	--Buttons animation
-	self.uiElements.buttons["nextRound"].animator:add(
-		"y",
-		self.uiElements.buttons["nextRound"].y,
-		self.canvas:getHeight() + 150,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
 	self.uiElements.buttons["menuButton"].animator:add(
 		"x",
 		self.uiElements.buttons["menuButton"].x,
@@ -736,7 +729,15 @@ function DiceCustomization:outAnimation()
 	)
 	self.uiElements.buttons["planButton"].animator:add(
 		"x",
-		self.uiElements.buttons["menuButton"].x,
+		self.uiElements.buttons["planButton"].x,
+		self.canvas:getWidth() + 200,
+		outDuration,
+		AnimationUtils.Easing.inOutCubic
+	)
+
+	self.uiElements.buttons["deckButton"].animator:add(
+		"x",
+		self.uiElements.buttons["deckButton"].x,
 		self.canvas:getWidth() + 200,
 		outDuration,
 		AnimationUtils.Easing.inOutCubic
@@ -1474,4 +1475,3 @@ function DiceCustomization:cleanup()
 end
 
 return DiceCustomization
-

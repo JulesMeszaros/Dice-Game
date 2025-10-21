@@ -888,6 +888,8 @@ function RoundScreen:outAnimation(onEnd)
 	})
 
 	--Buttons animation
+	--Ajout d'un délais le temps que les objets du shop disparaissent (je crois)
+
 	self.uiElements.buttons["rerollButton"].animator:add("y", self.rerollBtnY, 1500, outDuration)
 	self.uiElements.buttons["menuButton"].animator:add(
 		"x",
@@ -898,7 +900,15 @@ function RoundScreen:outAnimation(onEnd)
 	)
 	self.uiElements.buttons["planButton"].animator:add(
 		"x",
-		self.uiElements.buttons["menuButton"].x,
+		self.uiElements.buttons["planButton"].x,
+		self.canvas:getWidth() + 300,
+		outDuration,
+		AnimationUtils.Easing.inOutCubic
+	)
+
+	self.uiElements.buttons["deckButton"].animator:add(
+		"x",
+		self.uiElements.buttons["deckButton"].x,
 		self.canvas:getWidth() + 200,
 		outDuration,
 		AnimationUtils.Easing.inOutCubic

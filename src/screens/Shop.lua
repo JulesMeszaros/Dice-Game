@@ -1756,19 +1756,29 @@ function Shop:outAnimation()
 	end)
 
 	--Buttons animation
-	self.uiElements.buttons["nextRoundSmallBtn"].animator:addDelay(outDuration)
-	self.uiElements.buttons["rerollShopButton"].animator:addDelay(outDuration)
-	self.uiElements.buttons["nextRoundSmallBtn"].animator:add(
-		"y",
-		self.uiElements.buttons["nextRoundSmallBtn"].y,
-		-50,
+	self.uiElements.buttons["menuButton"].animator:addDelay(outDuration / 2)
+	self.uiElements.buttons["planButton"].animator:addDelay(outDuration / 2)
+	self.uiElements.buttons["deckButton"].animator:addDelay(outDuration / 2)
+
+	self.uiElements.buttons["planButton"].animator:add(
+		"x",
+		self.uiElements.buttons["planButton"].x,
+		self.canvas:getWidth() + 200,
 		outDuration,
 		AnimationUtils.Easing.inOutCubic
 	)
-	self.uiElements.buttons["rerollShopButton"].animator:add(
-		"y",
-		self.uiElements.buttons["rerollShopButton"].y,
-		-50,
+	self.uiElements.buttons["menuButton"].animator:add(
+		"x",
+		self.uiElements.buttons["menuButton"].x,
+		self.canvas:getWidth() + 200,
+		outDuration,
+		AnimationUtils.Easing.inOutCubic
+	)
+
+	self.uiElements.buttons["deckButton"].animator:add(
+		"x",
+		self.uiElements.buttons["deckButton"].x,
+		self.canvas:getWidth() + 200,
 		outDuration,
 		AnimationUtils.Easing.inOutCubic
 	)

@@ -515,12 +515,19 @@ function DeskChoice:outAnimation(badge)
 	)
 	self.uiElements.buttons["planButton"].animator:add(
 		"x",
-		self.uiElements.buttons["menuButton"].x,
+		self.uiElements.buttons["planButton"].x,
 		self.canvas:getWidth() + 200,
 		outDuration,
 		AnimationUtils.Easing.inOutCubic
 	)
 
+	self.uiElements.buttons["deckButton"].animator:add(
+		"x",
+		self.uiElements.buttons["deckButton"].x,
+		self.canvas:getWidth() + 200,
+		outDuration,
+		AnimationUtils.Easing.inOutCubic
+	)
 	--Ciggarettes
 	for i, c in next, self.uiElements.ciggiesUI do
 		c.animator:addGroup({

@@ -132,6 +132,7 @@ Constants.PAGES = {
 	COLLECTION = 3,
 }
 
+--Constante servant à déterminer quel écran est affiché.
 Constants.RUN_STATES = {
 	ROUND = 1, --Phase de jeu
 	SHOP = 2, --SHOP
@@ -204,7 +205,7 @@ Constants.PARALAXE_MAX_OFFSET = {
 	30,
 	--Layer 3 (back)
 	20,
-	--Aucun layer
+	--Aucun layer (4)
 	0,
 }
 
