@@ -132,11 +132,10 @@ function DeskChoice:updateCanvas(dt)
 		button:draw()
 	end
 
-	self:drawRoundDetails(dt)
+	self:drawRightPanel(dt)
 
 	if self.showDeck == false then
-		self:drawDeck(dt)
-		--self:drawDiceDetails(dt)
+		--Dessine le panneau de droite (deck + infos + boutons)
 		self:updateChoiceCanvas(dt)
 		if self.run.floorDeskNumber > Constants.DESKS_BY_FLOOR then
 			self:drawBossDesc(dt)
@@ -229,24 +228,6 @@ function DeskChoice:createDeck()
 end
 
 --TODO: move in gamescreen.lua
-function DeskChoice:drawDeck(dt)
-	local targetCanvas = love.graphics.getCanvas()
-	love.graphics.setCanvas(self.deckCanvas)
-	love.graphics.clear()
-
-	--Draw the background
-	love.graphics.draw(Sprites.DECK, 0, 0)
-
-	--draw the deck faces
-	for dice, face in next, self.deckFaces do
-		face:update(dt)
-		face:draw()
-	end
-
-	love.graphics.setCanvas(targetCanvas)
-	local px, py = G.calculateParalaxeOffset(2)
-	love.graphics.draw(self.deckCanvas, self.deckX + px, self.deckY + py)
-end
 
 --TODO: move in gamescreen.lua
 function DeskChoice:updateDiceNet(dt)
@@ -441,48 +422,15 @@ function DeskChoice:outAnimation(badge)
 		},
 
 		--right Pannel
+
 		{
-			property = "diceDetailsX",
-			from = self.diceDetailsX,
-			targetValue = self.canvas:getWidth() + 200,
+			property = "rightPanelX",
+			from = self.rightPanelX,
+			targetValue = self.canvas:getWidth() + 550,
 			duration = outDuration,
 			easing = AnimationUtils.Easing.inOutCubic,
 		},
-		{
-			property = "deckX",
-			from = self.deckX,
-			targetValue = self.canvas:getWidth() + 50,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "moneyX",
-			from = self.moneyX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "turnsX",
-			from = self.turnsX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "rerollsX",
-			from = self.rerollsX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "floorX",
-			from = self.floorX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
+
 		{
 			property = "bossDescY",
 			from = self.bossDescY,
@@ -505,29 +453,6 @@ function DeskChoice:outAnimation(badge)
 		self.badges[i].animator:add("y", self.badges[i].y, newBadgeY[i], 0.4, AnimationUtils.Easing.inCubic)
 	end
 
-	--Buttons animation
-	self.uiElements.buttons["menuButton"].animator:add(
-		"x",
-		self.uiElements.buttons["menuButton"].x,
-		self.canvas:getWidth() + 200,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
-	self.uiElements.buttons["planButton"].animator:add(
-		"x",
-		self.uiElements.buttons["planButton"].x,
-		self.canvas:getWidth() + 200,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
-
-	self.uiElements.buttons["deckButton"].animator:add(
-		"x",
-		self.uiElements.buttons["deckButton"].x,
-		self.canvas:getWidth() + 200,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
 	--Ciggarettes
 	for i, c in next, self.uiElements.ciggiesUI do
 		c.animator:addGroup({

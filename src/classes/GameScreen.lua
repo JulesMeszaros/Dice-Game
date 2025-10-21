@@ -82,6 +82,8 @@ function GameScreen:new(floor, run, screenType, round)
 	self.ciggiePopupCanvas = love.graphics.newCanvas(self.canvas:getWidth(), self.canvas:getHeight())
 	self.bossDesc = love.graphics.newCanvas(730, 140)
 
+	self.rightPanel = love.graphics.newCanvas(520, 1080)
+
 	--Wavy Texts
 	self.moneyWavyText = UI.Text.TextWavy:new("5$", 50, 50, {
 		amplitude = 2.5,
@@ -114,13 +116,8 @@ function GameScreen:new(floor, run, screenType, round)
 	self.descriptionTX, self.descriptionTY, self.descriptionX, self.descriptionY =
 		self.canvas:getWidth() - 30, 650, self.canvas:getWidth() + 600, 650
 
-	self.rerollsTX, self.rerollsTY, self.rerollsX, self.rerollsY = 1670, 310, self.canvas:getWidth() + 400, 310
-	self.turnsTX, self.turnsTY, self.turnsX, self.turnsY = 1670, 170, self.canvas:getWidth() + 400, 170
-	self.floorTX, self.floorTY, self.floorX, self.floorY = 1670, 30, self.canvas:getWidth() + 400, 30
-	self.moneyTX, self.moneyTY, self.moneyX, self.moneyY = 1670, 450, self.canvas:getWidth() + 400, 450
 	self.ciggiesTrayTX, self.ciggiesTrayTY, self.ciggiesTrayX, self.ciggiesTrayY =
 		1670, 590, self.canvas:getWidth() + 400, 590
-	self.deckTX, self.deckTY, self.deckX, self.deckY = 1460, 30, self.canvas:getWidth() + 100, 30
 
 	self.customizationMatTX, self.customizationMatTY, self.customizationMatX, self.customizationMatY =
 		820, 30, 820, -900
@@ -157,6 +154,8 @@ function GameScreen:new(floor, run, screenType, round)
 		550 + (340 / 2), 380, 550 + (340 / 2), 380
 	self.nextRoundSMTX, self.nextRoundSMTY, self.nextRoundSMX, self.nextRoundSMY = 815, 560, 815, 560
 
+	self.rightPanelTX, self.rightPanelTY, self.rightPanelX, self.rightPanelY = 1400, 0, self.canvas:getWidth() + 10, 0
+
 	--Background animation TODO: à modifier un peu plus tard pour rendre le truc modulable
 	self.animator:addDelay(0.0, function()
 		if self.screenType == Constants.RUN_STATES.ROUND and self.round.roundType == Constants.ROUND_TYPES.BOSS then
@@ -167,10 +166,16 @@ function GameScreen:new(floor, run, screenType, round)
 	end)
 
 	--Entry animation
-
 	self.animator:addDelay(0.2)
 
 	self.animator:addGroup({
+		{
+			property = "rightPanelX",
+			from = self.rightPanelX,
+			duration = AnimationUtils.EntryDuration,
+			targetValue = self.rightPanelTX,
+			easing = AnimationUtils.Easing.inOutCubic,
+		},
 		{
 			property = "customizationMatY",
 			from = self.customizationMatY,
@@ -200,58 +205,17 @@ function GameScreen:new(floor, run, screenType, round)
 			easing = AnimationUtils.Easing.outCubic,
 		},
 		{
-			property = "descriptionX",
-			from = self.descriptionX,
-			targetValue = self.descriptionTX,
-			duration = AnimationUtils.EntryDuration,
-			easing = AnimationUtils.Easing.outCubic,
-		},
-		{
 			property = "diceMaty",
 			from = self.diceMaty,
 			targetValue = self.diceMatTY,
 			duration = AnimationUtils.EntryDuration,
 			easing = AnimationUtils.Easing.inOutCubic,
 		},
-		{
-			property = "deckX",
-			from = self.deckX,
-			targetValue = self.deckTX,
-			duration = AnimationUtils.EntryDuration,
-			easing = AnimationUtils.Easing.outCubic,
-		},
-		{
-			property = "moneyX",
-			from = self.moneyX,
-			targetValue = self.moneyTX,
-			duration = AnimationUtils.EntryDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "turnsX",
-			from = self.turnsX,
-			targetValue = self.turnsTX,
-			duration = AnimationUtils.EntryDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "rerollsX",
-			from = self.rerollsX,
-			targetValue = self.rerollsTX,
-			duration = AnimationUtils.EntryDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
+
 		{
 			property = "ciggiesTrayX",
 			from = self.ciggiesTrayX,
 			targetValue = self.ciggiesTrayTX,
-			duration = AnimationUtils.EntryDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "floorX",
-			from = self.floorX,
-			targetValue = self.floorTX,
 			duration = AnimationUtils.EntryDuration,
 			easing = AnimationUtils.Easing.inOutCubic,
 		},
@@ -335,13 +299,13 @@ function GameScreen:new(floor, run, screenType, round)
 			print("menu")
 		end,
 		"src/assets/sprites/ui/Menu.png",
-		self.menuBtnX,
-		self.menuBtnY,
+		150,
+		1005,
 		190,
 		90,
 		self.gameCanvas,
 		function()
-			return Inputs.getMouseInCanvas(0, 0, 1)
+			return Inputs.getMouseInCanvas(1410, 0, 1)
 		end
 	)
 
@@ -351,13 +315,13 @@ function GameScreen:new(floor, run, screenType, round)
 			self.deckScreen = Deck:new()
 		end,
 		"src/assets/sprites/ui/Deck Button.png",
-		1555,
+		150,
 		910,
 		190,
 		75,
 		self.gameCanvas,
 		function()
-			return Inputs.getMouseInCanvas(0, 0, 1)
+			return Inputs.getMouseInCanvas(1410, 0, 1)
 		end
 	)
 
@@ -380,22 +344,6 @@ function GameScreen:new(floor, run, screenType, round)
 	)
 
 	self.uiElements.buttons["planButton"].layer = 1
-
-	--Buttons animation
-	self.uiElements.buttons["menuButton"].animator:add(
-		"x",
-		self.menuBtnX,
-		self.menuBtnTX,
-		AnimationUtils.EntryDuration * 3,
-		AnimationUtils.Easing.inOutCubic
-	)
-	self.uiElements.buttons["planButton"].animator:add(
-		"x",
-		self.planBtnX,
-		self.planBtnTX,
-		AnimationUtils.EntryDuration * 3,
-		AnimationUtils.Easing.inOutCubic
-	)
 
 	--Cas particulier de l'écran de round
 	if self.screenType == Constants.RUN_STATES.ROUND then
@@ -480,6 +428,50 @@ function GameScreen:updateCanvas(dt) end
 function GameScreen:draw() end
 
 --==UI Draw functions==--
+
+function GameScreen:drawRightPanel(dt)
+	local currentCanvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(self.rightPanel)
+	love.graphics.clear()
+
+	love.graphics.rectangle("fill", 0, 0, 520, 1080)
+	love.graphics.rectangle("line", 0, 0, 520, 1080)
+
+	--draw ui
+	self:drawDeck(dt)
+	self:drawRoundDetails(dt)
+
+	--draw buttons
+	self.uiElements.buttons["menuButton"]:update(dt)
+	self.uiElements.buttons["deckButton"]:update(dt)
+	self.uiElements.buttons["planButton"]:update(dt)
+
+	self.uiElements.buttons["menuButton"]:draw()
+	self.uiElements.buttons["deckButton"]:draw()
+	self.uiElements.buttons["planButton"]:draw()
+
+	love.graphics.setCanvas(currentCanvas)
+	love.graphics.draw(self.rightPanel, self.rightPanelX, self.rightPanelY)
+end
+
+function GameScreen:drawDeck(dt)
+	local targetCanvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(self.deckCanvas)
+	love.graphics.clear()
+
+	--Draw the background
+	love.graphics.draw(Sprites.DECK, 0, 0)
+
+	--draw the deck faces
+	for dice, face in next, self.deckFaces do
+		face:update(dt)
+		face:draw()
+	end
+
+	love.graphics.setCanvas(targetCanvas)
+	local px, py = G.calculateParalaxeOffset(2)
+	love.graphics.draw(self.deckCanvas, 60 + px, 30 + py)
+end
 
 function GameScreen:drawHorizontalDice(dt)
 	local px, py = G.calculateParalaxeOffset(2)
@@ -740,10 +732,10 @@ function GameScreen:drawRoundDetails(dt)
 	--DRAW ALL THE CANVAS
 	local px, py = G.calculateParalaxeOffset(1)
 	love.graphics.setCanvas(currentCanvas)
-	love.graphics.draw(self.roundNumberCanvas, self.floorX + px, self.floorY + py)
-	love.graphics.draw(self.handsCanvas, self.turnsX + px, self.turnsY + py)
-	love.graphics.draw(self.rerollsCanvas, self.rerollsX + px, self.rerollsY + py)
-	love.graphics.draw(self.moneyCanvas, self.moneyX + px, self.moneyY + py)
+	love.graphics.draw(self.roundNumberCanvas, 270 + px, 30 + py)
+	love.graphics.draw(self.handsCanvas, 270 + px, 170 + py)
+	love.graphics.draw(self.rerollsCanvas, 270 + px, 310 + py)
+	love.graphics.draw(self.moneyCanvas, 270 + px, 450 + py)
 end
 
 function GameScreen:drawCiggiesTray()
