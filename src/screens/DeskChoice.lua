@@ -127,11 +127,6 @@ function DeskChoice:updateCanvas(dt)
 	love.graphics.setCanvas(self.canvas)
 	love.graphics.clear()
 
-	for key, button in next, self.uiElements.buttons do
-		button:update(dt)
-		button:draw()
-	end
-
 	self:drawRightPanel(dt)
 
 	if self.showDeck == false then

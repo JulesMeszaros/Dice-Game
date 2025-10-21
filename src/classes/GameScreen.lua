@@ -333,13 +333,13 @@ function GameScreen:new(floor, run, screenType, round)
 			self.run:toggleInfoScreen()
 		end,
 		"src/assets/sprites/ui/Infos.png",
-		self.planBtnX,
-		self.planBtnY,
+		390,
+		1005,
 		230,
 		90,
 		self.gameCanvas,
 		function()
-			return Inputs.getMouseInCanvas(0, 0, 1)
+			return Inputs.getMouseInCanvas(1410, 0, 1)
 		end
 	)
 
@@ -438,7 +438,14 @@ function GameScreen:drawRightPanel(dt)
 	love.graphics.rectangle("line", 0, 0, 520, 1080)
 
 	--draw ui
-	self:drawDeck(dt)
+	if self.screenType ~= Constants.RUN_STATES.ROUND then
+		self:drawDeck(dt)
+	end
+
+	if self.screenType == Constants.RUN_STATES.ROUND and self.showDeck == false then
+		self:drawDiceDetails(dt)
+	end
+
 	self:drawRoundDetails(dt)
 
 	--draw buttons

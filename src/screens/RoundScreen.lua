@@ -299,7 +299,7 @@ function RoundScreen:updateCanvas(dt)
 	love.graphics.setCanvas(self.canvas)
 	--set background
 	love.graphics.clear()
-
+	self:drawRightPanel(dt)
 	--Check if a ciggie is being dragged to the screen
 	self:checkForDraggedCiggie()
 	if self.showDeck == false then
@@ -311,7 +311,7 @@ function RoundScreen:updateCanvas(dt)
 
 		--Dice Details
 		self:updateDiceNet(dt)
-		self:drawDiceDetails()
+		--self:drawDiceDetails()
 		--First round text
 		if self.showFirstRollText == true and self.round.firstRoll == false then
 			UI.Text.drawWavyText("Roll the dice!", self.canvas:getWidth() / 2, (self.canvas:getHeight() / 2) + 120, {
@@ -335,14 +335,9 @@ function RoundScreen:updateCanvas(dt)
 		self.deckScreen:draw()
 	end
 
-	--ROUND DETAILS
-	self:drawRoundDetails(dt)
-
 	--Bouttouns de round
-	for k, b in next, self.uiElements.buttons do
-		if self.showDeck == false or k ~= "rerollButton" then
-			b:draw()
-		end
+	if self.showDeck == false then
+		self.uiElements.buttons["rerollButton"]:draw()
 	end
 
 	--Figure Buttons
@@ -687,8 +682,8 @@ function RoundScreen:drawDiceDetails()
 	love.graphics.setCanvas(currentCanvas)
 	-- Draw dice details canvas with premultiplied alpha to avoid black fringe on rounded corners
 	love.graphics.setBlendMode("alpha", "premultiplied")
-	local px, py = G.calculateParalaxeOffset(1)
-	love.graphics.draw(self.diceDetailsCanvas, self.diceDetailsX + px, self.diceDetailsY + py, 0, 1, 1, 0, 0)
+	local px, py = G.calculateParalaxeOffset(2)
+	love.graphics.draw(self.diceDetailsCanvas, 60 + px, 30 + py, 0, 1, 1, 0, 0)
 	love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
@@ -794,44 +789,9 @@ function RoundScreen:outAnimation(onEnd)
 		},
 
 		{
-			property = "diceDetailsX",
-			from = self.diceDetailsX,
-			targetValue = self.canvas:getWidth() + 200,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "deckX",
-			from = self.deckX,
-			targetValue = self.canvas:getWidth() + 50,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "moneyX",
-			from = self.moneyX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "turnsX",
-			from = self.turnsX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "rerollsX",
-			from = self.rerollsX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "floorX",
-			from = self.floorX,
-			targetValue = self.canvas:getWidth() + 400,
+			property = "rightPanelX",
+			from = self.rightPanelX,
+			targetValue = self.canvas:getWidth() + 10,
 			duration = outDuration,
 			easing = AnimationUtils.Easing.inOutCubic,
 		},
@@ -889,30 +849,6 @@ function RoundScreen:outAnimation(onEnd)
 
 	--Buttons animation
 	--Ajout d'un délais le temps que les objets du shop disparaissent (je crois)
-
-	self.uiElements.buttons["rerollButton"].animator:add("y", self.rerollBtnY, 1500, outDuration)
-	self.uiElements.buttons["menuButton"].animator:add(
-		"x",
-		self.uiElements.buttons["menuButton"].x,
-		self.canvas:getWidth() + 200,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
-	self.uiElements.buttons["planButton"].animator:add(
-		"x",
-		self.uiElements.buttons["planButton"].x,
-		self.canvas:getWidth() + 300,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
-
-	self.uiElements.buttons["deckButton"].animator:add(
-		"x",
-		self.uiElements.buttons["deckButton"].x,
-		self.canvas:getWidth() + 200,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
 end
 
 --==UTILS FUNCTIONS==--
