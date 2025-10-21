@@ -157,9 +157,8 @@ function DiceCustomization:updateCanvas(dt)
 	self:checkForDraggedCiggie()
 
 	--UI
-
+	self:drawRightPanel(dt)
 	--Run informations
-	self:drawRoundDetails(dt)
 
 	--New Faces Canvas
 	--self:drawNewFacesCanvas()
@@ -172,10 +171,7 @@ function DiceCustomization:updateCanvas(dt)
 	self:drawCiggiesTray()
 
 	--Buttons
-	for key, button in next, self.uiElements.buttons do
-		button:draw()
-	end
-
+	self.uiElements.buttons["nextRound"]:draw()
 	--Popup d'ajout à l'inventaire
 	if self.dragAndDroppedReward then
 		love.graphics.draw(Sprites.ADD_TO_INVENTORY_L, self.inventoryMDTX, self.inventoryMDTY, 0, 1, 1)
@@ -652,46 +648,10 @@ function DiceCustomization:outAnimation()
 			duration = outDuration,
 			easing = AnimationUtils.Easing.inOutCubic,
 		},
-
 		{
-			property = "diceDetailsX",
-			from = self.diceDetailsX,
-			targetValue = self.canvas:getWidth() + 200,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "deckX",
-			from = self.deckX,
-			targetValue = self.canvas:getWidth() + 50,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "moneyX",
-			from = self.moneyX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "turnsX",
-			from = self.turnsX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "rerollsX",
-			from = self.rerollsX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "floorX",
-			from = self.floorX,
-			targetValue = self.canvas:getWidth() + 400,
+			property = "rightPanelX",
+			from = self.rightPanelX,
+			targetValue = self.canvas:getWidth() + 550,
 			duration = outDuration,
 			easing = AnimationUtils.Easing.inOutCubic,
 		},
@@ -718,30 +678,6 @@ function DiceCustomization:outAnimation()
 			},
 		})
 	end
-
-	--Buttons animation
-	self.uiElements.buttons["menuButton"].animator:add(
-		"x",
-		self.uiElements.buttons["menuButton"].x,
-		self.canvas:getWidth() + 200,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
-	self.uiElements.buttons["planButton"].animator:add(
-		"x",
-		self.uiElements.buttons["planButton"].x,
-		self.canvas:getWidth() + 200,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
-
-	self.uiElements.buttons["deckButton"].animator:add(
-		"x",
-		self.uiElements.buttons["deckButton"].x,
-		self.canvas:getWidth() + 200,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
 
 	--Dices exit
 	for i, dice in next, self.uiDices do

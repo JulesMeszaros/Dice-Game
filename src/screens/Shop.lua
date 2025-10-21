@@ -122,12 +122,8 @@ function Shop:updateCanvas(dt)
 
 	--Check if a ciggie is being dragged to the screen
 	self:checkForDraggedCiggie()
-
-	--Buttons
-	self:drawRoundDetails(dt)
-
+	self:drawRightPanel(dt)
 	if self.showDeck == false then
-		self:drawDeck(dt)
 		self:drawInventoryBackGroundSmall()
 		self:drawShopBackground(dt)
 		self:drawRewardsSmall()
@@ -135,12 +131,6 @@ function Shop:updateCanvas(dt)
 	end
 	--UI
 	--
-	for key, button in next, self.uiElements.buttons do
-		if key ~= "rerollShopButton" and key ~= "nextRoundSmallBtn" then
-			button:update(dt)
-			button:draw()
-		end
-	end
 
 	--Popup d'achat de face de dé
 	if self.dragAndDroppedShopDice then
@@ -1335,6 +1325,7 @@ function Shop:createFacesPriceTags()
 end
 
 --==Additionnal draw functions==--
+--[[
 function Shop:drawDeck(dt)
 	local targetCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.deckCanvas)
@@ -1355,8 +1346,9 @@ function Shop:drawDeck(dt)
 	end
 	local px, py = G.calculateParalaxeOffset(2)
 	love.graphics.setCanvas(targetCanvas)
-	love.graphics.draw(self.deckCanvas, self.deckX + px, self.deckY + py)
-end
+	--love.graphics.draw(self.deckCanvas, self.deckX + px, self.deckY + py)
+end]]
+--
 
 function Shop:drawInventoryFaces(dt)
 	for k, uiFace in next, self.inventoryFacesUI do
@@ -1686,49 +1678,6 @@ function Shop:outAnimation()
 		},
 
 		{
-			property = "diceDetailsX",
-			from = self.diceDetailsX,
-			targetValue = self.canvas:getWidth() + 200,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "deckX",
-			from = self.deckX,
-			targetValue = self.canvas:getWidth() + 50,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "moneyX",
-			from = self.moneyX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "turnsX",
-			from = self.turnsX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "rerollsX",
-			from = self.rerollsX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-		{
-			property = "floorX",
-			from = self.floorX,
-			targetValue = self.canvas:getWidth() + 400,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-
-		{
 			property = "shopBGY",
 			from = self.shopBGY,
 			targetValue = -1000,
@@ -1750,38 +1699,19 @@ function Shop:outAnimation()
 			duration = outDuration,
 			easing = AnimationUtils.Easing.inOutCubic,
 		},
+		{
+			property = "rightPanelX",
+			from = self.rightPanelX,
+			targetValue = self.canvas:getWidth() + 550,
+			duration = outDuration,
+			easing = AnimationUtils.Easing.inOutCubic,
+		},
 	})
 	self.animator:addDelay(0.5, function()
 		self.run:goToDiceCustomization()
 	end)
 
 	--Buttons animation
-	self.uiElements.buttons["menuButton"].animator:addDelay(outDuration / 2)
-	self.uiElements.buttons["planButton"].animator:addDelay(outDuration / 2)
-	self.uiElements.buttons["deckButton"].animator:addDelay(outDuration / 2)
-
-	self.uiElements.buttons["planButton"].animator:add(
-		"x",
-		self.uiElements.buttons["planButton"].x,
-		self.canvas:getWidth() + 200,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
-	self.uiElements.buttons["menuButton"].animator:add(
-		"x",
-		self.uiElements.buttons["menuButton"].x,
-		self.canvas:getWidth() + 200,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
-
-	self.uiElements.buttons["deckButton"].animator:add(
-		"x",
-		self.uiElements.buttons["deckButton"].x,
-		self.canvas:getWidth() + 200,
-		outDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
 end
 
 function Shop:isInList(diceList, targetDice)

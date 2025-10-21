@@ -791,7 +791,7 @@ function RoundScreen:outAnimation(onEnd)
 		{
 			property = "rightPanelX",
 			from = self.rightPanelX,
-			targetValue = self.canvas:getWidth() + 10,
+			targetValue = self.canvas:getWidth() + 550,
 			duration = outDuration,
 			easing = AnimationUtils.Easing.inOutCubic,
 		},

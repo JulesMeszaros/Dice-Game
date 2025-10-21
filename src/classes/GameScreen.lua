@@ -434,11 +434,8 @@ function GameScreen:drawRightPanel(dt)
 	love.graphics.setCanvas(self.rightPanel)
 	love.graphics.clear()
 
-	love.graphics.rectangle("fill", 0, 0, 520, 1080)
-	love.graphics.rectangle("line", 0, 0, 520, 1080)
-
 	--draw ui
-	if self.screenType ~= Constants.RUN_STATES.ROUND then
+	if self.screenType ~= Constants.RUN_STATES.ROUND and self.screenType ~= Constants.RUN_STATES.DICE_CUSTOMIZATION then
 		self:drawDeck(dt)
 	end
 
