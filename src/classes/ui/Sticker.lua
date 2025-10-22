@@ -1,3 +1,4 @@
+local Shaders = require("src.utils.Shaders")
 local Animator = require("src.utils.Animator")
 local UIElement = require("src.classes.ui.UIElement")
 
@@ -55,6 +56,9 @@ function Sticker:new(stickerObject, x, y, size, isSelectable, isHoverable, mouse
 
 	self.representedObject = stickerObject
 
+	--Shader
+	self.rainbowShader = Shaders.glitteryRainbow
+
 	return self
 end
 
@@ -85,6 +89,15 @@ end
 
 function Sticker:draw()
 	local px, py = G.calculateParalaxeOffset(self.layer)
+
+	self.rainbowShader:send("time", self.rotation + self.scaleX * 2 + 30)
+	self.rainbowShader:send("frequency", 0.3)
+	self.rainbowShader:send("intensity", 0.2)
+	--self.rainbowShader:send("scale", 50)
+	self.rainbowShader:send("gridSize", 50)
+
+	love.graphics.setShader(self.rainbowShader)
+
 	love.graphics.draw(
 		self.canvas,
 		self.x + px,
@@ -95,6 +108,7 @@ function Sticker:draw()
 		self.canvas:getWidth() / 2,
 		self.canvas:getHeight() / 2
 	)
+	love.graphics.setShader()
 end
 
 function Sticker:isHovered() --Check if mouse is above the face
