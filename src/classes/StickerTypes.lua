@@ -11,4 +11,6 @@ function FlameSticker:new()
 	return self
 end
 
+StickerTypes.FlameSticker = FlameSticker
+
 return StickerTypes

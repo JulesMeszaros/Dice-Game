@@ -1,3 +1,6 @@
+local StickerTypes = require("src.classes.StickerTypes")
+local StickerObject = require("src.classes.StickerObject")
+local Sticker = require("src.classes.ui.Sticker")
 local Deck = require("src.classes.ui.Deck")
 local Constants = require("src.utils.Constants")
 local Inputs = require("src.utils.scripts.Inputs")
@@ -75,12 +78,12 @@ function Shop:new(run)
 	self.availableFaceObjects = {}
 	self.availableCiggies = {}
 	self.availableCoffees = {}
-
+	self.availableStickers = {}
 	--Shop Objects UI
 	self.availableFaceObjectsUI = {}
 	self.availableCiggieObjectsUI = {}
 	self.availableCoffeesUI = {}
-
+	self.stickersUI = {}
 	self.facesPriceTags = {}
 	self.ciggiesPriceTags = {}
 
@@ -170,6 +173,12 @@ function Shop:updateCanvas(dt)
 			if ciggieUI ~= self.dragAndDroppedObject then
 				ciggieUI:draw()
 			end
+		end
+
+		--Stickers
+		for s, sticker in next, self.stickersUI do
+			sticker:update(dt)
+			sticker:draw()
 		end
 
 		self:drawFacesPriceTags()
@@ -322,6 +331,10 @@ function Shop:mousepressed(x, y, button, istouch, presses)
 			ciggie:clickEvent()
 		end
 
+		for key, sticker in next, self.stickersUI do
+			sticker:clickEvent()
+		end
+
 		--Figure buttons
 		self.clickedFigure = self:getCurrentlyHoveredLine()
 	end
@@ -460,6 +473,17 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 		end
 	end
 
+	--Stickers
+	for key, sticker in next, self.stickersUI do
+		local wasReleased = sticker:releaseEvent()
+		sticker.isBeingDragged = false
+
+		if sticker.anchorX and sticker.anchorY then
+			sticker.targetX = sticker.anchorX
+			sticker.targetY = sticker.anchorY
+		end
+	end
+
 	--Figure buttons
 	if self.clickedFigure and self.clickedFigure ~= 7 then
 		if self.clickedFigure == self:getCurrentlyHoveredLine() then
@@ -532,7 +556,7 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
 			end
 		end
 	end
-
+	--Ciggie
 	if isDragging == true then
 		for key, ciggie in next, self.availableCiggieObjectsUI do
 			if ciggie.isDraggable and ciggie.isBeingClicked then
@@ -542,6 +566,20 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
 				ciggie.dragXspeed = dx
 				ciggie.targetX = x
 				ciggie.targetY = y
+				break
+			end
+		end
+	end
+
+	--Stickers
+	if isDragging == true then
+		for key, sticker in next, self.stickersUI do
+			if sticker.isDraggable and sticker.isBeingClicked then
+				sticker.isBeingDragged = true
+				self.dragAndDroppedObject = sticker
+				sticker.dragXspeed = dx
+				sticker.targetX = x
+				sticker.targetY = y
 				break
 			end
 		end
@@ -739,6 +777,9 @@ function Shop:generateNewShop()
 	for _, face in ipairs(self.availableFaceObjects or {}) do
 		face = nil -- Allow for garbage collection
 	end
+	for _, sticker in ipairs(self.availableStickers or {}) do
+		sticker = nil -- Allow for garbage collection
+	end
 	for _, ciggie in ipairs(self.availableCiggies or {}) do
 		ciggie = nil -- Allow for garbage collection
 	end
@@ -746,6 +787,7 @@ function Shop:generateNewShop()
 	--Generate the objects to buy
 	self:generateAvailableFaces()
 	self:generateAvailableCiggies()
+	self:generateRandomStickers()
 
 	-- Clear previous UI lists completely
 	for k in pairs(self.availableFaceObjectsUI or {}) do
@@ -917,6 +959,9 @@ function Shop:generateNewShop()
 		self:generateRandomCoffee(i, randomFigures[i])
 	end
 
+	--Stickers
+	self:generateStickersUI()
+
 	--Generate the price tags
 	self:createFacesPriceTags()
 end
@@ -991,6 +1036,30 @@ function Shop:generateRandomCoffee(i, randomFigureIndex)
 	coffeeButton.layer = 4
 
 	table.insert(self.availableCoffeesUI, coffeeButton)
+end
+
+function Shop:generateRandomStickers()
+	self.availableStickers = {
+		StickerTypes.FlameSticker:new(),
+		StickerTypes.FlameSticker:new(),
+		StickerTypes.FlameSticker:new(),
+		StickerTypes.FlameSticker:new(),
+	}
+end
+
+function Shop:generateStickersUI()
+	self.stickersUI = {}
+
+	local xs = { 555, 725, 895, 1065 }
+	local y = 535
+
+	for i, sticker in next, self.availableStickers do
+		local s = Sticker:new(sticker, xs[i] + (110 / 2), y + (110 / 2), 110, true, true, function()
+			return Inputs.getMouseInCanvas(0, 0)
+		end, 0, 0)
+		s.layer = 3
+		self.stickersUI[sticker] = s
+	end
 end
 
 --==UTILS==--

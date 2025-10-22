@@ -47,7 +47,6 @@ function DiceFace:new(
 	self.targetY = y
 	self.x = x
 	self.y = y
-	self.z = 0 --Détermine l'ordre de dessin des dés sur le terrain
 	self.absoluteX = absoluteX or 0
 	self.absoluteY = absoluteY or 0
 
@@ -480,42 +479,6 @@ function springUpdate(current, target, velocity, dt, frequency, damping)
 	velocity = velocity + accel * dt
 	current = current + velocity * dt
 	return current, velocity
-end
-
-function DiceFace:flipChange(newFace)
-	self.animator:addGroup({
-		{ property = "scaleX", from = self.scaleX, targetValue = 1.2, duration = 0.2 },
-		{ property = "scaleY", from = self.scaleY, targetValue = 1.2, duration = 0.2 },
-	})
-	self.animator:addDelay(0.1)
-	self.animator:add("scaleX", 1.2, 0, 0.1, nil, function()
-		self:setRepresentedFace(newFace)
-	end)
-	self.animator:add("scaleX", 0, 1.2, 0.1)
-	self.animator:addDelay(0.1)
-	self.animator:addGroup({
-		{ property = "scaleX", from = 1.2, targetValue = self.scaleX, duration = 0.2 },
-		{ property = "scaleY", from = 1.2, targetValue = self.scaleY, duration = 0.2 },
-	})
-end
-
-function DiceFace:shake(xintensity, yintensity, duration)
-	local shakeDuration = 0.01 --seconds
-	local nIterations = duration / shakeDuration
-
-	for i = 1, nIterations do
-		local xShake = math.random(-1 * xintensity, xintensity)
-		local yShake = math.random(-1 * yintensity, yintensity)
-
-		self.animator:addGroup({
-			{ property = "x", from = self.targetX, targetValue = xShake, duration = shakeDuration },
-			{ property = "y", from = self.targetY, targetValue = yShake, duration = shakeDuration },
-		})
-	end
-	self.animator:addGroup({
-		{ property = "x", from = self.x, targetValue = self.targetX, duration = shakeDuration },
-		{ property = "y", from = self.y, targetValue = self.targetY, duration = shakeDuration },
-	})
 end
 
 return DiceFace
