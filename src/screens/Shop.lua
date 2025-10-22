@@ -111,6 +111,7 @@ function Shop:update(dt)
 	end
 
 	self:getCurrentlyHoveredCiggie()
+	self:getCurrentlyHoveredSticker()
 	self:getCurrentlyHoveredFace()
 	self:getCurrentlyHoveredCoffeeButton()
 	self:getCurrentlyHoveredObject()
@@ -1105,6 +1106,16 @@ function Shop:getCurrentlyHoveredFace()
 	end
 end
 
+function Shop:getCurrentlyHoveredSticker()
+	self.currentlyHoveredSticker = nil
+	for key, sticker in next, self.stickersUI do
+		if sticker:isHovered() then
+			self.currentlyHoveredSticker = sticker
+			break
+		end
+	end
+end
+
 function Shop:getCurrentlyHoveredCoffeeButton()
 	self.currentlyHoveredCoffeeButton = nil
 	for i, btn in next, self.availableCoffeesUI do
@@ -1122,8 +1133,16 @@ function Shop:getCurrentlyHoveredObject()
 		self.currentlyHoveredObject = self.currentlyHoveredCiggie
 	elseif self.currentlyHoveredCoffeeButton then
 		self.currentlyHoveredObject = self.currentlyHoveredCoffeeButton
+	elseif self.currentlyHoveredSticker then
+		self.currentlyHoveredObject = self.currentlyHoveredSticker
 	else
 		self.currentlyHoveredObject = nil
+	end
+
+	if self.currentlyHoveredObject then
+		print(self.currentlyHoveredObject.representedObject.name)
+	else
+		print("nothing")
 	end
 end
 

@@ -8,10 +8,15 @@ function Sticker:new()
 	self.name = "Sticker"
 	self.description = "This is a placeholder Sticker. You Are not supposed to see this.... woops"
 	self.holographic = false
-
+	self.objectType = "Sticker"
 	return self
 end
 
+function Sticker:getDescription()
+	return self.description
+end
+
+--Effects
 function Sticker:startRoundEffect()
 	print("StartRound")
 end

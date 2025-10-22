@@ -8,6 +8,9 @@ FlameSticker.__index = FlameSticker
 function FlameSticker:new()
 	local self = setmetatable(StickerObject:new(), FlameSticker)
 
+	self.name = "Flame Sticker"
+	self.description = "Placeholder flame sticker... Placeholder Description... yay!~"
+
 	return self
 end
 

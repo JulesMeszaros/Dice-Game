@@ -83,6 +83,8 @@ function InfoBubble:update(dt)
 			self:generateCiggieBubble()
 		elseif self.object.representedObject.objectType == "Coffee" then
 			self:generateCoffeeBubble()
+		elseif self.object.representedObject.objectType == "Sticker" then
+			self:generateStickerBubble()
 		end
 	end
 end
@@ -382,6 +384,81 @@ function InfoBubble:generateCoffeeBubble()
 	--Render du contenu
 	--Tag
 	love.graphics.draw(Sprites.COFFEE, self.canvas:getWidth() / 2, 55, 0, 1, 1, Sprites.COFFEE:getWidth() / 2, 0)
+
+	--Text
+	love.graphics.setColor(0, 0, 0)
+	love.graphics.draw(self.name, self.canvas:getWidth() / 2, 5, 0, 1, 1, self.name:getWidth() / 2, 0)
+
+	local formatedText = UI.Text.drawFormattedText(
+		self.object.representedObject:getDescription(),
+		self.canvas:getWidth() / 2,
+		100,
+		Fonts.soraDesc,
+		lineWidth,
+		true
+	)
+
+	love.graphics.setColor(1, 1, 1)
+
+	love.graphics.setCanvas(currentCanvas)
+end
+
+function InfoBubble:generateStickerBubble()
+	self.time = 0
+	--Name
+	local name = love.graphics.newText(Fonts.soraName, self.object.representedObject.name)
+
+	--Creation de la largeur
+	local width = math.max(name:getWidth() + 40, 350)
+	self.width = width
+	lineWidth = width - 20
+
+	--Description
+	local descriptionText = self.object.representedObject:getDescription()
+
+	local textW, wrappedText = Fonts.soraDesc:getWrap(descriptionText, lineWidth)
+	local textLines = {}
+	for i, line in next, wrappedText do
+		local lineText = love.graphics.newText(Fonts.soraDesc, line)
+		table.insert(textLines, lineText)
+	end
+
+	--Creation de la largeur
+	local height = table.getn(wrappedText) * 30 + 20 + 100
+
+	self.name = name
+	self.height = height
+
+	self:generateCanvas(width, height)
+
+	-- Pre-render everything into the canvas
+	local currentCanvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(self.canvas)
+	love.graphics.clear()
+
+	--On dessine les angles
+	love.graphics.draw(self.baseSprite, self.quads[1], 0, 0)
+	love.graphics.draw(self.baseSprite, self.quads[2], self.canvas:getWidth() - self.gridDim, 0)
+	love.graphics.draw(self.baseSprite, self.quads[3], 0, self.canvas:getHeight() - self.gridDim)
+	love.graphics.draw(
+		self.baseSprite,
+		self.quads[4],
+		self.canvas:getWidth() - self.gridDim,
+		self.canvas:getHeight() - self.gridDim
+	)
+
+	--On dessine les cotés
+	love.graphics.draw(self.baseSprite, self.quads[6], self.width - self.gridDim, self.gridDim, 0, 1, self.hr)
+	love.graphics.draw(self.baseSprite, self.quads[7], 0, self.gridDim, 0, 1, self.hr)
+
+	love.graphics.draw(self.baseSprite, self.quads[5], self.gridDim, 0, 0, self.wr, 1)
+	love.graphics.draw(self.baseSprite, self.quads[8], self.gridDim, self.height - self.gridDim, 0, self.wr, 1)
+
+	love.graphics.draw(self.baseSprite, self.quads[9], self.gridDim, self.gridDim, 0, self.wr, self.hr)
+
+	--Render du contenu
+	--Tag
+	love.graphics.draw(Sprites.STICKER, self.canvas:getWidth() / 2, 55, 0, 1, 1, Sprites.STICKER:getWidth() / 2, 0)
 
 	--Text
 	love.graphics.setColor(0, 0, 0)
