@@ -64,6 +64,7 @@ end
 
 function Sticker:update(dt)
 	self.time = self.time + dt
+	self.animator:update(dt)
 
 	self:calculateScale()
 	self:updateScale(dt)

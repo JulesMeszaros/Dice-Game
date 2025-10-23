@@ -986,10 +986,6 @@ function Shop:generateAvailableFaces()
 		end
 	end
 
-	for _, __ in next, forbiddenFaces do
-		print(__)
-	end
-
 	self.availableFaceObjects = {}
 	for i = 1, 4 do
 		local f = GenerateRandom.faceObject(forbiddenFaces)
@@ -1137,12 +1133,6 @@ function Shop:getCurrentlyHoveredObject()
 		self.currentlyHoveredObject = self.currentlyHoveredSticker
 	else
 		self.currentlyHoveredObject = nil
-	end
-
-	if self.currentlyHoveredObject then
-		print(self.currentlyHoveredObject.representedObject.name)
-	else
-		print("nothing")
 	end
 end
 
@@ -1678,6 +1668,43 @@ function Shop:outAnimation()
 			{
 				property = "targetedScale",
 				from = face.targetedScale,
+				targetValue = 0,
+				duration = outDuration / 2,
+				easing = AnimationUtils.Easing.easeOutBack,
+			},
+
+			--Rotation
+			{
+				property = "rotation",
+				from = 0,
+				targetValue = -1,
+				duration = outDuration / 2,
+				easing = AnimationUtils.Easing.easeOutBack,
+			},
+			{
+				property = "baseRotation",
+				from = 0,
+				targetValue = -1,
+				duration = outDuration / 2,
+				easing = AnimationUtils.Easing.easeOutBack,
+			},
+		})
+	end
+
+	for i, sticker in next, self.stickersUI do
+		sticker.animator:addGroup({
+			{ property = "scaleX", from = sticker.scaleX, targetValue = 0, duration = outDuration / 2 },
+			{ property = "scaleY", from = sticker.scaleY, targetValue = 0, duration = outDuration / 2 },
+			{
+				property = "baseTargetedScale",
+				from = sticker.baseTargetedScale,
+				targetValue = 0,
+				duration = outDuration / 2,
+				easing = AnimationUtils.Easing.easeOutBack,
+			},
+			{
+				property = "targetedScale",
+				from = sticker.targetedScale,
 				targetValue = 0,
 				duration = outDuration / 2,
 				easing = AnimationUtils.Easing.easeOutBack,

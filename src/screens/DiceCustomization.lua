@@ -474,8 +474,6 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
 						--On met à jour les sprites
 						face:updateSprite()
 						self.uiDices[closestFace[3]][closestFace[4]]:updateSprite()
-
-						print(currentFace.faceValue, faceToSwap.faceValue)
 					end
 				end
 

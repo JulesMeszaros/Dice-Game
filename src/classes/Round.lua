@@ -115,10 +115,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 end
 
 function Round:update(dt)
-	print(self.usedCiggiesRound)
-
 	self.animator:update(dt)
-
 	--update le terrain
 	self.terrain:update(dt)
 end
