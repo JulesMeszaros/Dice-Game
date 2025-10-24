@@ -1,3 +1,4 @@
+local Constants = require("src.utils.Constants")
 local Shaders = require("src.utils.Shaders")
 local Animator = require("src.utils.Animator")
 local UIElement = require("src.classes.ui.UIElement")
@@ -33,7 +34,7 @@ function Sticker:new(stickerObject, x, y, size, isSelectable, isHoverable, mouse
 	self.targetX = x
 	self.targetY = y
 	self.mousePosition = mousePosition
-
+	self.isTerrainSticker = false
 	self.velx = 0
 	self.vely = 0
 
@@ -74,8 +75,6 @@ function Sticker:update(dt)
 
 	self.targetedRotation = self.baseRotation + self.dragRotation
 	self:updateAngle(dt)
-
-	print(self.dragRotation)
 end
 
 function Sticker:updateCanvas(dt)
@@ -99,16 +98,30 @@ function Sticker:draw()
 
 	love.graphics.setShader(self.rainbowShader)
 
-	love.graphics.draw(
-		self.canvas,
-		self.x + px,
-		self.y + py,
-		self.rotation,
-		self.scaleX,
-		self.scaleY,
-		self.canvas:getWidth() / 2,
-		self.canvas:getHeight() / 2
-	)
+	if self.isTerrainSticker and G.game.run.currentState == Constants.RUN_STATES.ROUND then
+		love.graphics.draw(
+			self.canvas,
+			self.x + px,
+			self.y + py + 170,
+			self.rotation,
+			self.scaleX,
+			self.scaleY,
+			self.canvas:getWidth() / 2,
+			self.canvas:getHeight() / 2
+		)
+	else
+		love.graphics.draw(
+			self.canvas,
+			self.x + px,
+			self.y + py,
+			self.rotation,
+			self.scaleX,
+			self.scaleY,
+			self.canvas:getWidth() / 2,
+			self.canvas:getHeight() / 2
+		)
+	end
+
 	love.graphics.setShader()
 end
 
@@ -116,8 +129,11 @@ function Sticker:isHovered() --Check if mouse is above the face
 	--Utilise la fonction passée en paramètre, qui permet d'avoir la position de la souris dans laquelle elle est rendue.
 	local vx, vy = self.mousePosition().x, self.mousePosition().y
 
+	local isFromShopTerrain = self.isTerrainSticker and G.game.run.currentState == Constants.RUN_STATES.SHOP
+
 	return (
 		self.isHoverable
+		and isFromShopTerrain == false
 		and vx > (self.x - (self.size / 2))
 		and vx < (self.x + (self.size / 2))
 		and vy > (self.y - (self.size / 2))
@@ -210,9 +226,6 @@ function Sticker:clickEvent()
 		self.isBeingClicked = true
 		wasClicked = true
 	end
-
-	print("click")
-
 	return wasClicked
 end
 

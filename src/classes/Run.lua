@@ -22,8 +22,9 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 
 	--Stickers
 	--On créée deux listes de stickers. Une pour les stickers normeaux, une pour les stickers de case.
-	self.stickers = {}
-	self.caseStickers = {}
+	self.stickers = {} --Liste pour les objets stickers
+	self.uiStickers = {} --Liste pour les objets visuels de stickers
+	self.caseStickers = {} --Liste pour les objets stickers attribués à des cases
 
 	--Ciggies
 	self.ciggiesObjects = {}

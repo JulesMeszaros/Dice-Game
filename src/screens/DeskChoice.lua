@@ -290,7 +290,6 @@ function DeskChoice:keypressed(key)
 	if key == "d" then
 		self.deckScreen = Deck:new()
 		self.showDeck = not self.showDeck
-		print(self.showDeck)
 	end
 end
 

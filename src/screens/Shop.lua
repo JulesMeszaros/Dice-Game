@@ -100,6 +100,13 @@ function Shop:new(run)
 		self:createRewardFaces()
 		self:generateCiggiesUI()
 	end)
+
+	--Booleen sachant si montrer le terrain quand un sticker est glissé depuis le shop
+	self.terrainCanvas = love.graphics.newCanvas(930, 460)
+	self.showTerrain = false
+
+	self.terrainShowY, self.terrainHideY = -500, 30
+	self.terrainX, self.terrainY = 505, -500
 	return self
 end
 
@@ -115,6 +122,29 @@ function Shop:update(dt)
 	self:getCurrentlyHoveredFace()
 	self:getCurrentlyHoveredCoffeeButton()
 	self:getCurrentlyHoveredObject()
+
+	--Detection de sticker glissé
+	self.showTerrainPrev = self.showTerrain
+	self.showTerrain = false
+
+	for i, sticker in next, self.stickersUI do
+		if sticker.isBeingDragged then
+			self.showTerrain = true
+			self.draggedSticker = sticker
+		end
+	end
+	if self.draggedSticker then
+		self:detectStickerPositionOnTerrain(self.draggedSticker)
+	end
+	--Si l'état de showterrain est différente entre deux frames, on vérifie si l'état est vrai ou faux et on affiche ou désactive le terrain
+
+	if self.showTerrainPrev ~= self.showTerrain then
+		if self.showTerrain then
+			self:showTerrainAnim()
+		else
+			self:hideTerrain()
+		end
+	end
 
 	self:updateCanvas(dt)
 end
@@ -250,6 +280,9 @@ function Shop:updateCanvas(dt)
 		self.buyCiggieText:reset()
 	end
 
+	--Dessine le terrain qui descend quand on DnD un sticker
+	self:drawShopTerrain(dt)
+
 	--Draw the drag and dropped object on top of everything else
 	if self.dragAndDroppedObject then
 		self.dragAndDroppedObject:draw()
@@ -343,6 +376,7 @@ end
 
 function Shop:mousereleased(x, y, button, istouch, presses)
 	self.dragAndDroppedObject = nil
+	self.draggedSticker = nil
 	self.dragAndDroppedShopDice = nil
 	self.dragAndDroppedReward = nil
 	self.dragAndDroppedInventory = nil
@@ -482,6 +516,14 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 		if sticker.anchorX and sticker.anchorY then
 			sticker.targetX = sticker.anchorX
 			sticker.targetY = sticker.anchorY
+		end
+
+		if self:detectStickerPositionOnTerrain(sticker) then
+			local stickerPos = self:detectStickerPositionOnTerrain(sticker)
+			print(stickerPos.x, stickerPos.y)
+
+			--Action d'acheter le sticker, et le placer sur le terrain
+			self:buySticker(sticker)
 		end
 	end
 
@@ -1571,6 +1613,62 @@ function Shop:getCurrentlyHoveredCiggie()
 			break
 		end
 	end
+end
+--Animations
+function Shop:drawShopTerrain(dt)
+	local currentCanvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(self.terrainCanvas)
+	love.graphics.clear()
+
+	--Dessine le background
+	love.graphics.draw(Sprites.DICE_MAT, 0, self.terrainCanvas:getHeight(), 0, 1, 1, 0, Sprites.DICE_MAT:getHeight())
+
+	--Dessine les stickers déjà placés
+	for i, sticker in next, self.run.uiStickers do
+		sticker:update(dt)
+		sticker:draw()
+	end
+
+	love.graphics.setCanvas(currentCanvas)
+	love.graphics.draw(self.terrainCanvas, self.terrainX, self.terrainY)
+end
+
+function Shop:showTerrainAnim()
+	self.animator:add("terrainY", -500, 30, 0.3, AnimationUtils.Easing.outQuad)
+end
+
+function Shop:hideTerrain()
+	self.animator:add("terrainY", 30, -500, 0.3)
+end
+
+function Shop:detectStickerPositionOnTerrain(sticker)
+	if
+		sticker.x > self.terrainX
+		and sticker.x < self.terrainX + self.terrainCanvas:getWidth()
+		and sticker.y > self.terrainY
+		and sticker.y < self.terrainY + self.terrainCanvas:getHeight()
+	then
+		return { x = math.floor(sticker.x - self.terrainX), y = math.floor(sticker.y - self.terrainY) }
+	else
+		return nil
+	end
+end
+
+function Shop:buySticker(sticker)
+	--On ajout le stickerObject à la liste des stickerObject de la run
+	table.insert(self.run.stickers, sticker.representedObject)
+	--On ajoute le sticker UI à la liste de la run
+	local pos = self:detectStickerPositionOnTerrain(sticker)
+	local s = Sticker:new(sticker.representedObject, pos.x, pos.y, 110, false, true, function()
+		return Inputs.getMouseInCanvas(510, 490)
+	end, 510, 490)
+
+	s.isTerrainSticker = true --Permet de dire qu'il s'agit d'un sticker affiché sur le terrain, et non dans le shop
+
+	table.insert(self.run.uiStickers, s)
+
+	--On supprime le sticker du shop (ui)
+	self.stickersUI[sticker.representedObject] = nil
 end
 
 function Shop:outAnimation()

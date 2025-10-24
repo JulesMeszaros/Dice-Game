@@ -307,7 +307,7 @@ function RoundScreen:updateCanvas(dt)
 		self:drawPlayersInfos(dt)
 		--Dice Tray
 		local px, py = G.calculateParalaxeOffset(3)
-		self:drawDiceTray(self.diceMatx + px, self.diceMaty + py, self.diceFaces)
+		self:drawDiceTray(self.diceMatx + px, self.diceMaty + py, self.diceFaces, dt)
 
 		--Dice Details
 		self:updateDiceNet(dt)
@@ -634,12 +634,19 @@ end
 
 --==DRAW FUNCTIONS==--
 
-function RoundScreen:drawDiceTray(x, y, dices2)
+function RoundScreen:drawDiceTray(x, y, dices2, dt)
 	local targetCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.dice_tray)
 	love.graphics.clear()
 
+	--On dessine le background
 	love.graphics.draw(Sprites.DICE_MAT, 0, 0, 0, 1, 1)
+
+	--On dessine les stickers
+	for i, sticker in next, self.round.run.uiStickers do
+		sticker:update(dt)
+		sticker:draw()
+	end
 
 	--On déssine les autres dés
 	for key, uiFace in next, dices2 do

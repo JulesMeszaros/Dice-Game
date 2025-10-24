@@ -72,8 +72,6 @@ function GenerateRandom.faceObject(forbiddenKeys, c, u, r) --Les parametres c u 
 
 	local randomFaceObject = randomFaceType:new(randomFaceValue, 10)
 
-	print(randomRarity, randomFaceKey, randomFaceValue)
-
 	return randomFaceObject
 end
 

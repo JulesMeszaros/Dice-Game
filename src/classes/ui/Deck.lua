@@ -20,7 +20,6 @@ function Deck:new()
 			local f = DiceFace:new(d, df, 30 + (_ - 1) * 150 + 410, (__ - 1) * 120 + 140, 120, false, true, function()
 				return Inputs.getMouseInCanvas(510, 30)
 			end, nil, 510, 30)
-			print(f)
 			local apparitionDuration = 0.4
 
 			f.baseTargetedScale = 0
