@@ -209,6 +209,9 @@ function RoundScreen:new(round)
 		self.timers.firstRerollTime = 0
 		self.showFirstRollText = true
 		self:generateCiggiesUI()
+
+		--Active l'effet des stickers concernés
+		self.round.run:stickerStartRoundEffect()
 	end)
 
 	self.diceFaces = {}
@@ -771,6 +774,10 @@ end
 
 function RoundScreen:outAnimation(onEnd)
 	local outDuration = 0.4
+	self.animator:addDelay(0.1, function()
+		self.round.run:stickerEndRoundEffect()
+	end)
+	self.animator:addDelay(0.4)
 	self.animator:addGroup({
 		{
 			property = "gridX",
@@ -985,6 +992,7 @@ function RoundScreen:playFigure(figure, params)
 	if self.round.run.availableFigures[figure] >= 1 and table.getn(self.round.selectedDices) >= 1 then
 		self.round:playFigure(points, usedDices, figure)
 		self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure] - 1
+		self.round.run:stickerFigurePlayedEffect()
 	end
 end
 --Reorganises the UI faces by face order (unselected dices)

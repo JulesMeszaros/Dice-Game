@@ -404,6 +404,8 @@ function Round:endTriggeringPhase()
 		self.handScore = 0
 	end
 
+	self.run:stickerEndTriggeringPhaseEffect()
+
 	if self.roundScore >= self.targetScore or self.remainingHands <= 0 then
 		self:endRound()
 	else
@@ -465,6 +467,8 @@ function Round:rerollDices() --Triggers the makeRoll function after clicking the
 	self.terrain.rerollingTimer = 2
 	G.animator:finishAll()
 	G.animator:add("waveY", -6, 0, 1.0, AnimationUtils.Easing.outQuad)
+
+	self.run:stickerRerollEffect()
 
 	if self.firstRoll == false then
 		self:makeRoll(self.diceObjects)

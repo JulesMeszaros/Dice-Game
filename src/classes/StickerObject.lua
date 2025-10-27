@@ -30,39 +30,48 @@ function Sticker:figurePlayedEffect()
 end
 
 function Sticker:startTriggerEffect()
+	--A implementer
 	print("starttrigger")
 end
 
 function Sticker:endTriggerEffect()
+	--A implementer
 	print("endtrigger")
 end
 
 function Sticker:diceTriggeredEffect()
+	--A implementer
 	print("diceTrigger")
 end
 
 function Sticker:rerollEffect()
+	--A implementer
 	print("reroll")
 end
 
 function Sticker:caseEffect()
+	--A implementer
 	print("caseeffect")
 end
 
 function Sticker:ciggieUsedEffect()
+	--A implementer
 	print("ciggieUsed")
 end
 
 function Sticker:coffeeUsedEffect()
+	--A implementer
 	print("coffeUsed")
 end
 
 function Sticker:diceFaceBoughtEffect()
+	--A implementer
 	print("diceFaceBought")
 end
 
 --Effet qui se déclenche une seule fois, au moment ou le sticker est acheté et placé sur le terrain
 function Sticker:buyEffect()
+	--A implementer
 	print("sticker bought")
 end
 

@@ -15,7 +15,7 @@ local Constants = {
 	BASE_AVAILABLE_HANDS = 1,
 
 	--Debug
-	SHOP_EVERY_DESK = false,
+	SHOP_EVERY_DESK = true,
 	OVERPOWER = false,
 
 	--Prices

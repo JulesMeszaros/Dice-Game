@@ -381,4 +381,35 @@ function Run:cleanup()
 	self.ciggiesObjects = {}
 end
 
+--Sticker functions
+function Run:stickerStartRoundEffect()
+	for i, sticker in next, self.stickers do
+		sticker:startRoundEffect()
+	end
+end
+
+function Run:stickerEndRoundEffect()
+	for i, sticker in next, self.stickers do
+		sticker:endRoundEffect()
+	end
+end
+
+function Run:stickerFigurePlayedEffect()
+	for i, sticker in next, self.stickers do
+		sticker:figurePlayedEffect()
+	end
+end
+
+function Run:stickerEndTriggeringPhaseEffect()
+	for i, sticker in next, self.stickers do
+		sticker:endTriggerEffect()
+	end
+end
+
+function Run:stickerRerollEffect()
+	for i, sticker in next, self.stickers do
+		sticker:rerollEffect()
+	end
+end
+
 return Run

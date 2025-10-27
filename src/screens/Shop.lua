@@ -1634,11 +1634,11 @@ function Shop:drawShopTerrain(dt)
 end
 
 function Shop:showTerrainAnim()
-	self.animator:add("terrainY", -500, 30, 0.3, AnimationUtils.Easing.outQuad)
+	self.animator:add("terrainY", -500, 30, 0.2, AnimationUtils.Easing.outQuad)
 end
 
 function Shop:hideTerrain()
-	self.animator:add("terrainY", 30, -500, 0.3)
+	self.animator:add("terrainY", 30, -500, 0.2, AnimationUtils.Easing.inQuad)
 end
 
 function Shop:detectStickerPositionOnTerrain(sticker)
