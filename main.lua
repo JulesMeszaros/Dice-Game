@@ -4,6 +4,7 @@ local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local FaceTypes = require("src.classes.FaceTypes")
+local StickerTypes = require("src.classes.StickerTypes")
 local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 G = {
 	--Background color
@@ -40,6 +41,10 @@ G.uncommonDices = {}
 G.rareDices = {}
 G.faceTypes = FaceTypes
 
+G.stickerNames = {}
+G.basicStickers = {}
+G.holoStickers = {}
+
 for key, facetype in next, FaceTypes do
 	local f = facetype:new(1, 10)
 	if f.tier == "Common" then
@@ -50,6 +55,16 @@ for key, facetype in next, FaceTypes do
 		table.insert(G.rareDices, key)
 	end
 	G.faceNames[key] = f.name
+end
+
+for key, facetype in next, StickerTypes do
+	local s = facetype:new()
+	if s.holographic == true then
+		table.insert(G.holoStickers, key)
+	else
+		table.insert(G.basicStickers, key)
+	end
+	G.stickerNames[key] = s.name
 end
 
 applyCRT = true
