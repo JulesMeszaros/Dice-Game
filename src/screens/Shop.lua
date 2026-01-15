@@ -1079,7 +1079,7 @@ end
 
 function Shop:generateRandomStickers()
 	self.availableStickers = {
-		StickerTypes.FlameSticker:new(),
+		StickerTypes.MoneyBagSticker:new(),
 		StickerTypes.FlameSticker:new(),
 		StickerTypes.FlameSticker:new(),
 		StickerTypes.FlameSticker:new(),
@@ -1666,6 +1666,9 @@ function Shop:buySticker(sticker)
 	s.isTerrainSticker = true --Permet de dire qu'il s'agit d'un sticker affiché sur le terrain, et non dans le shop
 
 	table.insert(self.run.uiStickers, s)
+
+	--On active l'effet d'achat du sticker
+	sticker.representedObject:buyEffect(self.run)
 
 	--On supprime le sticker du shop (ui)
 	self.stickersUI[sticker.representedObject] = nil

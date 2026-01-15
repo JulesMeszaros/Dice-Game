@@ -44,8 +44,6 @@ function Sticker:new(stickerObject, x, y, size, isSelectable, isHoverable, mouse
 	self.isDraggable = true
 	self.dragXspeed = 0
 
-	self.sprite = love.graphics.newImage("src/assets/sprites/stickers/Flame.png")
-
 	self.scaleX = 1
 	self.scaleY = 1
 	self.baseTargetedScale = 1
@@ -56,7 +54,7 @@ function Sticker:new(stickerObject, x, y, size, isSelectable, isHoverable, mouse
 	self.time = 0
 
 	self.representedObject = stickerObject
-
+	self.sprite = love.graphics.newImage(self.representedObject.sprite)
 	--Shader
 	self.rainbowShader = Shaders.glitteryRainbow
 

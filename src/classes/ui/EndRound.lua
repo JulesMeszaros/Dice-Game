@@ -147,14 +147,15 @@ function EndRound:updateEarnedMoney()
 	local coworkerLabel = love.graphics.newText(Fonts.soraReward, {
 		{ 255 / 255, 247 / 255, 160 / 255 },
 		"Coworker Reward : ",
-		{ 255 / 255, 223 / 255, 120 / 255 },
-		tostring(self.round.baseReward),
 	})
 	local turnsLabel = love.graphics.newText(Fonts.soraReward, {
 		{ 255 / 255, 247 / 255, 160 / 255 },
 		"Turn Left : ",
-		{ 255 / 255, 223 / 255, 120 / 255 },
-		tostring(self.round.remainingHands),
+	})
+
+	local additionnalLabel = love.graphics.newText(Fonts.soraReward, {
+		{ 255 / 255, 247 / 255, 160 / 255 },
+		"Additionnal revenues : ",
 	})
 
 	local coworkerDollars = love.graphics.newText(
@@ -166,11 +167,16 @@ function EndRound:updateEarnedMoney()
 		{ { 255 / 255, 178 / 255, 89 / 255 }, string.rep("$", self.round.remainingHands) }
 	)
 
+	local additionnalDolars = love.graphics.newText(
+		Fonts.soraReward,
+		{ { 255 / 255, 178 / 255, 89 / 255 }, string.rep("$", self.round.run.additionalMoney) }
+	)
+
 	local totalReward = love.graphics.newText(Fonts.soraRewardTotal, {
 		{ 255 / 255, 247 / 255, 160 / 255 },
 		"+",
 		{ 255 / 255, 223 / 255, 120 / 255 },
-		tostring(self.round.remainingHands + self.round.baseReward),
+		tostring(self.round.remainingHands + self.round.baseReward + self.round.run.additionalMoney),
 		{ 255 / 255, 178 / 255, 89 / 255 },
 		"$",
 	})
@@ -181,6 +187,9 @@ function EndRound:updateEarnedMoney()
 	love.graphics.draw(coworkerDollars, 20, 140)
 	love.graphics.draw(turnsLabel, 20, 180)
 	love.graphics.draw(turnsDollars, 20, 220)
+	love.graphics.draw(additionnalLabel, 20, 260)
+	love.graphics.draw(additionnalDolars, 20, 300)
+
 	love.graphics.draw(totalReward, self.moneyRewardCanvas:getWidth() / 2, 367, 0, 1, 1, totalReward:getWidth() / 2)
 
 	love.graphics.setCanvas(currentCanvas)

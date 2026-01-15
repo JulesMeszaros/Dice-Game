@@ -774,6 +774,7 @@ end
 
 function RoundScreen:outAnimation(onEnd)
 	local outDuration = 0.4
+	-- Déclenchement des effets de fin de round.
 	self.animator:addDelay(0.1, function()
 		self.round.run:stickerEndRoundEffect()
 	end)

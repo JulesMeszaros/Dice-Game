@@ -55,6 +55,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 	self.runPaused = false
 
 	--Money
+	self.additionalMoney = 0
 	self.money = 5
 	self.totalspent = 0
 
@@ -142,7 +143,7 @@ end
 
 function Run:goToNextRound()
 	--Calculate the money earned, based on the number of hands remaining
-	local moneyEarned = self.currentRound.remainingHands + self.currentRound.baseReward
+	local moneyEarned = self.currentRound.remainingHands + self.currentRound.baseReward + self.additionalMoney
 	self.money = self.money + moneyEarned
 
 	--Increments the desk, and goes to the next floor if the desk rank is > 3
@@ -384,31 +385,31 @@ end
 --Sticker functions
 function Run:stickerStartRoundEffect()
 	for i, sticker in next, self.stickers do
-		sticker:startRoundEffect()
+		sticker:startRoundEffect(self)
 	end
 end
 
 function Run:stickerEndRoundEffect()
 	for i, sticker in next, self.stickers do
-		sticker:endRoundEffect()
+		sticker:endRoundEffect(self)
 	end
 end
 
 function Run:stickerFigurePlayedEffect()
 	for i, sticker in next, self.stickers do
-		sticker:figurePlayedEffect()
+		sticker:figurePlayedEffect(self)
 	end
 end
 
 function Run:stickerEndTriggeringPhaseEffect()
 	for i, sticker in next, self.stickers do
-		sticker:endTriggerEffect()
+		sticker:endTriggerEffect(self)
 	end
 end
 
 function Run:stickerRerollEffect()
 	for i, sticker in next, self.stickers do
-		sticker:rerollEffect()
+		sticker:rerollEffect(self)
 	end
 end
 
