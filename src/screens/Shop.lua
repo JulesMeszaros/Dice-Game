@@ -91,7 +91,7 @@ function Shop:new(run)
 	self.inventoryFacesUI = {}
 	self.rewardsFacesUI = {}
 
-	self.rerollShopPrice = Constants.BASE_SHOP_REROLL_PRICE
+	self.rerollShopPrice = self.run.baseShopRerollPrice
 
 	--Wait for all the animations to end, then show the inventory and the shop + ciggies UI
 	self.animator:addDelay(0.5, function()
@@ -520,10 +520,12 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 
 		if self:detectStickerPositionOnTerrain(sticker) then
 			local stickerPos = self:detectStickerPositionOnTerrain(sticker)
-			print(stickerPos.x, stickerPos.y)
 
 			--Action d'acheter le sticker, et le placer sur le terrain
-			self:buySticker(sticker)
+			if self.run.money >= Constants.BASE_STICKER_PRICE then
+				self:buySticker(sticker)
+				self.run.money = self.run.money - Constants.BASE_STICKER_PRICE
+			end
 		end
 	end
 
@@ -1080,8 +1082,8 @@ end
 function Shop:generateRandomStickers()
 	self.availableStickers = {
 		StickerTypes.MoneyBagSticker:new(),
-		StickerTypes.FlameSticker:new(),
-		StickerTypes.FlameSticker:new(),
+		StickerTypes.RerollAdderSticker:new(),
+		StickerTypes.ShopRerollSticker:new(),
 		StickerTypes.FlameSticker:new(),
 	}
 end

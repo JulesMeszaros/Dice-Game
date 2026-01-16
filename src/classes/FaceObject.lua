@@ -144,21 +144,14 @@ function FaceObject:triggerEffect(round)
 	return
 end
 
-function FaceObject:backupEffect(round)
-	print("backup!", self.name, self.faceValue)
-end
+function FaceObject:backupEffect(round) end
 
-function FaceObject:fullHandEffect(round)
-	print("full!")
-end
+function FaceObject:fullHandEffect(round) end
 
-function FaceObject:replayEffect(round)
-	print("replay")
-end
+function FaceObject:replayEffect(round) end
 
 function FaceObject:uniqueEffect(round)
 	--Effect that triggers only if the dice is the only dice this type in scored hand
-	print("unique")
 end
 
 function FaceObject:firstEffect(round)

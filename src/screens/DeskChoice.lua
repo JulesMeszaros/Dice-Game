@@ -531,9 +531,6 @@ function DeskChoice:getCurrentlyHoveredFace()
 			break
 		end
 	end
-	if self.currentlyHoveredFace then
-		print(self.currentlyHoveredFace.representedObject.name)
-	end
 	--Si un dé est survolé et qu'il est différent du dé précédent alors on créé un nouveau canvas d'infos
 end
 

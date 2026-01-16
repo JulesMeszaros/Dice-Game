@@ -54,6 +54,10 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 	self.currentState = Constants.RUN_STATES.ROUND
 	self.runPaused = false
 
+	--Creating base stats (modifiables par les stickers)
+	self.baseRerolls = Constants.BASE_REROLLS
+	self.baseShopRerollPrice = Constants.BASE_SHOP_REROLL_PRICE
+
 	--Money
 	self.additionalMoney = 0
 	self.money = 5

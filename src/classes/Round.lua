@@ -51,7 +51,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 	self.floorNumber = floor
 	self.deskNumber = desk
 	self.roundType = roundType
-	self.availableRerolls = Constants.BASE_REROLLS
+	self.availableRerolls = self.run.baseRerolls
 	self.bountyHunterFigure = math.random(1, 13)
 	self.handRefunded = false --utilisée pour annuler l'utilisation d'une main
 	self.usedCiggiesRound = 0
@@ -390,7 +390,7 @@ function Round:endTriggeringPhase()
 		if self.bossType == Constants.BOSS_TYPES.CHEF_RD then
 			self.availableRerolls = 0
 		else
-			self.availableRerolls = Constants.BASE_REROLLS
+			self.availableRerolls = self.run.baseRerolls
 		end
 
 		self.roundScore = self.roundScore + self.handScore

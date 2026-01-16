@@ -424,7 +424,6 @@ function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
 		if isDragging == true then
 			for key, diceui in next, self.diceFaces do
 				if diceui.isDraggable and diceui.isBeingClicked then
-					print(diceui.x, diceui.y)
 					--On calcule le nombre de dés non sélectionnés à gauche de celui qui eest drag and drop
 					local leftDices = 1
 					for i, f in next, self.unselectedDices do
@@ -432,8 +431,6 @@ function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
 							leftDices = leftDices + 1
 						end
 					end
-
-					print(leftDices)
 
 					for i, face in next, self.unselectedDices do
 						if face == diceui then
@@ -443,8 +440,6 @@ function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
 							break
 						end
 					end
-
-					print(table.getn(self.unselectedDices))
 
 					diceui.isBeingDragged = true
 					self.dragAndDroppedDice = diceui
