@@ -30,7 +30,7 @@ function MoneyBagSticker:new()
 
 	self.sprite = "src/assets/sprites/stickers/MoneyBag.png"
 
-	self.name = "Money Bag Sticker"
+	self.name = "Salary Bonus"
 	self.description = "Gives an additional 5$ at the end of each office."
 
 	return self
@@ -51,7 +51,7 @@ function RerollAdderSticker:new()
 
 	self.sprite = "src/assets/sprites/stickers/Repeat.png"
 
-	self.name = "Additional Reroll Sticker"
+	self.name = "Last Chance"
 	self.description = "Adds an additional reroll per hand"
 
 	return self
@@ -73,7 +73,7 @@ function ShopRerollSticker:new()
 
 	self.sprite = "src/assets/sprites/stickers/Plus.png"
 
-	self.name = " Sticker"
+	self.name = "On The House"
 	self.description = "Sets the base price for the shop reroll to 0$."
 
 	return self
@@ -83,5 +83,27 @@ function ShopRerollSticker:buyEffect(run)
 	run.baseShopRerollPrice = 0
 end
 StickerTypes.ShopRerollSticker = ShopRerollSticker
+
+--ThirteenthMonth Sticker
+
+local ThirteenthMonthSticker = setmetatable({}, { __index = StickerObject })
+ThirteenthMonthSticker.__index = ThirteenthMonthSticker
+
+function ThirteenthMonthSticker:new()
+	local self = setmetatable(StickerObject:new(), ThirteenthMonthSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Coin.png"
+
+	self.name = "13th Month"
+	self.description = "+10$ at the end of each office."
+	self.holographic = true
+
+	return self
+end
+
+function ThirteenthMonthSticker:buyEffect(run)
+	run.additionalMoney = run.additionalMoney + 10
+end
+StickerTypes.ThirteenthMonthSticker = ThirteenthMonthSticker
 
 return StickerTypes

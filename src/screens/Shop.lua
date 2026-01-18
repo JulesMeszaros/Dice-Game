@@ -1084,7 +1084,7 @@ function Shop:generateRandomStickers()
 		StickerTypes.MoneyBagSticker:new(),
 		StickerTypes.RerollAdderSticker:new(),
 		StickerTypes.ShopRerollSticker:new(),
-		StickerTypes.FlameSticker:new(),
+		StickerTypes.ThirteenthMonthSticker:new(),
 	}
 end
 
