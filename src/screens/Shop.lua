@@ -1080,12 +1080,11 @@ function Shop:generateRandomCoffee(i, randomFigureIndex)
 end
 
 function Shop:generateRandomStickers()
-	self.availableStickers = {
-		StickerTypes.MoneyBagSticker:new(),
-		StickerTypes.RerollAdderSticker:new(),
-		StickerTypes.ShopRerollSticker:new(),
-		StickerTypes.ThirteenthMonthSticker:new(),
-	}
+	self.availableStickers = {}
+
+	for i = 1, 4 do
+		table.insert(self.availableStickers, self:generateRandomSticker())
+	end
 end
 
 function Shop:generateStickersUI()
@@ -1210,6 +1209,18 @@ function Shop:getRandomFaceObject(forbiddenKeys)
 	local randomFaceObject = randomFaceType:new(randomFaceValue, 10)
 
 	return randomFaceObject
+end
+
+function Shop:generateRandomSticker()
+	local keys = {}
+
+	for k in pairs(StickerTypes) do
+		table.insert(keys, k)
+	end
+
+	local randomKey = keys[math.random(#keys)]
+
+	return StickerTypes[randomKey]:new()
 end
 
 function Shop:generateRandomCiggie(forbiddenKeys)

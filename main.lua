@@ -45,6 +45,7 @@ G.stickerNames = {}
 G.basicStickers = {}
 G.holoStickers = {}
 
+--create list with faces objects placeholders
 for key, facetype in next, FaceTypes do
 	local f = facetype:new(1, 10)
 	if f.tier == "Common" then
@@ -57,6 +58,7 @@ for key, facetype in next, FaceTypes do
 	G.faceNames[key] = f.name
 end
 
+--create list with stickers object placeholders
 for key, facetype in next, StickerTypes do
 	local s = facetype:new()
 	if s.holographic == true then

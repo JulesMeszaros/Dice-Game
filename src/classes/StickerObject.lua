@@ -16,6 +16,10 @@ function Sticker:getDescription()
 	return self.description
 end
 
+function Sticker:unlockCondition()
+	return true
+end
+
 --Effects
 function Sticker:startRoundEffect(run)
 	print("StartRound")
