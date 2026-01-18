@@ -2,7 +2,7 @@ local StickerObject = require("src.classes.StickerObject")
 
 local StickerTypes = {}
 
---Flame Sticker
+--Flame Sticker (placeholder)
 
 local FlameSticker = setmetatable({}, { __index = StickerObject })
 FlameSticker.__index = FlameSticker
@@ -18,7 +18,7 @@ function FlameSticker:new()
 	return self
 end
 
-StickerTypes.FlameSticker = FlameSticker
+--StickerTypes.FlameSticker = FlameSticker
 
 --MoneyBag Sticker
 
