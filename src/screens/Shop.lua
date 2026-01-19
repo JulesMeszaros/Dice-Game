@@ -89,6 +89,7 @@ function Shop:new(run)
 	self.stickersUI = {}
 	self.facesPriceTags = {}
 	self.ciggiesPriceTags = {}
+	self.stickersPriceTags = {}
 
 	--Inventory faces
 	self.inventoryFacesUI = {}
@@ -215,7 +216,7 @@ function Shop:updateCanvas(dt)
 			sticker:draw()
 		end
 
-		self:drawFacesPriceTags()
+		self:drawPriceTags()
 		self:drawHorizontalDice(dt)
 	end
 
@@ -836,9 +837,10 @@ function Shop:generateNewShop()
 	self:generateAvailableFaces()
 	self:generateAvailableCiggies()
 
-	--if self.firstShopGeneration == true then
-	self:generateRandomStickers()
-	--end
+	if self.firstShopGeneration == true then
+		self:generateRandomStickers()
+	end
+
 	-- Clear previous UI lists completely
 	for k in pairs(self.availableFaceObjectsUI or {}) do
 		self.availableFaceObjectsUI[k] = nil
@@ -1031,9 +1033,9 @@ function Shop:generateNewShop()
 	end
 
 	--Stickers
-	--	if self.firstShopGeneration == true then
-	self:generateStickersUI()
-	--	end
+	if self.firstShopGeneration == true then
+		self:generateStickersUI()
+	end
 	--Generate the price tags
 	self:createFacesPriceTags()
 	self.firstShopGeneration = false
@@ -1510,6 +1512,9 @@ function Shop:createFacesPriceTags()
 	for _, canvas in pairs(self.ciggiesPriceTags or {}) do
 		canvas:release()
 	end
+	for _, canvas in pairs(self.stickersPriceTags or {}) do
+		canvas:release()
+	end
 
 	self.facesPriceTags = {}
 	self.faceTextObjects = {}
@@ -1531,33 +1536,17 @@ function Shop:createFacesPriceTags()
 		table.insert(self.ciggiesPriceTags, c)
 		table.insert(self.faceTextObjects, priceText)
 	end
-end
 
---==Additionnal draw functions==--
---[[
-function Shop:drawDeck(dt)
-	local targetCanvas = love.graphics.getCanvas()
-	love.graphics.setCanvas(self.deckCanvas)
-	love.graphics.clear()
-
-	--Draw the background
-	love.graphics.draw(Sprites.DECK, 0, 0)
-
-	--draw the deck faces
-	for dice, face in next, self.deckFaces do
-		if face:getIsSelected() then
-			face.selectionScale = 0.1
-		else
-			face.selectionScale = 0
-		end
-		face:update(dt)
-		face:draw()
+	--Stickers
+	self.stickersPriceTags = {}
+	for i = 1, 4 do
+		local c = love.graphics.newCanvas(70, 30)
+		love.graphics.setBlendMode("alpha")
+		local priceText = love.graphics.newText(Fonts.soraPrice, tostring(Constants.BASE_STICKER_PRICE) .. "€")
+		table.insert(self.stickersPriceTags, c)
+		table.insert(self.faceTextObjects, priceText)
 	end
-	local px, py = G.calculateParalaxeOffset(2)
-	love.graphics.setCanvas(targetCanvas)
-	--love.graphics.draw(self.deckCanvas, self.deckX + px, self.deckY + py)
-end]]
---
+end
 
 function Shop:drawInventoryFaces(dt)
 	for k, uiFace in next, self.inventoryFacesUI do
@@ -1599,7 +1588,7 @@ function Shop:updateRewardsPositions()
 	end
 end
 
-function Shop:drawFacesPriceTags()
+function Shop:drawPriceTags()
 	local currentCanvas = love.graphics.getCanvas()
 	local px, py = G.calculateParalaxeOffset(2)
 	local xs = { 570, 720, 570, 720 }
@@ -1666,6 +1655,34 @@ function Shop:drawFacesPriceTags()
 
 		love.graphics.setCanvas(currentCanvas)
 		love.graphics.draw(c, xs[i] + px, ys[i] + py, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth() / 2, 0)
+	end
+
+	--Stickers
+	for i, c in next, self.stickersPriceTags do
+		love.graphics.setCanvas(c)
+		love.graphics.clear()
+		--Background
+		love.graphics.draw(Sprites.PRICE_TAG, 0, 0)
+		--Text
+		local priceText = self.faceTextObjects[#self.facesPriceTags + #self.ciggiesPriceTags + i]
+
+		love.graphics.setColor(232 / 255, 79 / 255, 79 / 255, 1)
+		love.graphics.draw(
+			priceText,
+			c:getWidth() / 2,
+			c:getHeight() / 2,
+			0,
+			1,
+			1,
+			priceText:getWidth() / 2,
+			priceText:getHeight() / 2
+		)
+		love.graphics.setColor(1, 1, 1, 1)
+		local xs = 610 + 170 * (i - 1)
+		local ys = 635
+
+		love.graphics.setCanvas(currentCanvas)
+		love.graphics.draw(c, xs + px, ys + py, 0, self.priceTagsScale, self.priceTagsScale, c:getWidth() / 2, 0)
 	end
 end
 
