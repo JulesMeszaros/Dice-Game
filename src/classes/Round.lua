@@ -22,7 +22,6 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 
 	self.dragOriginX = nil
 	self.dragOriginY = nil
-	self.remainingHands = Constants.BASE_TURNS
 	self.roundScore = 0
 	self.faceRewards = faceRewards
 
@@ -51,7 +50,10 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 	self.floorNumber = floor
 	self.deskNumber = desk
 	self.roundType = roundType
+
+	self.remainingHands = self.run.baseHands
 	self.availableRerolls = self.run.baseRerolls
+
 	self.bountyHunterFigure = math.random(1, 13)
 	self.handRefunded = false --utilisée pour annuler l'utilisation d'une main
 	self.usedCiggiesRound = 0

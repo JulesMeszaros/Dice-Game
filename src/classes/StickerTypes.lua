@@ -106,4 +106,26 @@ function ThirteenthMonthSticker:buyEffect(run)
 end
 StickerTypes.ThirteenthMonthSticker = ThirteenthMonthSticker
 
+--HelpingHand Sticker
+
+local HelpingHandSticker = setmetatable({}, { __index = StickerObject })
+HelpingHandSticker.__index = HelpingHandSticker
+
+function HelpingHandSticker:new()
+	local self = setmetatable(StickerObject:new(), HelpingHandSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Thumbs Up.png"
+
+	self.name = "Helping Hand"
+	self.description = "+1 additionnal hand per office/"
+	self.holographic = true
+
+	return self
+end
+
+function HelpingHandSticker:buyEffect(run)
+	run.baseHands = run.baseHands + 1
+end
+StickerTypes.HelpingHandSticker = HelpingHandSticker
+
 return StickerTypes

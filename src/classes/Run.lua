@@ -55,6 +55,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 	self.runPaused = false
 
 	--Creating base stats (modifiables par les stickers)
+	self.baseHands = Constants.BASE_TURNS
 	self.baseRerolls = Constants.BASE_REROLLS
 	self.baseShopRerollPrice = Constants.BASE_SHOP_REROLL_PRICE
 

@@ -7,7 +7,11 @@ function Sticker:new()
 	self.sprite = "src/assets/sprites/stickers/Flame.png"
 	self.name = "Sticker"
 	self.description = "This is a placeholder Sticker. You Are not supposed to see this.... woops"
+	--Variable décrivant si le sticker est holographique ou non
 	self.holographic = false
+	--Si le sticker est holographique, quel est le sticker qu'il améliore
+	self.baseSticker = nil
+
 	self.objectType = "Sticker"
 	return self
 end
