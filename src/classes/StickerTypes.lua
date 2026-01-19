@@ -128,4 +128,26 @@ function HelpingHandSticker:buyEffect(run)
 end
 StickerTypes.HelpingHandSticker = HelpingHandSticker
 
+--MorningBrew Sticker
+
+local MorningBrewSticker = setmetatable({}, { __index = StickerObject })
+MorningBrewSticker.__index = MorningBrewSticker
+
+function MorningBrewSticker:new()
+	local self = setmetatable(StickerObject:new(), MorningBrewSticker)
+
+	self.sprite = "src/assets/sprites/stickers/CoffeeCup.png"
+
+	self.name = "Morning Brew"
+	self.description = "The most played figure always appears in the first generation of the shop"
+	self.holographic = true
+
+	return self
+end
+
+function MorningBrewSticker:buyEffect(run)
+	run.morningBrewSticker = true
+end
+StickerTypes.MorningBrewSticker = MorningBrewSticker
+
 return StickerTypes

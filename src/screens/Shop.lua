@@ -26,6 +26,9 @@ function Shop:new(run)
 	self:createDeck()
 	self.dragAndDroppedObject = nil
 
+	--Toggle for the first shop generation
+	self.firstShopGeneration = true
+
 	--Wavy Texts
 	self.sellText = UI.Text.TextWavy:new("Sell (3$)", 250, 950, {
 		font = Fonts.SoraBig,
@@ -997,7 +1000,29 @@ function Shop:generateNewShop()
 	end
 
 	--Coffee
+	local maxPlayed = 0
+	local maxPlayedCount = 0
+
+	if self.firstShopGeneration == true then
+		--Variable de la figure la plus jouée. On la met à 0, comme ca dans l'éventualité ou toutes les figures sont à 0, on peut skip le sticker MorningBrew
+		for figure, info in pairs(self.run.figuresInfos) do
+			print(figure, info.playcount)
+			if info.playcount > maxPlayedCount then
+				maxPlayed = figure
+				maxPlayedCount = info.playcount
+			end
+		end
+		print("figure la plus jouée : ", maxPlayed, "playcount", maxPlayedCount)
+	end
+
 	local randomFigures = GenerateRandom.generateUniqueNumbers(1, 13, 4)
+
+	--SI on est dans la premiere generation, que la figure la plus jouée n'est pas 0 et qu'on a le morning brew sticker,
+	--On remplace le premier numéro généré par le numéro de la figure la plus jouée.
+	if self.run.morningBrewSticker == true and self.firstShopGeneration and maxPlayed > 0 then
+		randomFigures[1] = maxPlayed
+	end
+
 	self.availableCoffeesUI = {}
 
 	for i = 1, 3 do
@@ -1009,6 +1034,7 @@ function Shop:generateNewShop()
 
 	--Generate the price tags
 	self:createFacesPriceTags()
+	self.firstShopGeneration = false
 end
 
 function Shop:generateAvailableFaces()
