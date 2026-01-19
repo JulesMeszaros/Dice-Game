@@ -62,9 +62,9 @@ end
 for key, facetype in next, StickerTypes do
 	local s = facetype:new()
 	if s.holographic == true then
-		table.insert(G.holoStickers, key)
+		G.holoStickers[key] = s
 	else
-		table.insert(G.basicStickers, key)
+		G.basicStickers[key] = s
 	end
 	G.stickerNames[key] = s.name
 end

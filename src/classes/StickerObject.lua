@@ -20,7 +20,7 @@ function Sticker:getDescription()
 	return self.description
 end
 
-function Sticker:unlockCondition()
+function Sticker:unlockCondition(run)
 	return true
 end
 

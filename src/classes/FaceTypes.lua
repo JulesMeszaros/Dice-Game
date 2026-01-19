@@ -2577,6 +2577,7 @@ function DiamondDice:getDescription(run)
 end
 
 FaceTypes.DiamondDice = DiamondDice
+
 --UTILS--
 function multiplyScore(round, f)
 	round.handScore = round.handScore * f

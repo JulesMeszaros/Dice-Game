@@ -835,8 +835,10 @@ function Shop:generateNewShop()
 	--Generate the objects to buy
 	self:generateAvailableFaces()
 	self:generateAvailableCiggies()
-	self:generateRandomStickers()
 
+	--if self.firstShopGeneration == true then
+	self:generateRandomStickers()
+	--end
 	-- Clear previous UI lists completely
 	for k in pairs(self.availableFaceObjectsUI or {}) do
 		self.availableFaceObjectsUI[k] = nil
@@ -1012,7 +1014,6 @@ function Shop:generateNewShop()
 				maxPlayedCount = info.playcount
 			end
 		end
-		print("figure la plus jouée : ", maxPlayed, "playcount", maxPlayedCount)
 	end
 
 	local randomFigures = GenerateRandom.generateUniqueNumbers(1, 13, 4)
@@ -1030,8 +1031,9 @@ function Shop:generateNewShop()
 	end
 
 	--Stickers
+	--	if self.firstShopGeneration == true then
 	self:generateStickersUI()
-
+	--	end
 	--Generate the price tags
 	self:createFacesPriceTags()
 	self.firstShopGeneration = false
@@ -1108,8 +1110,58 @@ end
 function Shop:generateRandomStickers()
 	self.availableStickers = {}
 
-	for i = 1, 4 do
-		table.insert(self.availableStickers, self:generateRandomSticker())
+	--En gros :
+	--On créée la liste de stickersp possible
+	--On parcours la liste des stickers placeholder, et on vérifie qu'ils ne soient pas dans la liste des stickers du joueur,
+	--Et que leur condition de déblocage est sur Vrai
+	--Si c'est le cas, ou l'ajoute dans la liste des clés autorisées
+	local possibleStickers = {}
+	for key, sticker in next, G.basicStickers do
+		local stickerName = sticker.name
+
+		local isInInventory = false
+		--On check que le sticker n'est pas déjà dans l'inventaire
+		for i, playerSticker in next, self.run.stickers do
+			if playerSticker.name == stickerName then
+				isInInventory = true
+			end
+		end
+
+		--Si pas dans inventaire et la condition de unlock est OK, on l'ajoute à la liste des stickers acceptés
+		if sticker:unlockCondition(self.run) == true and isInInventory == false then
+			table.insert(possibleStickers, key)
+		end
+	end
+
+	--On fait pareil avec les holo
+	local possibleStickersHolo = {}
+	for key, sticker in next, G.holoStickers do
+		local stickerName = sticker.name
+
+		local isInInventory = false
+		--On check que le sticker n'est pas déjà dans l'inventaire
+		for i, playerSticker in next, self.run.stickers do
+			if playerSticker.name == stickerName then
+				isInInventory = true
+			end
+		end
+
+		--Si pas dans inventaire et la condition de unlock est OK, on l'ajoute à la liste des stickers acceptés
+		if sticker:unlockCondition(self.run) == true and isInInventory == false then
+			table.insert(possibleStickersHolo, key)
+		end
+	end
+
+	--On créée les stickers et on les ajoute les à la liste
+	for i = 1, 3 do
+		table.insert(self.availableStickers, self:generateRandomSticker(possibleStickers))
+	end
+	--On ajoute un sticker holo si possible
+	if #possibleStickersHolo > 0 then
+		table.insert(self.availableStickers, self:generateRandomSticker(possibleStickersHolo))
+	else
+		--On ajoute un 4e sticker normal si jamais on n'a pas de sticker holo possible
+		table.insert(self.availableStickers, self:generateRandomSticker(possibleStickers))
 	end
 end
 
@@ -1237,14 +1289,12 @@ function Shop:getRandomFaceObject(forbiddenKeys)
 	return randomFaceObject
 end
 
-function Shop:generateRandomSticker()
-	local keys = {}
-
-	for k in pairs(StickerTypes) do
-		table.insert(keys, k)
+function Shop:generateRandomSticker(possibleStickers)
+	if #possibleStickers == 0 then
+		return nil
 	end
 
-	local randomKey = keys[math.random(#keys)]
+	local randomKey = possibleStickers[math.random(#possibleStickers)]
 
 	return StickerTypes[randomKey]:new()
 end

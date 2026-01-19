@@ -101,6 +101,10 @@ function ThirteenthMonthSticker:new()
 	return self
 end
 
+function ThirteenthMonthSticker:unlockCondition(run)
+	return checkForSticker(run, StickerTypes.MoneyBagSticker)
+end
+
 function ThirteenthMonthSticker:buyEffect(run)
 	run.additionalMoney = run.additionalMoney + 10
 end
@@ -118,7 +122,6 @@ function HelpingHandSticker:new()
 
 	self.name = "Helping Hand"
 	self.description = "+1 additionnal hand per office/"
-	self.holographic = true
 
 	return self
 end
@@ -140,7 +143,6 @@ function MorningBrewSticker:new()
 
 	self.name = "Morning Brew"
 	self.description = "The most played figure always appears in the first generation of the shop"
-	self.holographic = true
 
 	return self
 end
@@ -149,5 +151,18 @@ function MorningBrewSticker:buyEffect(run)
 	run.morningBrewSticker = true
 end
 StickerTypes.MorningBrewSticker = MorningBrewSticker
+
+function checkForSticker(run, stickerType)
+	local stickerObject = stickerType:new()
+
+	local stickerInInventory = false
+	for i, sticker in next, run.stickers do
+		if stickerObject.name == sticker.name then
+			stickerInInventory = true
+		end
+	end
+
+	return stickerInInventory
+end
 
 return StickerTypes
