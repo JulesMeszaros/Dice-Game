@@ -412,6 +412,91 @@ function InfoBubble:generateStickerBubble()
 	local width = math.max(name:getWidth() + 40, 350)
 	self.width = width
 	lineWidth = width - 20
+	--Tags
+	local tags = {}
+
+	table.insert(tags, Sprites.STICKER)
+
+	if self.object.representedObject.holographic == true then
+		table.insert(tags, Sprites.HOLOGRAPHIC)
+	end
+
+	self.tagsPositions = UI.arrangeImagesWrapped(tags, self.width / 2, 55, self.width - 10, 5, 5)
+
+	--Description
+	local descriptionText = self.object.representedObject:getDescription()
+	local textW, wrappedText = Fonts.soraDesc:getWrap(descriptionText, lineWidth)
+	local textLines = {}
+	for i, line in next, wrappedText do
+		local lineText = love.graphics.newText(Fonts.soraDesc, line)
+		table.insert(textLines, lineText)
+	end
+
+	--Creation de la hauteur
+	local height = getMaxY(self.tagsPositions) + table.getn(wrappedText) * 30 + 20
+
+	self.name = name
+	self.height = height
+
+	self:generateCanvas(width, height)
+
+	-- Pre-render everything into the canvas
+	local currentCanvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(self.canvas)
+	love.graphics.clear()
+
+	--On dessine les angles
+	love.graphics.draw(self.baseSprite, self.quads[1], 0, 0)
+	love.graphics.draw(self.baseSprite, self.quads[2], self.canvas:getWidth() - self.gridDim, 0)
+	love.graphics.draw(self.baseSprite, self.quads[3], 0, self.canvas:getHeight() - self.gridDim)
+	love.graphics.draw(
+		self.baseSprite,
+		self.quads[4],
+		self.canvas:getWidth() - self.gridDim,
+		self.canvas:getHeight() - self.gridDim
+	)
+
+	--On dessine les cotés
+	love.graphics.draw(self.baseSprite, self.quads[6], self.width - self.gridDim, self.gridDim, 0, 1, self.hr)
+	love.graphics.draw(self.baseSprite, self.quads[7], 0, self.gridDim, 0, 1, self.hr)
+
+	love.graphics.draw(self.baseSprite, self.quads[5], self.gridDim, 0, 0, self.wr, 1)
+	love.graphics.draw(self.baseSprite, self.quads[8], self.gridDim, self.height - self.gridDim, 0, self.wr, 1)
+
+	love.graphics.draw(self.baseSprite, self.quads[9], self.gridDim, self.gridDim, 0, self.wr, self.hr)
+
+	--Draw tags
+	for i, p in next, self.tagsPositions do
+		love.graphics.draw(p.image, p.x, p.y, 0, 1, 1, p.image:getWidth() / 2, p.image:getHeight() / 2)
+	end
+
+	--Text
+	love.graphics.setColor(0, 0, 0)
+	love.graphics.draw(self.name, self.canvas:getWidth() / 2, 5, 0, 1, 1, self.name:getWidth() / 2, 0)
+
+	local formatedText = UI.Text.drawFormattedText(
+		self.object.representedObject:getDescription(self.screen.run),
+		self.canvas:getWidth() / 2,
+		getMaxY(self.tagsPositions),
+		Fonts.soraDesc,
+		lineWidth,
+		true
+	)
+
+	love.graphics.setColor(1, 1, 1)
+
+	love.graphics.setCanvas(currentCanvas)
+end
+
+function InfoBubble:generateStickerBubble_old()
+	self.time = 0
+	--Name
+	local name = love.graphics.newText(Fonts.soraName, self.object.representedObject.name)
+
+	--Creation de la largeur
+	local width = math.max(name:getWidth() + 40, 350)
+	self.width = width
+	lineWidth = width - 20
 
 	--Description
 	local descriptionText = self.object.representedObject:getDescription()
@@ -459,6 +544,18 @@ function InfoBubble:generateStickerBubble()
 	--Render du contenu
 	--Tag
 	love.graphics.draw(Sprites.STICKER, self.canvas:getWidth() / 2, 55, 0, 1, 1, Sprites.STICKER:getWidth() / 2, 0)
+	if self.object.representedObject.holographic == true then
+		love.graphics.draw(
+			Sprites.HOLOGRAPHIC,
+			self.canvas:getWidth() / 2,
+			100,
+			0,
+			1,
+			1,
+			Sprites.HOLOGRAPHIC:getWidth() / 2,
+			0
+		)
+	end
 
 	--Text
 	love.graphics.setColor(0, 0, 0)

@@ -12,11 +12,13 @@ Sprites.COMMON = love.graphics.newImage("src/assets/sprites/ui/Common.png")
 Sprites.UNCOMMON = love.graphics.newImage("src/assets/sprites/ui/Uncommon.png")
 Sprites.RARE = love.graphics.newImage("src/assets/sprites/ui/Rare.png")
 
+--Pillules de bulles de description
 Sprites.GHOST = love.graphics.newImage("src/assets/sprites/ui/Ghost.png")
 Sprites.BLANK = love.graphics.newImage("src/assets/sprites/ui/Blank.png")
 Sprites.COFFEE = love.graphics.newImage("src/assets/sprites/ui/Coffee.png")
 Sprites.MAGICWAND = love.graphics.newImage("src/assets/sprites/ui/Magic Wand.png")
 Sprites.STICKER = love.graphics.newImage("src/assets/sprites/ui/Sticker.png")
+Sprites.HOLOGRAPHIC = love.graphics.newImage("src/assets/sprites/ui/Holo.png")
 
 Sprites.ENEMY_INFOS = love.graphics.newImage("src/assets/sprites/ui/Enemy.png")
 Sprites.PLAYER_INFOS = love.graphics.newImage("src/assets/sprites/ui/Player.png")
