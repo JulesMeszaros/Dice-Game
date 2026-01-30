@@ -538,7 +538,6 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 		if self.clickedFigure == self:getCurrentlyHoveredLine() then
 			if self.addingAvailableHand == true then
 				self:addAvailableHand(self.clickedFigure)
-				self.addingAvailableHand = false
 			end
 		end
 	end

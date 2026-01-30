@@ -588,7 +588,6 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
 					else
 						if self.clickedFigure ~= 7 then
 							self:addAvailableHand(self.clickedFigure)
-							self.addingAvailableHand = false
 						end
 					end
 				end

@@ -1392,9 +1392,10 @@ function GameScreen:drawUpgradingFigurePopup(dt)
 end
 
 function GameScreen:addAvailableHand(i)
-	if i ~= 7 then
+	if i ~= 7 and self.run.baseAvailableHands[i] < Constants.BASE_MAX_HANDS_FIGURES then
 		self.run.baseAvailableHands[i] = self.run.baseAvailableHands[i] + 1
 		self.run.availableFigures[i] = self.run.availableFigures[i] + 1
+		self.addingAvailableHand = false
 	end
 end
 

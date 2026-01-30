@@ -13,6 +13,7 @@ local Constants = {
 	BASE_MAX_CIGGIES = 3,
 	BASE_TURNS = 3,
 	BASE_AVAILABLE_HANDS = 1,
+	BASE_MAX_HANDS_FIGURES = 3,
 
 	--Debug
 	SHOP_EVERY_DESK = true,
