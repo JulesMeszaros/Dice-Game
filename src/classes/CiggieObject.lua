@@ -23,6 +23,7 @@ function CiggieObject:trigger(screen, screenType)
 		(self.usableIn == "any" or screenType == self.usableIn or isInList(self.usableIn, screenType))
 		and self:usageCondition(screen) == true
 	then
+		screen.run.lastUsedCiggie = self
 		screen.run.totalUsedCiggie = screen.run.totalUsedCiggie + 1
 		if screenType == Constants.RUN_STATES.ROUND then
 			screen.round.usedCiggiesRound = screen.round.usedCiggiesRound + 1
@@ -30,6 +31,10 @@ function CiggieObject:trigger(screen, screenType)
 		self:effect(screen)
 		self:destruct(screen)
 		screen:generateCiggiesUI()
+
+		for i, sticker in next, screen.run.stickers do
+			sticker:ciggieUsedEffect(screen.run)
+		end
 	else
 		print("not usable here", screenType)
 	end
@@ -41,11 +46,20 @@ function CiggieObject:triggerInShop(screen, key)
 		(self.usableIn == "any" or screenType == self.usableIn or isInList(self.usableIn, screenType))
 		and self:usageCondition(screen) == true
 	then
+		screen.run.lastUsedCiggie = self
+
 		screen:setMoneyTo(screen.run.money - Constants.BASE_CIGGIE_PRICE)
 		screen.run.totalspent = screen.run.totalspent + Constants.BASE_CIGGIE_PRICE
 		screen.run.totalUsedCiggie = screen.run.totalUsedCiggie + 1
 		self:effect(screen)
 		table.remove(screen.availableCiggieObjectsUI, key)
+
+		--Effets de stickers
+
+		for i, sticker in next, screen.run.stickers do
+			sticker:ciggieUsedEffect(screen.run)
+		end
+
 		screen:generateCiggiesUI()
 		return true
 	else

@@ -209,4 +209,42 @@ end
 
 StickerTypes.DeepPocketsSticker = DeepPocketsSticker
 
+--BackToBack Sticker
+
+local BackToBackSticker = setmetatable({}, { __index = StickerObject })
+BackToBackSticker.__index = BackToBackSticker
+
+function BackToBackSticker:new()
+	local self = setmetatable(StickerObject:new(), BackToBackSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Cloud.png"
+
+	self.name = "Back To Back"
+	self.description = "Magic Wands have 1 out of 4 chance of being cloned when used."
+
+	return self
+end
+
+function BackToBackSticker:ciggieUsedEffect(run)
+	print(run.lastUsedCiggie.name)
+	local randomInt = math.random(1, 4)
+	if randomInt == 4 then
+		table.insert(run.ciggiesObjects, getmetatable(run.lastUsedCiggie):new())
+		if run.currentRound then
+			run.currentRound.terrain:generateCiggiesUI()
+		end
+		if run.shop then
+			run.shop:generateCiggiesUI()
+		end
+		if run.customizationScreen then
+			run.customizationScreen:generateCiggiesUI()
+		end
+		if run.deskChoice then
+			run.deskChoice:generateCiggiesUI()
+		end
+	end
+end
+
+StickerTypes.BackToBackSticker = BackToBackSticker
+
 return StickerTypes
