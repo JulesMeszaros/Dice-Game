@@ -1218,17 +1218,19 @@ function DiceCustomization:getCurrentlyHoveredObject()
 end
 
 function DiceCustomization:addRewardToInventory(face, key)
-	--Supprimer la face de la liste des rewards
-	table.remove(self.run.facesRewardsInventory, key)
-	--Ajouter la face à l'inventaire de jeu
-	table.insert(self.run.facesInventory, face.representedObject)
-	--Supprimer la face UI des rewards
-	table.remove(self.rewardsUIFaces, key)
-	--Ajouter la face UI à l'inventaire
-	table.insert(self.newUIFaces, face)
+	if table.getn(self.run.facesInventory) < 8 then
+		--Supprimer la face de la liste des rewards
+		table.remove(self.run.facesRewardsInventory, key)
+		--Ajouter la face à l'inventaire de jeu
+		table.insert(self.run.facesInventory, face.representedObject)
+		--Supprimer la face UI des rewards
+		table.remove(self.rewardsUIFaces, key)
+		--Ajouter la face UI à l'inventaire
+		table.insert(self.newUIFaces, face)
 
-	--Réorganiser l'inventaire
-	self:updateInventoryPositions()
+		--Réorganiser l'inventaire
+		self:updateInventoryPositions()
+	end
 end
 
 function DiceCustomization:sellReward(face, faceUI, key)
@@ -1360,7 +1362,7 @@ function DiceCustomization:updateInventoryPositions()
 		local closestFace = self:detectClosestFace(uiFace.x, uiFace.y)
 		if closestFace then
 		else
-			j = j+1
+			j = j + 1
 			uiFace.anchorX = self.xPositions[j] + 60 + self.inventoryMDTX
 			uiFace.anchorY = self.yPositions[j] + self.inventoryMDTY + 60
 			uiFace.targetX = self.xPositions[j] + 60 + self.inventoryMDTX
