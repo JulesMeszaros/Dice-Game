@@ -156,11 +156,6 @@ function GameOver:mousemoved(x, y, dx, dy, isDragging) end
 
 --==Animation==--
 function GameOver:outAnimation(nextScreen)
-	--Ajoute la cigarette gagnée à l'inventaire si possible
-	if table.getn(self.round.run.ciggiesObjects) < Constants.BASE_MAX_CIGGIES then
-		table.insert(self.round.run.ciggiesObjects, self.round.ciggieReward)
-	end
-
 	--Popup
 	self.animator:addGroup({
 		{ property = "backgroundOpacity", from = 0.7, targetValue = 0, duration = 0.3 },
@@ -179,4 +174,3 @@ function GameOver:outAnimation(nextScreen)
 end
 
 return GameOver
-

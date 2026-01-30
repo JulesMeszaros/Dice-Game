@@ -94,7 +94,7 @@ function Rockmans:usageCondition(round)
 	end
 	if
 		round.screenType == Constants.RUN_STATES.SHOP
-		and table.getn(round.run.ciggiesObjects) >= Constants.BASE_MAX_CIGGIES
+		and table.getn(round.run.ciggiesObjects) >= round.run.maxCiggies
 	then
 		condition = false
 	end
@@ -107,7 +107,7 @@ function Rockmans:effect(screen)
 	table.insert(screen.run.ciggiesObjects, getmetatable(randomCiggie):new())
 end
 
-CiggieTypes.Rockmans = Rockmans
+--CiggieTypes.Rockmans = Rockmans
 
 --Time--
 

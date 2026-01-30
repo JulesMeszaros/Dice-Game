@@ -252,7 +252,7 @@ function StrikeOfLuck:new(faceValue, pointsValue)
 end
 
 function StrikeOfLuck:triggerEffect(round)
-	if table.getn(round.run.ciggiesObjects) < Constants.BASE_MAX_CIGGIES then
+	if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies then
 		local c = GenerateRandom.CiggieObject()
 		table.insert(round.run.ciggiesObjects, c)
 		round.terrain:generateCiggiesUI()
@@ -1282,10 +1282,7 @@ end
 function TwinFlame:triggerEffect(round)
 	addScore(round, self:getPointsValue(round.run))
 
-	if
-		table.getn(round.run.ciggiesObjects) < Constants.BASE_MAX_CIGGIES
-		and table.getn(round.run.ciggiesObjects) > 0
-	then
+	if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies and table.getn(round.run.ciggiesObjects) > 0 then
 		local randomCiggie = round.run.ciggiesObjects[math.random(1, #round.run.ciggiesObjects)]
 
 		table.insert(round.run.ciggiesObjects, getmetatable(randomCiggie):new())
@@ -2032,7 +2029,7 @@ function FortuneDice:new(faceValue, pointsValue)
 end
 
 function FortuneDice:triggerEffect(round)
-	if table.getn(round.run.ciggiesObjects) < Constants.BASE_MAX_CIGGIES then
+	if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies then
 		local c = CiggieTypes.Fortune:new()
 		table.insert(round.run.ciggiesObjects, c)
 		round.terrain:generateCiggiesUI()
@@ -2474,7 +2471,7 @@ function TimeDice:new(faceValue, pointsValue)
 end
 
 function TimeDice:triggerEffect(round)
-	if table.getn(round.run.ciggiesObjects) < Constants.BASE_MAX_CIGGIES then
+	if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies then
 		local c = CiggieTypes.Time:new()
 		table.insert(round.run.ciggiesObjects, c)
 		round.terrain:generateCiggiesUI()

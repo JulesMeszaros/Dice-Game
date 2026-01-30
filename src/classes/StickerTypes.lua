@@ -187,4 +187,26 @@ end
 
 StickerTypes.HardSkillsSticker = HardSkillsSticker
 
+--DeepPockets Sticker
+
+local DeepPocketsSticker = setmetatable({}, { __index = StickerObject })
+DeepPocketsSticker.__index = DeepPocketsSticker
+
+function DeepPocketsSticker:new()
+	local self = setmetatable(StickerObject:new(), DeepPocketsSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Star.png"
+
+	self.name = "Deep Pockets"
+	self.description = "Gains one slot in your Magic Wands storage."
+
+	return self
+end
+
+function DeepPocketsSticker:buyEffect(run)
+	run.maxCiggies = run.maxCiggies + 1
+end
+
+StickerTypes.DeepPocketsSticker = DeepPocketsSticker
+
 return StickerTypes

@@ -385,7 +385,7 @@ function EndRound:outAnimation()
 	end
 
 	--Ajoute la cigarette gagnée à l'inventaire si possible
-	if table.getn(self.round.run.ciggiesObjects) < Constants.BASE_MAX_CIGGIES then
+	if table.getn(self.round.run.ciggiesObjects) < self.round.run.maxCiggies then
 		table.insert(self.round.run.ciggiesObjects, self.round.ciggieReward)
 	end
 

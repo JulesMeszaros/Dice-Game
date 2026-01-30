@@ -60,6 +60,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 	self.baseShopRerollPrice = Constants.BASE_SHOP_REROLL_PRICE
 	self.morningBrewSticker = false
 	self.maxFiguresPossible = Constants.BASE_MAX_HANDS_FIGURES
+	self.maxCiggies = Constants.BASE_MAX_CIGGIES
 
 	--Money
 	self.additionalMoney = 0

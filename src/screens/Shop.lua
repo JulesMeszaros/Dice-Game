@@ -668,10 +668,7 @@ function Shop:buyDiceFace(face, faceUI, key)
 end
 
 function Shop:buyCiggie(ciggie, ciggieUI, key)
-	if
-		table.getn(self.run.ciggiesObjects) < Constants.BASE_MAX_CIGGIES
-		and self.run.money >= Constants.BASE_CIGGIE_PRICE
-	then
+	if table.getn(self.run.ciggiesObjects) < self.run.maxCiggies and self.run.money >= Constants.BASE_CIGGIE_PRICE then
 		self:setMoneyTo(self.run.money - Constants.BASE_CIGGIE_PRICE)
 		self.run.totalspent = self.run.totalspent + Constants.BASE_CIGGIE_PRICE
 		--Add the ciggie to the inventory
