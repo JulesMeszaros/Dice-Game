@@ -228,7 +228,8 @@ end
 function BackToBackSticker:ciggieUsedEffect(run)
 	print(run.lastUsedCiggie.name)
 	local randomInt = math.random(1, 4)
-	if randomInt == 4 then
+
+	if randomInt == 4 and table.getn(run.ciggiesObjects) < run.maxCiggies then
 		table.insert(run.ciggiesObjects, getmetatable(run.lastUsedCiggie):new())
 		if run.currentRound then
 			run.currentRound.terrain:generateCiggiesUI()
