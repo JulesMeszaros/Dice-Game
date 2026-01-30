@@ -165,4 +165,26 @@ function checkForSticker(run, stickerType)
 	return stickerInInventory
 end
 
+--HardSkills Sticker
+
+local HardSkillsSticker = setmetatable({}, { __index = StickerObject })
+HardSkillsSticker.__index = HardSkillsSticker
+
+function HardSkillsSticker:new()
+	local self = setmetatable(StickerObject:new(), HardSkillsSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Bolt.png"
+
+	self.name = "Hard Skills"
+	self.description = "Sets the limit to the upgrade of figures to 4 hands by floor."
+
+	return self
+end
+
+function HardSkillsSticker:buyEffect(run)
+	run.maxFiguresPossible = run.maxFiguresPossible + 1
+end
+
+StickerTypes.HardSkillsSticker = HardSkillsSticker
+
 return StickerTypes

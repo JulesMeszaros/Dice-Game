@@ -117,6 +117,8 @@ end
 function Shop:update(dt)
 	self.animator:update(dt)
 
+	self.uiElements.buttons["rerollShopButton"].isActivated = self.rerollShopPrice <= self.run.money
+
 	if love.timer.getTime() % 0.1 < dt then
 		self.scoresChanged = true
 	end
