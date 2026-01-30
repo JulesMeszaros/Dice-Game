@@ -264,9 +264,7 @@ function DiceCustomization:draw()
 end
 
 --==INPUTS FUNCTIONS==--
-function DiceCustomization:keypressed(key)
-	print("keypressed")
-end
+function DiceCustomization:keypressed(key) end
 
 function DiceCustomization:mousepressed(x, y, button, istouch, presses)
 	--Variable nous permetant de vérifier si une face de reward ou de l'inventaire a été clickée
@@ -324,7 +322,6 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
 		--Si c'est le cas : on la place dessus
 		if closestFace then
 			--On check s'il n'y a aucune autre face à cette place
-			--TODO
 			local isAlreadyCovered = false
 
 			--On parcoure les autres faces de l'inventaire pour vérifier qu'aucune n'est au meme endroit
@@ -497,6 +494,8 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
 		ciggie.isBeingDragged = false
 		self:ciggieReleaseAction(ciggie)
 	end
+
+	self:updateInventoryPositions()
 end
 
 function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
@@ -1356,11 +1355,17 @@ function DiceCustomization:sellDiceFace(face, faceUI, key)
 end
 
 function DiceCustomization:updateInventoryPositions()
+	local j = 0
 	for i, uiFace in next, self.newUIFaces do
-		uiFace.anchorX = self.xPositions[i] + 60 + self.inventoryMDTX
-		uiFace.anchorY = self.yPositions[i] + self.inventoryMDTY + 60
-		uiFace.targetX = self.xPositions[i] + 60 + self.inventoryMDTX
-		uiFace.targetY = self.yPositions[i] + self.inventoryMDTY + 60
+		local closestFace = self:detectClosestFace(uiFace.x, uiFace.y)
+		if closestFace then
+		else
+			j = j+1
+			uiFace.anchorX = self.xPositions[j] + 60 + self.inventoryMDTX
+			uiFace.anchorY = self.yPositions[j] + self.inventoryMDTY + 60
+			uiFace.targetX = self.xPositions[j] + 60 + self.inventoryMDTX
+			uiFace.targetY = self.yPositions[j] + self.inventoryMDTY + 60
+		end
 	end
 end
 
