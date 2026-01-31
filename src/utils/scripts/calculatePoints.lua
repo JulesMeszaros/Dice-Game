@@ -69,18 +69,44 @@ function CalculatePoints.fullBasePoints(dices, level)
 
 	local distrib = getValueDistribution(dices)
 
-	--On vérifie qu'on a a la fois une face présente 3 fois et une autre présente 2 fois
-	hasFull = hasAllValues(distrib, { 3, 2 })
+	-- FULL classique (3 + 2)
+	local hasFull = hasAllValues(distrib, { 3, 2 })
 
 	if hasFull then
 		score = 25
 
-		for dice, f in next, dices do
-			table.insert(usedDices, f)
+		for _, dice in pairs(dices) do
+			table.insert(usedDices, dice)
 		end
 	end
 
-	score = level * score
+	-- THINK DIFFERENT : double paire
+	if not hasFull and G.game.run.thinkDifferent == true then
+		local pairsValues = {}
+
+		for value, count in pairs(distrib) do
+			if count >= 2 then
+				table.insert(pairsValues, value)
+			end
+		end
+		-- si on a au moins deux paires
+		if #pairsValues >= 2 then
+			local sum = 0
+			for _, dice in pairs(dices) do
+				for _, v in ipairs(pairsValues) do
+					if dice:getCurrentFaceObject().faceValue == v then
+						table.insert(usedDices, dice)
+						break
+					end
+				end
+			end
+
+			score = 25
+			print(sum)
+		end
+	end
+
+	score = score * level
 
 	return { score, usedDices }
 end

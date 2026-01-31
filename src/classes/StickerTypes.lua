@@ -248,4 +248,25 @@ end
 
 StickerTypes.BackToBackSticker = BackToBackSticker
 
+--ThinkDifferent Sticker
+
+local ThinkDifferentSticker = setmetatable({}, { __index = StickerObject })
+ThinkDifferentSticker.__index = ThinkDifferentSticker
+
+function ThinkDifferentSticker:new()
+	local self = setmetatable(StickerObject:new(), ThinkDifferentSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Lightbulb.png"
+
+	self.name = "Think Different"
+	self.description = "Full Houses can be played with two pairs of dices."
+	self.holographic = true
+	return self
+end
+
+function ThinkDifferentSticker:buyEffect(run)
+	run.thinkDifferent = true
+end
+
+StickerTypes.ThinkDifferentSticker = ThinkDifferentSticker
 return StickerTypes
