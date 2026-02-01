@@ -84,35 +84,40 @@ jobs:
           name: ${{ needs.get-info.outputs.base-name }}_Windows_installer
           path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_installer.exe
   build-macos:
-      runs-on: macos-latest
-      steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    runs-on: macos-latest
+    needs: [build-core, auto-test]
+    env:
+      OUTPUT_FOLDER: ./build
 
-      - name: Install zip
-        run: brew install zip || true
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Download LÖVE
-        run: |
-          curl -L -o love.zip https://github.com/love2d/love/releases/download/11.5/love-11.5-macos.zip
-          unzip love.zip
+    # 🔽 récupérer le .love déjà construit
+    - name: Download core love package
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
 
-      - name: Build .love file
-        run: |
-          zip -9 -r game.love . -x "*.git*" -x "misc/*" -x ".github/*"
+    - name: Download LÖVE
+      run: |
+        curl -L -o love.zip https://github.com/love2d/love/releases/download/11.5/love-11.5-macos.zip
+        unzip love.zip
 
-      - name: Create .app bundle
-        run: |
-          cp -R love.app DiceGame.app
-          mv .github/workflows/AppIcons.icns DiceGame.app/Contents/Resources/game.icns
-          cp game.love DiceGame.app/Contents/Resources/
+    - name: Create .app bundle
+      run: |
+        cp -R love.app ${{ env.PRODUCT_NAME }}.app
+        cp ${{ env.CORE_LOVE_PACKAGE_PATH }} \
+           ${{ env.PRODUCT_NAME }}.app/Contents/Resources/
 
-      - name: Zip macOS app
-        run: |
-          zip -9 -r DiceGame-macOS.zip DiceGame.app
+    - name: Zip macOS app
+      run: |
+        mkdir -p ${{ env.OUTPUT_FOLDER }}
+        zip -9 -r ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}-macOS.zip \
+          ${{ env.PRODUCT_NAME }}.app
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: DiceGame-macOS
-          path: DiceGame-macOS.zip
+    - name: Upload macOS artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.PRODUCT_NAME }}_macOS
+        path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}-macOS.zip
