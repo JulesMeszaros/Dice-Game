@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - name: Build Windows packages
@@ -22,6 +22,21 @@ jobs:
         #product-website: https://www.example.com
         installer-languages: English.isl ChineseSimplified.isl
         output-folder: "./dist"
+    - name: Upload 32-bit artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ needs.get-info.outputs.base-name }}_Windows_x86
+        path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_x86.zip
+    - name: Upload 64-bit artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ needs.get-info.outputs.base-name }}_Windows_x64
+        path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_x64.zip
+    - name: Upload installer artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ needs.get-info.outputs.base-name }}_Windows_installer
+        path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_installer.exe
 
     #steps:
       #- name: Build macOS packages
