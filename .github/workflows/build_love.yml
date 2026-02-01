@@ -104,7 +104,7 @@ jobs:
           #app-name: ${{ env.PRODUCT_NAME }}
           #bundle-id: ${{ env.BUNDLE_ID }}
           #copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
-          icon-path: ./.github/AppIcons.icns
+          icon-path: ./.github/workflows/AppIcons.icns
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           #libs-path: ./ColdClear/universal/
           #product-name: ${{ env.PRODUCT_NAME }}
