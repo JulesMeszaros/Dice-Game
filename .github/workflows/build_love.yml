@@ -110,11 +110,11 @@ jobs:
           #product-name: ${{ env.PRODUCT_NAME }}
           #version-string: "1.0.0"
           #output-folder: ${{ env.OUTPUT_FOLDER }}
-          account-username: ""
-          account-password: ""
-          team-id: ""
-          developer-id-application-base64: ""
-          developer-id-application-password: ""
+          account-username: "${{ secrets.APPLE_ID }}"
+          account-password: "${{ secrets.APPLE_ID_PW }}"
+          team-id: "Jules Meszaros"
+          developer-id-application-base64: "${{ secrets.DEVELOPPER_ID_APP_ID }}"
+          developer-id-application-password: "${{ secrets.APP_CERT_PW }}"
           #developer-id-installer-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER }}
           #developer-id-installer-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER_PWD }}
           #dmg-background-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/dmg.png
