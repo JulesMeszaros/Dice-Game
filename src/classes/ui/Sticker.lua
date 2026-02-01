@@ -93,8 +93,9 @@ function Sticker:draw()
 	self.rainbowShader:send("intensity", 0.2)
 	--self.rainbowShader:send("scale", 50)
 	self.rainbowShader:send("gridSize", 50)
-
-	love.graphics.setShader(self.rainbowShader)
+	if self.representedObject.holographic == true then
+		love.graphics.setShader(self.rainbowShader)
+	end
 
 	if self.isTerrainSticker and G.game.run.currentState == Constants.RUN_STATES.ROUND then
 		love.graphics.draw(
