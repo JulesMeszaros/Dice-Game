@@ -83,3 +83,61 @@ jobs:
         with:
           name: ${{ needs.get-info.outputs.base-name }}_Windows_installer
           path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_installer.exe
+  build-macos-portable:
+    runs-on: macos-latest
+    needs: [build-core, auto-test]
+    env:
+      OUTPUT_FOLDER: ./build
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      # Download your core love package here
+      - name: Download core love package
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      - name: Build macOS packages
+        id: build-packages
+        uses: love-actions/love-actions-macos-portable@v1
+        with:
+          #app-name: ${{ env.PRODUCT_NAME }}
+          #bundle-id: ${{ env.BUNDLE_ID }}
+          #copyright: "Copyright © 2019-2022 26F-Studio. Some Rights Reserved."
+          #icon-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/icon.icns
+          #love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+          #libs-path: ./ColdClear/universal/
+          #product-name: ${{ env.PRODUCT_NAME }}
+          #version-string: "1.0.0"
+          #output-folder: ${{ env.OUTPUT_FOLDER }}
+          account-username: ""
+          account-password: ""
+          team-id: ""
+          developer-id-application-base64: ""
+          developer-id-application-password: ""
+          #developer-id-installer-base64: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER }}
+          #developer-id-installer-password: ${{ secrets.APPLE_CERT_DEVELOPER_ID_INSTALLER_PWD }}
+          #dmg-background-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/dmg.png
+          #dmg-icon-position: "239 203"
+          #dmg-icon-size: "100"
+          #dmg-link-position: "565 203"
+          #dmg-text-size: "12"
+          #dmg-volume-icon-path: ./.github/build/macOS/${{ env.BUILD_TYPE }}/dmg.icns
+          #dmg-volume-name: ${{ env.PRODUCT_NAME }}
+          #dmg-window-position: "200 120"
+          #dmg-window-size: "800 500"
+      - name: Upload pkg artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_pkg
+          path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}.pkg
+      - name: Upload dmg artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_dmg
+          path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}.dmg
+      - name: Upload bare artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_bare
+          path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}.zip
