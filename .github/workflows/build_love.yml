@@ -6,38 +6,55 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
-
+    needs: [build-core, auto-test]
+    env:
+      OUTPUT_FOLDER: ./build
     steps:
-    - name: Build Windows packages
-      id: build-packages
-      uses: love-actions/love-actions-windows@v1.1.3
-      with:
-        #love-package: ./game.love
-        #icon-path: ./assets/windows/icon.ico
-        #rc-path: ./assets/windows/template.rc
-        product-name: dice_deluxe
-        #app-id: ${{ secrets.APP_ID }}
-        #product-website: https://www.example.com
-        installer-languages: English.isl ChineseSimplified.isl
-        output-folder: "./dist"
-    - name: Upload 32-bit artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ needs.get-info.outputs.base-name }}_Windows_x86
-        path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_x86.zip
-    - name: Upload 64-bit artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ needs.get-info.outputs.base-name }}_Windows_x64
-        path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_x64.zip
-    - name: Upload installer artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ needs.get-info.outputs.base-name }}_Windows_installer
-        path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_installer.exe
-
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      # Download your core love package here
+      - name: Download core love package
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.CORE_LOVE_ARTIFACT_NAME }}
+      # This is an example dynamic library
+      - name: Download ColdClear
+        uses: ./.github/actions/get-cc
+        with:
+          platform: Windows
+          dir: ./ColdClear
+      - name: Build Windows packages
+        id: build-packages
+        uses: love-actions/love-actions-windows@v1
+        with:
+          love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
+          icon-path: ./.github/build/windows/${{ env.BUILD_TYPE }}/icon.ico
+          rc-path: ./.github/build/windows/${{ env.BUILD_TYPE }}/template.rc
+          extra-assets-x86: ./ColdClear/x86/CCloader.dll ./ColdClear/x86/cold_clear.dll
+          extra-assets-x64: ./ColdClear/x64/CCloader.dll ./ColdClear/x64/cold_clear.dll
+          product-name: ${{ env.PRODUCT_NAME }}
+          app-id: ${{ secrets.APP_ID }}
+          project-website: https://www.example.com/
+          installer-languages: English.isl ChineseSimplified.isl Japanese.isl French.isl
+          output-folder: ${{ env.OUTPUT_FOLDER }}
+      - name: Upload 32-bit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_Windows_x86
+          path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_x86.zip
+      - name: Upload 64-bit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_Windows_x64
+          path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_x64.zip
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.get-info.outputs.base-name }}_Windows_installer
+          path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_installer.exe
     #steps:
       #- name: Build macOS packages
         #id: build-packages
