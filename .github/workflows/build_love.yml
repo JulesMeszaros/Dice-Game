@@ -127,17 +127,17 @@ jobs:
           #dmg-window-position: "200 120"
           #dmg-window-size: "800 500"
       - name: Upload pkg artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_pkg
           path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}.pkg
       - name: Upload dmg artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_dmg
           path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}.dmg
       - name: Upload bare artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ needs.get-info.outputs.base-name }}_macOS_portable_bare
           path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}.zip
