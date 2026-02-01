@@ -1108,60 +1108,69 @@ function Shop:generateRandomCoffee(i, randomFigureIndex)
 end
 
 function Shop:generateRandomStickers()
+	local function popRandom(list)
+		if #list == 0 then
+			return nil
+		end
+		local index = love.math.random(#list)
+		return table.remove(list, index)
+	end
+
 	self.availableStickers = {}
 
-	--En gros :
-	--On créée la liste de stickersp possible
-	--On parcours la liste des stickers placeholder, et on vérifie qu'ils ne soient pas dans la liste des stickers du joueur,
-	--Et que leur condition de déblocage est sur Vrai
-	--Si c'est le cas, ou l'ajoute dans la liste des clés autorisées
+	-- ===== Stickers normaux =====
 	local possibleStickers = {}
 	for key, sticker in next, G.basicStickers do
-		local stickerName = sticker.name
-
 		local isInInventory = false
-		--On check que le sticker n'est pas déjà dans l'inventaire
-		for i, playerSticker in next, self.run.stickers do
-			if playerSticker.name == stickerName then
+
+		for _, playerSticker in next, self.run.stickers do
+			if playerSticker.name == sticker.name then
 				isInInventory = true
+				break
 			end
 		end
 
-		--Si pas dans inventaire et la condition de unlock est OK, on l'ajoute à la liste des stickers acceptés
-		if sticker:unlockCondition(self.run) == true and isInInventory == false then
+		if sticker:unlockCondition(self.run) and not isInInventory then
 			table.insert(possibleStickers, key)
 		end
 	end
 
-	--On fait pareil avec les holo
+	-- ===== Stickers holo =====
 	local possibleStickersHolo = {}
 	for key, sticker in next, G.holoStickers do
-		local stickerName = sticker.name
-
 		local isInInventory = false
-		--On check que le sticker n'est pas déjà dans l'inventaire
-		for i, playerSticker in next, self.run.stickers do
-			if playerSticker.name == stickerName then
+
+		for _, playerSticker in next, self.run.stickers do
+			if playerSticker.name == sticker.name then
 				isInInventory = true
+				break
 			end
 		end
 
-		--Si pas dans inventaire et la condition de unlock est OK, on l'ajoute à la liste des stickers acceptés
-		if sticker:unlockCondition(self.run) == true and isInInventory == false then
+		if sticker:unlockCondition(self.run) and not isInInventory then
 			table.insert(possibleStickersHolo, key)
 		end
 	end
 
-	--On créée les stickers et on les ajoute les à la liste
+	-- ===== 1) Jusqu’à 3 stickers normaux =====
 	for i = 1, 3 do
-		table.insert(self.availableStickers, self:generateRandomSticker(possibleStickers))
+		local key = popRandom(possibleStickers)
+		if not key then
+			break
+		end
+		table.insert(self.availableStickers, self:generateRandomSticker({ key }))
 	end
-	--On ajoute un sticker holo si possible
-	if #possibleStickersHolo > 0 then
-		table.insert(self.availableStickers, self:generateRandomSticker(possibleStickersHolo))
+
+	-- ===== 2) Sticker holo si possible =====
+	local holoKey = popRandom(possibleStickersHolo)
+	if holoKey then
+		table.insert(self.availableStickers, self:generateRandomSticker({ holoKey }))
 	else
-		--On ajoute un 4e sticker normal si jamais on n'a pas de sticker holo possible
-		table.insert(self.availableStickers, self:generateRandomSticker(possibleStickers))
+		-- ===== 3) Sinon un 4e normal =====
+		local key = popRandom(possibleStickers)
+		if key then
+			table.insert(self.availableStickers, self:generateRandomSticker({ key }))
+		end
 	end
 end
 

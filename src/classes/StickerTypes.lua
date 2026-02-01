@@ -28,7 +28,7 @@ MoneyBagSticker.__index = MoneyBagSticker
 function MoneyBagSticker:new()
 	local self = setmetatable(StickerObject:new(), MoneyBagSticker)
 
-	self.sprite = "src/assets/sprites/stickers/MoneyBag.png"
+	self.sprite = "src/assets/sprites/stickers/Moneybag.png"
 
 	self.name = "Salary Bonus"
 	self.description = "Gives an additional 5$ at the end of each office."
