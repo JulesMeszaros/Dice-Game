@@ -1023,7 +1023,7 @@ function Shop:generateNewShop()
 		end
 	end
 
-	local randomFigures = GenerateRandom.generateUniqueNumbers(1, 13, 4)
+	local randomFigures = GenerateRandom.generateUniqueNumbersShop(1, 13, 4)
 
 	--SI on est dans la premiere generation, que la figure la plus jouée n'est pas 0 et qu'on a le morning brew sticker,
 	--On remplace le premier numéro généré par le numéro de la figure la plus jouée.
@@ -1119,7 +1119,7 @@ function Shop:generateRandomStickers()
 		if #list == 0 then
 			return nil
 		end
-		local index = love.math.random(#list)
+		local index = G.rngShop:random(#list)
 		return table.remove(list, index)
 	end
 
@@ -1141,6 +1141,7 @@ function Shop:generateRandomStickers()
 			table.insert(possibleStickers, key)
 		end
 	end
+	possibleSticker = GenerateRandom.sorted(possibleStickers)
 
 	-- ===== Stickers holo =====
 	local possibleStickersHolo = {}
@@ -1158,6 +1159,7 @@ function Shop:generateRandomStickers()
 			table.insert(possibleStickersHolo, key)
 		end
 	end
+	possibleStickersHolo = GenerateRandom.sorted(possibleStickersHolo)
 
 	-- ===== 1) Jusqu’à 3 stickers normaux =====
 	for i = 1, 3 do
@@ -1296,9 +1298,9 @@ function Shop:getRandomFaceObject(forbiddenKeys)
 		end
 	end
 
-	local randomFaceKey = keys[math.random(#keys)]
+	local randomFaceKey = keys[G.rngShop:random(#keys)]
 	local randomFaceType = FaceTypes[randomFaceKey] --On récupère une face type au hasard
-	local randomFaceValue = math.random(1, 6) --La face numérique
+	local randomFaceValue = G.rngShop:random(1, 6) --La face numérique
 
 	local randomFaceObject = randomFaceType:new(randomFaceValue, 10)
 
@@ -1310,7 +1312,7 @@ function Shop:generateRandomSticker(possibleStickers)
 		return nil
 	end
 
-	local randomKey = possibleStickers[math.random(#possibleStickers)]
+	local randomKey = possibleStickers[G.rngShop:random(#possibleStickers)]
 
 	return StickerTypes[randomKey]:new()
 end
@@ -1331,7 +1333,9 @@ function Shop:generateRandomCiggie(forbiddenKeys)
 		end
 	end
 
-	local randomCiggieKey = keys[math.random(#keys)]
+	keys = GenerateRandom.sorted(keys)
+
+	local randomCiggieKey = keys[G.rngShop:random(#keys)]
 	local randomCiggieType = CiggieTypes[randomCiggieKey] --On récupère une face type au hasard
 
 	local randomCiggieObject = randomCiggieType:new()

@@ -37,6 +37,9 @@ G = {
 	rngEnemies = love.math.newRandomGenerator(69420),
 	--RNG pour les trucs généraux, par exemple les animations etc
 	rngGeneral = love.math.newRandomGenerator(69420),
+
+	--Pour le texte input
+	text = "",
 }
 
 --Animators
@@ -85,6 +88,10 @@ for key, facetype in next, StickerTypes do
 	end
 	G.stickerNames[key] = s.name
 end
+
+G.stickerNames = GenerateRandom.sorted(G.stickerNames)
+G.basicStickers = GenerateRandom.sorted(G.basicStickers)
+G.holoStickers = GenerateRandom.sorted(G.holoStickers)
 
 applyCRT = true
 
@@ -147,7 +154,11 @@ function love.load()
 	backgroundCanvas = love.graphics.newCanvas(love.graphics.getWidth(), love.graphics.getHeight())
 end
 
+function love.textinput(t) end
+
 function love.update(dt)
+	print(text)
+
 	if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
 		--print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
 	end
