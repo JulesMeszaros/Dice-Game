@@ -80,7 +80,7 @@ function Sticker:updateCanvas(dt)
 	love.graphics.setCanvas(self.canvas)
 	love.graphics.clear()
 
-	love.graphics.draw(self.sprite, 0, 0)
+	love.graphics.draw(self.sprite, 0, 0, 0, self.size / self.sprite:getWidth(), self.size / self.sprite:getHeight())
 
 	love.graphics.setCanvas(currentCanvas)
 end
