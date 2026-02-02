@@ -528,9 +528,16 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 			local stickerPos = self:detectStickerPositionOnTerrain(sticker)
 
 			--Action d'acheter le sticker, et le placer sur le terrain
-			if self.run.money >= Constants.BASE_STICKER_PRICE then
+			if
+				(sticker.representedObject.holographic == true and self.run.money >= Constants.BASE_HOLO_STICKER_PRICE)
+				or (sticker.representedObject.holographic == false and self.run.money >= Constants.BASE_STICKER_PRICE)
+			then
 				self:buySticker(sticker)
-				self.run.money = self.run.money - Constants.BASE_STICKER_PRICE
+				if sticker.representedObject.holographic == true then
+					self.run.money = self.run.money - Constants.BASE_HOLO_STICKER_PRICE
+				else
+					self.run.money = self.run.money - Constants.BASE_STICKER_PRICE
+				end
 			end
 		end
 	end
@@ -1546,10 +1553,13 @@ function Shop:createFacesPriceTags()
 
 	--Stickers
 	self.stickersPriceTags = {}
-	for i = 1, 4 do
+	for i = 1, #self.availableStickers do
 		local c = love.graphics.newCanvas(70, 30)
 		love.graphics.setBlendMode("alpha")
 		local priceText = love.graphics.newText(Fonts.soraPrice, tostring(Constants.BASE_STICKER_PRICE) .. "€")
+		if self.availableStickers[i].holographic == true then
+			priceText = love.graphics.newText(Fonts.soraPrice, tostring(Constants.BASE_HOLO_STICKER_PRICE) .. "€")
+		end
 		table.insert(self.stickersPriceTags, c)
 		table.insert(self.faceTextObjects, priceText)
 	end

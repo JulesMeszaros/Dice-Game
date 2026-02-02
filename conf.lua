@@ -1,6 +1,6 @@
 function love.conf(t)
 	--Window configurations
-	t.window.display = 2
+	t.window.display = 1
 	t.window.fullscreen = false
 	t.window.width = 1290
 	t.window.height = 720
