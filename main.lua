@@ -28,6 +28,15 @@ G = {
 	--Wave
 	waveX = 0,
 	waveY = 0,
+	--Randoms
+	--Pour le tiré de dés
+	rngDices = love.math.newRandomGenerator(69420),
+	--Pour la génération de shops
+	rngShop = love.math.newRandomGenerator(69420),
+	--Pour la création des dénemies
+	rngEnemies = love.math.newRandomGenerator(69420),
+	--RNG pour les trucs généraux, par exemple les animations etc
+	rngGeneral = love.math.newRandomGenerator(69420),
 }
 
 --Animators
@@ -45,7 +54,7 @@ G.stickerNames = {}
 G.basicStickers = {}
 G.holoStickers = {}
 
---create list with faces objects placeholders
+--create list with faces objects placeholdersmain.lua
 for key, facetype in next, FaceTypes do
 	local f = facetype:new(1, 10)
 	if f.tier == "Common" then
@@ -57,6 +66,14 @@ for key, facetype in next, FaceTypes do
 	end
 	G.faceNames[key] = f.name
 end
+
+-- On trie les listes de noms pour qu'elles aient toujours le meme ordre
+-- Cela est nécessaire car la liste FaceTypes est non ordonnée, et donc il est impossible de prévoir
+-- quel sera son ordre au lancé du jeu.
+G.faceNames = GenerateRandom.sorted(G.faceNames)
+G.commonDices = GenerateRandom.sorted(G.commonDices)
+G.uncommonDices = GenerateRandom.sorted(G.uncommonDices)
+G.rareDices = GenerateRandom.sorted(G.rareDices)
 
 --create list with stickers object placeholders
 for key, facetype in next, StickerTypes do
@@ -132,7 +149,7 @@ end
 
 function love.update(dt)
 	if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
-		print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
+		--print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
 	end
 
 	G.circleRad = 0.06 --+ AnimationUtils.osccilate(love.timer.getTime(), 4, 0.01)
@@ -203,8 +220,10 @@ function love.keypressed(key)
 		end
 	end
 
-	if key == "p" then
-		GenerateRandom.faceObject({})
+	if key == "m" then
+		local ft = GenerateRandom.faceObjectReward({})
+		print(ft.name)
+		print(ft.faceValue)
 	end
 end
 

@@ -33,7 +33,7 @@ function Floor:generateDesks(deskRank)
 	--Generate target score
 	local targetScore = 0
 	--Generate desk number
-	local deskNumber = self.floorNumber * 100 + deskRank * 10 + math.random(0, 9)
+	local deskNumber = self.floorNumber * 100 + deskRank * 10 + 10 --G.rngEnemies:random(0, 9)
 
 	--Generate target
 	if deskRank == 1 then
@@ -86,8 +86,8 @@ function Floor:generateReward(c, u, r)
 	local uncommon = u or 20
 	local rare = r or 5 --Les parametres représentent le pourcentage de chances d'avoir un common, uncommon, ou rare
 	return {
-		GenerateRandom.faceObject({ "WhiteDice" }, common, uncommon, rare),
-		GenerateRandom.faceObject({ "WhiteDice" }, common, uncommon, rare),
+		GenerateRandom.faceObjectReward({ "WhiteDice" }, common, uncommon, rare),
+		GenerateRandom.faceObjectReward({ "WhiteDice" }, common, uncommon, rare),
 	}
 end
 

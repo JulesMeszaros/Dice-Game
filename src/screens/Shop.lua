@@ -1067,7 +1067,7 @@ function Shop:generateAvailableFaces()
 
 	self.availableFaceObjects = {}
 	for i = 1, 4 do
-		local f = GenerateRandom.faceObject(forbiddenFaces)
+		local f = GenerateRandom.faceObjectShop(forbiddenFaces)
 		table.insert(self.availableFaceObjects, f)
 	end
 end

@@ -71,7 +71,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 		for k, _ in pairs(Constants.BOSS_TYPES) do
 			table.insert(bossKeys, k)
 		end
-		local randomKey = bossKeys[math.random(#bossKeys)]
+		local randomKey = bossKeys[G.rngEnemies:random(#bossKeys)]
 		self.bossType = Constants.BOSS_TYPES[randomKey]
 	end
 
@@ -99,7 +99,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 	--Ennemy metadata
 	self.enemyCharacter = Lion:new()
 	if self.roundType == Constants.ROUND_TYPES.BASE then
-		self.enemyJob = Constants.EMPLOIS[math.random(#Constants.EMPLOIS)]
+		self.enemyJob = Constants.EMPLOIS[G.rngEnemies:random(#Constants.EMPLOIS)]
 	else
 		self.enemyJob = "Manager"
 	end

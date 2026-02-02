@@ -688,7 +688,7 @@ function DiceCustomization:outAnimation()
 	for i, dice in next, self.uiDices do
 		for j, face in next, dice do
 			--Add a random animation for every faces
-			local randomSide = math.random(0, 1)
+			local randomSide = G.rngGeneral:random(0, 1)
 			local exitX = -200
 			if randomSide == 0 then
 				exitX = -200
@@ -696,9 +696,9 @@ function DiceCustomization:outAnimation()
 				exitX = self.canvas:getWidth() + 200
 			end
 			local exitY = self.canvas:getHeight() / 2
-			local duration = math.random(3, 5) / 10
-			local delayStart = math.random(1, 3) / 100
-			local randomAngle = math.random(-500, 500) / 100
+			local duration = G.rngGeneral:random(3, 5) / 10
+			local delayStart = G.rngGeneral:random(1, 3) / 100
+			local randomAngle = G.rngGeneral:random(-500, 500) / 100
 			face.animator:addDelay(delayStart)
 			face.animator:addGroup({
 				{
@@ -749,7 +749,7 @@ function DiceCustomization:outAnimation()
 
 	--inventory Faces exit
 	for i, face in next, self.newUIFaces do
-		local randomSide = math.random(0, 1)
+		local randomSide = G.rngGeneral:random(0, 1)
 		local exitX = -200
 		if randomSide == 0 then
 			exitX = -200
@@ -757,9 +757,9 @@ function DiceCustomization:outAnimation()
 			exitX = self.canvas:getWidth() + 200
 		end
 		local exitY = self.canvas:getHeight() / 2
-		local duration = math.random(3, 5) / 10
+		local duration = G.rngGeneral:random(3, 5) / 10
 
-		local randomAngle = math.random(-500, 500) / 100
+		local randomAngle = G.rngGeneral:random(-500, 500) / 100
 
 		face.animator:addGroup({
 			{
@@ -809,7 +809,7 @@ function DiceCustomization:outAnimation()
 
 	--Rewards
 	for i, face in next, self.rewardsUIFaces do
-		local randomSide = math.random(0, 1)
+		local randomSide = G.rngGeneral:random(0, 1)
 		local exitX = -200
 		if randomSide == 0 then
 			exitX = -200
@@ -817,9 +817,9 @@ function DiceCustomization:outAnimation()
 			exitX = self.canvas:getWidth() + 200
 		end
 		local exitY = self.canvas:getHeight() / 2
-		local duration = math.random(3, 5) / 10
+		local duration = G.rngGeneral:random(3, 5) / 10
 
-		local randomAngle = math.random(-500, 500) / 100
+		local randomAngle = G.rngGeneral:random(-500, 500) / 100
 
 		face.animator:addGroup({
 			{
@@ -946,9 +946,9 @@ function DiceCustomization:createInventoryUI()
 		end, nil)
 		diceFace.animator:addDelay(0.3)
 		diceFace.layer = 3
-		local duration = math.random(2, 8) / 10
+		local duration = G.rngGeneral:random(2, 8) / 10
 
-		local randomAngle = math.random(-500, 500) / 100
+		local randomAngle = G.rngGeneral:random(-500, 500) / 100
 
 		diceFace.animator:addGroup({
 			{
@@ -1014,9 +1014,9 @@ function DiceCustomization:createRewardsUI()
 		diceFace.animator:addDelay(0.3)
 		diceFace.layer = 3
 
-		local duration = math.random(2, 8) / 10
+		local duration = G.rngGeneral:random(2, 8) / 10
 
-		local randomAngle = math.random(-500, 500) / 100
+		local randomAngle = G.rngGeneral:random(-500, 500) / 100
 
 		diceFace.animator:addGroup({
 			{
@@ -1094,7 +1094,7 @@ function DiceCustomization:createDiceUI(diceObject, i)
 	for k, faceObject in next, diceObject:getAllFaces() do
 		local possibleXs = { -200, self.canvas:getWidth() + 200 }
 
-		local startX = possibleXs[math.random(1, #possibleXs)]
+		local startX = possibleXs[G.rngGeneral:random(1, #possibleXs)]
 		local startY = self.canvas:getHeight() / 2
 
 		--Create a dice face ui with the dice
@@ -1102,12 +1102,12 @@ function DiceCustomization:createDiceUI(diceObject, i)
 			return Inputs.getMouseInCanvas(0, 0)
 		end, nil)
 
-		local duration = math.random(3, 5) / 10 -- the duration of the animation
-		local delayStart = math.random(1, 3) / 10 --a little delay before it starts to desynchronize the dices
+		local duration = G.rngGeneral:random(3, 5) / 10 -- the duration of the animation
+		local delayStart = G.rngGeneral:random(1, 3) / 10 --a little delay before it starts to desynchronize the dices
 		diceFace.animator:addDelay(delayStart) --applying the delay
 		diceFace.layer = 3
 
-		local randomAngle = math.random(-500, 500) / 100
+		local randomAngle = G.rngGeneral:random(-500, 500) / 100
 
 		diceFace.animator:addDelay(0.3)
 		diceFace.animator:addGroup({
