@@ -6,6 +6,9 @@ local AnimationUtils = require("src.utils.scripts.Animations")
 local FaceTypes = require("src.classes.FaceTypes")
 local StickerTypes = require("src.classes.StickerTypes")
 local GenerateRandom = require("src.utils.scripts.GenerateRandom")
+
+local seed = os.time()
+
 G = {
 	--Background color
 	backgroundR = 40 / 255,
@@ -30,13 +33,13 @@ G = {
 	waveY = 0,
 	--Randoms
 	--Pour le tiré de dés
-	rngDices = love.math.newRandomGenerator(69420),
+	rngDices = love.math.newRandomGenerator(seed),
 	--Pour la génération de shops
-	rngShop = love.math.newRandomGenerator(69420),
+	rngShop = love.math.newRandomGenerator(seed),
 	--Pour la création des dénemies
-	rngEnemies = love.math.newRandomGenerator(69420),
+	rngEnemies = love.math.newRandomGenerator(seed),
 	--RNG pour les trucs généraux, par exemple les animations etc
-	rngGeneral = love.math.newRandomGenerator(69420),
+	rngGeneral = love.math.newRandomGenerator(seed),
 
 	--Pour le texte input
 	text = "",
