@@ -643,12 +643,7 @@ function Shop:mousemoved(x, y, dx, dy, isDragging)
 	end
 end
 
-function Shop:keypressed(key)
-	if key == "d" then
-		self.showDeck = not self.showDeck
-		self.deckScreen = Deck:new()
-	end
-end
+function Shop:keypressed(key) end
 
 --==Shop Functions==--
 function Shop:buyDiceFace(face, faceUI, key)

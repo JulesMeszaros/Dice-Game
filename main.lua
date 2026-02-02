@@ -215,26 +215,22 @@ function love.draw()
 end
 
 function love.keypressed(key)
-	if key == "c" then
-		applyCRT = not applyCRT
-	end
-
 	game:keypressed(key)
 
-	if key == "f" then
-		currentFpsIndex = currentFpsIndex % #fpsOptions + 1
-		fpsLimit = fpsOptions[currentFpsIndex]
-		if fpsLimit then
-			print("FPS limité à " .. fpsLimit)
-		else
-			print("FPS illimité")
+	if Constants.DEBUG == true then
+		if key == "c" then
+			applyCRT = not applyCRT
 		end
-	end
 
-	if key == "m" then
-		local ft = GenerateRandom.faceObjectReward({})
-		print(ft.name)
-		print(ft.faceValue)
+		if key == "f" then
+			currentFpsIndex = currentFpsIndex % #fpsOptions + 1
+			fpsLimit = fpsOptions[currentFpsIndex]
+			if fpsLimit then
+				print("FPS limité à " .. fpsLimit)
+			else
+				print("FPS illimité")
+			end
+		end
 	end
 end
 

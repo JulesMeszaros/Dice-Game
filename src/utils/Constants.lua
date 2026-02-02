@@ -18,6 +18,7 @@ local Constants = {
 	--Debug
 	SHOP_EVERY_DESK = true,
 	OVERPOWER = false,
+	DEBUG = true,
 
 	--Prices
 	BASE_STICKER_PRICE = 10,

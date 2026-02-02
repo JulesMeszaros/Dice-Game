@@ -155,25 +155,19 @@ end
 function Round:keypressed(key)
 	self.terrain:keypressed(key)
 	--(Mainly for debug)
-	if key == "h" then --add 10 hands
-		self.remainingHands = self.remainingHands + 10
-	end
+	if Constants.DEBUG == true then
+		if key == "h" then --add 10 hands
+			self.remainingHands = self.remainingHands + 10
+		end
 
-	if key == "r" then --set rerolls to 10
-		self.availableRerolls = 10
-	end
+		if key == "r" then --set rerolls to 10
+			self.availableRerolls = self.availableRerolls + 10
+		end
 
-	if key == "a" then --skip round
-		self.roundScore = 10000000
-		self:endRound()
-	end
-
-	if key == "s" then
-		AnimationUtils.shake(self.terrain, 30, 3, 0.2)
-	end
-
-	if key == "u" then
-		self.terrain.addingAvailableHand = not self.terrain.addingAvailableHand
+		if key == "a" then --skip round
+			self.roundScore = 10000000
+			self:endRound()
+		end
 	end
 end
 

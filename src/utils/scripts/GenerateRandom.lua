@@ -36,7 +36,6 @@ function GenerateRandom.generateUniqueNumbers(min, max, n, method)
 end
 
 function GenerateRandom.generateUniqueNumbersShop(min, max, n)
-	local methode = method or math.random
 	local numbers = {}
 	local pool = {}
 	for i = min, max do

@@ -230,12 +230,14 @@ function Run:keypressed(key)
 		self.customizationScreen:keypressed(key)
 	end
 
-	if key == "m" then
-		self.money = 20000
-	end
+	if Constants.DEBUG == true then
+		if key == "m" then
+			self.money = 20000
+		end
 
-	if key == "f" then
-		self:resetAvailableFigures()
+		if key == "f" then
+			self:resetAvailableFigures()
+		end
 	end
 end
 
