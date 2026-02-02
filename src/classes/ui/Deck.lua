@@ -2,6 +2,7 @@ local AnimationUtils = require("src.utils.scripts.Animations")
 local DiceFace = require("src.classes.ui.DiceFace")
 local Sprites = require("src.utils.Sprites")
 local Inputs = require("src.utils.scripts.Inputs")
+local Sticker = require("src.classes.ui.Sticker")
 
 local Deck = {}
 Deck.__index = Deck
@@ -12,6 +13,9 @@ function Deck:new()
 	self.canvas = love.graphics.newCanvas(1130, 830)
 	self.stickersCanvas = love.graphics.newCanvas(350, 430)
 	self.diceFaces = {}
+	self.stickers = {}
+
+	self:createStickers()
 
 	--Create the dice faces
 	for _, d in next, G.game.run.diceObjects do
@@ -79,7 +83,6 @@ function Deck:updateCanvas(dt)
 
 	love.graphics.clear()
 
-	--love.graphics.rectangle("fill", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
 	love.graphics.draw(Sprites.COMPOSITION_PANEL, 0, 30)
 	self:drawStickers(dt)
 	love.graphics.draw(Sprites.DECK_PANEL, self.canvas:getWidth(), 0, 0, 1, 1, Sprites.DECK_PANEL:getWidth(), 0)
@@ -105,18 +108,53 @@ function Deck:drawStickers(dt)
 	love.graphics.setCanvas(self.stickersCanvas)
 	love.graphics.clear()
 
+	--Dessin du fond (sprite)
 	love.graphics.draw(Sprites.STICKERS_PANEL, 0, 0)
+
+	--Dessin et update des stickers
+	for _, sticker in next, self.stickers do
+		sticker:update(dt)
+		sticker:draw()
+	end
 
 	love.graphics.setCanvas(currentCanvas)
 	love.graphics.draw(self.stickersCanvas, 0, 370)
 end
 
+function Deck:createStickers()
+	self.stickers = {}
+	for i, sticker in next, G.game.run.stickers do
+		--x
+		local x = 60 + ((i - 1) % 3) * 110
+		--y
+		local y = 100 + math.floor((i - 1) / 3) * 100
+		--angle
+		local rAngle = math.random(-100, 100) / 200
+		--jitter
+		local xj = math.random(-5, 5)
+		local yj = math.random(-5, 5)
+
+		local s = Sticker:new(sticker, x + xj, y + yj, 100, false, true, function()
+			return Inputs.getMouseInCanvas(510, 400, 1)
+		end, 510, 400)
+		s.baseRotation = rAngle
+
+		self.stickers[sticker] = s
+	end
+end
+
 function Deck:getCurrentlyHoveredFace()
+	--Fonction pour récupérer la face OU le sticker qui est hover
 	for i, dice in next, self.diceFaces do
 		for j, face in next, dice do
 			if face:isHovered() then
 				return face
 			end
+		end
+	end
+	for i, sticker in next, self.stickers do
+		if sticker:isHovered() then
+			return sticker
 		end
 	end
 	return nil
