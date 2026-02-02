@@ -54,7 +54,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 	self.remainingHands = self.run.baseHands
 	self.availableRerolls = self.run.baseRerolls
 
-	self.bountyHunterFigure = math.random(1, 13)
+	self.bountyHunterFigure = G.rngGeneral:random(1, 13)
 	self.handRefunded = false --utilisée pour annuler l'utilisation d'une main
 	self.usedCiggiesRound = 0
 
@@ -417,7 +417,7 @@ function Round:endTriggeringPhase()
 
 	--Reset des stats de trigger phase
 	self.handRefunded = false
-	self.bountyHunterFigure = math.random(1, 13)
+	self.bountyHunterFigure = G.rngGeneral:random(1, 13)
 end
 
 --==DICE FUNCTIONS==--
@@ -516,9 +516,9 @@ function Round:makeRoll(dices)
 	for key, dice in next, dices do --Creates the roll animation for the rerolled dices
 		self.terrain.diceFaces[dice].isRolling = true
 
-		local randomXPos = math.random(80, self.terrain.dice_tray:getWidth() - 80)
-		local randomYPos = math.random(220, self.terrain.dice_tray:getHeight() - 150)
-		local randomR = ((math.random(0, 1000) / 1000) * 5) - 2.5 --(1001 angles possibles entre -2.5 et 5 radians)
+		local randomXPos = G.rngGeneral:random(80, self.terrain.dice_tray:getWidth() - 80)
+		local randomYPos = G.rngGeneral:random(220, self.terrain.dice_tray:getHeight() - 150)
+		local randomR = ((G.rngGeneral:random(0, 1000) / 1000) * 5) - 2.5 --(1001 angles possibles entre -2.5 et 5 radians)
 
 		--Set initial position (random X axis, under the terrain)
 		self.terrain.diceFaces[dice]:setX(self.terrain.dice_tray:getWidth() / 2)
@@ -533,8 +533,8 @@ function Round:makeRoll(dices)
 		self.terrain.diceFaces[dice].animator:addDelay(((5 - table.getn(dices)) / 5) * 0.4)
 
 		--Add a small random delay to add some relaness
-		self.terrain.diceFaces[dice].animator:addDelay((math.random(0, 100) / 100) * 0.2)
-		local rollDuration = (math.random(50, 100) / 100) * 0.6
+		self.terrain.diceFaces[dice].animator:addDelay((G.rngGeneral:random(0, 100) / 100) * 0.2)
+		local rollDuration = (G.rngGeneral:random(50, 100) / 100) * 0.6
 		if self.availableRerolls == 1 then
 			rollDuration = rollDuration + 0.3
 		end
@@ -614,7 +614,7 @@ function Round:drawDices(dices)
 	local faceObjects = self.drawedFaceObjects
 
 	for key, dice in next, dices do
-		local n = math.random(1, dice:getNbFaces()) --Prend un index dans les faces du dé
+		local n = G.rngDices:random(1, dice:getNbFaces()) --Prend un index dans les faces du dé
 		local faceObject = dice:getFace(n)
 		faceObjects[dice] = faceObject
 	end
