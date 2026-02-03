@@ -11,6 +11,8 @@ local MainMenu = {}
 
 MainMenu.__index = MainMenu
 
+seedLabel = love.graphics.newText(love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 50), "Seed :")
+
 function MainMenu:new(gameCanvas, game)
 	local self = setmetatable({}, MainMenu)
 
@@ -27,7 +29,13 @@ function MainMenu:new(gameCanvas, game)
 	self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 
 	--Creation de la boîte de texte pour la seed (temporaire)
-	self.seedInput = TextInput:new(self.canvas:getWidth() - 30 - 300, self.canvas:getHeight() - 30 - 50, 300, 50)
+	self.seedInput = TextInput:new(
+		self.canvas:getWidth() - 30 - 225,
+		self.canvas:getHeight() - 30 - 25,
+		450,
+		50,
+		{ noSpace = true, maxChars = 8, noSpecial = true, forceCaps = true }
+	)
 
 	-- Create version text only once
 	self.versionText = love.graphics.newText(Fonts.soraSmall, "AEROSOL DELUXE GAMES — " .. Constants.GAME_VERSION)
@@ -74,6 +82,16 @@ function MainMenu:updateCanvas(dt)
 	love.graphics.draw(Sprites.MAIN_LOGO, self.canvas:getWidth() / 2, 75, 0, 1, 1, Sprites.MAIN_LOGO:getWidth() / 2, 0)
 
 	--Text box (temporaire)
+	love.graphics.draw(
+		seedLabel,
+		self.canvas:getWidth() - 500,
+		self.canvas:getHeight() - 30,
+		0,
+		1,
+		1,
+		seedLabel:getWidth(),
+		seedLabel:getHeight()
+	)
 	self.seedInput:draw()
 
 	--Version

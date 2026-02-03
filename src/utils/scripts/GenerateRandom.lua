@@ -105,7 +105,6 @@ function GenerateRandom.faceObjectReward(forbiddenKeys, c, u, r) --Les parametre
 	end
 
 	local k = G.rngEnemies:random(1, #keys)
-	print("rng enemies : ", k)
 	local randomFaceKey = keys[G.rngEnemies:random(1, k)]
 	local randomFaceType = G.faceTypes[randomFaceKey] --On récupère une face type au hasard
 	local randomFaceValue = G.rngEnemies:random(1, 6) --La face numérique

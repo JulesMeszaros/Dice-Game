@@ -285,8 +285,6 @@ end
 --==INPUT FUNCTIONS==--
 
 function DeskChoice:keypressed(key)
-	print("keypressed")
-
 	if key == "d" then
 		self.deckScreen = Deck:new()
 		self.showDeck = not self.showDeck

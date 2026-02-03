@@ -28,12 +28,13 @@ function TextField:new(x, y, width, fontSize, args)
 
 	--Additionnals arguments
 	args = args or {}
-	self.noLetters = args["noLetters"] or false
 	self.forceCaps = args["forceCaps"] or false
 	self.maxChars = args["maxChars"] or false
 	self.noSpace = args["noSpace"] or false
 	self.noNums = args["noNums"] or false
-	self.noSpecial = args["noSpecials"] or false
+	self.noSpecial = args["noSpecial"] or false
+
+	--Liste des caractères interdits (construite en fonction des paramètres ci-dessus)
 	-- Cursor
 	self.cursorTimer = 0
 	self.cursorBlinkRate = 0.5
@@ -68,6 +69,8 @@ function TextField:draw()
 		love.graphics.setColor(0.8, 0.8, 0.8)
 	end
 
+	love.graphics.setLineWidth(4)
+
 	love.graphics.rectangle("line", 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
 
 	-- Texte
@@ -98,7 +101,26 @@ end
 
 function TextField:textinput(t)
 	if self.focused then
-		self.text = self.text .. t
+		--Filtre des espaces
+		if self.noSpace and t == " " then
+			return
+		end
+		--Filtre des charactères non alpha numériques (et espaces)
+		if self.noSpecial and not t:match("[%a%d ]") then
+			return -- Ignore tout ce qui n'est pas lettre, chiffre ou espace
+		end
+		--Filtre des caractères numériques
+		if self.noNums and t:match("%d") then
+			return -- Ignore les chiffres (0-9)
+		end
+		--Met les lettres en majuscule si force caps est vrai
+		if self.forceCaps then
+			t = string.upper(t)
+		end
+
+		if self.maxChars == false or self.maxChars > #self.text then
+			self.text = self.text .. t
+		end
 	end
 end
 

@@ -59,7 +59,6 @@ end
 
 function RerollAdderSticker:buyEffect(run)
 	run.baseRerolls = run.baseRerolls + 1
-	print("reroll added !")
 end
 StickerTypes.RerollAdderSticker = RerollAdderSticker
 

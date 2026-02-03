@@ -76,9 +76,7 @@ function UIElement:releaseEvent() --S'active lorsqu'un click est complété
 	return wasReleased
 end
 
-function UIElement:clickAction()
-	print("Click Action")
-end
+function UIElement:clickAction() end
 
 --Get/set Functions--
 

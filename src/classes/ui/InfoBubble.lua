@@ -74,12 +74,8 @@ function InfoBubble:update(dt)
 
 	if self.previousObject ~= self.object then
 		if self.object.representedObject.objectType == "Dice Face" then
-			--rint(self.object.representedObject.name)
-
 			self:generateDiceBubble()
 		elseif self.object.representedObject.objectType == "Magic Wand" then
-			--print(self.object.representedObject.name)
-
 			self:generateCiggieBubble()
 		elseif self.object.representedObject.objectType == "Coffee" then
 			self:generateCoffeeBubble()
