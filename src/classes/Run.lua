@@ -1,3 +1,4 @@
+local PauseMenu = require("src.classes.ui.Pause")
 local Shop = require("src.screens.Shop")
 local DeskChoice = require("src.screens.DeskChoice")
 local DiceCustomization = require("src.screens.DiceCustomization")
@@ -52,7 +53,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 	self.roundNumber = 0 --Représente le numéro de round total
 	--Run state
 	self.currentState = Constants.RUN_STATES.ROUND
-	self.runPaused = false
+	self.displayInfoScreen = false
 
 	--Creating base stats (modifiables par les stickers)
 	self.baseHands = Constants.BASE_TURNS
@@ -101,7 +102,7 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 end
 
 function Run:update(dt)
-	if self.runPaused ~= true then
+	if self.displayInfoScreen ~= true and self.displayPauseMenu ~= true then
 		self.animator:update(dt)
 		if self.currentState == Constants.RUN_STATES.ROUND then
 			--update Round
@@ -117,9 +118,11 @@ function Run:update(dt)
 		elseif self.currentState == Constants.RUN_STATES.DICE_CUSTOMIZATION then
 			self.customizationScreen:update(dt)
 		end
-	else
+	elseif self.displayInfoScreen == true and self.displayPauseMenu ~= true then
 		self.infoScreen:update(dt)
 		self.infoScreen:updateCanvas(dt)
+	else
+		self.pauseMenu:update(dt)
 	end
 end
 
@@ -137,8 +140,13 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
 	end
 
 	--Info screen
-	if self.runPaused == true and self.infoScreen then
+	if self.displayInfoScreen == true and self.infoScreen then
 		self.infoScreen:draw()
+	end
+
+	--Pause screen
+	if self.displayPauseMenu == true and self.pauseMenu then
+		self.pauseMenu:draw()
 	end
 end
 
@@ -191,20 +199,33 @@ end
 
 --==INFO MENU FUNCTION==--
 function Run:startInfoScreen()
-	self.runPaused = true
+	self.displayInfoScreen = true
 	self.infoScreen = Infos:new(self)
 end
 
+function Run:startPauseMenu()
+	self.displayPauseMenu = true
+	self.pauseMenu = PauseMenu:new(self)
+end
+
 function Run:endInfoScreen()
-	self.runPaused = false
+	self.displayInfoScreen = false
 	self.infoScreen = nil
 end
 
 function Run:toggleInfoScreen()
-	if self.runPaused == true then
+	if self.displayInfoScreen == true then
 		self:endInfoScreen()
 	else
 		self:startInfoScreen()
+	end
+end
+
+function Run:togglePauseMenu()
+	if self.displayPauseMenu == true then
+		self.displayPauseMenu = false
+	else
+		self:startPauseMenu()
 	end
 end
 
@@ -230,6 +251,12 @@ function Run:keypressed(key)
 		self.customizationScreen:keypressed(key)
 	end
 
+	print(key)
+
+	if key == "escape" then
+		self:togglePauseMenu()
+	end
+
 	if Constants.DEBUG == true then
 		if key == "m" then
 			self.money = 20000
@@ -246,7 +273,7 @@ function Run:mousepressed(x, y, button, istouch, presses)
 	self.dragOriginX = x
 	self.dragOriginY = y
 
-	if self.runPaused == false then
+	if self.displayInfoScreen == false and self.displayPauseMenu ~= true then
 		if self.currentState == Constants.RUN_STATES.ROUND then
 			self.currentRound.terrain:mousepressed(x, y, button, istouch, presses)
 		elseif self.currentState == Constants.RUN_STATES.SHOP then
@@ -258,13 +285,15 @@ function Run:mousepressed(x, y, button, istouch, presses)
 		elseif self.currentState == Constants.RUN_STATES.DICE_CUSTOMIZATION then
 			self.customizationScreen:mousepressed(x, y, button, istouch, presses)
 		end
-	else
+	elseif self.displayInfoScreen == true and self.displayPauseMenu ~= true then
 		self.infoScreen:mousepressed(x, y, button, istouch, presses)
+	else
+		self.pauseMenu:mousepressed(x, y, button, istouch, presses)
 	end
 end
 
 function Run:mousereleased(x, y, button, istouch, presses)
-	if self.runPaused == false then
+	if self.displayInfoScreen == false then
 		if self.currentState == Constants.RUN_STATES.ROUND then
 			self.currentRound.terrain:mousereleased(x, y, button, istouch, presses)
 		elseif self.currentState == Constants.RUN_STATES.SHOP then
@@ -276,8 +305,10 @@ function Run:mousereleased(x, y, button, istouch, presses)
 		elseif self.currentState == Constants.RUN_STATES.DICE_CUSTOMIZATION then
 			self.customizationScreen:mousereleased(x, y, button, istouch, presses)
 		end
-	else
+	elseif self.displayInfoScreen == true and self.displayPauseMenu ~= true then
 		self.infoScreen:mousereleased(x, y, button, istouch, presses)
+	else
+		self.pauseMenu:mousereleased(x, y, button, istouch, presses)
 	end
 
 	--Deactivate dragging
@@ -285,7 +316,7 @@ function Run:mousereleased(x, y, button, istouch, presses)
 end
 
 function Run:mousemoved(x, y, dx, dy)
-	if self.runPaused == false then
+	if self.displayInfoScreen == false then
 		if self.currentState == Constants.RUN_STATES.ROUND then
 			self.currentRound.terrain:mousemoved(x, y, dx, dy, self.isDragging)
 		elseif self.currentState == Constants.RUN_STATES.SHOP then
@@ -297,8 +328,10 @@ function Run:mousemoved(x, y, dx, dy)
 		elseif self.currentState == Constants.RUN_STATES.DICE_CUSTOMIZATION then
 			self.customizationScreen:mousemoved(x, y, dx, dy, self.isDragging)
 		end
-	else
+	elseif self.displayInfoScreen == true and self.displayPauseMenu ~= true then
 		self.infoScreen:mousemoved(x, y, dx, dy, self.isDragging)
+	else
+		self.pauseMenu:mousereleased(x, y, dx, dy, self.isDragging)
 	end
 	--x et y sont la position, dx et dy sont la vitesse.
 

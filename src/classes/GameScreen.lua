@@ -306,7 +306,7 @@ function GameScreen:new(floor, run, screenType, round)
 
 	self.uiElements.buttons["menuButton"] = Button:new(
 		function()
-			print("menu")
+			G.game.run:togglePauseMenu()
 		end,
 		"src/assets/sprites/ui/Menu.png",
 		150,

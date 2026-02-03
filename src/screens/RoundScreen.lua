@@ -418,7 +418,7 @@ function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
 		self.round.phase ~= Constants.ROUND_STATES.END_ROUND
 		and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER
 		and self.round.phase ~= Constants.ROUND_STATES.RUN_END
-		and self.run.runPaused == false
+		and self.run.displayInfoScreen == false
 	then
 		--Drag and drop dice
 		if isDragging == true then
