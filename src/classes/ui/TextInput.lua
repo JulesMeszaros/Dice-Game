@@ -75,9 +75,9 @@ function TextField:draw()
 
 	-- Texte
 	love.graphics.setColor(1, 1, 1)
-	local textX = 0
+	local textX = 5
 	local textY = self.canvas:getHeight() / 2
-	love.graphics.print(self.text, textX, (self.canvas:getHeight() - self.fontSize) / 2)
+	love.graphics.print(self.text, textX, (self.canvas:getHeight() - self.fontSize) / 2 - 5)
 
 	-- Curseur
 	if self.focused and self.cursorVisible then
