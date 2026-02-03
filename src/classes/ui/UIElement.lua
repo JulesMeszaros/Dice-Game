@@ -6,207 +6,160 @@ local UIElement = {}
 UIElement.__index = {}
 
 function UIElement:new(gameCanvas)
-    local self = setmetatable({}, UIElement)
+	local self = setmetatable({}, UIElement)
 
-    self.animator = Animator:new(self)
+	self.animator = Animator:new(self)
 
-    --Parametres d'interractions
-    
-    self.sprite = nil 
-    self.isSelectable = false
-    self.isHoverable = false
-    self.isDraggable = false
-    self.isSelected = false
+	--Parametres d'interractions
 
-    --Position
-    self.x = 0
-    self.y = 0
+	self.sprite = nil
+	self.isSelectable = false
+	self.isHoverable = false
+	self.isDraggable = false
+	self.isSelected = false
 
-    --Graphic/Render parameters
-    self.width = 1
-    self.height = 1
+	--Position
+	self.x = 0
+	self.y = 0
 
-    self.hasShadow = true
-    --Echelle du boutton (utile quand par exemple la souris est au dessus)
-    self.scale = 1
-    self.targetedScale = 1
+	--Graphic/Render parameters
+	self.width = 1
+	self.height = 1
 
-    --State functions
-    self.isBeingClicked = false
-    self.isBeingDragged = false
-    self.isActivated = true
-    
-    return self
+	self.hasShadow = true
+	--Echelle du boutton (utile quand par exemple la souris est au dessus)
+	self.scale = 1
+	self.targetedScale = 1
+
+	--State functions
+	self.isBeingClicked = false
+	self.isBeingDragged = false
+	self.isActivated = true
+
+	return self
 end
 
-function UIElement:update(dt)
+function UIElement:update(dt) end
 
-end
-
-function UIElement:draw(gameCanvas)
-    --local shadow = self:renderShadow(gameCanvas)
-    local render = self:renderSprite(gameCanvas)
-    --love.graphics.draw(shadow, self.x+10, self.y+10, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
-    love.graphics.draw(render, self.x, self.y, 0, self.scale, self.scale, render:getWidth()/2, render:getHeight()/2)
-end
-
-function UIElement:renderSprite(gameCanvas)
-    local canvasHeight = self.height
-    local canvasWidth = self.width
-
-    local canvas = love.graphics.newCanvas(canvasWidth, canvasHeight)
-
-    --General settings
-    love.graphics.setCanvas(canvas)
-
-    local widthRatio = self.width/self.sprite:getWidth()
-    local heightRatio = self.height/self.sprite:getHeight()
-
-    --Draw the UI into the canvas
-    love.graphics.draw(self.sprite, 0, 0, 0, widthRatio, heightRatio) -- add the image
-
-    love.graphics.setCanvas(gameCanvas)
-
-    return canvas
-end
-
-function UIElement:renderShadow(gameCanvas)
-    local canvasHeight = self.height
-    local canvasWidth = self.width
-    local shadowCanvas = love.graphics.newCanvas(canvasWidth, canvasHeight) -- create the canvas
-
-    --General settings
-    shadowCanvas:setFilter("nearest", "nearest")
-    love.graphics.setBlendMode("alpha")
-    love.graphics.setCanvas(shadowCanvas)
-
-    love.graphics.setColor(0, 0, 0, 0.25)  -- black with 50% opacity
-    love.graphics.rectangle("fill", 0, 0, shadowCanvas:getWidth(), shadowCanvas:getHeight())
-    love.graphics.setColor(1,1,1,1)  -- black with 50% opacity
-
-    love.graphics.setCanvas(gameCanvas)
-    return shadowCanvas 
-end
-
---Interractions function--
-
-function UIElement:isHovered()
-    local vx, vy = InputsUtils.getVirtualMousePosition(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
-    return(
-        self.isHoverable and
-        vx > (self.x-(self.width/2)) and vx < (self.x+(self.width/2))
-        and
-        vy > (self.y-(self.height/2)) and vy < (self.y+(self.height/2))
-        )
+function UIElement:isHovered(layer)
+	layer = layer or 4
+	local vx, vy = InputsUtils.getVirtualMousePosition(layer)
+	return (
+		self.isHoverable
+		and vx > (self.x - (self.width / 2))
+		and vx < (self.x + (self.width / 2))
+		and vy > (self.y - (self.height / 2))
+		and vy < (self.y + (self.height / 2))
+	)
 end
 
 function UIElement:clickEvent() --S'active lorsqu'un click est commencé
-    local wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
-    
-    if(self:isHovered()) then
-        self.isBeingClicked = true
-        wasClicked = true
-    end
+	local wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
 
-    return wasClicked
+	if self:isHovered() then
+		self.isBeingClicked = true
+		wasClicked = true
+	end
+
+	return wasClicked
 end
 
 function UIElement:releaseEvent() --S'active lorsqu'un click est complété
-    local wasReleased = false
-    
-    if(self:isHovered()==true and self.isBeingClicked == true and not self.isBeingDragged)then --s'active uniquement si la souris est encore sur l'objet et qu'elle etait en train d'appuyer dessus
-        self:clickAction()
-        wasReleased = true
-    end
+	local wasReleased = false
 
-    self.isBeingClicked = false
-    return wasReleased
+	if self:isHovered() == true and self.isBeingClicked == true and not self.isBeingDragged then --s'active uniquement si la souris est encore sur l'objet et qu'elle etait en train d'appuyer dessus
+		self:clickAction()
+		wasReleased = true
+	end
+
+	self.isBeingClicked = false
+	return wasReleased
 end
 
 function UIElement:clickAction()
-    print("Click Action")
+	print("Click Action")
 end
 
 --Get/set Functions--
 
 function UIElement:hasShadow(state)
-    self.hasShadow = state
+	self.hasShadow = state
 end
 
 function UIElement:shadowOnHover(state)
-    self.shadowOnHover = state
+	self.shadowOnHover = state
 end
 
 function UIElement:setSprite(sprite)
-    self.sprite = sprite
+	self.sprite = sprite
 end
 
 function UIElement:getIsSelected()
-    return self.isSelected
+	return self.isSelected
 end
 
 function UIElement:setSelectable(state)
-    self.isSelectable = state
+	self.isSelectable = state
 end
 
 function UIElement:setHoverable(state)
-    self.isHoverable = state
+	self.isHoverable = state
 end
 
 function UIElement:getSelectable()
-    return self.isSelectable
+	return self.isSelectable
 end
 
 function UIElement:selectOrDeselect()
-    self:setSelected(not self:getIsSelected())
+	self:setSelected(not self:getIsSelected())
 end
 
 function UIElement:setHoverable()
-    return self.isHoverable
+	return self.isHoverable
 end
 
 function UIElement:setSelected(state)
-    self.isSelected = state
+	self.isSelected = state
 end
 
 function UIElement:setX(x)
-    self.x = x
+	self.x = x
 end
 
 function UIElement:setY(y)
-    self.y = y
+	self.y = y
 end
 
 function UIElement:getX()
-    return self.x
+	return self.x
 end
 
 function UIElement:getY()
-    return self.y
+	return self.y
 end
 
 function UIElement:setWidth(w)
-    self.width = w
+	self.width = w
 end
 
 function UIElement:setHeight(h)
-    self.height = h
+	self.height = h
 end
 
 function UIElement:setActivated(state)
-    if(state == true) then
-        self.isActivated = true
-        --self.isHoverable = true
-        self.isSelectable = true
-    else
-        self.isActivated = false
-        --self.isHoverable = false
-        self.isSelectable = false
-    end
+	if state == true then
+		self.isActivated = true
+		--self.isHoverable = true
+		self.isSelectable = true
+	else
+		self.isActivated = false
+		--self.isHoverable = false
+		self.isSelectable = false
+	end
 end
 
 function UIElement:dampLerp(current, target, speed, dt)
-    return current + (target - current) * (1 - math.exp(-speed * dt))
+	return current + (target - current) * (1 - math.exp(-speed * dt))
 end
 
 return UIElement

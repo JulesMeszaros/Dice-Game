@@ -2,6 +2,27 @@ local CiggieTypes = require("src.classes.CiggieTypes")
 
 local GenerateRandom = {}
 
+--Convertion de text vers seed
+function GenerateRandom.stringToSeed(str)
+	local hash = 5381 -- constante DJB2
+	for i = 1, #str do
+		hash = ((hash * 33) + string.byte(str, i)) % 4294967296
+	end
+	return hash
+end
+
+function GenerateRandom.randomSeedText()
+	local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	local result = ""
+
+	for i = 1, 8 do
+		local randomIndex = math.random(1, #chars)
+		result = result .. string.sub(chars, randomIndex, randomIndex)
+	end
+
+	return result
+end
+
 --Generate random Ciggie
 function GenerateRandom.CiggieObject()
 	--Get the list of keys

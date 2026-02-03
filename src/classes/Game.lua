@@ -2,6 +2,7 @@ local Run = require("src.classes.Run")
 local MainMenu = require("src.screens.MainMenu")
 
 --Utils
+local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 local Constants = require("src.utils.Constants")
 local Inputs = require("src.utils.scripts.Inputs")
 local Shaders = require("src.utils.Shaders")
@@ -88,7 +89,7 @@ end
 
 --==GAME FUNCTION==--
 
-function Game:startNewRun()
+function Game:startNewRun(seedText)
 	-- Cleanup existing run if exists
 	if self.run then
 		self.run:cleanup()
@@ -99,6 +100,29 @@ function Game:startNewRun()
 	if self.mainMenu then
 		self.mainMenu:cleanup()
 		self.mainMenu = nil
+	end
+
+	--Creation de la seed
+	if seedText and seedText ~= "" then
+		local seed = GenerateRandom.stringToSeed(seedText)
+		G.seedText = seedText
+		G.seed = seed
+		--On reset les random generator
+		G.rngDices = love.math.newRandomGenerator(seed)
+		G.rngShop = love.math.newRandomGenerator(seed)
+		G.rngEnemies = love.math.newRandomGenerator(seed)
+		G.rngGeneral = love.math.newRandomGenerator(seed)
+	else
+		local rndText = GenerateRandom.randomSeedText()
+		local seed = GenerateRandom.stringToSeed(rndText)
+
+		G.seed = seed
+		G.seedText = rndText
+		--On reset les random generator
+		G.rngDices = love.math.newRandomGenerator(seed)
+		G.rngShop = love.math.newRandomGenerator(seed)
+		G.rngEnemies = love.math.newRandomGenerator(seed)
+		G.rngGeneral = love.math.newRandomGenerator(seed)
 	end
 
 	local diceObjects = {} --liste des 6 dés blancs
@@ -124,8 +148,16 @@ end
 
 function Game:keypressed(key)
 	if self.currentScreen == Constants.PAGES.MAIN_MENU then
+		self.mainMenu:keypressed(key)
 	elseif self.currentScreen == Constants.PAGES.GAME then
 		self.run:keypressed(key)
+	end
+end
+
+function Game:textinput(t)
+	if self.currentScreen == Constants.PAGES.MAIN_MENU then
+		self.mainMenu:textinput(t)
+	elseif self.currentScreen == Constants.PAGES.GAME then
 	end
 end
 

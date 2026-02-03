@@ -33,16 +33,13 @@ G = {
 	waveY = 0,
 	--Randoms
 	--Pour le tiré de dés
-	rngDices = love.math.newRandomGenerator(seed),
+	rngDices = love.math.newRandomGenerator(os.time()),
 	--Pour la génération de shops
-	rngShop = love.math.newRandomGenerator(seed),
+	rngShop = love.math.newRandomGenerator(os.time()),
 	--Pour la création des dénemies
-	rngEnemies = love.math.newRandomGenerator(seed),
+	rngEnemies = love.math.newRandomGenerator(os.time()),
 	--RNG pour les trucs généraux, par exemple les animations etc
-	rngGeneral = love.math.newRandomGenerator(seed),
-
-	--Pour le texte input
-	text = "",
+	rngGeneral = love.math.newRandomGenerator(os.time()),
 }
 
 --Animators
@@ -157,11 +154,11 @@ function love.load()
 	backgroundCanvas = love.graphics.newCanvas(love.graphics.getWidth(), love.graphics.getHeight())
 end
 
-function love.textinput(t) end
+function love.textinput(t)
+	game:textinput(t)
+end
 
 function love.update(dt)
-	print(text)
-
 	if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
 		--print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
 	end

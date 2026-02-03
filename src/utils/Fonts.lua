@@ -20,4 +20,3 @@ Fonts.soraYouWon = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 
 Fonts.soraLightMini = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 25)
 
 return Fonts
-
