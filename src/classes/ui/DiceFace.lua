@@ -36,7 +36,7 @@ function DiceFace:new(
 	self.isDraggable = true
 	self.dragXspeed = 0
 	self.isHighlighted = false
-
+	self.wasHovered = false
 	--Dice parameters
 	self.diceObject = diceObject -- link to the diceObject it represents
 	self.representedObject = representedFace --Sets the represented face of the dice
@@ -132,6 +132,12 @@ function DiceFace:update(dt)
 
 	--update canvas
 	self:updateCanvas(dt)
+
+	if self.wasHovered == false and self:isHovered() == true then
+		G.audio:playHoverSound()
+	end
+
+	self.wasHovered = self:isHovered()
 end
 
 function DiceFace:draw()

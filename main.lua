@@ -1,4 +1,5 @@
 local Animator = require("src.utils.Animator")
+local AudioUtils = require("src.utils.AudioUtils")
 local Shaders = require("src.utils.Shaders")
 local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
@@ -40,6 +41,9 @@ G = {
 	rngEnemies = love.math.newRandomGenerator(os.time()),
 	--RNG pour les trucs généraux, par exemple les animations etc
 	rngGeneral = love.math.newRandomGenerator(os.time()),
+
+	--Audio
+	audio = AudioUtils:new(),
 }
 
 --Animators
@@ -218,10 +222,6 @@ function love.keypressed(key)
 	game:keypressed(key)
 
 	if Constants.DEBUG == true then
-		if key == "c" then
-			applyCRT = not applyCRT
-		end
-
 		if key == "f" then
 			currentFpsIndex = currentFpsIndex % #fpsOptions + 1
 			fpsLimit = fpsOptions[currentFpsIndex]
@@ -231,6 +231,10 @@ function love.keypressed(key)
 				print("FPS illimité")
 			end
 		end
+	end
+
+	if key == "space" then
+		G.audio:playHoverSound()
 	end
 end
 
