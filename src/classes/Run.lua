@@ -293,7 +293,7 @@ function Run:mousepressed(x, y, button, istouch, presses)
 end
 
 function Run:mousereleased(x, y, button, istouch, presses)
-	if self.displayInfoScreen == false then
+	if self.displayInfoScreen == false and self.displayPauseMenu ~= true then
 		if self.currentState == Constants.RUN_STATES.ROUND then
 			self.currentRound.terrain:mousereleased(x, y, button, istouch, presses)
 		elseif self.currentState == Constants.RUN_STATES.SHOP then
@@ -309,6 +309,7 @@ function Run:mousereleased(x, y, button, istouch, presses)
 		self.infoScreen:mousereleased(x, y, button, istouch, presses)
 	else
 		self.pauseMenu:mousereleased(x, y, button, istouch, presses)
+		print("msoudo<D-s>")
 	end
 
 	--Deactivate dragging
