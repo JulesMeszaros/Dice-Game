@@ -89,10 +89,10 @@ function Sticker:draw()
 	local px, py = G.calculateParalaxeOffset(self.layer)
 
 	self.rainbowShader:send("time", self.rotation + self.scaleX * 2 + 30)
-	self.rainbowShader:send("frequency", 0.3)
+	self.rainbowShader:send("frequency", 0.7)
 	self.rainbowShader:send("intensity", 0.2)
 	--self.rainbowShader:send("scale", 50)
-	self.rainbowShader:send("gridSize", 50)
+	self.rainbowShader:send("gridSize", 30)
 	if self.representedObject.holographic == true then
 		love.graphics.setShader(self.rainbowShader)
 	end

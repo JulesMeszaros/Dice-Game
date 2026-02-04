@@ -425,6 +425,7 @@ function Round:updateselectedDices(uiFace)
 	if uiFace:getIsSelected() then -- Dé sélectionné
 		if not self:containsDice(self.selectedDices, uiFace:getDiceObject()) then
 			table.insert(self.selectedDices, uiFace:getDiceObject()) -- Ajoute le dé à la fin
+			G.audio:playSelectSound()
 
 			for i, f in next, self.terrain.unselectedDices do
 				if f == uiFace then
@@ -436,6 +437,8 @@ function Round:updateselectedDices(uiFace)
 		if self:containsDice(self.selectedDices, uiFace:getDiceObject()) then -- Dé non sélectionné
 			for i, dice in ipairs(self.selectedDices) do
 				if dice == uiFace:getDiceObject() then
+					G.audio:playDeselectSound()
+
 					table.remove(self.selectedDices, i) --Trouve le dé dans la liste et le supprime
 					--On l'ajoute à la liste des dés non sélectionnés
 					if self.terrain.unselectedDices then

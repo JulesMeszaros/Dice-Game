@@ -232,10 +232,6 @@ function love.keypressed(key)
 			end
 		end
 	end
-
-	if key == "space" then
-		G.audio:playHoverSound()
-	end
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
