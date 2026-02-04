@@ -85,6 +85,7 @@ Sprites.PLAYCOUNT_GRAY = love.graphics.newImage("src/assets/sprites/ui/Playcount
 Sprites.PLAYCOUNT_LGRAY = love.graphics.newImage("src/assets/sprites/ui/Playcount_LGray.png")
 Sprites.END_ROUND_REWARDS = love.graphics.newImage("src/assets/sprites/ui/End Round Rewards.png")
 Sprites.YOU_WON = love.graphics.newImage("src/assets/sprites/ui/You Won.png")
+Sprites.END_RUN_BG = love.graphics.newImage("src/assets/sprites/ui/RunEnd.png")
 
 Sprites.LIGHTER = love.graphics.newImage("src/assets/sprites/ui/Lighter.png")
 Sprites.SELL_CIGGIE = love.graphics.newImage("src/assets/sprites/ui/Sell Ciggie.png")

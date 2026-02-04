@@ -24,6 +24,23 @@ function GameOver:new(run, round)
 	--UI Elements
 	self.backgroundOpacity = 0
 
+	--Create the text objects
+	self.seedText = love.graphics.newText(Fonts.sora30, G.seedText)
+	self.bestHandText = love.graphics.newText(Fonts.sora30, tostring(G.game.run.bestHand))
+
+	local maxPlayed = 1
+	local maxPlayedCount = 0
+
+	for figure, info in pairs(G.game.run.figuresInfos) do
+		print(figure, info.playcount)
+		if info.playcount > maxPlayedCount then
+			maxPlayed = figure
+			maxPlayedCount = info.playcount
+		end
+	end
+
+	self.mostPlayedText = love.graphics.newText(Fonts.sora30, Constants.FIGURES_LABELS[maxPlayed])
+
 	--Canvas
 	self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_WIDTH)
 	self.contentCanvas = love.graphics.newCanvas(930, 760)
@@ -120,7 +137,14 @@ function GameOver:drawMainCanvas(dt)
 	love.graphics.clear()
 
 	--Background
-	love.graphics.draw(Sprites.END_ROUND_BG, 0, 0)
+	love.graphics.draw(Sprites.END_RUN_BG, 0, 0)
+
+	--Stats texts
+	love.graphics.setColor(232 / 255, 79 / 255, 79 / 255)
+	love.graphics.draw(self.bestHandText, 750, 279, 0, 1, 1, self.bestHandText:getWidth(), 0)
+	love.graphics.draw(self.mostPlayedText, 750, 408, 0, 1, 1, self.mostPlayedText:getWidth(), 0)
+	love.graphics.draw(self.seedText, 750, 540, 0, 1, 1, self.seedText:getWidth(), 0)
+	love.graphics.setColor(1, 1, 1)
 
 	self.youLoose:update(dt)
 	self.youLoose:draw()
