@@ -85,6 +85,16 @@ function InfoBubble:update(dt)
 			self:generateBossBubble()
 		end
 	end
+
+	--Cas particulier des dés qui peuvent changer de face
+	if self.object.representedObject.objectType == "Dice Face" then
+		self.previousFace = self.currentFace
+		self.currentFace = self.object.representedObject
+
+		if self.currentFace ~= self.previousFace then
+			self:generateDiceBubble()
+		end
+	end
 end
 
 function InfoBubble:draw()
