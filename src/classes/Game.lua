@@ -91,10 +91,6 @@ end
 
 function Game:startNewRun(seedText)
 	-- Cleanup existing run if exists
-	if self.run then
-		self.run:cleanup()
-		self.run = nil
-	end
 
 	-- Cleanup main menu
 	if self.mainMenu then

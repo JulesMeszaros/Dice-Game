@@ -217,7 +217,7 @@ function RunEnd:outAnimation(nextScreen)
 	})
 
 	self.animator:addDelay(0.2, function()
-		self.round.terrain:outAnimation("mainMenu")
+		self.round.terrain:outAnimation(nextScreen)
 	end)
 end
 
