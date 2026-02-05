@@ -54,7 +54,7 @@ function PauseMenu:new()
 
 	self.buttons["reset"] = Button:new(
 		function()
-			print("reset run")
+			self:resetRun()
 		end,
 		"src/assets/sprites/ui/ResetRun.png",
 		385 + (477 / 2),
@@ -162,6 +162,11 @@ function PauseMenu:quitRun()
 
 		--Dice Customization
 	end
+end
+
+function PauseMenu:resetRun()
+	G.currentRun:togglePauseMenu()
+	G.game:startNewRun(G.seedText)
 end
 
 return PauseMenu
