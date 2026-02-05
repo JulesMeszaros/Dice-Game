@@ -87,6 +87,21 @@ function GameOver:new(run, round)
 		end
 	)
 
+	self.copySeed = Button:new(
+		function()
+			love.system.setClipboardText(G.seedText)
+		end,
+		"src/assets/sprites/ui/CopySeed.png",
+		400,
+		555,
+		100,
+		60,
+		self.run.gameCanvas,
+		function()
+			return Inputs.getMouseInCanvas(self.contentX, self.contentY)
+		end
+	)
+
 	--Positions
 	self.contentTX, self.contentTY, self.contentX, self.contentY = 510, 320, 510, self.canvas:getHeight() + 770
 
@@ -116,6 +131,8 @@ function GameOver:update(dt)
 	self.animator:update(dt)
 
 	self.mainMenuButton:update(dt)
+	self.copySeed:update(dt)
+
 	self.newRunButton:update(dt)
 end
 
@@ -150,6 +167,7 @@ function GameOver:drawMainCanvas(dt)
 	self.youLoose:draw()
 
 	self.mainMenuButton:draw()
+	self.copySeed:draw()
 	self.newRunButton:draw()
 
 	love.graphics.setCanvas(currentCanvas)
@@ -164,11 +182,12 @@ end
 function GameOver:mousepressed(x, y, button, istouch, presses)
 	self.mainMenuButton:clickEvent()
 	self.newRunButton:clickEvent()
+	self.copySeed:clickEvent()
 end
 
 function GameOver:mousereleased(x, y, button, istouch, presses)
 	--release event on UI elements (buttons)
-	for key, button in next, { self.mainMenuButton, self.newRunButton } do
+	for key, button in next, { self.copySeed, self.mainMenuButton, self.newRunButton } do
 		local wasReleased = button:releaseEvent()
 		if wasReleased then --Si le click a été complété
 			button:getCallback()()

@@ -61,6 +61,21 @@ function RunEnd:new(run, round)
 	})
 
 	--Button
+	self.copySeed = Button:new(
+		function()
+			love.system.setClipboardText(G.seedText)
+		end,
+		"src/assets/sprites/ui/CopySeed.png",
+		400,
+		555,
+		100,
+		60,
+		self.run.gameCanvas,
+		function()
+			return Inputs.getMouseInCanvas(self.contentX, self.contentY)
+		end
+	)
+
 	self.newRunButton = Button:new(
 		function()
 			self:outAnimation("newRun")
@@ -145,10 +160,13 @@ function RunEnd:drawMainCanvas(dt)
 	self.youWon:draw()
 
 	--Buttons
+	self.copySeed:update(dt)
+
 	self.mainMenuButton:update(dt)
 	self.newRunButton:update(dt)
 	self.mainMenuButton:draw()
 	self.newRunButton:draw()
+	self.copySeed:draw()
 
 	--Stats texts
 	love.graphics.setColor(232 / 255, 79 / 255, 79 / 255)
@@ -168,12 +186,13 @@ end
 --==Input functions==--
 function RunEnd:mousepressed(x, y, button, istouch, presses)
 	self.mainMenuButton:clickEvent()
+	self.copySeed:clickEvent()
 	self.newRunButton:clickEvent()
 end
 
 function RunEnd:mousereleased(x, y, button, istouch, presses)
 	--release event on UI elements (buttons)
-	for key, button in next, { self.mainMenuButton, self.newRunButton } do
+	for key, button in next, { self.copySeed, self.mainMenuButton, self.newRunButton } do
 		local wasReleased = button:releaseEvent()
 		if wasReleased then --Si le click a été complété
 			button:getCallback()()
@@ -185,11 +204,6 @@ function RunEnd:mousemoved(x, y, dx, dy, isDragging) end
 
 --==Animation==--
 function RunEnd:outAnimation(nextScreen)
-	--Ajoute la cigarette gagnée à l'inventaire si possible
-	if table.getn(self.round.run.ciggiesObjects) < self.run.maxCiggies then
-		table.insert(self.round.run.ciggiesObjects, self.round.ciggieReward)
-	end
-
 	--Popup
 	self.animator:addGroup({
 		{ property = "backgroundOpacity", from = 0.7, targetValue = 0, duration = 0.3 },
@@ -203,7 +217,7 @@ function RunEnd:outAnimation(nextScreen)
 	})
 
 	self.animator:addDelay(0.2, function()
-		self.round.terrain:outAnimation(nextScreen)
+		self.round.terrain:outAnimation("mainMenu")
 	end)
 end
 
