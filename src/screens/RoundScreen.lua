@@ -275,6 +275,9 @@ function RoundScreen:update(dt)
 	--Hover infos
 	self:getCurrentlyHoveredDice() --Le dé survolé
 	self:getCurrentlyHoveredCiggie() --Ciggie survolée
+	if self.round.roundType == Constants.ROUND_TYPES.BOSS then
+		self:getCurrentlyHoveredBoss()
+	end
 	self:getCurrentlyHoveredObject()
 
 	--Utilities buttons
@@ -886,6 +889,28 @@ function RoundScreen:getCurrentlyHoveredLine()
 		return nil
 	end
 end
+
+--Permet d'obtenir si la souris et au dessus de la tete du boss, et donc d'afficher une bulle qui donne sa description
+--Retourne une table similaire aux objets type dé, cigarette, etc pour etre utilisé dans une bulle d'info
+
+function RoundScreen:getCurrentlyHoveredBoss()
+	self.currentlyHoveredBoss = nil
+	local vx, vy = Inputs.getVirtualMousePosition(4)
+	if vy < 200 then
+		self.currentlyHoveredBoss = {
+			representedObject = {
+				objectType = "Boss",
+				name = Constants.BOSS_TYPES_DESC[self.round.bossType][1],
+				description = Constants.BOSS_TYPES_DESC[self.round.bossType][2],
+			},
+			x = vx,
+			y = vy,
+			absoluteX = 0,
+			absoluteY = 0,
+		}
+	end
+end
+
 --Gets the currenty hovered dice, both in the mat AND in the dice net
 function RoundScreen:getCurrentlyHoveredDice()
 	self.previouslyHoveredFace = self.currentlyHoveredFace
@@ -929,12 +954,12 @@ end
 
 --Gets the currently hovered object (dice, ciggie, etc...)
 function RoundScreen:getCurrentlyHoveredObject()
-	local object = nil
-
 	if self.endRoundPopUp then
 		self.currentlyHoveredObject = self.endRoundPopUp.currentlyHoveredFace
 	else
-		if self.currentlyHoveredCiggie then
+		if self.currentlyHoveredBoss then
+			self.currentlyHoveredObject = self.currentlyHoveredBoss
+		elseif self.currentlyHoveredCiggie then
 			self.currentlyHoveredObject = self.currentlyHoveredCiggie
 		elseif self.currentlyHoveredFace then
 			self.currentlyHoveredObject = self.currentlyHoveredFace

@@ -71,7 +71,7 @@ function InfoBubble:update(dt)
 	self.object = self.screen.currentlyHoveredObject
 
 	--print(self.screen.currentlyHoveredObject.representedObject.name)
-
+	--TODO : bugfig : corriger le bug qui ne met pas à jour la bulle apres un reroll si on survolle le meme dé qu'avant le reroll
 	if self.previousObject ~= self.object then
 		if self.object.representedObject.objectType == "Dice Face" then
 			self:generateDiceBubble()
@@ -81,6 +81,8 @@ function InfoBubble:update(dt)
 			self:generateCoffeeBubble()
 		elseif self.object.representedObject.objectType == "Sticker" then
 			self:generateStickerBubble()
+		elseif self.object.representedObject.objectType == "Boss" then
+			self:generateBossBubble()
 		end
 	end
 end
@@ -484,7 +486,7 @@ function InfoBubble:generateStickerBubble()
 	love.graphics.setCanvas(currentCanvas)
 end
 
-function InfoBubble:generateStickerBubble_old()
+function InfoBubble:generateBossBubble()
 	self.time = 0
 	--Name
 	local name = love.graphics.newText(Fonts.soraName, self.object.representedObject.name)
@@ -494,8 +496,15 @@ function InfoBubble:generateStickerBubble_old()
 	self.width = width
 	lineWidth = width - 20
 
+	--Tags
+	local tags = {}
+
+	table.insert(tags, Sprites.MANAGER)
+
+	self.tagsPositions = UI.arrangeImagesWrapped(tags, self.width / 2, 55, self.width - 10, 5, 5)
+
 	--Description
-	local descriptionText = self.object.representedObject:getDescription()
+	local descriptionText = self.object.representedObject.description
 
 	local textW, wrappedText = Fonts.soraDesc:getWrap(descriptionText, lineWidth)
 	local textLines = {}
@@ -505,7 +514,7 @@ function InfoBubble:generateStickerBubble_old()
 	end
 
 	--Creation de la largeur
-	local height = table.getn(wrappedText) * 30 + 20 + 100
+	local height = getMaxY(self.tagsPositions) + table.getn(wrappedText) * 30 + 20
 
 	self.name = name
 	self.height = height
@@ -528,7 +537,7 @@ function InfoBubble:generateStickerBubble_old()
 		self.canvas:getHeight() - self.gridDim
 	)
 
-	--On dessine les cotés
+	--On dessine les coté
 	love.graphics.draw(self.baseSprite, self.quads[6], self.width - self.gridDim, self.gridDim, 0, 1, self.hr)
 	love.graphics.draw(self.baseSprite, self.quads[7], 0, self.gridDim, 0, 1, self.hr)
 
@@ -538,19 +547,9 @@ function InfoBubble:generateStickerBubble_old()
 	love.graphics.draw(self.baseSprite, self.quads[9], self.gridDim, self.gridDim, 0, self.wr, self.hr)
 
 	--Render du contenu
-	--Tag
-	love.graphics.draw(Sprites.STICKER, self.canvas:getWidth() / 2, 55, 0, 1, 1, Sprites.STICKER:getWidth() / 2, 0)
-	if self.object.representedObject.holographic == true then
-		love.graphics.draw(
-			Sprites.HOLOGRAPHIC,
-			self.canvas:getWidth() / 2,
-			100,
-			0,
-			1,
-			1,
-			Sprites.HOLOGRAPHIC:getWidth() / 2,
-			0
-		)
+	--Draw tags
+	for i, p in next, self.tagsPositions do
+		love.graphics.draw(p.image, p.x, p.y, 0, 1, 1, p.image:getWidth() / 2, p.image:getHeight() / 2)
 	end
 
 	--Text
@@ -558,81 +557,13 @@ function InfoBubble:generateStickerBubble_old()
 	love.graphics.draw(self.name, self.canvas:getWidth() / 2, 5, 0, 1, 1, self.name:getWidth() / 2, 0)
 
 	local formatedText = UI.Text.drawFormattedText(
-		self.object.representedObject:getDescription(),
+		self.object.representedObject.description,
 		self.canvas:getWidth() / 2,
 		100,
 		Fonts.soraDesc,
 		lineWidth,
 		true
 	)
-
-	love.graphics.setColor(1, 1, 1)
-
-	love.graphics.setCanvas(currentCanvas)
-end
-
-function InfoBubble:generateBossBubble()
-	self.time = 0
-	--Name
-	local name = "Boss"
-
-	--Creation de la largeur
-	local width = math.max(name:getWidth() + 40, 350)
-	self.width = width
-	lineWidth = width - 20
-
-	--Description
-	local descriptionText = "Effet de boss"
-
-	local textW, wrappedText = Fonts.soraDesc:getWrap(descriptionText, lineWidth)
-	local textLines = {}
-	for i, line in next, wrappedText do
-		local lineText = love.graphics.newText(Fonts.soraDesc, line)
-		table.insert(textLines, lineText)
-	end
-
-	--Creation de la largeur
-	local height = 300
-
-	self.name = name
-	self.height = height
-
-	self:generateCanvas(width, height)
-
-	-- Pre-render everything into the canvas
-	local currentCanvas = love.graphics.getCanvas()
-	love.graphics.setCanvas(self.canvas)
-	love.graphics.clear()
-
-	--On dessine les angles
-	love.graphics.draw(self.baseSprite, self.quads[1], 0, 0)
-	love.graphics.draw(self.baseSprite, self.quads[2], self.canvas:getWidth() - self.gridDim, 0)
-	love.graphics.draw(self.baseSprite, self.quads[3], 0, self.canvas:getHeight() - self.gridDim)
-	love.graphics.draw(
-		self.baseSprite,
-		self.quads[4],
-		self.canvas:getWidth() - self.gridDim,
-		self.canvas:getHeight() - self.gridDim
-	)
-
-	--On dessine les cotés
-	love.graphics.draw(self.baseSprite, self.quads[6], self.width - self.gridDim, self.gridDim, 0, 1, self.hr)
-	love.graphics.draw(self.baseSprite, self.quads[7], 0, self.gridDim, 0, 1, self.hr)
-
-	love.graphics.draw(self.baseSprite, self.quads[5], self.gridDim, 0, 0, self.wr, 1)
-	love.graphics.draw(self.baseSprite, self.quads[8], self.gridDim, self.height - self.gridDim, 0, self.wr, 1)
-
-	love.graphics.draw(self.baseSprite, self.quads[9], self.gridDim, self.gridDim, 0, self.wr, self.hr)
-
-	--Render du contenu
-	--Tag
-
-	--Text
-	love.graphics.setColor(0, 0, 0)
-	love.graphics.draw(self.name, self.canvas:getWidth() / 2, 5, 0, 1, 1, self.name:getWidth() / 2, 0)
-
-	local formatedText =
-		UI.Text.drawFormattedText("Boss", self.canvas:getWidth() / 2, 100, Fonts.soraDesc, lineWidth, true)
 
 	love.graphics.setColor(1, 1, 1)
 

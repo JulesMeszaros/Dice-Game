@@ -21,6 +21,7 @@ Sprites.COFFEE = love.graphics.newImage("src/assets/sprites/ui/Coffee.png")
 Sprites.MAGICWAND = love.graphics.newImage("src/assets/sprites/ui/Magic Wand.png")
 Sprites.STICKER = love.graphics.newImage("src/assets/sprites/ui/Sticker.png")
 Sprites.HOLOGRAPHIC = love.graphics.newImage("src/assets/sprites/ui/Holo.png")
+Sprites.MANAGER = love.graphics.newImage("src/assets/sprites/ui/Manager Tag.png")
 
 Sprites.ENEMY_INFOS = love.graphics.newImage("src/assets/sprites/ui/Enemy.png")
 Sprites.PLAYER_INFOS = love.graphics.newImage("src/assets/sprites/ui/Player.png")
