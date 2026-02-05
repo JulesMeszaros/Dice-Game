@@ -6,6 +6,10 @@ AudioUtils.__index = AudioUtils
 function AudioUtils:new()
 	local self = setmetatable({}, AudioUtils)
 
+	self.sfxVolume = 1
+	self.musicVolume = 1
+	self.volume = 1
+
 	--Creation des sources audio pour les bruits de Hover des dés
 	self.dicesHoverSounds = {}
 	for i, decoder in next, AudioFiles.DICE_HOVER do
@@ -28,6 +32,7 @@ function AudioUtils:new()
 end
 
 function AudioUtils:playSound(source)
+	source:setVolume(self.sfxVolume * self.volume)
 	source:play()
 end
 

@@ -38,7 +38,7 @@ function PauseMenu:new()
 
 	self.buttons["toggle"] = Button:new(
 		function()
-			print("toggle sound")
+			G.audio.volume = 1 - G.audio.volume
 		end,
 		"src/assets/sprites/ui/ToggleSound.png",
 		385 + (477 / 2),
