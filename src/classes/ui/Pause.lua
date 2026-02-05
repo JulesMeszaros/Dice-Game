@@ -1,3 +1,4 @@
+local MainMenu = require("src.screens.MainMenu")
 local Fonts = require("src.utils.Fonts")
 local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
@@ -68,7 +69,7 @@ function PauseMenu:new()
 
 	self.buttons["quit"] = Button:new(
 		function()
-			print("quit run")
+			self:quitRun()
 		end,
 		"src/assets/sprites/ui/QuitRun.png",
 		385 + (477 / 2),
@@ -139,5 +140,28 @@ function PauseMenu:mousereleased(x, y, button, istouch, presses)
 end
 
 function PauseMenu:mousemoved(x, y, dx, dy, isDragging) end
+
+function PauseMenu:quitRun()
+	G.game.run:togglePauseMenu()
+	if G.game.run.currentState == Constants.RUN_STATES.ROUND then
+		--Round
+		--G.game.run.currentRound.terrain:outAnimation("mainMenu")
+		G.game.mainMenu = MainMenu:new(nil, G.game)
+		G.game.currentScreen = 0
+	elseif G.game.run.currentState == Constants.RUN_STATES.SHOP then
+		--Shop
+		G.game.mainMenu = MainMenu:new(nil, G.game)
+		G.game.currentScreen = 0
+	elseif G.game.run.currentState == Constants.RUN_STATES.ROUND_CHOICE then
+		--ROUND CHOICE
+		G.game.mainMenu = MainMenu:new(nil, G.game)
+		G.game.currentScreen = 0
+	elseif G.game.run.currentState == Constants.RUN_STATES.DICE_CUSTOMIZATION then
+		G.game.mainMenu = MainMenu:new(nil, G.game)
+		G.game.currentScreen = 0
+
+		--Dice Customization
+	end
+end
 
 return PauseMenu
