@@ -572,6 +572,7 @@ function GameScreen:drawCiggiePopup(dt)
 	self.sellCiggieText:draw()
 
 	--Lighter
+	--[[
 	love.graphics.draw(
 		Sprites.LIGHTER,
 		self.lighterX,
@@ -582,7 +583,7 @@ function GameScreen:drawCiggiePopup(dt)
 		Sprites.LIGHTER:getWidth() / 2,
 		Sprites.LIGHTER:getHeight() / 2
 	)
-
+	]]
 	love.graphics.setCanvas(currentCanvas)
 	love.graphics.draw(self.ciggiePopupCanvas, 0, 0, 0, 1, 1)
 end
