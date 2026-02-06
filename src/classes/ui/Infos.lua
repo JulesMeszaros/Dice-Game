@@ -124,6 +124,8 @@ end
 function Infos:update(dt) end
 
 function Infos:updateCanvas(dt)
+	self:getCurrentlyHoveredBoss()
+
 	self:getCurrentlyHoveredFace()
 	self:getCurrentlyHoveredCiggie()
 	self:getCurrentlyHoveredObject()
@@ -148,6 +150,7 @@ function Infos:updateCanvas(dt)
 	self:drawBadgeHorizontal()
 	self:drawPlayerBadge()
 	self:drawProgression()
+
 	self:drawRoundDetails(dt)
 
 	--faces UI
@@ -425,6 +428,9 @@ function Infos:drawProgression()
 
 	love.graphics.draw(Sprites.PROGRESSION, 0, 0)
 
+	G.game.run.currentFloor.boss.enemyCharacter:update()
+	G.game.run.currentFloor.boss.enemyCharacter:draw(100, 390, 160, 160)
+
 	love.graphics.setCanvas(currentCanvas)
 	love.graphics.draw(self.progression, self.progressionX + px, self.progressionY + py)
 end
@@ -562,6 +568,24 @@ function Infos:drawCiggiesTrayFront()
 end
 
 --Hovered objects
+function Infos:getCurrentlyHoveredBoss()
+	self.currentlyHoveredBoss = nil
+	local vx, vy = Inputs.getVirtualMousePosition(4)
+	if vx > 1470 and vx < 1630 and vy > 340 and vy < 500 then
+		self.currentlyHoveredBoss = {
+			representedObject = {
+				objectType = "Boss",
+				name = Constants.BOSS_TYPES_DESC[G.currentRun.currentFloor.boss.bossType][1],
+				description = Constants.BOSS_TYPES_DESC[G.currentRun.currentFloor.boss.bossType][2],
+			},
+			x = vx,
+			y = vy,
+			absoluteX = 0,
+			absoluteY = 0,
+		}
+	end
+end
+
 function Infos:getCurrentlyHoveredFace()
 	self.currentlyHoveredFace = nil
 	--Reward faces
@@ -674,7 +698,9 @@ function Infos:fadeOut()
 end
 
 function Infos:getCurrentlyHoveredObject()
-	if self.currentlyHoveredCiggie then
+	if self.currentlyHoveredBoss then
+		self.currentlyHoveredObject = self.currentlyHoveredBoss
+	elseif self.currentlyHoveredCiggie then
 		self.currentlyHoveredObject = self.currentlyHoveredCiggie
 	elseif self.currentlyHoveredFace then
 		self.currentlyHoveredObject = self.currentlyHoveredFace
@@ -705,4 +731,3 @@ function Infos:getSpacedPositions(count, x1, x2)
 end
 
 return Infos
-

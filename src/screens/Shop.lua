@@ -837,9 +837,9 @@ function Shop:generateNewShop()
 	self:generateAvailableFaces()
 	self:generateAvailableCiggies()
 
-	--if self.firstShopGeneration == true then
-	self:generateRandomStickers()
-	--end
+	if self.firstShopGeneration == true then
+		self:generateRandomStickers()
+	end
 
 	-- Clear previous UI lists completely
 	for k in pairs(self.availableFaceObjectsUI or {}) do
@@ -952,7 +952,7 @@ function Shop:generateNewShop()
 	--Create the UI
 	for i, c in next, self.availableCiggies do
 		local xs = { 890, 970 }
-		local ys = { 120, 120 }
+		local ys = { 140, 140 }
 
 		local x = xs[i] + 25
 		local y = ys[i] + 150
@@ -1033,9 +1033,9 @@ function Shop:generateNewShop()
 	end
 
 	--Stickers
-	--if self.firstShopGeneration == true then
-	self:generateStickersUI()
-	--end
+	if self.firstShopGeneration == true then
+		self:generateStickersUI()
+	end
 	--Generate the price tags
 	self:createFacesPriceTags()
 	self.firstShopGeneration = false

@@ -1139,7 +1139,7 @@ function GameScreen:generateCiggiesUI()
 	local xPos = self:getSpacedPositions(table.getn(self.run.ciggiesObjects), 1680, 1880)
 
 	for i, ciggie in next, self.run.ciggiesObjects do
-		local c = Ciggie:new(ciggie, xPos[i], 780, true, true, function()
+		local c = Ciggie:new(ciggie, xPos[i], 780 - 50 + 33, true, true, function()
 			return Inputs.getMouseInCanvas(0, 0)
 		end, self.round)
 		c.baseRotation, c.rotation = 1.57, 1.57

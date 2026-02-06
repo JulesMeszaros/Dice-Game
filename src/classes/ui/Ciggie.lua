@@ -40,7 +40,7 @@ function Ciggie:new(ciggieObject, x, y, isSelectable, isHoverable, mousePosition
 	self.rotation = 0 --Angle the dice is actually showed at
 
 	--Scale
-	self.width, self.height = 300, 50
+	self.width, self.height = 350, 50
 	self.scaleX = 1
 	self.scaleY = 1
 	self.targetedScale = 1

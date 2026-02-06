@@ -222,7 +222,7 @@ function love.keypressed(key)
 	game:keypressed(key)
 
 	if Constants.DEBUG == true then
-		if key == "f" then
+		if key == "$" then
 			currentFpsIndex = currentFpsIndex % #fpsOptions + 1
 			fpsLimit = fpsOptions[currentFpsIndex]
 			if fpsLimit then
