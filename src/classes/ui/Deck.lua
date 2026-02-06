@@ -1,3 +1,4 @@
+local Fonts = require("src.utils.Fonts")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local DiceFace = require("src.classes.ui.DiceFace")
 local Sprites = require("src.utils.Sprites")
@@ -16,6 +17,32 @@ function Deck:new()
 	self.stickers = {}
 
 	self:createStickers()
+
+	--Creation d'un inventaire des faces pour les tableaux
+	self.numberedFaces = { 0, 0, 0, 0, 0, 0 }
+	self.blankFaces = 0
+	self.ghostFaces = 0
+
+	for _, dice in next, G.game.diceObjects do
+		for __, face in next, dice:getAllFaces() do
+			if face.blank == true then
+				self.blankFaces = self.blankFaces + 1
+			else
+				self.numberedFaces[face.faceValue] = self.numberedFaces[face.faceValue] + 1
+			end
+			if face.ghost == true then
+				self.ghostFaces = self.ghostFaces + 1
+			end
+		end
+	end
+
+	self.numberedFacesText = {}
+	self.ghostText = love.graphics.newText(Fonts.soraLightMini, tostring(self.ghostFaces))
+	self.blankText = love.graphics.newText(Fonts.soraLightMini, tostring(self.blankFaces))
+
+	for _, number in next, self.numberedFaces do
+		table.insert(self.numberedFacesText, love.graphics.newText(Fonts.soraLightMini, tostring(number)))
+	end
 
 	--Create the dice faces
 	for _, d in next, G.game.run.diceObjects do
@@ -84,6 +111,17 @@ function Deck:updateCanvas(dt)
 	love.graphics.clear()
 
 	love.graphics.draw(Sprites.COMPOSITION_PANEL, 0, 30)
+	--Dessin des texts
+	love.graphics.setColor(108 / 255, 86 / 255, 113 / 255)
+	for i, txt in next, self.numberedFacesText do
+		love.graphics.draw(txt, 128, 116 + (i - 1) * 34, 0, 1, 1, txt:getWidth() / 2, txt:getHeight() / 2)
+	end
+
+	love.graphics.draw(self.blankText, 255, 182, 0, 1, 1, self.blankText:getWidth() / 2, self.blankText:getHeight() / 2)
+	love.graphics.draw(self.ghostText, 255, 218, 0, 1, 1, self.ghostText:getWidth() / 2, self.ghostText:getHeight() / 2)
+
+	love.graphics.setColor(1, 1, 1)
+
 	self:drawStickers(dt)
 	love.graphics.draw(Sprites.DECK_PANEL, self.canvas:getWidth(), 0, 0, 1, 1, Sprites.DECK_PANEL:getWidth(), 0)
 
