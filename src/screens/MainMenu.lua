@@ -57,10 +57,10 @@ function MainMenu:new(gameCanvas, game)
 
 	self.uiElements.buttons["website"] = Button:new(
 		function()
-			love.system.openURL("https://adx.n8scape.fr")
+			love.system.openURL("http://adx.n8scape.fr")
 		end,
 		"src/assets/sprites/ui/WWW.png",
-		252,
+		250,
 		100,
 		120,
 		120,

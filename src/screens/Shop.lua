@@ -53,6 +53,20 @@ function Shop:new(run)
 		}
 	)
 
+	self.useCiggieText = UI.Text.TextWavy:new(
+		"Use Now (" .. tostring(Constants.BASE_CIGGIE_PRICE) .. "$)",
+		30 + Sprites.USE_NOW:getWidth() / 2,
+		self.canvas:getHeight() - 30 - Sprites.USE_NOW:getHeight() / 2,
+		{
+			font = Fonts.soraMedium,
+			centered = true,
+			amplitude = 5,
+			speed = 2,
+			colorStart = { 1, 1, 1 },
+			colorEnd = { 1, 1, 1 },
+		}
+	)
+
 	self.buyText = UI.Text.TextWavy:new(
 		"Buy (5$)",
 		self.inventorySMTX + self.inventoryCanvasSmall:getWidth() / 2,
@@ -277,13 +291,29 @@ function Shop:updateCanvas(dt)
 	--Buy Ciggie Popup
 	if self.dragAndDroppedShopCiggie then
 		local px, py = G.calculateParalaxeOffset(1)
+
 		love.graphics.draw(Sprites.BUY_CIGGIE, 1670 + px, 590 + py, 0, 1, 1)
-		love.graphics.draw(Sprites.USE_NOW, 30, self.canvas:getHeight() - 30, 0, 1, 1, 0, Sprites.USE_NOW:getHeight())
+
+		love.graphics.draw(
+			Sprites.USE_NOW,
+			30 + px,
+			self.canvas:getHeight() - 30 + py,
+			0,
+			1,
+			1,
+			0,
+			Sprites.USE_NOW:getHeight()
+		)
 		-- love.graphics.draw(Sprites.USE_NOW, 30, 0, 1, 1, 0, Sprites.USE_NOW:getHeight())
+
+		self.useCiggieText:update(dt)
+		self.useCiggieText:draw()
+
 		self.buyCiggieText:update(dt)
 		self.buyCiggieText:draw()
 	else
 		self.buyCiggieText:reset()
+		self.useCiggieText:reset()
 	end
 
 	--Dessine le terrain qui descend quand on DnD un sticker
