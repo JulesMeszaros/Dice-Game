@@ -37,6 +37,9 @@ local AudioFiles = {
 		love.sound.newDecoder("src/assets/sounds/placeholders/00008 - WAV_8_GUESS_BNK_SE_GAM036.wav"),
 		love.sound.newDecoder("src/assets/sounds/placeholders/00009 - WAV_9_GUESS_BNK_SE_GAM036.wav"),
 	},
+
+	MOUSE_CLICK_1 = love.sound.newDecoder("src/assets/sounds/click_on.ogg"),
+	MOUSE_CLICK_2 = love.sound.newDecoder("src/assets/sounds/click_off.ogg"),
 }
 
 return AudioFiles

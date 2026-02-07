@@ -55,6 +55,36 @@ function MainMenu:new(gameCanvas, game)
 		end
 	)
 
+	self.uiElements.buttons["website"] = Button:new(
+		function()
+			love.system.openURL("https://adx.n8scape.fr")
+		end,
+		"src/assets/sprites/ui/WWW.png",
+		252,
+		100,
+		120,
+		120,
+		nil,
+		function()
+			return Inputs.getMouseInCanvas(0, 0, 4)
+		end
+	)
+
+	self.uiElements.buttons["discord"] = Button:new(
+		function()
+			love.system.openURL("https://discord.gg/SEbbEsjt57")
+		end,
+		"src/assets/sprites/ui/discord.png",
+		100,
+		100,
+		120,
+		120,
+		nil,
+		function()
+			return Inputs.getMouseInCanvas(0, 0, 4)
+		end
+	)
+
 	G.backgroundChange(Constants.BACKGROUND_COLORS.DARK_GRAY, 0.5)
 
 	return self
@@ -168,4 +198,3 @@ function MainMenu:cleanup()
 end
 
 return MainMenu
-

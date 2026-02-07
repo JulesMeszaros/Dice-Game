@@ -1,3 +1,4 @@
+local AudioFiles = require("src.utils.AudioFiles")
 local Shaders = require("src.utils.Shaders")
 
 local UIElement = require("src.classes.ui.UIElement")
@@ -8,144 +9,160 @@ local Animator = require("src.utils.Animator")
 local Button = setmetatable({}, { __index = UIElement })
 Button.__index = Button
 
-function Button:new(
-    callback, 
-    spritePath, 
-    x, 
-    y, 
-    width, 
-    height, 
-    gameCanvas, 
-    mousePosition)
+function Button:new(callback, spritePath, x, y, width, height, gameCanvas, mousePosition)
+	local self = setmetatable(UIElement.new(), Button)
+	self.gameCanvas = gameCanvas
 
-    
+	self.animator = Animator:new(self)
+	self:setSprite(love.graphics.newImage(spritePath))
 
-    local self = setmetatable(UIElement.new(), Button)
-    self.gameCanvas = gameCanvas
+	self:setX(x)
+	self:setY(y)
 
-    self.animator = Animator:new(self)
-    self:setSprite(love.graphics.newImage(spritePath))
+	self.height = height
+	self.width = width
+	self.targetedScale = 1
 
-    self:setX(x)
-    self:setY(y)
+	--Hover options
+	self.isHoverable = true
+	self.mousePosition = mousePosition
 
-    self.height = height
-    self.width = width
-    self.targetedScale = 1
+	--Dragging options
+	self.isDraggable = false
+	self.dragOffsetX = 0
+	self.dragOffsetY = 0
 
-    --Hover options
-    self.isHoverable = true
-    self.mousePosition = mousePosition
+	self.callbackFunction = callback
 
-    --Dragging options
-    self.isDraggable = false
-    self.dragOffsetX = 0
-    self.dragOffsetY = 0
+	--Create the canvas ONCE
+	self.uiCanvas = self:createCanvas()
 
-    self.callbackFunction = callback
-
-    --Create the canvas ONCE
-    self.uiCanvas = self:createCanvas()
-
-    return self
+	return self
 end
 
 function Button:update(dt)
-    self.animator:update(dt)
-    if(self:isHovered())then
-        self.targetedScale = 1.03
-        if(love.mouse.isDown(1) and self.isActivated) then
-            self.targetedScale = 0.97
-        end
-    else
-        self.targetedScale = 1
-    end
+	self.animator:update(dt)
+	if self:isHovered() then
+		self.targetedScale = 1.03
+		if love.mouse.isDown(1) and self.isActivated then
+			self.targetedScale = 0.97
+		end
+	else
+		self.targetedScale = 1
+	end
 
-    local speed = 30
-    self.scale = self:dampLerp(self.scale, self.targetedScale, speed, dt)
+	local speed = 30
+	self.scale = self:dampLerp(self.scale, self.targetedScale, speed, dt)
 
-    --update the button canvas
-    self:updateCanvas()
+	--update the button canvas
+	self:updateCanvas()
 end
 
 function Button:createCanvas(gameCanvas)
-    local canvas = love.graphics.newCanvas(self.width, self.height)
+	local canvas = love.graphics.newCanvas(self.width, self.height)
 
-    --General settings
-    --canvas:setFilter("nearest", "nearest")
-    love.graphics.setBlendMode("alpha")
-    love.graphics.setCanvas(canvas)
+	--General settings
+	--canvas:setFilter("nearest", "nearest")
+	love.graphics.setBlendMode("alpha")
+	love.graphics.setCanvas(canvas)
 
-    love.graphics.setCanvas(gameCanvas)
+	love.graphics.setCanvas(gameCanvas)
 
-    return canvas
+	return canvas
 end
 
 function Button:updateCanvas()
-    local currentCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(self.uiCanvas)
-    love.graphics.clear()
-    
-    --If desactivated : grey the button
-    if self.isActivated==false then
-        love.graphics.setShader(Shaders.grayscaleShader)
-    else
-        love.graphics.setShader()
-    end
-    
-    --Draw the UI into the canvas
-    local widthRatio = self.width/self.sprite:getWidth()
-    local heightRatio = self.height/self.sprite:getHeight()
+	local currentCanvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(self.uiCanvas)
+	love.graphics.clear()
 
-    love.graphics.draw(self.sprite, 0, 0, 0, widthRatio, heightRatio) -- add the image
+	--If desactivated : grey the button
+	if self.isActivated == false then
+		love.graphics.setShader(Shaders.grayscaleShader)
+	else
+		love.graphics.setShader()
+	end
 
-    love.graphics.setShader()
-    love.graphics.setCanvas(currentCanvas)
+	--Draw the UI into the canvas
+	local widthRatio = self.width / self.sprite:getWidth()
+	local heightRatio = self.height / self.sprite:getHeight()
+
+	love.graphics.draw(self.sprite, 0, 0, 0, widthRatio, heightRatio) -- add the image
+
+	love.graphics.setShader()
+	love.graphics.setCanvas(currentCanvas)
+end
+
+function Button:clickEvent() --S'active lorsqu'un click est commencé
+	local wasClicked = false -- Variable retournée : vrai si le dé a été cliqué, faux si le dé n'a pas été clické
+
+	if self:isHovered() then
+		self.isBeingClicked = true
+		G.audio:buttonSound(true)
+
+		wasClicked = true
+	end
+
+	return wasClicked
 end
 
 function Button:draw()
-    local layer = self.layer or 4
-    local px, py = G.calculateParalaxeOffset(layer)
-    love.graphics.draw(self.uiCanvas, self.x+px, self.y+py, 0, self.scale, self.scale, self.uiCanvas:getWidth()/2, self.uiCanvas:getHeight()/2)
+	local layer = self.layer or 4
+	local px, py = G.calculateParalaxeOffset(layer)
+	love.graphics.draw(
+		self.uiCanvas,
+		self.x + px,
+		self.y + py,
+		0,
+		self.scale,
+		self.scale,
+		self.uiCanvas:getWidth() / 2,
+		self.uiCanvas:getHeight() / 2
+	)
 end
 
+function Button:clickAction() end
+
 function Button:getCallback()
-    if(self.isActivated==true) then
-        return self.callbackFunction --Returns the function
-    else
-        return function()end --Doesnt do anything
-    end
+	if self.isActivated == true then
+		G.audio:buttonSound(false)
+		return self.callbackFunction --Returns the function
+	else
+		return function() end --Doesnt do anything
+	end
 end
 
 function Button:isHovered() --Check if mouse is above the face
-    --Utilise la fonction passée en paramètre, qui permet d'avoir la position de la souris dans laquelle elle est rendue.
-    local vx, vy = self.mousePosition().x, self.mousePosition().y
+	--Utilise la fonction passée en paramètre, qui permet d'avoir la position de la souris dans laquelle elle est rendue.
+	local vx, vy = self.mousePosition().x, self.mousePosition().y
 
-    return(
-        self.isHoverable and
-        vx > (self.x-(self.width/2)) and vx < (self.x+(self.width/2))
-        and
-        vy > (self.y-(self.height/2)) and vy < (self.y+(self.height/2))
-        )
+	return (
+		self.isHoverable
+		and vx > (self.x - (self.width / 2))
+		and vx < (self.x + (self.width / 2))
+		and vy > (self.y - (self.height / 2))
+		and vy < (self.y + (self.height / 2))
+	)
 end
 
 function Button:cleanup()
-    -- Release UI canvas
-    if self.uiCanvas then
-        self.uiCanvas:release()
-        self.uiCanvas = nil
-    end
+	-- Release UI canvas
+	if self.uiCanvas then
+		self.uiCanvas:release()
+		self.uiCanvas = nil
+	end
 
-    -- Release sprite if loaded
-    if self.sprite then
-        self.sprite:release()
-        self.sprite = nil
-    end
+	-- Release sprite if loaded
+	if self.sprite then
+		self.sprite:release()
+		self.sprite = nil
+	end
 
-    -- Clear animator
-    if self.animator then
-        self.animator = nil
-    end
+	-- Clear animator
+	if self.animator then
+		self.animator = nil
+	end
 end
 
 return Button
+

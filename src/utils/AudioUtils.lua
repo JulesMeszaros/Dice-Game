@@ -31,6 +31,15 @@ function AudioUtils:new()
 	return self
 end
 
+function AudioUtils:buttonSound(state)
+	local decoder = AudioFiles.MOUSE_CLICK_1
+	if state == false then
+		decoder = AudioFiles.MOUSE_CLICK_2
+	end
+	local source = love.audio.newSource(decoder, "static")
+	self:playSound(source)
+end
+
 function AudioUtils:playSound(source)
 	source:setVolume(self.sfxVolume * self.volume)
 	source:play()
