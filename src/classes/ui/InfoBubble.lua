@@ -160,16 +160,24 @@ function InfoBubble:draw()
 
 	--Dessin des bulles complémentaires
 	if self.sideBubbles then
+		--Permet de calculer la position verticale des bulles pour etre centrées sur la bulle principale
 		local totalHeight = 0
 		for i, bubble in next, self.sideBubbles do
 			totalHeight = totalHeight + bubble:getHeight() + 10
 		end
 
+		local xPos = x + 20 + self.canvas:getWidth()
+
+		if x > Constants.VIRTUAL_GAME_WIDTH / 2 then
+			xPos = x - 20 - self.canvas:getWidth()
+		end
+
+		--Dessin successif des bulles
 		local precedentHeight = 0
 		for i, bubble in next, self.sideBubbles do
 			love.graphics.draw(
 				self.sideBubbles[i],
-				x + 20 + self.canvas:getWidth(),
+				xPos,
 				y
 					+ AnimationUtils.osccilate(self.time, 3, 6)
 					+ precedentHeight
