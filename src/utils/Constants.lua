@@ -32,6 +32,13 @@ local Constants = {
 	BASE_SHOP_REROLL_PRINCE_INCREMENT = 1,
 }
 
+--Effects descriptions
+Constants.EFFECT_DESCRIPTIONS = {
+	GHOST = { "Ghost", "Becomes disabled until the end of this round if discarded or not used in the played figure." },
+	BLANK = { "Blank", "Doesn't count as a numbered face, but can be used in any figure." },
+	BACKUP = { "Backup", "Triggers its effect when not selected in the played hand." },
+}
+
 --Enums
 Constants.FIGURES = {
 	ONES = 1,

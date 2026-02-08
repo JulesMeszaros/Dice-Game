@@ -1,3 +1,4 @@
+local Constants = require("src.utils.Constants")
 local Fonts = require("src.utils.Fonts")
 local Sprites = require("src.utils.Sprites")
 local AnimationUtils = require("src.utils.scripts.Animations")
@@ -73,6 +74,7 @@ function InfoBubble:update(dt)
 	--print(self.screen.currentlyHoveredObject.representedObject.name)
 	--TODO : bugfig : corriger le bug qui ne met pas à jour la bulle apres un reroll si on survolle le meme dé qu'avant le reroll
 	if self.previousObject ~= self.object then
+		self.sideBubbles = nil
 		if self.object.representedObject.objectType == "Dice Face" then
 			self:generateDiceBubble()
 		elseif self.object.representedObject.objectType == "Magic Wand" then
@@ -153,7 +155,35 @@ function InfoBubble:draw()
 	love.graphics.draw(self.canvas, x - 3, y + 12 + AnimationUtils.osccilate(self.time, 3, 6), 0, 1, 1, ox, oy)
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.setShader()
+	--Dessin de la bulle
 	love.graphics.draw(self.canvas, x, y + AnimationUtils.osccilate(self.time, 3, 6), 0, 1, 1, ox, oy)
+
+	--Dessin des bulles complémentaires
+	if self.sideBubbles then
+		local totalHeight = 0
+		for i, bubble in next, self.sideBubbles do
+			totalHeight = totalHeight + bubble:getHeight() + 10
+		end
+
+		local precedentHeight = 0
+		for i, bubble in next, self.sideBubbles do
+			love.graphics.draw(
+				self.sideBubbles[i],
+				x + 20 + self.canvas:getWidth(),
+				y
+					+ AnimationUtils.osccilate(self.time, 3, 6)
+					+ precedentHeight
+					- (totalHeight / 2)
+					+ self.canvas:getHeight() / 2,
+				0,
+				1,
+				1,
+				ox,
+				oy
+			)
+			precedentHeight = precedentHeight + 10 + bubble:getHeight()
+		end
+	end
 end
 
 function InfoBubble:generateCanvas(w, h)
@@ -164,7 +194,89 @@ function InfoBubble:generateCanvas(w, h)
 	self.wr = (self.width - 2 * self.gridDim) / self.gridDim --ratio de la taille pour les sprites superieurs et inferieurs
 end
 
+--Bulle complémentaire pour les effets spéciaux
+function InfoBubble:generateComplementaryBubble(effect)
+	self.time = 0
+	--Name
+	local name = love.graphics.newText(Fonts.soraName, effect[1])
+
+	--Creation de la largeur
+	local width = math.max(name:getWidth() + 40, 350)
+	lineWidth = width - 20
+
+	--Description
+	local descriptionText = effect[2]
+
+	local textW, wrappedText = Fonts.soraDesc:getWrap(descriptionText, lineWidth)
+	local textLines = {}
+	for i, line in next, wrappedText do
+		local lineText = love.graphics.newText(Fonts.soraDesc, line)
+		table.insert(textLines, lineText)
+	end
+
+	--Creation de la hauteur
+	local height = table.getn(wrappedText) * 30 + 50
+
+	local bubbleCanvas = love.graphics.newCanvas(width, height)
+
+	--Calcul de la taille/ratio des sprites à afficher
+	local hr = (height - 2 * self.gridDim) / self.gridDim --ratio de la taille pour les sprites de coté
+	local wr = (width - 2 * self.gridDim) / self.gridDim --ratio de la taille pour les sprites superieurs et inferieurs
+	-- Pre-render everything into the canvas
+	local currentCanvas = love.graphics.getCanvas()
+
+	love.graphics.setCanvas(bubbleCanvas)
+	love.graphics.clear()
+
+	--On dessine les angles
+	love.graphics.draw(self.baseSprite, self.quads[1], 0, 0)
+	love.graphics.draw(self.baseSprite, self.quads[2], bubbleCanvas:getWidth() - self.gridDim, 0)
+	love.graphics.draw(self.baseSprite, self.quads[3], 0, bubbleCanvas:getHeight() - self.gridDim)
+	love.graphics.draw(
+		self.baseSprite,
+		self.quads[4],
+		bubbleCanvas:getWidth() - self.gridDim,
+		bubbleCanvas:getHeight() - self.gridDim
+	)
+
+	--On dessine les cotés
+	love.graphics.draw(self.baseSprite, self.quads[6], width - self.gridDim, self.gridDim, 0, 1, hr)
+	love.graphics.draw(self.baseSprite, self.quads[7], 0, self.gridDim, 0, 1, hr)
+
+	love.graphics.draw(self.baseSprite, self.quads[5], self.gridDim, 0, 0, wr, 1)
+	love.graphics.draw(self.baseSprite, self.quads[8], self.gridDim, height - self.gridDim, 0, wr, 1)
+
+	love.graphics.draw(self.baseSprite, self.quads[9], self.gridDim, self.gridDim, 0, wr, hr)
+
+	--Text
+	love.graphics.setColor(0, 0, 0)
+	love.graphics.draw(name, bubbleCanvas:getWidth() / 2, 5, 0, 1, 1, name:getWidth() / 2, 0)
+
+	local formatedText =
+		UI.Text.drawFormattedText(descriptionText, bubbleCanvas:getWidth() / 2, 50, Fonts.soraDesc, lineWidth, true)
+
+	love.graphics.setColor(1, 1, 1)
+
+	love.graphics.setCanvas(currentCanvas)
+
+	return bubbleCanvas
+end
+
 function InfoBubble:generateDiceBubble()
+	self.sideBubbles = {}
+
+	if self.object.representedObject.ghost then
+		table.insert(self.sideBubbles, self:generateComplementaryBubble(Constants.EFFECT_DESCRIPTIONS.GHOST))
+	end
+
+	if self.object.representedObject.blank then
+		table.insert(self.sideBubbles, self:generateComplementaryBubble(Constants.EFFECT_DESCRIPTIONS.BLANK))
+	end
+
+	if self.object.representedObject.backup then
+		table.insert(self.sideBubbles, self:generateComplementaryBubble(Constants.EFFECT_DESCRIPTIONS.BACKUP))
+	end
+
 	self.time = 0
 	--Name
 	local name = love.graphics.newText(Fonts.soraName, self.object.representedObject.name)
