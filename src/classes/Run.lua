@@ -8,13 +8,20 @@ local Constants = require("src.utils.Constants")
 local Floor = require("src.classes.Floor")
 local CiggieTypes = require("src.classes.CiggieTypes")
 local Animator = require("src.utils.Animator")
+local TutorialManager = require("src.utils.TutorialManager")
 
 local Run = {}
 
 Run.__index = Run
 
-function Run:new(dices, gameCanvas, game, diceObjects)
+function Run:new(dices, gameCanvas, game, diceObjects, tutorial)
 	local self = setmetatable({}, Run)
+
+	if tutorial then
+		self.tutorial = TutorialManager:new()
+	else
+		self.tutorial = nil
+	end
 
 	self.animator = Animator:new(self)
 
@@ -96,12 +103,24 @@ function Run:new(dices, gameCanvas, game, diceObjects)
 
 	self.floorNumber = 1 --Représente l'étage (augmente de 1 après un boss)
 	self.floorDeskNumber = 1 --Représente le numéro de bureau dans l'étage actuel (retourne à 1 après un boss)
-	self:goToRoundSelection()
 
+	--Si on est dans une run tutorial, on commence directement par le premier round (on choisit le premier bureau proposé). Sinon, on emmene sur la selection de round
+
+	if self.tutorial then
+		local firstDesk = self.currentFloor.desks[1][1]
+
+		self:startNewRound(firstDesk, Constants.ROUND_TYPES.BASE)
+	else
+		self:goToRoundSelection()
+	end
 	return self
 end
 
 function Run:update(dt)
+	if self.tutorial and self.tutorial.current then
+		print(self.tutorial.current.text)
+	end
+
 	if self.displayInfoScreen ~= true and self.displayPauseMenu ~= true then
 		self.animator:update(dt)
 		if self.currentState == Constants.RUN_STATES.ROUND then
@@ -127,6 +146,7 @@ function Run:update(dt)
 end
 
 function Run:draw(gameCanvas) --Render the game into the Game Canvas.
+	--Dessin de l'écran en cours
 	if self.currentState == Constants.RUN_STATES.ROUND then --check if we are in round
 		self:drawRound() --Draw the round
 	elseif self.currentState == Constants.RUN_STATES.SHOP then --check if we are in shop
@@ -138,6 +158,8 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
 	elseif self.currentState == Constants.RUN_STATES.DICE_CUSTOMIZATION then
 		self.customizationScreen:draw()
 	end
+
+	--Dessin du tutoriel ?
 
 	--Info screen
 	if self.displayInfoScreen == true and self.infoScreen then
@@ -239,6 +261,17 @@ end
 --==INPUTS FUNCTIONS==
 
 function Run:keypressed(key)
+	if self.tutorial then
+		if key == "t" then
+			self.tutorial:push({
+				text = "PProutProutProutProutProutP routProutProutProutrout ((PROUT)) [[PROUT]] {{PROUT}}",
+			})
+		end
+		if key == "s" then
+			self.tutorial:confirm()
+		end
+	end
+
 	if self.currentState == Constants.RUN_STATES.ROUND then
 		self.currentRound:keypressed(key)
 	elseif self.currentState == Constants.RUN_STATES.SHOP then
@@ -273,7 +306,8 @@ function Run:mousepressed(x, y, button, istouch, presses)
 	self.dragOriginX = x
 	self.dragOriginY = y
 
-	if self.displayInfoScreen == false and self.displayPauseMenu ~= true then
+	if self.tutorial and self.tutorial.current then
+	elseif self.displayInfoScreen == false and self.displayPauseMenu ~= true then
 		if self.currentState == Constants.RUN_STATES.ROUND then
 			self.currentRound.terrain:mousepressed(x, y, button, istouch, presses)
 		elseif self.currentState == Constants.RUN_STATES.SHOP then

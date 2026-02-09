@@ -42,13 +42,28 @@ function MainMenu:new(gameCanvas, game)
 
 	self.uiElements.buttons["newRun"] = Button:new(
 		function()
-			self.game:startNewRun(self.seedInput.text)
+			self.game:startNewRun(self.seedInput.text, false)
 		end,
 		"src/assets/sprites/ui/New Run.png",
 		618 + 678 / 2,
-		730 + 180 / 2,
+		620 + 180 / 2,
 		678,
 		180,
+		nil,
+		function()
+			return Inputs.getMouseInCanvas(0, 0)
+		end
+	)
+
+	self.uiElements.buttons["newTutorial"] = Button:new(
+		function()
+			self.game:startNewRun(self.seedInput.text, true)
+		end,
+		"src/assets/sprites/ui/TutorialButton.png",
+		960,
+		930,
+		400,
+		130,
 		nil,
 		function()
 			return Inputs.getMouseInCanvas(0, 0)

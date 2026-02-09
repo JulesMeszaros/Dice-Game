@@ -89,7 +89,7 @@ end
 
 --==GAME FUNCTION==--
 
-function Game:startNewRun(seedText)
+function Game:startNewRun(seedText, tutorial)
 	-- Cleanup existing run if exists
 
 	-- Cleanup main menu
@@ -135,7 +135,7 @@ function Game:startNewRun(seedText)
 	self.diceObjects = diceObjects
 
 	self.currentScreen = Constants.PAGES.GAME
-	self.run = Run:new(diceObjects, self.gameCanvas, self, self.diceObjects)
+	self.run = Run:new(diceObjects, self.gameCanvas, self, self.diceObjects, tutorial)
 
 	G.currentRun = self.run
 end

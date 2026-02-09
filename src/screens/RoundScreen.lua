@@ -243,6 +243,10 @@ function RoundScreen:new(round)
 end
 
 function RoundScreen:update(dt)
+	if self.run.tutorial and self.run.tutorial.current then
+		self.run.tutorial:updateTutoCanvas(dt)
+	end
+
 	if self.showDeck == false then
 		self.timers.firstRerollTime = self.timers.firstRerollTime + dt
 		self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy + dt
@@ -410,6 +414,10 @@ function RoundScreen:updateCanvas(dt)
 		--self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
 		self.infoBubble:update(dt)
 		self.infoBubble:draw()
+	end
+
+	if self.run.tutorial and self.run.tutorial.current then
+		self:drawTutoText()
 	end
 
 	love.graphics.setCanvas(currentCanvas)

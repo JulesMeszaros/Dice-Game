@@ -30,7 +30,7 @@ function MoneyBagSticker:new()
 
 	self.sprite = "src/assets/sprites/stickers/Moneybag.png"
 
-	self.name = "Salary Bonus"
+	self.name = "Bonus Check"
 	self.description = "Gives an additional 5$ at the end of each office."
 
 	return self

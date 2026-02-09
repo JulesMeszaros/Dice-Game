@@ -1400,6 +1400,20 @@ function GameScreen:addAvailableHand(i)
 	end
 end
 
+--Tutorial
+function GameScreen:drawTutoText(x, y)
+	local x = x or 0
+	local y = y or Constants.VIRTUAL_GAME_HEIGHT - Sprites.TUTO_PANEL:getHeight()
+
+	--Dessin d'un fond transparant noir
+	love.graphics.setColor(0, 0, 0, 0.7)
+	love.graphics.rectangle("fill", 0, 0, Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+	love.graphics.setColor(1, 1, 1)
+
+	--Dessin du panneau
+	love.graphics.draw(self.run.tutorial.tutoPanelCanvas, x, y)
+end
+
 --==State modification functions==--
 function GameScreen:setMoneyTo(m)
 	local d = 0.1

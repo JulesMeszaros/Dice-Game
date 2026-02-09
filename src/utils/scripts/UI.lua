@@ -399,4 +399,3 @@ UI.ScreenWave = function(rx, ry)
 end
 
 return UI
-
