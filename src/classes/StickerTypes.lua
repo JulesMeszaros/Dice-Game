@@ -94,7 +94,7 @@ function ThirteenthMonthSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Coin.png"
 
 	self.name = "13th Month"
-	self.description = "+10$ at the end of each office."
+	self.description = "+3$ at the end of each office."
 	self.holographic = true
 
 	return self
@@ -105,7 +105,7 @@ function ThirteenthMonthSticker:unlockCondition(run)
 end
 
 function ThirteenthMonthSticker:buyEffect(run)
-	run.additionalMoney = run.additionalMoney + 10
+	run.additionalMoney = run.additionalMoney + 3
 end
 StickerTypes.ThirteenthMonthSticker = ThirteenthMonthSticker
 
