@@ -39,4 +39,3 @@ end
 CalculateTarget.manager = manager
 
 return CalculateTarget
-
