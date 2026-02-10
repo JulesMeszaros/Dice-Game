@@ -117,10 +117,6 @@ function Run:new(dices, gameCanvas, game, diceObjects, tutorial)
 end
 
 function Run:update(dt)
-	if self.tutorial and self.tutorial.current then
-		print(self.tutorial.current.text)
-	end
-
 	if self.displayInfoScreen ~= true and self.displayPauseMenu ~= true then
 		self.animator:update(dt)
 		if self.currentState == Constants.RUN_STATES.ROUND then
@@ -262,18 +258,6 @@ end
 
 function Run:keypressed(key)
 	if self.tutorial then
-		if key == "t" then
-			self.tutorial:push({
-				text = "Bienvenue dans ((Dice Deluxe !)) Votre objectif est de vaincre vos ennemis en jouant des figures de dés et en marquant plus de point que leur objectif.",
-			})
-			self.tutorial:push({
-				text = "Votre ennemi nécessite 80 points pour être battu. Vous disposez de 3 ((mains)) pour atteindre ce palier, ainsi que 3 [[rerolls]] par mains.",
-			})
-
-			self.tutorial:push({
-				text = "Allons-y, jetons nos premiers dés ! Clickez sur le bouton [[ROLL!]] en bas de votre écran.",
-			})
-		end
 		if key == "s" then
 			self.tutorial:confirm()
 		end

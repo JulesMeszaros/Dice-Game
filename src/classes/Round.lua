@@ -1,3 +1,4 @@
+local TutorialEvents = require("src.utils.TutorialEvents")
 local Constants = require("src.utils.Constants")
 local DiceFace = require("src.classes.ui.DiceFace")
 local RoundScreen = require("src.screens.RoundScreen")
@@ -602,6 +603,12 @@ function Round:makeRoll(dices)
 		self.terrain.diceFaces[dice].animator:addDelay(0.6, function()
 			self.terrain:sortUnselectedDices(rerolledDiceFaces)
 		end)
+
+		if self.run.tutorial then
+			self.terrain.animator:addDelay(0.6, function()
+				TutorialEvents.firstRoll()
+			end)
+		end
 	end
 end
 

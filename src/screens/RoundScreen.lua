@@ -1,4 +1,5 @@
 --Utils
+local TutorialEvents = require("src.utils.TutorialEvents")
 local Inputs = require("src.utils.scripts.Inputs")
 local CalculatePoints = require("src.utils.scripts.CalculatePoints")
 local Fonts = require("src.utils.Fonts")
@@ -212,6 +213,11 @@ function RoundScreen:new(round)
 
 		--Active l'effet des stickers concernés
 		self.round.run:stickerStartRoundEffect()
+
+		if self.run.tutorial then
+			TutorialEvents.welcomeMessage()
+			TutorialEvents.explainFigures()
+		end
 	end)
 
 	self.diceFaces = {}
