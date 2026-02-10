@@ -264,7 +264,14 @@ function Run:keypressed(key)
 	if self.tutorial then
 		if key == "t" then
 			self.tutorial:push({
-				text = "PProutProutProutProutProutP routProutProutProutrout ((PROUT)) [[PROUT]] {{PROUT}}",
+				text = "Bienvenue dans ((Dice Deluxe !)) Votre objectif est de vaincre vos ennemis en jouant des figures de dés et en marquant plus de point que leur objectif.",
+			})
+			self.tutorial:push({
+				text = "Votre ennemi nécessite 80 points pour être battu. Vous disposez de 3 ((mains)) pour atteindre ce palier, ainsi que 3 [[rerolls]] par mains.",
+			})
+
+			self.tutorial:push({
+				text = "Allons-y, jetons nos premiers dés ! Clickez sur le bouton [[ROLL!]] en bas de votre écran.",
 			})
 		end
 		if key == "s" then
