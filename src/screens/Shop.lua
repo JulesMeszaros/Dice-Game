@@ -24,11 +24,19 @@ function Shop:new(run)
 	local self = setmetatable(Screen:new(run.currentFloor, run, Constants.RUN_STATES.SHOP, run.currentRound), Shop)
 
 	--Tutorial variables
-	self.canBuyDiceFace = false
-	self.canBuySticker = false
-	self.canBuyAnything = false
-	self.canRerollShop = false
-	self.canGoToNextRound = false
+	if self.run.floorNumber == 2 then
+		self.canBuyDiceFace = false
+		self.canBuySticker = false
+		self.canBuyAnything = false
+		self.canRerollShop = false
+		self.canGoToNextRound = false
+	else
+		self.canBuyDiceFace = true
+		self.canBuySticker = true
+		self.canBuyAnything = true
+		self.canRerollShop = true
+		self.canGoToNextRound = true
+	end
 
 	self.priceTagsScale = 1
 	self:createDeck()

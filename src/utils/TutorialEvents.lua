@@ -157,6 +157,9 @@ function TutorialEvents.managerSelection()
 	G.currentRun.tutorial:pushOnce("managerSelection3", {
 		text = "This one prevents you from playing non-numbered figures. Interesting... you can't play either Full Houses, Straights and so on...",
 		pos = "ur",
+		onConfirm = function()
+			G.currentRun.deskChoice.canSelectRound = true
+		end,
 	})
 end
 
