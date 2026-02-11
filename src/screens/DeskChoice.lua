@@ -12,6 +12,7 @@ local Screen = require("src.classes.GameScreen")
 local UI = require("src.utils.scripts.UI")
 local Fonts = require("src.utils.Fonts")
 local Deck = require("src.classes.ui.Deck")
+local TutorialEvents = require("src.utils.TutorialEvents")
 
 local DeskChoice = setmetatable({}, { __index = Screen })
 DeskChoice.__index = DeskChoice
@@ -87,6 +88,14 @@ function DeskChoice:new(floor, run)
 	self.animator:addDelay(0.5, function()
 		self:generateCiggiesUI()
 	end)
+
+	if self.run.tutorial then
+		self.animator:addDelay(0.3, TutorialEvents.deskChoice)
+
+		if self.run.roundNumber == 2 then
+			self.animator:addDelay(0.3, TutorialEvents.managerSelection())
+		end
+	end
 
 	--self:createHorizontalDice()
 
@@ -184,6 +193,10 @@ function DeskChoice:updateCanvas(dt)
 		--self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
 		self.infoBubble:update(dt)
 		self.infoBubble:draw()
+	end
+
+	if self.run.tutorial and self.run.tutorial.current then
+		self:drawTutoText()
 	end
 
 	love.graphics.setCanvas(currentCanvas)

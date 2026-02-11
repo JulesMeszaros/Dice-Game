@@ -1,4 +1,4 @@
---Utils
+--Utilsroundscreen
 local TutorialEvents = require("src.utils.TutorialEvents")
 local Inputs = require("src.utils.scripts.Inputs")
 local CalculatePoints = require("src.utils.scripts.CalculatePoints")
@@ -216,7 +216,10 @@ function RoundScreen:new(round)
 
 		if self.run.tutorial then
 			TutorialEvents.welcomeMessage()
-			TutorialEvents.explainFigures()
+		end
+
+		if self.run.tutorial and self.run.roundNumber == 2 then
+			TutorialEvents.secondRoundStart()
 		end
 	end)
 
@@ -249,10 +252,6 @@ function RoundScreen:new(round)
 end
 
 function RoundScreen:update(dt)
-	if self.run.tutorial and self.run.tutorial.current then
-		self.run.tutorial:updateTutoCanvas(dt)
-	end
-
 	if self.showDeck == false then
 		self.timers.firstRerollTime = self.timers.firstRerollTime + dt
 		self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy + dt
@@ -297,6 +296,7 @@ function RoundScreen:update(dt)
 				and table.getn(self.round.selectedDices) < table.getn(self.round.diceObjects)
 				and self.round.phase ~= Constants.ROUND_STATES.TRIGGERING
 				and self.rerollingTimer <= 0
+				and (G.currentRun.tutorialCanReroll == true or not G.currentRun.tutorial)
 		)
 
 		button:update(dt)
@@ -1023,7 +1023,12 @@ end
 
 function RoundScreen:playFigure(figure, params)
 	local points, usedDices = params[1], params[2]
-	if self.round.run.availableFigures[figure] >= 1 and table.getn(self.round.selectedDices) >= 1 then
+	if
+		self.round.run.availableFigures[figure] >= 1
+		and table.getn(self.round.selectedDices) >= 1
+		--On vérifie aussi que la run tutorial peut jouer des figures
+		and (G.currentRun.tutorialCanPlayFigure == true or not G.currentRun.tutorial)
+	then
 		self.round:playFigure(points, usedDices, figure)
 		self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure] - 1
 		self.round.run:stickerFigurePlayedEffect()

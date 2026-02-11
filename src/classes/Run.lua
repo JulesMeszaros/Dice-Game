@@ -117,6 +117,10 @@ function Run:new(dices, gameCanvas, game, diceObjects, tutorial)
 end
 
 function Run:update(dt)
+	if self.tutorial and self.tutorial.current then
+		self.tutorial:updateTutoCanvas(dt)
+	end
+
 	if self.displayInfoScreen ~= true and self.displayPauseMenu ~= true then
 		self.animator:update(dt)
 		if self.currentState == Constants.RUN_STATES.ROUND then
@@ -298,6 +302,7 @@ function Run:mousepressed(x, y, button, istouch, presses)
 	self.dragOriginY = y
 
 	if self.tutorial and self.tutorial.current then
+		self.tutorial:confirm()
 	elseif self.displayInfoScreen == false and self.displayPauseMenu ~= true then
 		if self.currentState == Constants.RUN_STATES.ROUND then
 			self.currentRound.terrain:mousepressed(x, y, button, istouch, presses)

@@ -1,3 +1,4 @@
+local TutorialEvents = require("src.utils.TutorialEvents")
 local Constants = require("src.utils.Constants")
 local Inputs = require("src.utils.scripts.Inputs")
 local Fonts = require("src.utils.Fonts")
@@ -79,6 +80,11 @@ function EndRound:new(run, round)
 	self.animator:addDelay(0.1, function()
 		self:generateRewards()
 	end)
+
+	if G.currentRun.tutorial then
+		self.animator:addDelay(0.3, TutorialEvents.firstRoundWin)
+		print("djkldjskljsdkljdl")
+	end
 
 	G.backgroundChange(Constants.BACKGROUND_COLORS.GREEN, 0.5)
 

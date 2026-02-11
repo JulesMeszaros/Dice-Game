@@ -606,7 +606,13 @@ function Round:makeRoll(dices)
 
 		if self.run.tutorial then
 			self.terrain.animator:addDelay(0.6, function()
-				TutorialEvents.firstRoll()
+				if self.run.usedRerolls == 0 then
+					TutorialEvents.firstRoll()
+				elseif self.run.usedRerolls == 1 then
+					TutorialEvents.secondRoll()
+				elseif self.run.usedRerolls == 2 then
+					TutorialEvents.thirdRoll()
+				end
 			end)
 		end
 	end

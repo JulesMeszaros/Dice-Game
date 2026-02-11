@@ -57,7 +57,7 @@ function MainMenu:new(gameCanvas, game)
 
 	self.uiElements.buttons["newTutorial"] = Button:new(
 		function()
-			self.game:startNewRun(self.seedInput.text, true)
+			self.game:startNewRun("IOXAHBAJ", true)
 		end,
 		"src/assets/sprites/ui/TutorialButton.png",
 		960,

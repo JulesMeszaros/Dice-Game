@@ -9,6 +9,7 @@ local FaceHoverInfo = require("src.classes.ui.FaceHoverInfo")
 local Screen = require("src.classes.GameScreen")
 local Fonts = require("src.utils.Fonts")
 local UI = require("src.utils.scripts.UI")
+local TutorialEvents = require("src.utils.TutorialEvents")
 --===========--
 
 local DiceCustomization = setmetatable({}, { __index = Screen })
@@ -104,6 +105,10 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 	self.animator:addDelay(0.5, function()
 		self:generateCiggiesUI()
 	end)
+
+	if G.currentRun.tutorial then
+		self.animator:addDelay(0.3, TutorialEvents.customizationScreen)
+	end
 
 	return self
 end
@@ -254,6 +259,10 @@ function DiceCustomization:updateCanvas(dt)
 		--self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
 		self.infoBubble:update(dt)
 		self.infoBubble:draw()
+	end
+
+	if self.run.tutorial and self.run.tutorial.current then
+		self:drawTutoText()
 	end
 
 	love.graphics.setCanvas(currentCanvas)

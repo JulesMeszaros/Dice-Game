@@ -10,6 +10,7 @@ local Button = require("src.classes.ui.Button")
 local DiceFace = require("src.classes.ui.DiceFace")
 local Ciggie = require("src.classes.ui.Ciggie")
 local UI = require("src.utils.scripts.UI")
+local TutorialEvents = require("src.utils.TutorialEvents")
 
 local RunEnd = {}
 RunEnd.__index = RunEnd
