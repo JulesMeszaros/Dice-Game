@@ -1401,17 +1401,32 @@ function GameScreen:addAvailableHand(i)
 end
 
 --Tutorial
-function GameScreen:drawTutoText(x, y)
-	local x = x or 0
-	local y = y or Constants.VIRTUAL_GAME_HEIGHT - Sprites.TUTO_PANEL:getHeight()
+function GameScreen:drawTutoText()
+	if self.run.tutorial and self.run.tutorial.current then
+		--Position de base
+		local x = 0
+		local y = Constants.VIRTUAL_GAME_HEIGHT - Sprites.TUTO_PANEL:getHeight()
 
-	--Dessin d'un fond transparant noir
-	love.graphics.setColor(0, 0, 0, 0.7)
-	love.graphics.rectangle("fill", 0, 0, Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
-	love.graphics.setColor(1, 1, 1)
+		--Position dans les autres coins si précisé
+		if self.run.tutorial.current.pos == "ul" then
+			x = 0
+			y = 0
+		elseif self.run.tutorial.current.pos == "ur" then
+			x = Constants.VIRTUAL_GAME_WIDTH - Sprites.TUTO_PANEL:getWidth()
+			y = 0
+		elseif self.run.tutorial.current.pos == "lr" then
+			x = Constants.VIRTUAL_GAME_WIDTH - Sprites.TUTO_PANEL:getWidth()
+			y = Constants.VIRTUAL_GAME_HEIGHT - Sprites.TUTO_PANEL:getHeight()
+		end
 
-	--Dessin du panneau
-	love.graphics.draw(self.run.tutorial.tutoPanelCanvas, x, y)
+		--Dessin d'un fond transparant noir
+		love.graphics.setColor(0, 0, 0, 0.7)
+		love.graphics.rectangle("fill", 0, 0, Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+		love.graphics.setColor(1, 1, 1)
+
+		--Dessin du panneau
+		love.graphics.draw(self.run.tutorial.tutoPanelCanvas, x, y)
+	end
 end
 
 --==State modification functions==--
