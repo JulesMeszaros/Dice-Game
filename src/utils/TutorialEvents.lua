@@ -13,7 +13,6 @@ function TutorialEvents.welcomeMessage()
 		pos = "ul",
 		onConfirm = function()
 			G.currentRun.tutorialCanReroll = true
-			print("tutorial ok")
 		end,
 	})
 end
@@ -23,6 +22,9 @@ function TutorialEvents.firstRoll()
 	G.currentRun.tutorial:pushOnce("firstRoll1", {
 		text = "Hey, good throw ! You almost got a Small Straight. Keep those 3, 4 and 5 by clicking on them and reroll the other two.",
 		pos = "ul",
+		onConfirm = function()
+			G.currentRun.currentRound.terrain.firstThrow = true
+		end,
 	})
 end
 
@@ -31,6 +33,9 @@ function TutorialEvents.secondRoll()
 	G.currentRun.tutorial:pushOnce("secondRoll", {
 		text = "Too bad! But you still have one chance. Roll Again!",
 		pos = "ul",
+		onConfirm = function()
+			G.currentRun.currentRound.terrain.secondThrow = true
+		end,
 	})
 end
 
@@ -39,8 +44,15 @@ function TutorialEvents.thirdRoll()
 	G.currentRun.tutorial:pushOnce("thirdroll1", {
 		text = "Nice! We just rolled a 2 AND a 6! Even better than a Small Straight, we just rolled a Large one. Select the two last dices by clicking on them also, and select the Large Straight on the table on your left.",
 		pos = "ur",
-	})
 
+		onConfirm = function()
+			G.currentRun.currentRound.terrain.thirdThrow = true
+			G.currentRun.tutorialCanPlayFigure = true
+		end,
+	})
+end
+
+function TutorialEvents.figureInfo()
 	G.currentRun.tutorial:pushOnce("thirdroll2", {
 		text = "As you can see, this figure gives us 25 points. But when you play a figure, each dice applies an effect based on its played side. Here your dices are a bit boring...",
 		pos = "ur",

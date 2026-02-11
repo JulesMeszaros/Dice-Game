@@ -1,4 +1,5 @@
 --Utilsroundscreen
+local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 local TutorialEvents = require("src.utils.TutorialEvents")
 local Inputs = require("src.utils.scripts.Inputs")
 local CalculatePoints = require("src.utils.scripts.CalculatePoints")
@@ -27,6 +28,11 @@ local font30 = Fonts.soraMedium
 function RoundScreen:new(round)
 	local self =
 		setmetatable(Screen:new(round.run.currentFloor, round.run, Constants.RUN_STATES.ROUND, round), RoundScreen)
+
+	--Tutorial variables
+	self.firstThrow = false
+	self.secondThrow = false
+	self.thirdThrow = false
 
 	self.gameCanvas = round.gameCanvas
 	self.round = round
@@ -252,6 +258,7 @@ function RoundScreen:new(round)
 end
 
 function RoundScreen:update(dt)
+	self:getRerollButtonStatusTutorial()
 	if self.showDeck == false then
 		self.timers.firstRerollTime = self.timers.firstRerollTime + dt
 		self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy + dt
@@ -296,7 +303,10 @@ function RoundScreen:update(dt)
 				and table.getn(self.round.selectedDices) < table.getn(self.round.diceObjects)
 				and self.round.phase ~= Constants.ROUND_STATES.TRIGGERING
 				and self.rerollingTimer <= 0
-				and (G.currentRun.tutorialCanReroll == true or not G.currentRun.tutorial)
+				and (
+					(G.currentRun.tutorialCanReroll == true and self:getRerollButtonStatusTutorial())
+					or not G.currentRun.tutorial
+				)
 		)
 
 		button:update(dt)
@@ -1150,6 +1160,53 @@ function RoundScreen:cleanup()
 	self.currentlyHoveredCiggie = nil
 	self.endRoundPopUp = nil
 	self.gameOverPopup = nil
+end
+
+function RoundScreen:getRerollButtonStatusTutorial()
+	--On quitte la fonction si on est pas en run tutorial ou qu'on n'est pas au premier bureau
+	if not self.run.tutorial or not (self.run.floorDeskNumber == 1 and self.run.floorNumber == 1) then
+		return true
+	end
+	--Pour le premier lancer, accepté
+	if self.firstThrow == false and self.secondThrow == false then
+		return true
+	end
+	--Après le deuxième lancer : doit être activé si les mêmes trois dés sont sélectionés
+	if self.secondThrow == true then
+		local selectedDices = {}
+		for i, dice in next, self.diceFaces do
+			if dice:getIsSelected() then
+				table.insert(selectedDices, dice.representedObject.faceValue)
+			end
+		end
+		return listsAreEqual(GenerateRandom.sorted(selectedDices), { 3, 4, 5 })
+	end
+	--Après le premier lancer : doit être activé si trois dés sont sélectionnés et qu'il s'agit des bons
+	if self.firstThrow == true and self.secondThrow == false then
+		local selectedDices = {}
+		for i, dice in next, self.diceFaces do
+			if dice:getIsSelected() then
+				table.insert(selectedDices, dice.representedObject.faceValue)
+			end
+		end
+		return listsAreEqual(GenerateRandom.sorted(selectedDices), { 3, 4, 5 })
+	end
+end
+
+function listsAreEqual(list1, list2)
+	-- Vérifie d'abord la longueur
+	if #list1 ~= #list2 then
+		return false
+	end
+
+	-- Compare chaque valeur dans l'ordre
+	for i = 1, #list1 do
+		if list1[i] ~= list2[i] then
+			return false
+		end
+	end
+
+	return true
 end
 
 return RoundScreen

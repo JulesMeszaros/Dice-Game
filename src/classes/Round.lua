@@ -632,9 +632,10 @@ function Round:drawDices(dices)
 	--Tire uniquement les dés donnés en paramètre et retourne une table avec comme clé les dés et en valeur le numéro de face tiré.
 
 	local faceObjects = self.drawedFaceObjects
-
+	print("____________ROLL_______________")
 	for key, dice in next, dices do
 		local n = G.rngDices:random(1, dice:getNbFaces()) --Prend un index dans les faces du dé
+		print(key .. " " .. n)
 		local faceObject = dice:getFace(n)
 		faceObjects[dice] = faceObject
 	end

@@ -127,7 +127,9 @@ function Shop:new(run)
 		self:generateCiggiesUI()
 	end)
 
-	self.animator:addDelay(0.5, TutorialEvents.shop())
+	if self.run.tutorial then
+		self.animator:addDelay(0.5, TutorialEvents.shop())
+	end
 
 	--Booleen sachant si montrer le terrain quand un sticker est glissé depuis le shop
 	self.terrainCanvas = love.graphics.newCanvas(930, 460)
