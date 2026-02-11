@@ -121,35 +121,13 @@ function TutorialManager:draw()
 	end
 end
 
--- ============================================================
--- Event driven
--- ============================================================
-function TutorialManager:onEvent(eventName, data)
-	-- Exemple
-	if eventName == "ShopOpened" then
-		self:pushOnce("first_shop", {
-			type = "popup",
-			title = "Shop",
-			text = "Welcome to the shop! Here you can buy stickers.",
-			blocking = true,
-		})
-	end
-
-	if eventName == "FirstDiceRoll" then
-		self:pushOnce("first_roll", {
-			type = "popup",
-			title = "Dice Roll",
-			text = "You rolled your dice. Now pick a scoring combination.",
-			blocking = true,
-		})
-	end
-end
-
 --Update des éléments visuels
 function TutorialManager:updateTutoCanvas(dt)
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.tutoPanelCanvas)
 	love.graphics.clear()
+
+	local sx, sy = 1, 1
 
 	love.graphics.draw(Sprites.TUTO_PANEL, 0, 0)
 	--Dessin du texte
