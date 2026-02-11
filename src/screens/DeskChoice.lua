@@ -23,7 +23,7 @@ function DeskChoice:new(floor, run)
 	local self = setmetatable(Screen:new(floor, run, Constants.RUN_STATES.ROUND_CHOICE), DeskChoice)
 
 	--Tutorial function
-	if self.run.floorNumber == 1 then
+	if self.run.floorNumber == 1 or (self.run.floorNumber == 2 and self.run.floorDeskNumber == 1) then
 		self.canSelectRound = false
 	else
 		self.canSelectRound = true

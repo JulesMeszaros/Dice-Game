@@ -121,6 +121,7 @@ function TutorialEvents.deskChoice()
 	G.currentRun.tutorial:pushOnce("deskChoice3", {
 		text = "Again, you can hover your mouse hover the rewards to see their in-game effects. Click on the badge of the coworkeryou want to battle to start the next round.",
 		onConfirm = function()
+			G.currentRun.tutorialCanReroll = false
 			G.currentRun.deskChoice.canSelectRound = true
 		end,
 	})
@@ -142,6 +143,9 @@ function TutorialEvents.secondRoundStart()
 	G.currentRun.tutorial:pushOnce("secondRound4", {
 		pos = "ur",
 		text = "Each floor is composed of two coworkers and a manager. So you got two rounds before going to the next floor and regaining the ability to play your Large Straight.",
+		onConfirm = function()
+			G.currentRun.tutorialCanReroll = true
+		end,
 	})
 end
 
@@ -256,6 +260,9 @@ function TutorialEvents.secondFloor()
 	G.currentRun.tutorial:pushOnce("secondFloor3", {
 		text = "Well, I think you know the basis now. You need to reach and beat the manager of the 8th floor to escape this [[sh&#@!ty company]]. Good luck mate!",
 		pos = "ur",
+		onComplete = function()
+			G.currentRun.deskChoice.canSelectRound = true
+		end,
 	})
 end
 
