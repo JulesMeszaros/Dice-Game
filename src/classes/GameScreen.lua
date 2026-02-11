@@ -1426,6 +1426,9 @@ function GameScreen:drawTutoText()
 
 		--Dessin du panneau
 		love.graphics.draw(self.run.tutorial.tutoPanelCanvas, x, y)
+
+		--Dessin du bouton
+		self.run.tutorial.nextButton:draw()
 	end
 end
 

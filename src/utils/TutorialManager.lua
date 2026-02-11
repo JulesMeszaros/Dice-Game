@@ -1,3 +1,6 @@
+local Constants = require("src.utils.Constants")
+local Inputs = require("src.utils.scripts.Inputs")
+local Button = require("src.classes.ui.Button")
 local Sprites = require("src.utils.Sprites")
 local UI = require("src.utils.scripts.UI")
 local Fonts = require("src.utils.Fonts")
@@ -7,6 +10,20 @@ TutorialManager.__index = TutorialManager
 function TutorialManager:new(run)
 	local self = setmetatable({}, TutorialManager)
 
+	self.nextButton = Button:new(
+		function()
+			self:confirm()
+		end,
+		"src/assets/sprites/ui/NextTuto.png",
+		Constants.VIRTUAL_GAME_WIDTH - 30 - 111,
+		Constants.VIRTUAL_GAME_HEIGHT - 30 - 75,
+		223,
+		150,
+		nil,
+		function()
+			return Inputs.getMouseInCanvas(0, 0)
+		end
+	)
 	self.run = run
 
 	-- queue de messages à afficher
@@ -127,7 +144,7 @@ function TutorialManager:updateTutoCanvas(dt)
 	love.graphics.setCanvas(self.tutoPanelCanvas)
 	love.graphics.clear()
 
-	local sx, sy = 1, 1
+	self.nextButton:update(dt)
 
 	love.graphics.draw(Sprites.TUTO_PANEL, 0, 0)
 	--Dessin du texte
@@ -162,6 +179,18 @@ function TutorialManager:_popNext()
 	else
 		self.current = nil
 		self.isBlocking = false
+	end
+end
+
+--Interactions
+function TutorialManager:mousepressed(x, y, button, istouch, presses)
+	self.nextButton:clickEvent()
+end
+
+function TutorialManager:mousereleased(x, y, button, istouch, presses)
+	local wasReleased = self.nextButton:releaseEvent()
+	if wasReleased then --Si le click a été complété
+		self.nextButton:getCallback()()
 	end
 end
 

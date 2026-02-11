@@ -303,7 +303,8 @@ function Run:mousepressed(x, y, button, istouch, presses)
 	self.dragOriginY = y
 
 	if self.tutorial and self.tutorial.current then
-		self.tutorial:confirm()
+		--self.tutorial:confirm()
+		self.tutorial:mousepressed(x, y, button, istouch, presses)
 	elseif self.displayInfoScreen == false and self.displayPauseMenu ~= true then
 		if self.currentState == Constants.RUN_STATES.ROUND then
 			self.currentRound.terrain:mousepressed(x, y, button, istouch, presses)
@@ -324,7 +325,9 @@ function Run:mousepressed(x, y, button, istouch, presses)
 end
 
 function Run:mousereleased(x, y, button, istouch, presses)
-	if self.displayInfoScreen == false and self.displayPauseMenu ~= true then
+	if self.tutorial and self.tutorial.current then
+		self.tutorial:mousereleased(x, y, button, istouch, presses)
+	elseif self.displayInfoScreen == false and self.displayPauseMenu ~= true then
 		if self.currentState == Constants.RUN_STATES.ROUND then
 			self.currentRound.terrain:mousereleased(x, y, button, istouch, presses)
 		elseif self.currentState == Constants.RUN_STATES.SHOP then
