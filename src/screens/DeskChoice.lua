@@ -1,4 +1,4 @@
---Ceci est un test de texte avec NVIM. Je n'ai aucune idée de comment utiliser ce logiciel pour le moment, on va voir comment je m'en sort hahahahahahahaha........
+--Ceci est le premier fichier créé à l'aide de NeoVim, pour l'histoire.
 
 local Constants = require("src.utils.Constants")
 local Inputs = require("src.utils.scripts.Inputs")
@@ -21,6 +21,13 @@ local choiceNumber = 4
 
 function DeskChoice:new(floor, run)
 	local self = setmetatable(Screen:new(floor, run, Constants.RUN_STATES.ROUND_CHOICE), DeskChoice)
+
+	--Tutorial function
+	if self.run.floorNumber == 1 then
+		self.canSelectRound = false
+	else
+		self.canSelectRound = true
+	end
 
 	self.dragAndDroppedObject = nil
 
@@ -343,7 +350,9 @@ function DeskChoice:mousereleased(x, y, button, istouch, presses)
 		for key, badge in next, self.badges do
 			local wasReleased = badge:releaseEvent()
 			if wasReleased then --Si le click a été complété
-				self:outAnimation(badge)
+				if not self.run.tutorial or self.canSelectRound == true then
+					self:outAnimation(badge)
+				end
 			end
 		end
 		--Gestion des dés dans le deck vertical à droite

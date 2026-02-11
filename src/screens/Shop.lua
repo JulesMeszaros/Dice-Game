@@ -23,6 +23,13 @@ Shop.__index = Shop
 function Shop:new(run)
 	local self = setmetatable(Screen:new(run.currentFloor, run, Constants.RUN_STATES.SHOP, run.currentRound), Shop)
 
+	--Tutorial variables
+	self.canBuyDiceFace = false
+	self.canBuySticker = false
+	self.canBuyAnything = false
+	self.canRerollShop = false
+	self.canGoToNextRound = false
+
 	self.priceTagsScale = 1
 	self:createDeck()
 	self.dragAndDroppedObject = nil
@@ -516,7 +523,9 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 			and face.y > self.inventorySMTY
 			and face.y < self.inventorySMTY + self.inventoryCanvasSmall:getHeight()
 		then
-			self:buyDiceFace(face.representedObject, face, key)
+			if not self.run.tutorial or self.canBuyDiceFace == true then
+				self:buyDiceFace(face.representedObject, face, key)
+			end
 		end
 	end
 
@@ -534,7 +543,9 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 			and ciggie.x < 1670 + Sprites.BUY_CIGGIE:getWidth()
 			and ciggie.y < 590 + Sprites.BUY_CIGGIE:getHeight()
 		then
-			self:buyCiggie(ciggie.representedObject, ciggie, key)
+			if not self.run.tutorial or self.canBuyAnything == true then
+				self:buyCiggie(ciggie.representedObject, ciggie, key)
+			end
 		end
 
 		if
@@ -569,11 +580,20 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 				(sticker.representedObject.holographic == true and self.run.money >= Constants.BASE_HOLO_STICKER_PRICE)
 				or (sticker.representedObject.holographic == false and self.run.money >= Constants.BASE_STICKER_PRICE)
 			then
-				self:buySticker(sticker)
-				if sticker.representedObject.holographic == true then
-					self.run.money = self.run.money - Constants.BASE_HOLO_STICKER_PRICE
-				else
-					self.run.money = self.run.money - Constants.BASE_STICKER_PRICE
+				if not self.tutorial and self.canBuySticker == true then
+					self:buySticker(sticker)
+
+					if sticker.representedObject.holographic == true then
+						self:setMoneyTo(self.run.money - Constants.BASE_HOLO_STICKER_PRICE)
+					else
+						self:setMoneyTo(self.run.money - Constants.BASE_STICKER_PRICE)
+					end
+
+					if self.run.tutorial then
+						self.animator:addDelay(0.2, function()
+							TutorialEvents.shop3()
+						end)
+					end
 				end
 			end
 		end
@@ -703,6 +723,10 @@ function Shop:buyDiceFace(face, faceUI, key)
 
 		--Update the positions of the dices
 		self:updateInventoryPositions()
+
+		if self.run.tutorial then
+			self.animator:addDelay(0.2, TutorialEvents.shop2())
+		end
 	end
 end
 
@@ -847,13 +871,15 @@ function Shop:sellReward(face, faceUI, key)
 end
 
 function Shop:rerollShop()
-	if self.run.money >= self.rerollShopPrice then
-		G.animator:finishAll()
-		G.animator:add("waveY", -6, 0, 1.0, AnimationUtils.Easing.outQuad)
-		self.run.money = self.run.money - self.rerollShopPrice
-		self.run.totalspent = self.run.totalspent + self.rerollShopPrice
-		self:generateNewShop()
-		self.rerollShopPrice = self.rerollShopPrice + Constants.BASE_SHOP_REROLL_PRINCE_INCREMENT
+	if not self.run.tutorial or self.canRerollShop == true then
+		if self.run.money >= self.rerollShopPrice then
+			G.animator:finishAll()
+			G.animator:add("waveY", -6, 0, 1.0, AnimationUtils.Easing.outQuad)
+			self.run.money = self.run.money - self.rerollShopPrice
+			self.run.totalspent = self.run.totalspent + self.rerollShopPrice
+			self:generateNewShop()
+			self.rerollShopPrice = self.rerollShopPrice + Constants.BASE_SHOP_REROLL_PRINCE_INCREMENT
+		end
 	end
 end
 
@@ -1835,6 +1861,10 @@ end
 
 function Shop:outAnimation()
 	local outDuration = 0.4
+
+	if self.run.tutorial and self.canGoToNextRound == false then
+		return
+	end
 
 	--Out animation for inventory faces
 	for i = #self.inventoryFacesUI, 1, -1 do

@@ -95,19 +95,22 @@ end
 --Interaction functions
 function CoffeeButton:clickAction()
 	if self.run.money >= Constants.BASE_COFFEE_PRICE and self.used == false then
-		--Retirer l'argent
-		self.run.money = self.run.money - Constants.BASE_COFFEE_PRICE
-		self.run.totalspent = self.run.totalspent + Constants.BASE_COFFEE_PRICE
+		--On s'assure que si on est dans une run tutorial, on a la possibilité d'acheter du caffé
+		if not self.run.tutorial or self.run.shop.canBuyAnything == true then
+			--Retirer l'argent
 
-		--Level Up la figure
-		self.run.totalUsedCoffees = self.run.totalUsedCoffees + 1
-		self.run:levelUpFigure(self.figureIndex)
+			self.run.money = self.run.money - Constants.BASE_COFFEE_PRICE
+			self.run.totalspent = self.run.totalspent + Constants.BASE_COFFEE_PRICE
 
-		--Desactiver le bouton
-		self.used = true
-		self.isActivated = false
+			--Level Up la figure
+			self.run.totalUsedCoffees = self.run.totalUsedCoffees + 1
+			self.run:levelUpFigure(self.figureIndex)
+
+			--Desactiver le bouton
+			self.used = true
+			self.isActivated = false
+		end
 	end
 end
 
 return CoffeeButton
-

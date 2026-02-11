@@ -25,6 +25,9 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 		),
 		DiceCustomization
 	)
+	print("fdn", self.run.floorDeskNumber)
+	print("floornumber", self.run.floorNumber)
+
 	self.run = previousRound.run
 	--Table where we store the ui faces of the face objects earned
 	self.newFaceObjects = newFaceObjects
@@ -54,6 +57,11 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 			return Inputs.getMouseInCanvas(0, 0, 3)
 		end
 	)
+
+	--Desactivation du bouton au cas ou on est au premier ecran de customization du tutoriel
+
+	self.uiElements.buttons["nextRound"].isActivated = not self.run.tutorial
+		or not (self.run.floorDeskNumber == 2 and self.run.floorNumber == 1)
 
 	self.uiElements.buttons["nextRound"].layer = 3
 
@@ -505,6 +513,25 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
 	end
 
 	self:updateInventoryPositions()
+
+	--Desactivation du bouton Next Round en cas de tutorial
+	local everyRewardPlaced = true
+	local everyInventoryPlaced = true
+	--Verification pour les rewards
+	for i, reward in next, self.rewardsUIFaces do
+		if not self:detectClosestFace(reward.x, reward.y) then
+			everyRewardPlaced = false
+		end
+	end
+	--Verification pour l'inventaire (si le joueur a ajouté des rewards à l'inventaire)
+	for i, reward in next, self.newUIFaces do
+		if not self:detectClosestFace(reward.x, reward.y) then
+			everyRewardPlaced = false
+		end
+	end
+	self.uiElements.buttons["nextRound"].isActivated = not self.run.tutorial
+		or not (self.run.floorDeskNumber == 2 and self.run.floorNumber == 1)
+		or (everyRewardPlaced and everyInventoryPlaced)
 end
 
 function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
