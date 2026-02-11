@@ -1,3 +1,4 @@
+local TutorialEvents = require("src.utils.TutorialEvents")
 local StickerTypes = require("src.classes.StickerTypes")
 local StickerObject = require("src.classes.StickerObject")
 local Sticker = require("src.classes.ui.Sticker")
@@ -118,6 +119,8 @@ function Shop:new(run)
 		self:createRewardFaces()
 		self:generateCiggiesUI()
 	end)
+
+	self.animator:addDelay(0.5, TutorialEvents.shop())
 
 	--Booleen sachant si montrer le terrain quand un sticker est glissé depuis le shop
 	self.terrainCanvas = love.graphics.newCanvas(930, 460)
@@ -336,6 +339,10 @@ function Shop:updateCanvas(dt)
 		--self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
 		self.infoBubble:update(dt)
 		self.infoBubble:draw()
+	end
+
+	if self.run.tutorial and self.run.tutorial.current then
+		self:drawTutoText()
 	end
 
 	love.graphics.setCanvas(currentCanvas)

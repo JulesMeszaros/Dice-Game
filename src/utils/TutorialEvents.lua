@@ -149,4 +149,18 @@ function TutorialEvents.shop()
 	})
 end
 
+function TutorialEvents.secondFloor()
+	G.currentRun.tutorial:pushOnce("secondFloor", {
+		text = "Alrighty! You managed to reach the second floor",
+	})
+
+	G.currentRun.tutorial:pushOnce("secondFloor2", {
+		text = "As promised, your Large Straight can be used again! But don't worry, there are ways to increase the number of times a figure can be used in a single floor... But i'm not saying more.",
+	})
+
+	G.currentRun.tutorial:pushOnce("secondFloor3", {
+		text = "Well, I think you know the basis now. You need to reach and beat the manager of the 8th floor to escape this [[sh&#@!ty company]]. Good luck mate!",
+	})
+end
+
 return TutorialEvents

@@ -99,10 +99,11 @@ function Run:new(dices, gameCanvas, game, diceObjects, tutorial)
 
 	--Floor variables
 	--Create the first floor of the game
-	self.currentFloor = Floor:new(1, self)
 
 	self.floorNumber = 1 --Représente l'étage (augmente de 1 après un boss)
 	self.floorDeskNumber = 1 --Représente le numéro de bureau dans l'étage actuel (retourne à 1 après un boss)
+
+	self.currentFloor = Floor:new(1, self)
 
 	--Si on est dans une run tutorial, on commence directement par le premier round (on choisit le premier bureau proposé). Sinon, on emmene sur la selection de round
 

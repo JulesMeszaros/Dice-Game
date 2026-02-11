@@ -93,8 +93,13 @@ function DeskChoice:new(floor, run)
 		self.animator:addDelay(0.3, TutorialEvents.deskChoice)
 
 		if self.run.roundNumber == 2 then
-			self.animator:addDelay(0.3, TutorialEvents.managerSelection())
+			self.animator:addDelay(0.3, TutorialEvents.managerSelection)
 		end
+
+		if self.run.floorNumber == 2 then
+			self.animator:addDelay(0.3, TutorialEvents.secondFloor)
+		end
+		print("floor", self.run.floorNumber)
 	end
 
 	--self:createHorizontalDice()

@@ -11,6 +11,7 @@ function Floor:new(floornumber, run)
 
 	self.run = run
 	self.floorNumber = floornumber
+	self.run.floorNumber = floornumber
 	self.desks = {}
 	self.boss = self:generateBoss()
 

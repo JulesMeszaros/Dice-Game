@@ -72,8 +72,18 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 		for k, _ in pairs(Constants.BOSS_TYPES) do
 			table.insert(bossKeys, k)
 		end
-		local randomKey = bossKeys[G.rngEnemies:random(#bossKeys)]
+		local sortedBosses = GenerateRandom.sorted(bossKeys)
+		local randomKey = sortedBosses[G.rngEnemies:random(#sortedBosses)]
+
 		self.bossType = Constants.BOSS_TYPES[randomKey]
+
+		print("etage", self.run.floorNumber)
+
+		if self.run.tutorial and self.run.floorNumber == 1 then
+			self.bossType = 2
+		end
+
+		print("type", self.bossType)
 	end
 
 	if self.roundType == Constants.ROUND_TYPES.BOSS then
