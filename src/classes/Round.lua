@@ -155,7 +155,7 @@ function Round:endRound()
 	else
 		--CREATE A GAME OVER SCREEN
 		self.terrain.gameOverPopup = GameOver:new(self.run, self)
-		if self.run.tutorial then
+		if self.run.tutorial and self.run.floorNumber == 1 then
 			TutorialEvents.gameOver()
 		end
 		self.phase = Constants.ROUND_STATES.GAME_OVER
