@@ -260,8 +260,19 @@ function TutorialEvents.secondFloor()
 	G.currentRun.tutorial:pushOnce("secondFloor3", {
 		text = "Well, I think you know the basis now. You need to reach and beat the manager of the 8th floor to escape this [[sh&#@!ty company]]. Good luck mate!",
 		pos = "ur",
-		onComplete = function()
+		onConfirm = function()
 			G.currentRun.deskChoice.canSelectRound = true
+		end,
+	})
+end
+
+function TutorialEvents.gameOver()
+	G.currentRun.tutorial:push({
+		text = "Wait, you lost ..? Okay i'm giving you another chance, but do better !",
+		pos = "ur",
+		onConfirm = function()
+			G.currentRun.currentRound:resetRound()
+			G.currentRun:resetAvailableFigures()
 		end,
 	})
 end

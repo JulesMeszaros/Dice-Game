@@ -637,9 +637,8 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
 end
 
 function RoundScreen:keypressed(k)
-	if k == "d" then
-		self.showDeck = not self.showDeck
-		self.deckScreen = Deck:new()
+	if k == "l" then
+		self.round:resetRound()
 	end
 end
 

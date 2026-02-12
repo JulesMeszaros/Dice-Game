@@ -155,6 +155,9 @@ function Round:endRound()
 	else
 		--CREATE A GAME OVER SCREEN
 		self.terrain.gameOverPopup = GameOver:new(self.run, self)
+		if self.run.tutorial then
+			TutorialEvents.gameOver()
+		end
 		self.phase = Constants.ROUND_STATES.GAME_OVER
 	end
 
@@ -736,6 +739,25 @@ function Round:containsDice(diceList, targetDice)
 		end
 	end
 	return false
+end
+
+function Round:resetRound()
+	local newRound = self:new(
+		self.nround,
+		self.floorNumber,
+		self.deskNumber,
+		nil,
+		self.run,
+		self.baseReward,
+		self.targetScore,
+		self.diceObjects,
+		self.roundType,
+		self.faceRewards
+	)
+
+	newRound.enemyCharacter = self.enemyCharacter
+
+	self.run.currentRound = newRound
 end
 
 return Round
