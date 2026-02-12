@@ -118,10 +118,6 @@ function Run:new(dices, gameCanvas, game, diceObjects, tutorial)
 end
 
 function Run:update(dt)
-	if self.tutorial and self.tutorial.current then
-		self.tutorial:updateTutoCanvas(dt)
-	end
-
 	if self.displayInfoScreen ~= true and self.displayPauseMenu ~= true then
 		self.animator:update(dt)
 		if self.currentState == Constants.RUN_STATES.ROUND then
@@ -143,6 +139,11 @@ function Run:update(dt)
 		self.infoScreen:updateCanvas(dt)
 	else
 		self.pauseMenu:update(dt)
+	end
+
+	if self.tutorial and self.tutorial.current then
+		self.tutorial:update(dt)
+		self.tutorial:updateTutoCanvas()
 	end
 end
 

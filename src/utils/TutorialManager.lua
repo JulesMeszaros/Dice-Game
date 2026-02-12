@@ -1,3 +1,5 @@
+local AnimationUtils = require("src.utils.scripts.Animations")
+local Animator = require("src.utils.Animator")
 local Constants = require("src.utils.Constants")
 local Inputs = require("src.utils.scripts.Inputs")
 local Button = require("src.classes.ui.Button")
@@ -24,7 +26,13 @@ function TutorialManager:new(run)
 			return Inputs.getMouseInCanvas(0, 0)
 		end
 	)
+	self.animator = Animator:new(self)
+
 	self.run = run
+
+	self.opacity = 0
+	self.x = -10000
+	self.y = -10000
 
 	-- queue de messages à afficher
 	self.queue = {}
@@ -60,7 +68,29 @@ function TutorialManager:push(messageData)
 
 	if not self.current then
 		self:_popNext()
+		--Animation de l'opacity du background
+		self.animator:add("opacity", 0, 0.6, 0.4, AnimationUtils.Easing.inOutCubic)
+		--Animation de l'entrée du carton de dialogue
+		local duration = 0.2
+		if messageData.pos == "ul" then
+			self.animator:add("x", -Sprites.TUTO_PANEL:getWidth() - 50, 30, duration, AnimationUtils.Easing.outQuad)
+			self.y = 30
+		elseif messageData.pos == "ur" then
+			self.animator:add(
+				"x",
+				Constants.VIRTUAL_GAME_WIDTH + 50,
+				Constants.VIRTUAL_GAME_WIDTH - Sprites.TUTO_PANEL:getWidth() - 30,
+				duration,
+				AnimationUtils.Easing.outQuad
+			)
+			self.y = 30
+		else
+			self.animator:add("x", -Sprites.TUTO_PANEL:getWidth() - 50, 30, duration, AnimationUtils.Easing.outQuad)
+			self.y = Constants.VIRTUAL_GAME_HEIGHT - Sprites.TUTO_PANEL:getHeight() - 30
+		end
 	end
+
+	self:updateTutoCanvas()
 end
 
 -- ============================================================
@@ -123,6 +153,9 @@ function TutorialManager:update(dt)
 	if self.current.update then
 		self.current.update(self.run, dt, self.current)
 	end
+
+	self.animator:update(dt)
+	self.nextButton:update(dt)
 end
 
 -- ============================================================
@@ -139,12 +172,10 @@ function TutorialManager:draw()
 end
 
 --Update des éléments visuels
-function TutorialManager:updateTutoCanvas(dt)
+function TutorialManager:updateTutoCanvas()
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.tutoPanelCanvas)
 	love.graphics.clear()
-
-	self.nextButton:update(dt)
 
 	love.graphics.draw(Sprites.TUTO_PANEL, 0, 0)
 	--Dessin du texte
@@ -179,6 +210,9 @@ function TutorialManager:_popNext()
 	else
 		self.current = nil
 		self.isBlocking = false
+		self.opacity = 0
+		self.x = -10000
+		self.y = -10000
 	end
 end
 

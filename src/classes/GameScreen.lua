@@ -1408,24 +1408,14 @@ function GameScreen:drawTutoText()
 		local y = Constants.VIRTUAL_GAME_HEIGHT - Sprites.TUTO_PANEL:getHeight()
 
 		--Position dans les autres coins si précisé
-		if self.run.tutorial.current.pos == "ul" then
-			x = 0
-			y = 0
-		elseif self.run.tutorial.current.pos == "ur" then
-			x = Constants.VIRTUAL_GAME_WIDTH - Sprites.TUTO_PANEL:getWidth()
-			y = 0
-		elseif self.run.tutorial.current.pos == "lr" then
-			x = Constants.VIRTUAL_GAME_WIDTH - Sprites.TUTO_PANEL:getWidth()
-			y = Constants.VIRTUAL_GAME_HEIGHT - Sprites.TUTO_PANEL:getHeight()
-		end
 
 		--Dessin d'un fond transparant noir
-		love.graphics.setColor(0, 0, 0, 0.7)
+		love.graphics.setColor(0, 0, 0, self.run.tutorial.opacity)
 		love.graphics.rectangle("fill", 0, 0, Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 		love.graphics.setColor(1, 1, 1)
 
 		--Dessin du panneau
-		love.graphics.draw(self.run.tutorial.tutoPanelCanvas, x, y)
+		love.graphics.draw(self.run.tutorial.tutoPanelCanvas, self.run.tutorial.x, self.run.tutorial.y)
 
 		--Dessin du bouton
 		self.run.tutorial.nextButton:draw()

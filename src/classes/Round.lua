@@ -615,19 +615,19 @@ function Round:makeRoll(dices)
 		--self.terrain.unselectedDices = rerolledDiceFaces
 		self.terrain.diceFaces[dice].animator:addDelay(0.6, function()
 			self.terrain:sortUnselectedDices(rerolledDiceFaces)
-		end)
 
-		if self.run.tutorial then
-			self.terrain.animator:addDelay(0.6, function()
-				if self.run.usedRerolls == 0 then
-					TutorialEvents.firstRoll()
-				elseif self.run.usedRerolls == 1 then
-					TutorialEvents.secondRoll()
-				elseif self.run.usedRerolls == 2 then
-					TutorialEvents.thirdRoll()
-				end
-			end)
-		end
+			if self.run.tutorial then
+				self.terrain.animator:addDelay(0.3, function()
+					if self.run.usedRerolls == 0 then
+						TutorialEvents.firstRoll()
+					elseif self.run.usedRerolls == 1 then
+						TutorialEvents.secondRoll()
+					elseif self.run.usedRerolls == 2 then
+						TutorialEvents.thirdRoll()
+					end
+				end)
+			end
+		end)
 	end
 end
 
