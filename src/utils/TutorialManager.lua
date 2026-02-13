@@ -49,6 +49,17 @@ function TutorialManager:new(run)
 	--Canvas pour les éléments du tutorial.
 	self.tutoPanelCanvas = love.graphics.newCanvas(790, 260)
 
+	-----------------
+	---Toasts Notifications--
+	-----------------
+	self.toastQueue = {}
+	self.currentToast = nil
+
+	self.tx = -10000
+	self.ty = -10000
+
+	self.toastCanvas = love.graphics.newCanvas(500, 125)
+
 	return self
 end
 
@@ -93,6 +104,28 @@ function TutorialManager:push(messageData)
 	self:updateTutoCanvas()
 end
 
+function TutorialManager:pushToast(toastData)
+	table.insert(self.toastQueue, toastData)
+
+	if not self.currentToast then
+		self:_popNextToast()
+
+		-- animation entrée toast
+		self.tx = Constants.VIRTUAL_GAME_WIDTH + 50
+		self.ty = 30
+
+		self.animator:add(
+			"tx",
+			Constants.VIRTUAL_GAME_WIDTH + 50,
+			Constants.VIRTUAL_GAME_WIDTH - 500 - 30,
+			0.25,
+			AnimationUtils.Easing.outQuad
+		)
+
+		self:updateToastCanvas()
+	end
+end
+
 -- ============================================================
 -- Push une seule fois via un ID unique
 -- ============================================================
@@ -121,6 +154,39 @@ function TutorialManager:confirm()
 	self:_popNext()
 end
 
+function TutorialManager:confirmToast(key)
+	--Permet de confirmer un toast, seulement si la clé donnée est la bonne.
+	--S'il n'y a pas de clé donnée, alors on confirme seulement si le toast n'a pas de clé
+	key = key or ""
+
+	if not self.currentToast then
+		return
+	end
+
+	if not self.currentToast.key or self.currentToast.key == key then
+		-- callback quand on confirme
+		if self.currentToast.onConfirm then
+			self.currentToast.onConfirm(self.run, self.currentToast)
+		end
+
+		-- animation de sortie
+		if #self.toastQueue <= 0 then
+			self.animator:add(
+				"tx",
+				self.tx,
+				Constants.VIRTUAL_GAME_WIDTH + 50,
+				0.2,
+				AnimationUtils.Easing.inQuad,
+				function()
+					self:_popNextToast()
+				end
+			)
+		else
+			self:_popNextToast()
+		end
+	end
+end
+
 -- ============================================================
 -- Passer au message suivant sans confirmer (skip)
 -- ============================================================
@@ -146,11 +212,11 @@ end
 -- Update : si le message a une fonction update personnalisée
 -- ============================================================
 function TutorialManager:update(dt)
-	if not self.current then
+	if not self.current and not self.currentToast then
 		return
 	end
 
-	if self.current.update then
+	if self.current and self.current.update then
 		self.current.update(self.run, dt, self.current)
 	end
 
@@ -173,6 +239,9 @@ end
 
 --Update des éléments visuels
 function TutorialManager:updateTutoCanvas()
+	if not self.current then
+		return
+	end
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.tutoPanelCanvas)
 	love.graphics.clear()
@@ -180,6 +249,23 @@ function TutorialManager:updateTutoCanvas()
 	love.graphics.draw(Sprites.TUTO_PANEL, 0, 0)
 	--Dessin du texte
 	UI.Text.drawFormattedText(self.current.text, 20, 20, Fonts.sora30, Sprites.TUTO_PANEL:getWidth() - 50, false)
+
+	love.graphics.setCanvas(currentCanvas)
+end
+
+function TutorialManager:updateToastCanvas()
+	if not self.currentToast then
+		return
+	end
+
+	local currentCanvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(self.toastCanvas)
+	love.graphics.clear()
+
+	love.graphics.draw(Sprites.TUTO_TOAST, 0, 0)
+
+	-- texte
+	UI.Text.drawFormattedText(self.currentToast.text or "", 20, 20, Fonts.sora30, 460, false)
 
 	love.graphics.setCanvas(currentCanvas)
 end
@@ -213,6 +299,26 @@ function TutorialManager:_popNext()
 		self.opacity = 0
 		self.x = -10000
 		self.y = -10000
+	end
+end
+
+function TutorialManager:_popNextToast()
+	-- on appelle onEnd si besoin
+	if self.currentToast and self.currentToast.onEnd then
+		self.currentToast.onEnd(self.run, self.currentToast)
+	end
+
+	if #self.toastQueue > 0 then
+		self.currentToast = table.remove(self.toastQueue, 1)
+
+		-- callback au moment où le message apparaît
+		if self.currentToast.onStart then
+			self.currentToast.onStart(self.run, self.currentToast)
+		end
+	else
+		self.currentToast = nil
+		self.tx = -10000
+		self.ty = -10000
 	end
 end
 

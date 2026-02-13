@@ -436,6 +436,10 @@ function RoundScreen:updateCanvas(dt)
 		self:drawTutoText()
 	end
 
+	if self.run.tutorial and self.run.tutorial.currentToast then
+		self:drawTutoToast()
+	end
+
 	love.graphics.setCanvas(currentCanvas)
 end
 

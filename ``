@@ -13,7 +13,7 @@ function TutorialEvents.welcomeMessage()
 		pos = "ul",
 		onConfirm = function()
 			G.currentRun.tutorialCanReroll = true
-			G.currentRun.tutorial:pushToast({ text = "Press the [[REROLL!]] button.", key = "firstThrow" })
+			G.currentRun.tutorial:pushToast({ text = "Press the [[REROLL!]] button." })
 		end,
 	})
 end
@@ -25,10 +25,6 @@ function TutorialEvents.firstRoll()
 		pos = "ul",
 		onConfirm = function()
 			G.currentRun.currentRound.terrain.firstThrow = true
-			G.currentRun.tutorial:pushToast({
-				text = "Click on the dices with ((3, 4 & 5)) and [[reroll]]",
-				key = "secondThrow",
-			})
 		end,
 	})
 end
@@ -40,11 +36,6 @@ function TutorialEvents.secondRoll()
 		pos = "ul",
 		onConfirm = function()
 			G.currentRun.currentRound.terrain.secondThrow = true
-			G.currentRun.currentRound.terrain.firstThrow = true
-			G.currentRun.tutorial:pushToast({
-				text = "[[Reroll]] the two remaining dices",
-				key = "thirdThrow",
-			})
 		end,
 	})
 end
@@ -58,10 +49,6 @@ function TutorialEvents.thirdRoll()
 		onConfirm = function()
 			G.currentRun.currentRound.terrain.thirdThrow = true
 			G.currentRun.tutorialCanPlayFigure = true
-			G.currentRun.tutorial:pushToast({
-				text = "Select the remaining dices and click on [[Large Straight]]",
-				key = "playFigure",
-			})
 		end,
 	})
 end

@@ -359,6 +359,11 @@ function GameScreen:new(floor, run, screenType, round)
 	if self.screenType == Constants.RUN_STATES.ROUND then
 		self.uiElements.buttons["rerollButton"] = Button:new(
 			function()
+				if self.run.tutorial then
+					self.run.tutorial:confirmToast("secondThrow")
+					self.run.tutorial:confirmToast("firstThrow")
+					self.run.tutorial:confirmToast("thirdThrow")
+				end
 				self.round:rerollDices()
 			end,
 			"src/assets/sprites/ui/Reroll.png",
@@ -1419,6 +1424,13 @@ function GameScreen:drawTutoText()
 
 		--Dessin du bouton
 		self.run.tutorial.nextButton:draw()
+	end
+end
+
+function GameScreen:drawTutoToast()
+	if self.run.tutorial and self.run.tutorial.currentToast then
+		--Dessin du panneau
+		love.graphics.draw(self.run.tutorial.toastCanvas, self.run.tutorial.tx, self.run.tutorial.ty)
 	end
 end
 

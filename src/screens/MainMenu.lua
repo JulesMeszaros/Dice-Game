@@ -89,7 +89,7 @@ function MainMenu:new(gameCanvas, game)
 		function()
 			love.system.openURL("https://discord.gg/SEbbEsjt57")
 		end,
-		"src/assets/sprites/ui/discord.png",
+		"src/assets/sprites/ui/Discord.png",
 		100,
 		100,
 		120,

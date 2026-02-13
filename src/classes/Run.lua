@@ -141,9 +141,10 @@ function Run:update(dt)
 		self.pauseMenu:update(dt)
 	end
 
-	if self.tutorial and self.tutorial.current then
+	if self.tutorial then
 		self.tutorial:update(dt)
 		self.tutorial:updateTutoCanvas()
+		self.tutorial:updateToastCanvas()
 	end
 end
 
@@ -265,7 +266,10 @@ end
 function Run:keypressed(key)
 	if self.tutorial then
 		if key == "s" then
-			self.tutorial:confirm()
+			self.tutorial:pushToast({ text = "bello" })
+		end
+		if key == "x" then
+			self.tutorial:confirmToast()
 		end
 	end
 

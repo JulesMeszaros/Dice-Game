@@ -648,6 +648,10 @@ end
 
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
+	if self.run.tutorial then
+		self.run.tutorial:confirmToast("playFigure")
+	end
+
 	--Commencer la phase de déclenchement
 
 	--Si boss trésorier : on retire de l'argent selon le nombre de dés
