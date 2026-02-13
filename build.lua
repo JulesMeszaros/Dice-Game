@@ -2,7 +2,7 @@ return {
 
 	-- basic settings:
 	name = "Dice Deluxe!", -- name of the game for your executable
-	developer = "AEROSOL DELUXE GAMES", -- dev name used in metadata of the file
+	developer = "AEROSOL DELUXE Interactives", -- dev name used in metadata of the file
 	output = "dist", -- output location for your game, defaults to $SAVE_DIRECTORY
 	version = "0.1a", -- 'version' of your game, used to name the folder in output
 	love = "11.5", -- version of LÖVE to use, must match github releases

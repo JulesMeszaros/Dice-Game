@@ -7,10 +7,11 @@ local AnimationUtils = require("src.utils.scripts.Animations")
 local FaceTypes = require("src.classes.FaceTypes")
 local StickerTypes = require("src.classes.StickerTypes")
 local GenerateRandom = require("src.utils.scripts.GenerateRandom")
-
+local SaveManager = require("src.utils.SaveManager")
 local seed = os.time()
 
 G = {
+	saveManager = SaveManager:new("profile.lua"),
 	--Background color
 	backgroundR = 40 / 255,
 	backgroundG = 40 / 255,

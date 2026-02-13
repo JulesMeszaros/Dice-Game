@@ -38,7 +38,8 @@ function MainMenu:new(gameCanvas, game)
 	)
 
 	-- Create version text only once
-	self.versionText = love.graphics.newText(Fonts.soraSmall, "AEROSOL DELUXE GAMES — " .. Constants.GAME_VERSION)
+	self.versionText =
+		love.graphics.newText(Fonts.soraSmall, "AEROSOL DELUXE Interactives — " .. Constants.GAME_VERSION)
 
 	self.uiElements.buttons["newRun"] = Button:new(
 		function()
