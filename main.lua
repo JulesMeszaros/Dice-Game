@@ -47,6 +47,25 @@ G = {
 	audio = AudioUtils:new(),
 }
 
+function initSave()
+	--Fonction qui créée un fichier de sauvegarde vierge si celui-ci est vide
+
+	G.saveManager.data["stats"] = {
+		dices = {},
+		wands = {},
+		stickers = {},
+		figures = {},
+		coffees = {},
+		wins = {},
+	}
+	G.saveManager:save()
+end
+
+--Initialisation d'un fichier de sauvegarde vide de stats s'il n'existe pas
+if not G.saveManager.data.stats then
+	initSave()
+end
+
 --Animators
 G.animator = Animator:new(G)
 G.bgAnimator = Animator:new(G)
@@ -221,6 +240,10 @@ end
 
 function love.keypressed(key)
 	game:keypressed(key)
+
+	if key == "@" then
+		G.saveManager:save()
+	end
 
 	if Constants.DEBUG == true then
 		if key == "$" then
