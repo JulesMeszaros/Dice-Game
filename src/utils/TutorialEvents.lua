@@ -120,6 +120,12 @@ function TutorialEvents.customizationScreen()
 	G.currentRun.tutorial:pushOnce("customScreen3", {
 		text = "You can drag and drop one of your fresh rewards on the face you want to apply it. When you are satisfied with your creation, hit[[NEXT OFFICE!]] to carry on.",
 		pos = "ur",
+		onConfirm = function()
+			G.currentRun.tutorial:pushToast({
+				text = "Customize you dices with your rewards and ((confirm))",
+				key = "customizeDice",
+			})
+		end,
 	})
 end
 
@@ -137,6 +143,10 @@ function TutorialEvents.deskChoice()
 		onConfirm = function()
 			G.currentRun.tutorialCanReroll = false
 			G.currentRun.deskChoice.canSelectRound = true
+			G.currentRun.tutorial:pushToast({
+				text = "Select your next oponent by clicking on a badge.",
+				key = "oponentSelect",
+			})
 		end,
 	})
 end
@@ -203,6 +213,10 @@ function TutorialEvents.shop()
 		pos = "ul",
 		onConfirm = function()
 			G.currentRun.shop.canBuyDiceFace = true
+			G.currentRun.tutorial:pushToast({
+				text = "Slide a dice face to your inventory to buy it.",
+				key = "diceFaceBuy",
+			})
 		end,
 	})
 end
@@ -211,6 +225,9 @@ function TutorialEvents.shop2()
 	G.currentRun.tutorial:pushOnce("presentingStickers", {
 		text = "Great! You just bought your first dice face. You'll be able to apply it to one of your dices after exiting the shop.",
 		pos = "ul",
+		onStart = function()
+			G.currentRun.tutorial:confirmToast("diceFaceBuy")
+		end,
 	})
 
 	G.currentRun.tutorial:pushOnce("presentingStickers2", {
@@ -227,6 +244,10 @@ function TutorialEvents.shop2()
 		onConfirm = function()
 			G.currentRun.shop.canBuySticker = true
 			G.currentRun.shop.canBuyDiceFace = false
+			G.currentRun.tutorial:pushToast({
+				text = "Grab a sticker and slide it to your play mat to buy it.",
+				key = "stickerBuy",
+			})
 		end,
 	})
 end
@@ -235,6 +256,9 @@ function TutorialEvents.shop3()
 	G.currentRun.tutorial:pushOnce("finishingShopPres", {
 		text = "Great Choice! Magic Wands are also on your disposal! Grab one and slide it to your Magic Wand Box to add it to your inventory.",
 		pos = "ul",
+		onStart = function()
+			G.currentRun.tutorial:confirmToast("dstickerBuy")
+		end,
 	})
 	G.currentRun.tutorial:pushOnce("finishingShopPres2", {
 		text = "Finally, figures can be leveled up. Drinking a coffee will permanently increase the base value of the corresponding figure.",

@@ -361,6 +361,9 @@ function Shop:updateCanvas(dt)
 	if self.run.tutorial and self.run.tutorial.current then
 		self:drawTutoText()
 	end
+	if self.run.tutorial and self.run.tutorial.currentToast then
+		self:drawTutoToast()
+	end
 
 	love.graphics.setCanvas(currentCanvas)
 end

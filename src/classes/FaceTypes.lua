@@ -18,7 +18,7 @@ function WhiteDice:new(faceValue, pointsValue)
 	self.name = "White Face"
 	self.id = 1
 	self.tier = "Common"
-	self.description = "Scoring : [[+10pts]]"
+	self.description = "[[+10pts]]"
 
 	--Metadatas about the graphics of the WhiteDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
@@ -53,7 +53,7 @@ function ChunkyDice:new(faceValue, pointsValue)
 	self.name = "Chunky Dice"
 	self.id = 2
 	self.tier = "Common"
-	self.description = "Scoring : [[+20pts]]"
+	self.description = "[[+20pts]]"
 
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Chunky Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
@@ -84,7 +84,7 @@ function MassiveDice:new(faceValue, pointsValue)
 	self.name = "Massive Dice"
 	self.id = 3
 	self.tier = "Uncommon"
-	self.description = "Scoring : [[+50pts]]"
+	self.description = "[[+50pts]]"
 
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Massive Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
@@ -116,8 +116,6 @@ function BlueDice:new(faceValue, pointsValue)
 	self.name = "Blue Dice"
 	self.tier = "Common"
 	self.id = 4
-	self.description =
-		"Scoring : [[+10pts]]. \n Passive : Adds [[2pts]] per used rerolls this building to its points value (currently : 0)"
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Blue Dice.png")
@@ -138,9 +136,7 @@ function BlueDice:triggerEffect(round)
 end
 
 function BlueDice:getDescription(run)
-	return "Scoring : [["
-		.. tostring(2 * run.usedRerolls)
-		.. "pts]]. \n Passive : Adds [[2pts]] per used rerolls this building to its points value)"
+	return "[[+2pts]] per used rerolls this building (currently : [[" .. tostring(2 * run.usedRerolls) .. "pts]] )."
 end
 
 FaceTypes.BlueDice = BlueDice
@@ -222,7 +218,7 @@ function DeluxeDice:triggerEffect(round)
 	addScore(round, self.pointsValue)
 end
 
-FaceTypes.DeluxeDice = DeluxeDice
+--FaceTypes.DeluxeDice = DeluxeDice
 
 --==STRIKE OF LUCK==--
 local StrikeOfLuck = setmetatable({}, { __index = FaceObject })
@@ -235,7 +231,7 @@ function StrikeOfLuck:new(faceValue, pointsValue)
 	self.name = "Strike Of Luck"
 	self.tier = "Common"
 	self.id = 7
-	self.description = "Scoring : [[+10pts]], adds a random ciggie to the inventory"
+	self.description = "[[+10pts]], adds a random ciggie to the inventory"
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Strike of Luck.png")
@@ -274,7 +270,7 @@ function Copyprinter:new(faceValue, pointsValue)
 	self.name = "Copyprinter"
 	self.tier = "Rare"
 	self.id = 8
-	self.description = "Scoring: Triggers the scoring dice to its left again. \n Blank"
+	self.description = "Triggers the scoring dice to its left again."
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Copyprinter.png")
@@ -318,45 +314,6 @@ end
 
 FaceTypes.Copyprinter = Copyprinter
 
---==BasketOfEggs==--
-local BasketOfEggs = setmetatable({}, { __index = FaceObject })
-BasketOfEggs.__index = BasketOfEggs
-
-function BasketOfEggs:new(faceValue, pointsValue)
-	local self = setmetatable(FaceObject:new(), BasketOfEggs)
-
-	--Metadatas about the BlackStar
-	self.name = "Basket Of Eggs"
-	self.tier = "Uncommon"
-	self.id = 9
-	self.description = "Full Hand: Multiplies the total score by ((1,5))."
-
-	--Metadatas about the graphics of the BlackStar
-	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Milk Dice.png")
-	self.spriteSheet:setFilter("linear", "linear")
-
-	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
-
-	self.fullHand = true
-
-	--Round status
-	self.faceValue = faceValue --Le numéro de face que le dé représente
-	self.pointsValue = 10 --This is the points scored by the dice
-	self.totalTriggered = 0
-
-	return self
-end
-
-function BasketOfEggs:triggerEffect(round)
-	addScore(round, self.pointsValue)
-end
-
-function BasketOfEggs:fullHandEffect(round)
-	multiplyScore(round, 1.5)
-end
-
--- FaceTypes.BasketOfEggs = BasketOfEggs
-
 --==Apparition==--
 local Apparition = setmetatable({}, { __index = FaceObject })
 Apparition.__index = Apparition
@@ -368,7 +325,7 @@ function Apparition:new(faceValue, pointsValue)
 	self.name = "Apparition"
 	self.tier = "Uncommon"
 	self.id = 10
-	self.description = "Scoring : Multiplies the hand score by ((2)). \n Ghost"
+	self.description = "Multiplies the hand score by ((2))."
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Apparition.png")
@@ -403,7 +360,7 @@ function BlackStar:new(faceValue, pointsValue)
 	self.name = "Black Star"
 	self.id = 11
 	self.tier = "Common"
-	self.description = "Scoring : [[+30pts]]\n Blank"
+	self.description = "[[+30pts]]"
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Black Star.png")
@@ -438,7 +395,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
 	self.id = 12
 	self.tier = "Common"
 	self.description =
-		"Scoring : Adds [[20pts]] multiplied by this face's number to the score. Passive : decreases the face number by one the first time you score this Face in the Office."
+		"[[+20pts]] multiplied by this face's number. Decreases the face number by one the first time you score this Face in an Office."
 
 	--Metadatas about the graphics of the ClockWorkDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Clockwork Dice.png")
@@ -477,8 +434,7 @@ function AshtrayDice:new(faceValue, pointsValue)
 	self.name = "Ashtray Dice"
 	self.id = 13
 	self.tier = "Common"
-	self.description =
-		"Scoring : Multiplies the total score by ((1)). This factor is upgraded by ((0.1)) each time a cigarette is smoked"
+	self.description = "((x1)). This factor is upgraded by ((0.1)) each time a cigarette is smoked"
 
 	--Metadatas about the graphics of the AshtrayDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ashtray Dice.png")
@@ -498,7 +454,7 @@ function AshtrayDice:triggerEffect(round)
 end
 
 function AshtrayDice:getDescription(run)
-	return "Scoring : Multiplies the total score by (("
+	return "x(("
 		.. (1 + 0.1 * run.totalUsedCiggie)
 		.. ")). This factor is upgraded by ((0.1)) each time a cigarette is smoked"
 end
@@ -516,7 +472,7 @@ function SteelDice:new(faceValue, pointsValue)
 	self.name = "Steel Dice"
 	self.id = 14
 	self.tier = "Common"
-	self.description = "Scoring : Adds [[10pts]] per € under 10€"
+	self.description = "Adds [[10pts]] per € under 10€"
 
 	--Metadatas about the graphics of the SteelDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Steel Dice.png")
@@ -536,9 +492,7 @@ function SteelDice:triggerEffect(round)
 end
 
 function SteelDice:getDescription(run)
-	return "Scoring : Adds [[10pts]] per € under 10€ (currently : [["
-		.. (math.max(0, 10 - run.money) * 10)
-		.. "pts]])"
+	return "[[+10pts]] for each $ under 10$ (currently : [[+" .. (math.max(0, 10 - run.money) * 10) .. "pts]])"
 end
 
 FaceTypes.SteelDice = SteelDice
@@ -554,7 +508,7 @@ function DoubleDown:new(faceValue, pointsValue)
 	self.name = "Double Down"
 	self.id = 16
 	self.tier = "Common"
-	self.description = "Scoring : Adds [[50pts]] per even dices in scored hand"
+	self.description = "[[+50pts]] per even dices in scored hand"
 
 	--Metadatas about the graphics of the DoubleDown
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Double Down.png")
@@ -596,7 +550,7 @@ function OddJob:new(faceValue, pointsValue)
 	self.name = "Odd Job"
 	self.id = 15
 	self.tier = "Common"
-	self.description = "Scoring : Adds [[50pts]] per odd dices in scored hand"
+	self.description = "[[+50pts]] per odd dices in scored hand"
 
 	--Metadatas about the graphics of the OddJob
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Odd Job.png")
@@ -638,7 +592,7 @@ function MusicDice:new(faceValue, pointsValue)
 	self.name = "Music Dice"
 	self.id = 17
 	self.tier = "Common"
-	self.description = "Scoring : [[+10pts]], multiplies the score by ((2)) if played hand contains exactly 4 dices"
+	self.description = "[[+10pts]], (X2)) if played hand contains exactly 4 dices"
 
 	--Metadatas about the graphics of the MusicDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Tempo Dice.png")
@@ -676,7 +630,7 @@ function Signature:new(faceValue, pointsValue)
 	self.name = "Signature"
 	self.id = 18
 	self.tier = "Uncommon"
-	self.description = "Unique : Multiplies the hand score by ((3)). Scoring: [[+10pts]]."
+	self.description = "[[+10pts]]. Unique : ((X3))"
 
 	--Metadatas about the graphics of the Signature
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Signature Dice.png")
@@ -741,7 +695,7 @@ function SniperDice:backupEffect(round)
 end
 
 function SniperDice:getDescription(run)
-	return "Backup : ((x" .. self.backupScoreValue .. ")). Value goes up by ((0.2pts))"
+	return "Backup : ((X" .. self.backupScoreValue .. ")). Value goes up by ((0.2pts))"
 end
 
 FaceTypes.SniperDice = SniperDice
@@ -761,7 +715,7 @@ function Spotlight:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the Spotlight
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Spotlight Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "First : Multiplies the hand score by ((3)). Scoring: [[+10pts]]"
+	self.description = "First : ((X3)). Scoring: [[+10pts]]"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the Spotlight in px (in the png)
 
 	self.first = true
@@ -799,7 +753,7 @@ function RiskyBusiness:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the RiskyBusiness
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Risky Business.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "Scoring : [[+100pts]], -10$."
+	self.description = "[[+100pts]], -10$."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the RiskyBusiness in px (in the png)
 
 	--Numbered status
@@ -832,7 +786,7 @@ function CryptoDice:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the CryptoDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crypto Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "Scoring : ((x3)), lowers the money to 0$"
+	self.description = "((x3)), lowers the money to 0$"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the CryptoDice in px (in the png)
 
 	--Numbered status
@@ -883,7 +837,7 @@ function Patience:triggerEffect(round)
 end
 
 function Patience:getDescription(run)
-	return "Scoring : [[+" .. tostring(self.pointsValue) .. "pts]], increase this value by [[30pts]]"
+	return "[[+" .. tostring(self.pointsValue) .. "pts]], this value is increased by [[30pts]] each time it's triggered"
 end
 
 FaceTypes.Patience = Patience
@@ -927,9 +881,9 @@ function DataDice:triggerEffect(round)
 end
 
 function DataDice:getDescription(run)
-	return "Scoring : [[+"
+	return "[[+"
 		.. tostring(self.pointsValue)
-		.. "pts]], increases by [[10pts]] if figure is a numbered figure, decreases by  if not."
+		.. "pts]], this value increases by [[10pts]] if the played figure is a numbered figure, decreases by [[10pts]] if not."
 end
 
 FaceTypes.DataDice = DataDice
