@@ -94,7 +94,7 @@ function TutorialEvents.firstRoundWin()
 		pos = "ul",
 	})
 	G.currentRun.tutorial:pushOnce("firstWin3", {
-		text = "Also, you earned two new ((dice faces)! Hover you mouse over them to see what their effect are.",
+		text = "Also, you earned two new ((dice faces))! Hover you mouse over them to see what their effect are.",
 		pos = "ul",
 	})
 	G.currentRun.tutorial:pushOnce("firstWin4", {
