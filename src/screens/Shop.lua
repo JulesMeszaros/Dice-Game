@@ -23,19 +23,21 @@ Shop.__index = Shop
 function Shop:new(run)
 	local self = setmetatable(Screen:new(run.currentFloor, run, Constants.RUN_STATES.SHOP, run.currentRound), Shop)
 
-	--Tutorial variables
-	if self.run.floorNumber == 2 then
-		self.canBuyDiceFace = false
-		self.canBuySticker = false
-		self.canBuyAnything = false
-		self.canRerollShop = false
-		self.canGoToNextRound = false
-	else
-		self.canBuyDiceFace = true
-		self.canBuySticker = true
-		self.canBuyAnything = true
-		self.canRerollShop = true
-		self.canGoToNextRound = true
+	if self.run.tutorial then
+		--Tutorial variables
+		if self.run.floorNumber == 2 then
+			self.canBuyDiceFace = false
+			self.canBuySticker = false
+			self.canBuyAnything = false
+			self.canRerollShop = false
+			self.canGoToNextRound = false
+		else
+			self.canBuyDiceFace = true
+			self.canBuySticker = true
+			self.canBuyAnything = true
+			self.canRerollShop = true
+			self.canGoToNextRound = true
+		end
 	end
 
 	self.priceTagsScale = 1
@@ -593,7 +595,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
 				(sticker.representedObject.holographic == true and self.run.money >= Constants.BASE_HOLO_STICKER_PRICE)
 				or (sticker.representedObject.holographic == false and self.run.money >= Constants.BASE_STICKER_PRICE)
 			then
-				if not self.tutorial and self.canBuySticker == true then
+				if not self.tutorial or self.canBuySticker == true then
 					self:buySticker(sticker)
 
 					if sticker.representedObject.holographic == true then
