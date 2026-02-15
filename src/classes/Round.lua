@@ -147,6 +147,7 @@ function Round:endRound()
 			print("You win the run!!!")
 			self.terrain.runWinPopup = RunEnd:new(self.run, self)
 			self.phase = Constants.ROUND_STATES.RUN_END
+			G.saveManager:save()
 		else
 			--CREATE A END ROUND SCREEN
 			self.terrain.endRoundPopUp = EndRound:new(self.run, self)
@@ -159,6 +160,8 @@ function Round:endRound()
 			TutorialEvents.gameOver()
 		end
 		self.phase = Constants.ROUND_STATES.GAME_OVER
+		--Enregistrement de la partie
+		G.saveManager:save()
 	end
 
 	--self.terrain:outAnimation()
