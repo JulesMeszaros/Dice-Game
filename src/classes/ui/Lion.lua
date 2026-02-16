@@ -114,7 +114,7 @@ function Lion:draw(x, y, width, height)
 end
 
 function Lion:generateRandomLion()
-	local maxIndex = 10
+	print("okoklion")
 	--Creating the indexes
 	self.backgroundIndex = G.rngEnemies:random(1, countFilesInFolder("src/assets/lion/background/"))
 	self.crownOneIndex = G.rngEnemies:random(1, countFilesInFolder("src/assets/lion/crownone/"))
@@ -152,4 +152,3 @@ function countFilesInFolder(folder)
 end
 
 return Lion
-

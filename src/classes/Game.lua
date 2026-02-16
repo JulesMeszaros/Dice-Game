@@ -1,3 +1,4 @@
+local CharacterCreation = require("src.screens.CharacterCreation")
 local Run = require("src.classes.Run")
 local MainMenu = require("src.screens.MainMenu")
 
@@ -32,10 +33,11 @@ function Game:start()
 	self.gameCanvas = gameCanvas
 	self.backgroundCanvas = love.graphics.newCanvas(self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
 
-	self.currentScreen = Constants.PAGES.MAIN_MENU
+	self.currentScreen = Constants.PAGES.CHARACTER_CREATION
 
 	--Create a main menu
 	self.mainMenu = MainMenu:new(self.gameCanvas, self)
+	self.characterCreation = CharacterCreation:new()
 
 	G.game = self
 
@@ -47,6 +49,8 @@ function Game:update(dt)
 		self.mainMenu:update(dt)
 	elseif self.currentScreen == Constants.PAGES.GAME then
 		self.run:update(dt)
+	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+		self.characterCreation:update(dt)
 	end
 
 	--damped offset
@@ -64,6 +68,8 @@ function Game:updateCanvas(dt)
 		self.mainMenu:draw()
 	elseif self.currentScreen == Constants.PAGES.GAME then
 		self.run:draw(self.gameCanvas)
+	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+		self.characterCreation:draw()
 	end
 
 	love.graphics.setCanvas()
@@ -147,6 +153,8 @@ function Game:keypressed(key)
 		self.mainMenu:keypressed(key)
 	elseif self.currentScreen == Constants.PAGES.GAME then
 		self.run:keypressed(key)
+	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+		self.characterCreation:keypressed(key)
 	end
 end
 
@@ -154,6 +162,8 @@ function Game:textinput(t)
 	if self.currentScreen == Constants.PAGES.MAIN_MENU then
 		self.mainMenu:textinput(t)
 	elseif self.currentScreen == Constants.PAGES.GAME then
+	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+		self.characterCreation:textinput(t)
 	end
 end
 
@@ -164,6 +174,8 @@ function Game:mousepressed(x, y, button, istouch, presses)
 		self.mainMenu:mousepressed(vx, vy, button, istouch, presses)
 	elseif self.currentScreen == Constants.PAGES.GAME then
 		self.run:mousepressed(vx, vy, button, istouch, presses)
+	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+		self.characterCreation:mousepressed(vx, vy, button, istouch, presses)
 	end
 end
 
@@ -174,6 +186,8 @@ function Game:mousereleased(vx, vy, button, istouch, presses)
 		self.mainMenu:mousereleased(vx, vy, button, istouch, presses)
 	elseif self.currentScreen == Constants.PAGES.GAME then
 		self.run:mousereleased(vx, vy, button, istouch, presses)
+	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+		self.characterCreation:mousereleased(vx, vy, button, istouch, presses)
 	end
 end
 
@@ -186,6 +200,8 @@ function Game:mousemoved(x, y, dx, dy)
 		self.mainMenu:mousemoved(vx, vy, vdx, vdy)
 	elseif self.currentScreen == Constants.PAGES.GAME then
 		self.run:mousemoved(vx, vy, vdx, vdy)
+	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+		self.characterCreation:mousemoved(vx, vy, vdx, vdy)
 	end
 end
 
