@@ -13,15 +13,12 @@ MainMenu.__index = MainMenu
 
 seedLabel = love.graphics.newText(love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 50), "Seed :")
 
-function MainMenu:new(gameCanvas, game)
+function MainMenu:new()
 	local self = setmetatable({}, MainMenu)
 
 	self.uiElements = {
 		buttons = {},
 	}
-
-	self.gameCanvas = gameCanvas
-	self.game = game
 
 	self.animationDices = {}
 
@@ -43,7 +40,7 @@ function MainMenu:new(gameCanvas, game)
 
 	self.uiElements.buttons["newRun"] = Button:new(
 		function()
-			self.game:startNewRun(self.seedInput.text, false)
+			G.game:startNewRun(self.seedInput.text, false)
 		end,
 		"src/assets/sprites/ui/New Run.png",
 		618 + 678 / 2,
@@ -58,7 +55,7 @@ function MainMenu:new(gameCanvas, game)
 
 	self.uiElements.buttons["newTutorial"] = Button:new(
 		function()
-			self.game:startNewRun("IOXAHBAJ", true)
+			G.game:startNewRun("IOXAHBAJ", true)
 		end,
 		"src/assets/sprites/ui/TutorialButton.png",
 		960,

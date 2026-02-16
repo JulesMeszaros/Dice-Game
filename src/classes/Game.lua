@@ -33,11 +33,17 @@ function Game:start()
 	self.gameCanvas = gameCanvas
 	self.backgroundCanvas = love.graphics.newCanvas(self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
 
-	self.currentScreen = Constants.PAGES.CHARACTER_CREATION
-
 	--Create a main menu
-	self.mainMenu = MainMenu:new(self.gameCanvas, self)
-	self.characterCreation = CharacterCreation:new()
+	--Si la save data ne contient pas de personnage à l'interieur, on réoriente dans un premier temps
+	--Vers la création de personnage.
+	self.mainMenu = MainMenu:new()
+
+	if not G.saveManager.data.profile then
+		self.characterCreation = CharacterCreation:new()
+		self.currentScreen = Constants.PAGES.CHARACTER_CREATION
+	else
+		self.currentScreen = Constants.PAGES.MAIN_MENU
+	end
 
 	G.game = self
 

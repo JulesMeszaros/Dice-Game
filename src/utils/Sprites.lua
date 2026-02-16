@@ -3,6 +3,7 @@ local Sprites = {}
 
 Sprites.MAIN_LOGO = love.graphics.newImage("src/assets/sprites/ui/Main Logo.png")
 
+Sprites.LION_FRAME = love.graphics.newImage("src/assets/sprites/ui/LionFrame.png")
 Sprites.PAUSE_BG = love.graphics.newImage("src/assets/sprites/ui/Pause Screen.png")
 
 Sprites.TUTO_PANEL = love.graphics.newImage("src/assets/sprites/ui/Tuto panel.png")

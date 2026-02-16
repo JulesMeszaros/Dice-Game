@@ -1,3 +1,4 @@
+local MainMenu = require("src.screens.MainMenu")
 local Animator = require("src.utils.Animator")
 local Fonts = require("src.utils.Fonts")
 local Inputs = require("src.utils.scripts.Inputs")
@@ -70,6 +71,9 @@ function CharacterCreation:update(dt)
 	self:updateCanvas(dt)
 	self.lion:update()
 	self.nameInput:update(dt)
+
+	self.nextButton:setActivated(self.nameInput.text ~= "")
+
 	for i, element in next, self.ui do
 		element:update(dt)
 	end
@@ -144,7 +148,25 @@ function CharacterCreation:generateRandomCharacter()
 	self.lion:generateRandomLion()
 end
 
-function CharacterCreation:saveCharacter() 
+function CharacterCreation:saveCharacter()
+	G.saveManager.data.profile = {
+		name = self.nameInput.text,
+		avatar = {
+			head = self.lion.headIndex,
+			crown_1 = self.lion.crownOneIndex,
+			crown_2 = self.lion.crownTwoIndex,
+			shoulders = self.lion.shouldersIndex,
+			eyes = self.lion.eyesIndex,
+			mouth = self.lion.mouthIndex,
+			nose = self.lion.noseIndex,
+		},
+	}
+
+	G.saveManager:save()
+
+	G.game.mainMenu = MainMenu:new()
+
+	G.game.currentScreen = Constants.PAGES.MAIN_MENU
 end
 
 return CharacterCreation
