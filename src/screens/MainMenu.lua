@@ -38,7 +38,8 @@ function MainMenu:new(gameCanvas, game)
 	)
 
 	-- Create version text only once
-	self.versionText = love.graphics.newText(Fonts.soraSmall, "AEROSOL DELUXE GAMES — " .. Constants.GAME_VERSION)
+	self.versionText =
+		love.graphics.newText(Fonts.soraSmall, "AEROSOL DELUXE Interactives — " .. Constants.GAME_VERSION)
 
 	self.uiElements.buttons["newRun"] = Button:new(
 		function()
@@ -89,7 +90,7 @@ function MainMenu:new(gameCanvas, game)
 		function()
 			love.system.openURL("https://discord.gg/SEbbEsjt57")
 		end,
-		"src/assets/sprites/ui/discord.png",
+		"src/assets/sprites/ui/Discord.png",
 		100,
 		100,
 		120,

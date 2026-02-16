@@ -7,10 +7,11 @@ local AnimationUtils = require("src.utils.scripts.Animations")
 local FaceTypes = require("src.classes.FaceTypes")
 local StickerTypes = require("src.classes.StickerTypes")
 local GenerateRandom = require("src.utils.scripts.GenerateRandom")
-
+local SaveManager = require("src.utils.SaveManager")
 local seed = os.time()
 
 G = {
+	saveManager = SaveManager:new("profile.lua"),
 	--Background color
 	backgroundR = 40 / 255,
 	backgroundG = 40 / 255,
@@ -45,6 +46,25 @@ G = {
 	--Audio
 	audio = AudioUtils:new(),
 }
+
+function initSave()
+	--Fonction qui créée un fichier de sauvegarde vierge si celui-ci est vide
+
+	G.saveManager.data["stats"] = {
+		dices = {},
+		wands = {},
+		stickers = {},
+		figures = {},
+		coffees = {},
+		wins = {},
+	}
+	G.saveManager:save()
+end
+
+--Initialisation d'un fichier de sauvegarde vide de stats s'il n'existe pas
+if not G.saveManager.data.stats then
+	initSave()
+end
 
 --Animators
 G.animator = Animator:new(G)
@@ -212,14 +232,15 @@ function love.draw()
 	love.graphics.setShader()
 	-- Update the cached FPS text object
 	fpstext:set("fps:" .. delta)
-	love.graphics.draw(fpstext, love.graphics.getWidth() - 5, 5, 0, 1, 1, fpstext:getWidth(), 0)
-
-	--dimtext = love.graphics.newText(Fonts.soraSmall, tostring(love.graphics.getWidth()).."x"..tostring(love.graphics.getHeight()))
-	--love.graphics.draw(dimtext, love.graphics.getWidth()-5, 30, 0, 1, 1, dimtext:getWidth(), 0)
+	--love.graphics.draw(fpstext, love.graphics.getWidth() - 5, 5, 0, 1, 1, fpstext:getWidth(), 0)
 end
 
 function love.keypressed(key)
 	game:keypressed(key)
+
+	if key == "@" then
+		G.saveManager:save()
+	end
 
 	if Constants.DEBUG == true then
 		if key == "$" then

@@ -118,10 +118,6 @@ function Run:new(dices, gameCanvas, game, diceObjects, tutorial)
 end
 
 function Run:update(dt)
-	if self.tutorial and self.tutorial.current then
-		self.tutorial:updateTutoCanvas(dt)
-	end
-
 	if self.displayInfoScreen ~= true and self.displayPauseMenu ~= true then
 		self.animator:update(dt)
 		if self.currentState == Constants.RUN_STATES.ROUND then
@@ -143,6 +139,12 @@ function Run:update(dt)
 		self.infoScreen:updateCanvas(dt)
 	else
 		self.pauseMenu:update(dt)
+	end
+
+	if self.tutorial then
+		self.tutorial:update(dt)
+		self.tutorial:updateTutoCanvas()
+		self.tutorial:updateToastCanvas()
 	end
 end
 
@@ -264,7 +266,10 @@ end
 function Run:keypressed(key)
 	if self.tutorial then
 		if key == "s" then
-			self.tutorial:confirm()
+			self.tutorial:pushToast({ text = "bello" })
+		end
+		if key == "x" then
+			self.tutorial:confirmToast()
 		end
 	end
 

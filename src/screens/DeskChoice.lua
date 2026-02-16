@@ -211,6 +211,10 @@ function DeskChoice:updateCanvas(dt)
 		self:drawTutoText()
 	end
 
+	if self.run.tutorial and self.run.tutorial.currentToast then
+		self:drawTutoToast()
+	end
+
 	love.graphics.setCanvas(currentCanvas)
 end
 
@@ -421,6 +425,9 @@ end
 --==Utils==--
 
 function DeskChoice:outAnimation(badge)
+	if self.run.tutorial then
+		self.run.tutorial:confirmToast("oponentSelect")
+	end
 	self.showText = false
 	local outDuration = 0.3
 	local newBadgeY = {

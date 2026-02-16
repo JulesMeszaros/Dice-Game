@@ -6,6 +6,7 @@ Sprites.MAIN_LOGO = love.graphics.newImage("src/assets/sprites/ui/Main Logo.png"
 Sprites.PAUSE_BG = love.graphics.newImage("src/assets/sprites/ui/Pause Screen.png")
 
 Sprites.TUTO_PANEL = love.graphics.newImage("src/assets/sprites/ui/Tuto panel.png")
+Sprites.TUTO_TOAST = love.graphics.newImage("src/assets/sprites/ui/Tuto Toast.png")
 
 Sprites.BUBBLE = love.graphics.newImage("src/assets/sprites/ui/Description Test.png")
 Sprites.DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Description.png")
@@ -60,7 +61,6 @@ Sprites.CUSTOMIZATION_MAT = love.graphics.newImage("src/assets/sprites/ui/DiceCo
 Sprites.MAGIC_WANDS = love.graphics.newImage("src/assets/sprites/ui/Ciggie Tray Back.png")
 Sprites.MAGIC_WANDS_FRONT = love.graphics.newImage("src/assets/sprites/ui/Ciggie Tray Front.png")
 
-Sprites.LION_FRAME = love.graphics.newImage("src/assets/sprites/ui/LionFrame.png")
 Sprites.BADGE = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
 Sprites.BADGE_LARGE = love.graphics.newImage("src/assets/sprites/ui/Badge Large.png")
 Sprites.BOSS_DESC = love.graphics.newImage("src/assets/sprites/ui/Boss Desc.png")

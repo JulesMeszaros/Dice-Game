@@ -70,15 +70,16 @@ function FaceObject:trigger(round)
 	-- randomValue is now in the requested range
 	UI.ScreenWave(rx, ry)
 
-	--[[ G.circleAnimator:finishAll()
-    G.circleAnimator:addGroup({
-        {property = "circleDarkness", from = -1.7, targetValue=-0.3, duration=0.6, easing = AnimationUtils.Easing.outQuad},
-        {property = "circleRad", from = 0.1, targetValue=0.06, duration=0.6, easing = AnimationUtils.Easing.outQuad}
-    }) ]]
-
 	--Incrémente les variables numériques
 	self.totalTriggered = self.totalTriggered + 1
 	self.roundTriggered = self.roundTriggered + 1
+
+	--Incrementation du trigger pour la save de stats
+	if G.saveManager.data["stats"]["dices"][self.id] then
+		G.saveManager.data["stats"]["dices"][self.id] = G.saveManager.data["stats"]["dices"][self.id] + 1
+	else
+		G.saveManager.data["stats"]["dices"][self.id] = 1
+	end
 
 	--Déclenche l'effet first si possible
 	if self.first == true then

@@ -46,6 +46,9 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 	self.uiElements.buttons["nextRound"] = Button:new(
 		function()
 			self:switchFaces()
+			if self.run.tutorial then
+				self.run.tutorial:confirmToast("customizeDice")
+			end
 		end,
 		"src/assets/sprites/ui/Next Round Big.png",
 		self.nextRoundX,
@@ -271,6 +274,9 @@ function DiceCustomization:updateCanvas(dt)
 
 	if self.run.tutorial and self.run.tutorial.current then
 		self:drawTutoText()
+	end
+	if self.run.tutorial and self.run.tutorial.currentToast then
+		self:drawTutoToast()
 	end
 
 	love.graphics.setCanvas(currentCanvas)

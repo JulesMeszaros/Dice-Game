@@ -147,6 +147,7 @@ function Round:endRound()
 			print("You win the run!!!")
 			self.terrain.runWinPopup = RunEnd:new(self.run, self)
 			self.phase = Constants.ROUND_STATES.RUN_END
+			G.saveManager:save()
 		else
 			--CREATE A END ROUND SCREEN
 			self.terrain.endRoundPopUp = EndRound:new(self.run, self)
@@ -155,7 +156,12 @@ function Round:endRound()
 	else
 		--CREATE A GAME OVER SCREEN
 		self.terrain.gameOverPopup = GameOver:new(self.run, self)
+		if self.run.tutorial and self.run.floorNumber == 1 then
+			TutorialEvents.gameOver()
+		end
 		self.phase = Constants.ROUND_STATES.GAME_OVER
+		--Enregistrement de la partie
+		G.saveManager:save()
 	end
 
 	--self.terrain:outAnimation()
@@ -612,19 +618,19 @@ function Round:makeRoll(dices)
 		--self.terrain.unselectedDices = rerolledDiceFaces
 		self.terrain.diceFaces[dice].animator:addDelay(0.6, function()
 			self.terrain:sortUnselectedDices(rerolledDiceFaces)
-		end)
 
-		if self.run.tutorial then
-			self.terrain.animator:addDelay(0.6, function()
-				if self.run.usedRerolls == 0 then
-					TutorialEvents.firstRoll()
-				elseif self.run.usedRerolls == 1 then
-					TutorialEvents.secondRoll()
-				elseif self.run.usedRerolls == 2 then
-					TutorialEvents.thirdRoll()
-				end
-			end)
-		end
+			if self.run.tutorial then
+				self.terrain.animator:addDelay(0.3, function()
+					if self.run.usedRerolls == 0 then
+						TutorialEvents.firstRoll()
+					elseif self.run.usedRerolls == 1 then
+						TutorialEvents.secondRoll()
+					elseif self.run.usedRerolls == 2 then
+						TutorialEvents.thirdRoll()
+					end
+				end)
+			end
+		end)
 	end
 end
 
@@ -645,6 +651,10 @@ end
 
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
+	if self.run.tutorial then
+		self.run.tutorial:confirmToast("playFigure")
+	end
+
 	--Commencer la phase de déclenchement
 
 	--Si boss trésorier : on retire de l'argent selon le nombre de dés
@@ -736,6 +746,25 @@ function Round:containsDice(diceList, targetDice)
 		end
 	end
 	return false
+end
+
+function Round:resetRound()
+	local newRound = self:new(
+		self.nround,
+		self.floorNumber,
+		self.deskNumber,
+		nil,
+		self.run,
+		self.baseReward,
+		self.targetScore,
+		self.diceObjects,
+		self.roundType,
+		self.faceRewards
+	)
+
+	newRound.enemyCharacter = self.enemyCharacter
+
+	self.run.currentRound = newRound
 end
 
 return Round
