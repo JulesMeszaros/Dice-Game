@@ -1,3 +1,4 @@
+local Names = require("src.utils.Names")
 local CiggieTypes = require("src.classes.CiggieTypes")
 
 local GenerateRandom = {}
@@ -161,4 +162,12 @@ function GenerateRandom.faceObjectShop(forbiddenKeys, c, u, r) --Les parametres 
 	return randomFaceObject
 end
 
+function GenerateRandom.name()
+	local prenomPrefix = Names.Prefixs[math.random(#Names.Prefixs)]
+	local prenomSuffix = Names.Suffixes[math.random(#Names.Suffixes)]
+	local nomPrefix = Names.Prefixs[math.random(#Names.Prefixs)]
+	local nomSuffix = Names.Suffixes[math.random(#Names.Suffixes)]
+
+	return prenomPrefix .. prenomSuffix .. " " .. nomPrefix .. nomSuffix
+end
 return GenerateRandom

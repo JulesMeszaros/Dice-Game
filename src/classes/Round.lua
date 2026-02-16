@@ -5,6 +5,7 @@ local RoundScreen = require("src.screens.RoundScreen")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local Inputs = require("src.utils.scripts.Inputs")
 local Animator = require("src.utils.Animator")
+local Names = require("src.utils.Names")
 local EndRound = require("src.classes.ui.EndRound")
 local GameOver = require("src.classes.ui.GameOver")
 local RunEnd = require("src.classes.ui.RunEnd")
@@ -108,6 +109,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 	end
 
 	--Ennemy metadata
+	self.enemyName = GenerateRandom.name()
 	self.enemyCharacter = Lion:new()
 	if self.roundType == Constants.ROUND_TYPES.BASE then
 		self.enemyJob = Constants.EMPLOIS[G.rngEnemies:random(#Constants.EMPLOIS)]
