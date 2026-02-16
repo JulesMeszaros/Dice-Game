@@ -1,3 +1,4 @@
+local Lion = require("src.classes.ui.Lion")
 local CharacterCreation = require("src.screens.CharacterCreation")
 local Run = require("src.classes.Run")
 local MainMenu = require("src.screens.MainMenu")
@@ -43,6 +44,9 @@ function Game:start()
 		self.currentScreen = Constants.PAGES.CHARACTER_CREATION
 	else
 		self.currentScreen = Constants.PAGES.MAIN_MENU
+		G.playerName = G.saveManager.data.profile.name
+		G.playerLion = Lion:new()
+		G.playerLion:createFromIndexes(G.saveManager.data.profile.avatar)
 	end
 
 	G.game = self

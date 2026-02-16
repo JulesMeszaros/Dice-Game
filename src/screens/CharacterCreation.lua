@@ -184,6 +184,10 @@ function CharacterCreation:saveCharacter()
 	G.game.mainMenu = MainMenu:new()
 
 	G.game.currentScreen = Constants.PAGES.MAIN_MENU
+
+	G.playerName = self.nameInput.text
+	G.playerLion = Lion:new()
+	G.playerLion:createFromIndexes(G.saveManager.data.profile.avatar)
 end
 
 return CharacterCreation

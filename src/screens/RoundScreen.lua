@@ -57,6 +57,8 @@ function RoundScreen:new(round)
 		colorEnd = { 0, 0, 0 },
 	})
 
+	self.playerName = love.graphics.newText(Fonts.sora30, G.playerName)
+
 	self.enemyScoreWavyText = UI.Text.TextWavy:new(tostring(self.round.targetScore), 20, 215, {
 		amplitude = 1,
 		speed = 1.5,
@@ -728,6 +730,22 @@ function RoundScreen:drawPlayersInfos(dt)
 	love.graphics.setCanvas(self.playerInfos)
 	love.graphics.clear()
 	love.graphics.draw(Sprites.PLAYER_INFOS, 0, 0)
+	--Avatar du joueur
+	G.playerLion:update(dt)
+	G.playerLion:draw(130, 125, 250, 250)
+
+	--Nom du joueur
+	love.graphics.draw(
+		self.playerName,
+		450,
+		37,
+		0,
+		1,
+		1,
+		self.playerName:getWidth() / 2,
+		self.playerName:getHeight() / 2
+	)
+
 	local scoreText = love.graphics.newText(font, tostring(self.round.roundScore))
 
 	self.playerScoreWavyText.text = tostring(self.round.roundScore)

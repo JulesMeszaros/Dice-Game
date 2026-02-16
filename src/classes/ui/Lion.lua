@@ -137,6 +137,24 @@ function Lion:generateRandomLion()
 		love.graphics.newImage("src/assets/lion/shoulders/shoulders" .. tostring(self.shouldersIndex) .. ".png")
 end
 
+function Lion:createFromIndexes(indexes)
+	head = indexes.head or 1
+	crown_1 = indexes.crown_1 or 1
+	crown_2 = indexes.crown_2 or 1
+	shoulders = indexes.shoulders or 1
+	eyes = indexes.eyes or 1
+	mouth = indexes.mouth or 1
+	nose = indexes.nose or 1
+
+	self.crownOneImage = love.graphics.newImage("src/assets/lion/crownone/crownone" .. tostring(crown_1) .. ".png")
+	self.crownTwoImage = love.graphics.newImage("src/assets/lion/crowntwo/crowntwo" .. tostring(crown_2) .. ".png")
+	self.eyesImage = love.graphics.newImage("src/assets/lion/eyes/eyes" .. tostring(eyes) .. ".png")
+	self.headImage = love.graphics.newImage("src/assets/lion/head/head" .. tostring(head) .. ".png")
+	self.mouthImage = love.graphics.newImage("src/assets/lion/mouth/mouth" .. tostring(mouth) .. ".png")
+	self.noseImage = love.graphics.newImage("src/assets/lion/nose/nose" .. tostring(nose) .. ".png")
+	self.shouldersImage = love.graphics.newImage("src/assets/lion/shoulders/shoulders" .. tostring(shoulders) .. ".png")
+end
+
 function countFilesInFolder(folder)
 	local files = love.filesystem.getDirectoryItems(folder)
 	local count = 0
