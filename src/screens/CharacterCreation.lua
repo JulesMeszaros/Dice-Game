@@ -1,3 +1,4 @@
+local UI = require("src.utils.scripts.UI")
 local MainMenu = require("src.screens.MainMenu")
 local Animator = require("src.utils.Animator")
 local Fonts = require("src.utils.Fonts")
@@ -21,6 +22,19 @@ function CharacterCreation:new()
 	self.character = Lion:new()
 
 	self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+
+	--Positions des éléments pour animation
+	local lionStartY, lionY = -300, self.canvas:getHeight() / 2 - 100
+	local rButtonStartY, rButtonY = self.canvas:getHeight() + 200, 745 + 80 / 2
+	local nameInputStartT, nameInputY = self.canvas:getHeight() + 100, 150 / 2 + 882
+
+	--Text en haut
+	self.welcomeText = UI.Text.TextWavy:new(
+		"Create your avatar !",
+		self.canvas:getWidth() / 2,
+		100,
+		{ amplitude = 5, speed = 3, spacing = 0.3, font = Fonts.soraBig, revealSpeed = 10, centered = true }
+	)
 
 	self.nameInput = TextInput:new(
 		self.canvas:getWidth() / 2,
@@ -71,6 +85,7 @@ function CharacterCreation:update(dt)
 	self:updateCanvas(dt)
 	self.lion:update()
 	self.nameInput:update(dt)
+	self.welcomeText:update(dt)
 
 	self.nextButton:setActivated(self.nameInput.text ~= "")
 
@@ -83,6 +98,8 @@ function CharacterCreation:updateCanvas(dt)
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.canvas)
 	love.graphics.clear()
+
+	self.welcomeText:draw()
 
 	--Dessin des boutons
 	for i, element in next, self.ui do
