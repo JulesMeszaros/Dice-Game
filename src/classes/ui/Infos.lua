@@ -21,6 +21,7 @@ function Infos:new(run)
 	self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 	self.animator = Animator:new(self)
 
+	self.playerName = love.graphics.newText(Fonts.soraMedium, G.playerName)
 	--UI Canvas
 	self.gridLarge = love.graphics.newCanvas(710, 1020)
 	self.inventoryLarge = love.graphics.newCanvas(290, 600)
@@ -124,6 +125,7 @@ end
 function Infos:update(dt) end
 
 function Infos:updateCanvas(dt)
+	G.playerLion:update(dt)
 	self:getCurrentlyHoveredBoss()
 
 	self:getCurrentlyHoveredFace()
@@ -415,7 +417,21 @@ function Infos:drawPlayerBadge()
 	love.graphics.clear()
 
 	love.graphics.draw(Sprites.PLAYER_BADGE, 0, 0)
+	G.playerLion:draw(self.playerBadge:getWidth() / 2, 265, 250, 250)
 
+	--Draw player name
+	love.graphics.setColor(232 / 255, 79 / 255, 79 / 255)
+	love.graphics.draw(
+		self.playerName,
+		self.playerBadge:getWidth() / 2,
+		45,
+		0,
+		1,
+		1,
+		self.playerName:getWidth() / 2,
+		self.playerName:getHeight() / 2
+	)
+	love.graphics.setColor(1, 1, 1)
 	love.graphics.setCanvas(currentCanvas)
 	love.graphics.draw(self.playerBadge, self.playerBadgeX + px, self.playerBadgeY + py)
 end
