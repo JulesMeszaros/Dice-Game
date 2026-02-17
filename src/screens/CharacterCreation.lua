@@ -72,6 +72,16 @@ function CharacterCreation:new()
 		end
 	)
 
+	--Texts de personalisation
+	self.customizationTexts = {
+		head = { love.graphics.newText(Fonts.soraMedium, "Head color"), 255, 200 },
+		shoulders = { love.graphics.newText(Fonts.soraMedium, "Shoulders color"), 255, 400 },
+		crown1 = { love.graphics.newText(Fonts.soraMedium, "Crown 1 color"), 255, 600 },
+		crown2 = { love.graphics.newText(Fonts.soraMedium, "Crown 2 color"), 255, 800 },
+		eyes = { love.graphics.newText(Fonts.soraMedium, "Eyes"), 1300, 200 },
+		nose = { love.graphics.newText(Fonts.soraMedium, "Nose"), 1300, 400 },
+		mouth = { love.graphics.newText(Fonts.soraMedium, "Mouth"), 1300, 600 },
+	}
 	--Boutons de customization
 	self.arrowButtons = {
 		headArrowLeft = Button:new(
@@ -314,6 +324,11 @@ function CharacterCreation:updateCanvas(dt)
 		button:draw()
 	end
 
+	--Texts
+	for i, text in next, self.customizationTexts do
+		love.graphics.draw(text[1], text[2], text[3], 0, 1, 1, text[1]:getWidth() / 2, text[1]:getHeight() / 2)
+	end
+
 	--Dessin du texte Input
 	self.nameInput:draw()
 	--Dessin du lion
@@ -423,7 +438,7 @@ function CharacterCreation:changePart(part, direction)
 		cr1 = "crownOneIndex",
 		cr2 = "crownTwoIndex",
 		eyes = "eyesIndex",
-		head ="headIndex",
+		head = "headIndex",
 		mouth = "mouthIndex",
 		nose = "noseIndex",
 		shoulders = "shouldersIndex",
@@ -432,7 +447,7 @@ function CharacterCreation:changePart(part, direction)
 	if self.lion[indexParts[part]] + direction > nParts[part] then
 		self.lion[indexParts[part]] = 1
 	elseif self.lion[indexParts[part]] + direction <= 0 then
-		self.lion[indexParts[part]] =self.lion[indexParts[part]]	
+		self.lion[indexParts[part]] = self.lion[indexParts[part]]
 	else
 		self.lion[indexParts[part]] = direction + self.lion[indexParts[part]]
 	end
