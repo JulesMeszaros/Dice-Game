@@ -74,13 +74,13 @@ function CharacterCreation:new()
 
 	--Texts de personalisation
 	self.customizationTexts = {
-		head = { love.graphics.newText(Fonts.soraMedium, "Head color"), 255, 200 },
-		shoulders = { love.graphics.newText(Fonts.soraMedium, "Shoulders color"), 255, 400 },
-		crown1 = { love.graphics.newText(Fonts.soraMedium, "Crown 1 color"), 255, 600 },
-		crown2 = { love.graphics.newText(Fonts.soraMedium, "Crown 2 color"), 255, 800 },
-		eyes = { love.graphics.newText(Fonts.soraMedium, "Eyes"), 1300, 200 },
-		nose = { love.graphics.newText(Fonts.soraMedium, "Nose"), 1300, 400 },
-		mouth = { love.graphics.newText(Fonts.soraMedium, "Mouth"), 1300, 600 },
+		head = { love.graphics.newText(Fonts.soraMedium, "Head color"), 320, 200 },
+		shoulders = { love.graphics.newText(Fonts.soraMedium, "Shoulders color"), 320, 400 },
+		crown1 = { love.graphics.newText(Fonts.soraMedium, "Crown 1 color"), 320, 600 },
+		crown2 = { love.graphics.newText(Fonts.soraMedium, "Crown 2 color"), 320, 800 },
+		eyes = { love.graphics.newText(Fonts.soraMedium, "Eyes"), 1590, 200 },
+		nose = { love.graphics.newText(Fonts.soraMedium, "Nose"), 1590, 400 },
+		mouth = { love.graphics.newText(Fonts.soraMedium, "Mouth"), 1590, 600 },
 	}
 	--Boutons de customization
 	self.arrowButtons = {
