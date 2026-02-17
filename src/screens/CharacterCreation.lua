@@ -19,8 +19,6 @@ function CharacterCreation:new()
 
 	self.animator = Animator:new(self)
 
-	self.character = Lion:new()
-
 	self.canvas = love.graphics.newCanvas(Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 
 	--Positions des éléments pour animation
@@ -38,7 +36,7 @@ function CharacterCreation:new()
 
 	self.nameInput = TextInput:new(
 		self.canvas:getWidth() / 2,
-		900,
+		980,
 		900,
 		90,
 		{ noSpace = false, maxChars = 10, noSpecial = true, forceCaps = false }
@@ -74,6 +72,208 @@ function CharacterCreation:new()
 		end
 	)
 
+	--Boutons de customization
+	self.arrowButtons = {
+		headArrowLeft = Button:new(
+			function()
+				self:changePart("head", -1)
+			end,
+			"src/assets/sprites/ui/Arrow Button L.png",
+			111,
+			200,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		headArrowRight = Button:new(
+			function()
+				self:changePart("head", 1)
+			end,
+			"src/assets/sprites/ui/Arrow Button.png",
+			529,
+			200,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		shouldersArrowLeft = Button:new(
+			function()
+				self:changePart("shoulders", -1)
+			end,
+			"src/assets/sprites/ui/Arrow Button L.png",
+			111,
+			400,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		shouldersArrowRight = Button:new(
+			function()
+				self:changePart("shoulders", 1)
+			end,
+			"src/assets/sprites/ui/Arrow Button.png",
+			529,
+			400,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		cr1ArrowLeft = Button:new(
+			function()
+				self:changePart("cr1", -1)
+			end,
+			"src/assets/sprites/ui/Arrow Button L.png",
+			111,
+			600,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		cr1ArrowRight = Button:new(
+			function()
+				self:changePart("cr1", 1)
+			end,
+			"src/assets/sprites/ui/Arrow Button.png",
+			529,
+			600,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		cr2ArrowLeft = Button:new(
+			function()
+				self:changePart("cr2", -1)
+			end,
+			"src/assets/sprites/ui/Arrow Button L.png",
+			111,
+			800,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		cr2ArrowRight = Button:new(
+			function()
+				self:changePart("cr2", 1)
+			end,
+			"src/assets/sprites/ui/Arrow Button.png",
+			529,
+			800,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		--Colonne de droite
+		eyesArrowLeft = Button:new(
+			function()
+				self:changePart("eyes", -1)
+			end,
+			"src/assets/sprites/ui/Arrow Button L.png",
+			Constants.VIRTUAL_GAME_WIDTH - 529,
+			200,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		eyesArrowRight = Button:new(
+			function()
+				self:changePart("eyes", 1)
+			end,
+			"src/assets/sprites/ui/Arrow Button.png",
+			Constants.VIRTUAL_GAME_WIDTH - 111,
+			200,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		noseArrowLeft = Button:new(
+			function()
+				self:changePart("nose", -1)
+			end,
+			"src/assets/sprites/ui/Arrow Button L.png",
+
+			Constants.VIRTUAL_GAME_WIDTH - 529,
+			400,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		noseArrowRight = Button:new(
+			function()
+				self:changePart("nose", 1)
+			end,
+			"src/assets/sprites/ui/Arrow Button.png",
+			Constants.VIRTUAL_GAME_WIDTH - 111,
+			400,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		mouthArrowLeft = Button:new(
+			function()
+				self:changePart("mouth", -1)
+			end,
+			"src/assets/sprites/ui/Arrow Button L.png",
+			Constants.VIRTUAL_GAME_WIDTH - 529,
+			600,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+		mouthArrowRight = Button:new(
+			function()
+				self:changePart("mouth", 1)
+			end,
+			"src/assets/sprites/ui/Arrow Button.png",
+			Constants.VIRTUAL_GAME_WIDTH - 111,
+			600,
+			80,
+			80,
+			nil,
+			function()
+				return Inputs.getMouseInCanvas(0, 0)
+			end
+		),
+	}
+
 	self.ui = { self.randomizeButton, self.nextButton }
 	self.lion = Lion:new()
 
@@ -88,6 +288,10 @@ function CharacterCreation:update(dt)
 	self.welcomeText:update(dt)
 
 	self.nextButton:setActivated(self.nameInput.text ~= "")
+
+	for i, button in next, self.arrowButtons do
+		button:update(dt)
+	end
 
 	for i, element in next, self.ui do
 		element:update(dt)
@@ -104,6 +308,10 @@ function CharacterCreation:updateCanvas(dt)
 	--Dessin des boutons
 	for i, element in next, self.ui do
 		element:draw()
+	end
+
+	for i, button in next, self.arrowButtons do
+		button:draw()
 	end
 
 	--Dessin du texte Input
@@ -137,11 +345,21 @@ function CharacterCreation:mousepressed(x, y, button, istouch, presses)
 	for i, element in next, self.ui do
 		element:clickEvent()
 	end
+	for i, element in next, self.arrowButtons do
+		element:clickEvent()
+	end
+
 	self.nameInput:mousepressed()
 end
 
 function CharacterCreation:mousereleased(x, y, button, istouch, presses)
 	for i, element in next, self.ui do
+		local wasReleased = element:releaseEvent()
+		if wasReleased then --Si le click a été complété
+			element:getCallback()()
+		end
+	end
+	for i, element in next, self.arrowButtons do
 		local wasReleased = element:releaseEvent()
 		if wasReleased then --Si le click a été complété
 			element:getCallback()()
@@ -188,6 +406,38 @@ function CharacterCreation:saveCharacter()
 	G.playerName = self.nameInput.text
 	G.playerLion = Lion:new()
 	G.playerLion:createFromIndexes(G.saveManager.data.profile.avatar)
+end
+
+function CharacterCreation:changePart(part, direction)
+	local nParts = {
+		cr1 = self.lion.nCrown1,
+		cr2 = self.lion.nCrown2,
+		eyes = self.lion.nEyes,
+		head = self.lion.nHead,
+		mouth = self.lion.nMouth,
+		nose = self.lion.nNose,
+		shoulders = self.lion.nShoulders,
+	}
+
+	local indexParts = {
+		cr1 = "crownOneIndex",
+		cr2 = "crownTwoIndex",
+		eyes = "eyesIndex",
+		head ="headIndex",
+		mouth = "mouthIndex",
+		nose = "noseIndex",
+		shoulders = "shouldersIndex",
+	}
+
+	if self.lion[indexParts[part]] + direction > nParts[part] then
+		self.lion[indexParts[part]] = 1
+	elseif self.lion[indexParts[part]] + direction <= 0 then
+		self.lion[indexParts[part]] =self.lion[indexParts[part]]	
+	else
+		self.lion[indexParts[part]] = direction + self.lion[indexParts[part]]
+	end
+
+	self.lion:updateSprite()
 end
 
 return CharacterCreation

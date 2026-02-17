@@ -16,6 +16,15 @@ function Lion:new()
 	self.noseIndex = 1
 	self.shouldersIndex = 1
 
+	self.nBackgrounds = countFilesInFolder("src/assets/lion/background/")
+	self.nCrown1 = countFilesInFolder("src/assets/lion/crownone/")
+	self.nCrown2 = countFilesInFolder("src/assets/lion/crowntwo/")
+	self.nEyes = countFilesInFolder("src/assets/lion/eyes/")
+	self.nHead = countFilesInFolder("src/assets/lion/head/")
+	self.nMouth = countFilesInFolder("src/assets/lion/mouth/")
+	self.nNose = countFilesInFolder("src/assets/lion/nose/")
+	self.nShoulders = countFilesInFolder("src/assets/lion/shoulders/")
+
 	self:generateRandomLion()
 	return self
 end
@@ -100,6 +109,21 @@ function Lion:update()
 	love.graphics.setCanvas(currentCanvas)
 end
 
+function Lion:updateSprite()
+	--Importing the images
+	self.crownOneImage =
+		love.graphics.newImage("src/assets/lion/crownone/crownone" .. tostring(self.crownOneIndex) .. ".png")
+	self.crownTwoImage =
+		love.graphics.newImage("src/assets/lion/crowntwo/crowntwo" .. tostring(self.crownTwoIndex) .. ".png")
+	self.eyesImage = love.graphics.newImage("src/assets/lion/eyes/eyes" .. tostring(self.eyesIndex) .. ".png")
+	self.headImage = love.graphics.newImage("src/assets/lion/head/head" .. tostring(self.headIndex) .. ".png")
+	self.mouthImage = love.graphics.newImage("src/assets/lion/mouth/mouth" .. tostring(self.mouthIndex) .. ".png")
+	self.noseImage = love.graphics.newImage("src/assets/lion/nose/nose" .. tostring(self.noseIndex) .. ".png")
+	self.shouldersImage =
+		love.graphics.newImage("src/assets/lion/shoulders/shoulders" .. tostring(self.shouldersIndex) .. ".png")
+
+end
+
 function Lion:draw(x, y, width, height)
 	love.graphics.draw(
 		self.canvas,
@@ -114,7 +138,6 @@ function Lion:draw(x, y, width, height)
 end
 
 function Lion:generateRandomLion()
-	print("okoklion")
 	--Creating the indexes
 	self.backgroundIndex = G.rngEnemies:random(1, countFilesInFolder("src/assets/lion/background/"))
 	self.crownOneIndex = G.rngEnemies:random(1, countFilesInFolder("src/assets/lion/crownone/"))
