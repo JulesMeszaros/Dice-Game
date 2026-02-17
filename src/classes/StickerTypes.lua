@@ -321,4 +321,24 @@ end
 
 StickerTypes.ShamrockSticker = ShamrockSticker
 
+--Bandaid Sticker
+local BandaidSticker = setmetatable({}, { __index = StickerObject })
+BandaidSticker.__index = BandaidSticker
+
+function BandaidSticker:new()
+	local self = setmetatable(StickerObject:new(), BandaidSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Bandaid.png"
+
+	self.name = "Bandaid"
+	self.description = "Three Of A Kind can be played with two dices. Four Of A Kind can be played with three."
+	return self
+end
+
+function BandaidSticker:buyEffect(run)
+	run.ThreeOAKFaciliter = true
+	run.FourOAKFaciliter = true
+end
+
+StickerTypes.BandaidSticker = BandaidSticker
 return StickerTypes

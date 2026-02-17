@@ -27,7 +27,6 @@ function CalculatePoints.numberBasePoints(number, dices, level)
 end
 
 function CalculatePoints.brelanBasePoints(dices, level)
-	--Calcul pour le Brelan (3 faces similaires)
 	local score = 0
 	local usedDices = {}
 
@@ -36,17 +35,33 @@ function CalculatePoints.brelanBasePoints(dices, level)
 	local maxDistrib = 0
 	local maxDistribN = 0
 
-	for n, v in next, distrib do --get max distributed number
+	for n, v in next, distrib do
 		if v > maxDistrib then
 			maxDistrib = v
+			maxDistribN = n
+		elseif v == maxDistrib and n > maxDistribN then
 			maxDistribN = n
 		end
 	end
 
-	if maxDistrib >= 3 then --On vérifie que le numero le plus représenté est superieur ou égal à 3
+	-- vrai brelan
+	if maxDistrib >= 3 then
 		for k, d in next, dices do
 			if d:getCurrentFaceObject().blank == false then
-				if d:getCurrentFaceObject().faceValue == maxDistribN and table.getn(usedDices) < 3 then
+				if d:getCurrentFaceObject().faceValue == maxDistribN and #usedDices < 3 then
+					score = score + d:getCurrentFaceObject().faceValue
+					table.insert(usedDices, d)
+				end
+			else
+				table.insert(usedDices, d)
+			end
+		end
+
+	-- facilitateur : paire = brelan
+	elseif G.currentRun.ThreeOAKFaciliter == true and maxDistrib == 2 then
+		for k, d in next, dices do
+			if d:getCurrentFaceObject().blank == false then
+				if d:getCurrentFaceObject().faceValue == maxDistribN and #usedDices < 2 then
 					score = score + d:getCurrentFaceObject().faceValue
 					table.insert(usedDices, d)
 				end
@@ -114,22 +129,39 @@ end
 function CalculatePoints.carreBasePoints(dices, level)
 	local score = 0
 	local usedDices = {}
-	local maxDistrib = 0
-	local maxDistribN = 0
 
 	local distrib = getValueDistribution(dices)
 
-	for n, v in next, distrib do --get max distributed number
+	local maxDistrib = 0
+	local maxDistribN = 0
+
+	for n, v in next, distrib do
 		if v > maxDistrib then
 			maxDistrib = v
+			maxDistribN = n
+		elseif v == maxDistrib and n > maxDistribN then
 			maxDistribN = n
 		end
 	end
 
-	if maxDistrib >= 4 then --On vérifie que le numero le plus représenté est superieur ou égal à 3
-		for dice, d in next, dices do
+	-- carré normal
+	if maxDistrib >= 4 then
+		for k, d in next, dices do
 			if d:getCurrentFaceObject().blank == false then
-				if d:getCurrentFaceObject().faceValue == maxDistribN and table.getn(usedDices) < 4 then
+				if d:getCurrentFaceObject().faceValue == maxDistribN and #usedDices < 4 then
+					score = score + d:getCurrentFaceObject().faceValue
+					table.insert(usedDices, d)
+				end
+			else
+				table.insert(usedDices, d)
+			end
+		end
+
+	-- facilitateur : brelan = carré
+	elseif G.currentRun.FourOAKFaciliter == true and maxDistrib == 3 then
+		for k, d in next, dices do
+			if d:getCurrentFaceObject().blank == false then
+				if d:getCurrentFaceObject().faceValue == maxDistribN and #usedDices < 3 then
 					score = score + d:getCurrentFaceObject().faceValue
 					table.insert(usedDices, d)
 				end
