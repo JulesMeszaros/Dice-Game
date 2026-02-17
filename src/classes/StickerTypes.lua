@@ -267,5 +267,58 @@ function ThinkDifferentSticker:buyEffect(run)
 	run.thinkDifferent = true
 end
 
+function ThinkDifferentSticker:unlockCOndition(run)
+	return true
+end
+
 StickerTypes.ThinkDifferentSticker = ThinkDifferentSticker
+
+--Clover Sticker
+local CloverSticker = setmetatable({}, { __index = StickerObject })
+CloverSticker.__index = CloverSticker
+
+function CloverSticker:new()
+	local self = setmetatable(StickerObject:new(), CloverSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Clover1.png"
+
+	self.name = "Clover"
+	self.description = "Gives an additionnal hand per floor to the Chance."
+	self.holographic = false
+	return self
+end
+
+function CloverSticker:buyEffect(run)
+	run.baseAvailableHands[7] = run.baseAvailableHands[7] + 1
+	run.availableFigures[7] = run.availableFigures[7] + 1
+end
+
+StickerTypes.CloverSticker = CloverSticker
+
+--Shamrock Sticker
+local ShamrockSticker = setmetatable({}, { __index = StickerObject })
+ShamrockSticker.__index = ShamrockSticker
+
+function ShamrockSticker:new()
+	local self = setmetatable(StickerObject:new(), ShamrockSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Clover2.png"
+
+	self.name = "Shamrock"
+	self.description = "Gives another additionnal hand per floor to the Chance."
+	self.holographic = true
+	return self
+end
+
+function ShamrockSticker:buyEffect(run)
+	run.baseAvailableHands[7] = run.baseAvailableHands[7] + 1
+	run.availableFigures[7] = run.availableFigures[7] + 1
+end
+
+function ShamrockSticker:unlockCondition(run)
+	return checkForSticker(run, StickerTypes.CloverSticker)
+end
+
+StickerTypes.ShamrockSticker = ShamrockSticker
+
 return StickerTypes
