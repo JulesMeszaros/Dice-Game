@@ -72,6 +72,9 @@ function CharacterCreation:new()
 		end
 	)
 
+	self.randomizeButton.layer = 1
+	self.nextButton.layer = 1
+
 	--Texts de personalisation
 	self.customizationTexts = {
 		head = { love.graphics.newText(Fonts.soraMedium, "Head color"), 320, 200 },
@@ -283,6 +286,9 @@ function CharacterCreation:new()
 			end
 		),
 	}
+	for i, button in next, self.arrowButtons do
+		button.layer = 2
+	end
 
 	self.ui = { self.randomizeButton, self.nextButton }
 	self.lion = Lion:new()
@@ -325,25 +331,37 @@ function CharacterCreation:updateCanvas(dt)
 	end
 
 	--Texts
+	local px, py = G.calculateParalaxeOffset(3)
+
 	for i, text in next, self.customizationTexts do
-		love.graphics.draw(text[1], text[2], text[3], 0, 1, 1, text[1]:getWidth() / 2, text[1]:getHeight() / 2)
+		love.graphics.draw(
+			text[1],
+			text[2] + px,
+			text[3] + py,
+			0,
+			1,
+			1,
+			text[1]:getWidth() / 2,
+			text[1]:getHeight() / 2
+		)
 	end
 
 	--Dessin du texte Input
 	self.nameInput:draw()
 	--Dessin du lion
 	--Background
+	local px, py = G.calculateParalaxeOffset(1)
 	love.graphics.draw(
 		Sprites.LION_FRAME,
-		self.canvas:getWidth() / 2,
-		self.canvas:getHeight() / 2 - 90,
+		self.canvas:getWidth() / 2 + px,
+		self.canvas:getHeight() / 2 - 90 + py,
 		0,
 		1,
 		1,
 		Sprites.LION_FRAME:getWidth() / 2,
 		Sprites.LION_FRAME:getHeight() / 2
 	)
-	self.lion:draw(self.canvas:getWidth() / 2, self.canvas:getHeight() / 2 - 100, 550, 550)
+	self.lion:draw(self.canvas:getWidth() / 2 + px, self.canvas:getHeight() / 2 - 100 + py, 550, 550)
 
 	--Dessin du texte de bienvenue (Créée ton personnage !)
 
