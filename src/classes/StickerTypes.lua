@@ -341,4 +341,25 @@ function BandaidSticker:buyEffect(run)
 end
 
 StickerTypes.BandaidSticker = BandaidSticker
+
+--Trophy Sticker
+local TrophySticker = setmetatable({}, { __index = StickerObject })
+TrophySticker.__index = TrophySticker
+
+function TrophySticker:new()
+	local self = setmetatable(StickerObject:new(), TrophySticker)
+
+	self.sprite = "src/assets/sprites/stickers/Trophy.png"
+
+	self.name = "Trophy"
+	self.description = "Adds a bonus of ((50pts)) to the Ones base points."
+	return self
+end
+
+function TrophySticker:buyEffect(run)
+	run.onesBaseBonus = true
+end
+
+StickerTypes.TrophySticker = TrophySticker
+
 return StickerTypes
