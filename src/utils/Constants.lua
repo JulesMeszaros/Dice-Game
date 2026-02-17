@@ -141,7 +141,7 @@ Constants.PAGES = {
 	GAME = 1,
 	SETTINGS = 2,
 	COLLECTION = 3,
-	CHARACTER_CREATION = 4
+	CHARACTER_CREATION = 4,
 }
 
 --Constante servant à déterminer quel écran est affiché.

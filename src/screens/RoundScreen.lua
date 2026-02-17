@@ -58,6 +58,7 @@ function RoundScreen:new(round)
 	})
 
 	self.playerName = love.graphics.newText(Fonts.sora30, G.playerName)
+	self.enemyName = love.graphics.newText(Fonts.sora30, self.round.enemyName)
 
 	self.enemyScoreWavyText = UI.Text.TextWavy:new(tostring(self.round.targetScore), 20, 215, {
 		amplitude = 1,
@@ -757,6 +758,10 @@ function RoundScreen:drawPlayersInfos(dt)
 	love.graphics.setCanvas(self.enemyInfos)
 	love.graphics.clear()
 	love.graphics.draw(Sprites.ENEMY_INFOS, 0, 0)
+
+	--Name
+	love.graphics.draw(self.enemyName, 200, 175, 0, 1, 1, self.enemyName:getWidth() / 2, self.enemyName:getHeight() / 2)
+
 	local targetScoreText = love.graphics.newText(font, "Target : " .. tostring(self.round.targetScore))
 
 	self.enemyScoreWavyText:update(dt)
@@ -764,7 +769,7 @@ function RoundScreen:drawPlayersInfos(dt)
 
 	--Lion
 	self.round.enemyCharacter:update()
-	self.round.enemyCharacter:draw(390 + 130, 125, 250, 250)
+	self.round.enemyCharacter:draw(390 + 120, 125, 250, 250)
 	local px, py = G.calculateParalaxeOffset(2)
 	love.graphics.setCanvas(currentCanvas)
 	-- Draw player/enemy infos with premultiplied alpha to prevent dark outlines on rounded corners

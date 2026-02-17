@@ -56,7 +56,11 @@ function Badge:new(round, x, y, originalY, width, height, mousePosition, large)
 	self.animator:addGroup({
 		{ property = "y", from = self.y, targetValue = y, duration = 0.5, easing = AnimationUtils.Easing.outCubic },
 	})
-
+	if self.bossBadge ~= true then
+		self.enemyName = love.graphics.newText(Fonts.sora30, self.round.enemyName)
+	else
+		self.enemyName = love.graphics.newText(Fonts.soraMedium, self.round.enemyName)
+	end
 	return self
 end
 
@@ -110,15 +114,40 @@ function Badge:updateCanvas(dt)
 
 	love.graphics.draw(self.sprite, 0, 0) -- add the background
 
+	love.graphics.setShader()
 	--Lion
 	self.round.enemyCharacter:update(dt)
 	if self.bossBadge == true then
 		self.round.enemyCharacter:draw(50 + 130, 150 + 135, 250, 250)
+		--Nom de l'ennemi
+		love.graphics.setColor(91 / 255, 113 / 255, 254 / 255)
+		love.graphics.draw(
+			self.enemyName,
+			self.uiCanvas:getWidth() / 2,
+			50,
+			0,
+			1,
+			1,
+			self.enemyName:getWidth() / 2,
+			self.enemyName:getHeight() / 2
+		)
+		love.graphics.setColor(1, 1, 1)
 	else
 		self.round.enemyCharacter:draw(120, 195, 200, 200)
+		--Nom de l'ennemi
+		love.graphics.setColor(91 / 255, 113 / 255, 254 / 255)
+		love.graphics.draw(
+			self.enemyName,
+			185,
+			35,
+			0,
+			1,
+			1,
+			self.enemyName:getWidth() / 2,
+			self.enemyName:getHeight() / 2
+		)
+		love.graphics.setColor(1, 1, 1)
 	end
-
-	love.graphics.setShader()
 
 	--Texts
 	local jobDeskText = love.graphics.newText(
@@ -239,4 +268,3 @@ function Badge:getCurrentlyHoveredFace()
 end
 
 return Badge
-
