@@ -34,6 +34,8 @@ function CharacterCreation:new()
 		{ amplitude = 5, speed = 3, spacing = 0.3, font = Fonts.soraBig, revealSpeed = 10, centered = true }
 	)
 
+	self.welcomeText.layer = 1
+
 	self.nameInput = TextInput:new(
 		self.canvas:getWidth() / 2,
 		980,
@@ -41,6 +43,7 @@ function CharacterCreation:new()
 		90,
 		{ noSpace = false, maxChars = 10, noSpecial = true, forceCaps = false }
 	)
+	self.nameInput.layer = 2
 
 	self.nextButton = Button:new(
 		function()

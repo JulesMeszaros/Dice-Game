@@ -81,6 +81,7 @@ function TextWavy:new(text, x, y, opts)
 	self.colorEnd = opts.colorEnd or self.colorStart
 	self.revealSpeed = opts.revealSpeed or 20
 	self.time = 0
+	self.layer = 4
 
 	-- Pré-calcul des largeurs de caractères
 	self.charWidths = {}
@@ -114,6 +115,7 @@ function TextWavy:draw()
 	end
 
 	local totalHeight = self.font:getHeight()
+	local px, py = G.calculateParalaxeOffset(self.layer)
 
 	local x = self.x
 	local y = self.y
@@ -133,7 +135,7 @@ function TextWavy:draw()
 			local color = lerpColor(self.colorStart, self.colorEnd, t)
 			love.graphics.setColor(color)
 
-			love.graphics.print(char, x, y + offsetY)
+			love.graphics.print(char, x + px, y + py + offsetY)
 		end
 		x = x + self.charWidths[i]
 	end

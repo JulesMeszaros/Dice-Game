@@ -40,6 +40,8 @@ function TextField:new(x, y, width, fontSize, args)
 	self.cursorBlinkRate = 0.5
 	self.cursorVisible = true
 
+	self.layer = 4
+
 	return self
 end
 
@@ -86,7 +88,8 @@ function TextField:draw()
 	end
 
 	love.graphics.setCanvas(currentCanvas)
-	love.graphics.draw(self.canvas, self.x, self.y, 0, 1, 1, self.width / 2, self.height / 2)
+	local px, py = G.calculateParalaxeOffset(self.layer)
+	love.graphics.draw(self.canvas, self.x + px, self.y + py, 0, 1, 1, self.width / 2, self.height / 2)
 end
 
 function TextField:mousepressed()
