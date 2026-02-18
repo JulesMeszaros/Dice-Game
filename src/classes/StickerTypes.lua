@@ -487,7 +487,7 @@ function FlameSticker:new()
 end
 
 function FlameSticker:getDescription()
-	return "Dices have 1 chance out of 2 to be re-triggered if their face is a (("
+	return "Dices have 1 chance out of 3 to be re-triggered if their face is a (("
 		.. self.choosenNumber
 		.. ")) (number changes each round)."
 end
@@ -499,7 +499,7 @@ end
 function FlameSticker:diceTriggeredEffect(run, opts)
 	print(opts.face.representedObject.faceValue)
 	if opts.face.representedObject.faceValue == self.choosenNumber or opts.face.representedObject.blank == true then
-		local r = math.random(1, 2)
+		local r = math.random(1, 3)
 		if r == 1 then
 			table.insert(G.currentRun.currentRound.diceFacesTriggerQueue, 1, opts.face)
 			table.insert(G.currentRun.currentRound.dicesTriggerQueue, 1, opts.dice)
