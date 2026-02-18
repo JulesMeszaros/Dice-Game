@@ -21,6 +21,10 @@ function CalculatePoints.numberBasePoints(number, dices, level)
 		end
 	end
 
+	if G.currentRun.additionalNumericDice == true and score > 0 then
+		score = score + number
+	end
+
 	score = level * score
 
 	if number == 1 and G.currentRun.onesBaseBonus == true and score > 0 then

@@ -362,4 +362,24 @@ end
 
 StickerTypes.TrophySticker = TrophySticker
 
+--Gift Sticker
+local GiftSticker = setmetatable({}, { __index = StickerObject })
+GiftSticker.__index = GiftSticker
+
+function GiftSticker:new()
+	local self = setmetatable(StickerObject:new(), GiftSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Gift.png"
+
+	self.name = "Gift"
+	self.description = "Numerical figures count an additional dice in their base points."
+	return self
+end
+
+function GiftSticker:buyEffect(run)
+	run.additionalNumericDice = true
+end
+
+StickerTypes.GiftSticker = GiftSticker
+
 return StickerTypes
