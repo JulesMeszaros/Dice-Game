@@ -473,6 +473,12 @@ function Run:stickerStartRoundEffect()
 	end
 end
 
+function Run:diceTriggeredEffect(opts)
+	for i, sticker in next, self.stickers do
+		sticker:diceTriggeredEffect(self, opts)
+	end
+end
+
 function Run:stickerEndRoundEffect()
 	for i, sticker in next, self.stickers do
 		sticker:endRoundEffect(self)

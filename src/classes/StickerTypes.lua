@@ -2,24 +2,6 @@ local StickerObject = require("src.classes.StickerObject")
 
 local StickerTypes = {}
 
---Flame Sticker (placeholder)
-
-local FlameSticker = setmetatable({}, { __index = StickerObject })
-FlameSticker.__index = FlameSticker
-
-function FlameSticker:new()
-	local self = setmetatable(StickerObject:new(), FlameSticker)
-
-	self.sprite = "src/assets/sprites/stickers/Flame.png"
-
-	self.name = "Flame Sticker"
-	self.description = "Placeholder flame sticker... Placeholder Description... yay!~"
-
-	return self
-end
-
---StickerTypes.FlameSticker = FlameSticker
-
 --MoneyBag Sticker
 
 local MoneyBagSticker = setmetatable({}, { __index = StickerObject })
@@ -435,7 +417,7 @@ function EyesSticker:new()
 
 	self.name = "Eyes"
 	self.description = "Playing a figure two times in a row multiplies its base value by two."
-	self.holographic = false
+	self.holographic = true
 	return self
 end
 
@@ -444,5 +426,87 @@ function EyesSticker:buyEffect(run)
 end
 
 StickerTypes.EyesSticker = EyesSticker
+
+--Checkmark Sticker
+local CheckmarkSticker = setmetatable({}, { __index = StickerObject })
+CheckmarkSticker.__index = CheckmarkSticker
+
+function CheckmarkSticker:new()
+	local self = setmetatable(StickerObject:new(), CheckmarkSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Checkmark.png"
+
+	self.name = "Checkmark"
+	self.description = "Your first hand in an office doesn't spend any figure use."
+	self.holographic = false
+	return self
+end
+
+function CheckmarkSticker:buyEffect(run)
+	run.firstHandFigureSpare = true
+end
+
+StickerTypes.CheckmarkSticker = CheckmarkSticker
+
+--Clock Sticker
+local ClockSticker = setmetatable({}, { __index = StickerObject })
+ClockSticker.__index = ClockSticker
+
+function ClockSticker:new()
+	local self = setmetatable(StickerObject:new(), ClockSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Clock.png"
+
+	self.name = "Clock"
+	self.description = "Dices are triggered two times each on your last hand."
+	self.holographic = true
+	return self
+end
+
+function ClockSticker:buyEffect(run)
+	run.lastTurnDoubleTrigger = true
+end
+
+StickerTypes.ClockSticker = ClockSticker
+
+--Flame Sticker (placeholder)
+
+local FlameSticker = setmetatable({}, { __index = StickerObject })
+FlameSticker.__index = FlameSticker
+
+function FlameSticker:new()
+	local self = setmetatable(StickerObject:new(), FlameSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Flame.png"
+
+	self.name = "Flame"
+	self.holographic = true
+	self.description = ""
+	self.choosenNumber = 0
+	return self
+end
+
+function FlameSticker:getDescription()
+	return "Dices have 1 chance out of 2 to be re-triggered if their face is a (("
+		.. self.choosenNumber
+		.. ")) (number changes each round)."
+end
+
+function FlameSticker:startRoundEffect(run)
+	self.choosenNumber = math.random(1, 6)
+end
+
+function FlameSticker:diceTriggeredEffect(run, opts)
+	print(opts.face.representedObject.faceValue)
+	if opts.face.representedObject.faceValue == self.choosenNumber or opts.face.representedObject.blank == true then
+		local r = math.random(1, 2)
+		if r == 1 then
+			table.insert(G.currentRun.currentRound.diceFacesTriggerQueue, 1, opts.face)
+			table.insert(G.currentRun.currentRound.dicesTriggerQueue, 1, opts.dice)
+		end
+	end
+end
+
+StickerTypes.FlameSticker = FlameSticker
 
 return StickerTypes

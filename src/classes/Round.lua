@@ -47,6 +47,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 	self.run = run
 
 	--Current Round Parameters
+	self.numberOfHands = 0
 	self.firstRoll = false
 	self.nround = n
 	self.floorNumber = floor
@@ -270,11 +271,20 @@ function Round:startTriggeringPhase(usedDices, figure)
 	--Create the dice face trigger queue
 	for k, df in next, sortedDiceFaces do
 		table.insert(self.diceFacesTriggerQueue, df) --Copie la liste dans trigger Queue
+		--Si on est au dernier tour et qu'on a le sticker nécécité , on ajoute une deuxieme fois chaque dé dans la queue
+		if self.remainingHands == 1 and self.run.lastTurnDoubleTrigger == true then
+			table.insert(self.diceFacesTriggerQueue, df) --Copie la liste dans trigger Queue
+		end
 	end
 
 	--Create the dice trigger queue
 	for k, d in next, sortedDices do
 		table.insert(self.dicesTriggerQueue, d) --Copie la liste dans trigger Queue
+		--Si on est au dernier tour et qu'on a le sticker nécécité , on ajoute une deuxieme fois chaque dé dans la queue
+		--Si on est au dernier tour et qu'on a le sticker nécécité , on ajoute une deuxieme fois chaque dé dans la queue
+		if self.remainingHands == 1 and self.run.lastTurnDoubleTrigger == true then
+			table.insert(self.dicesTriggerQueue, d) --Copie la liste dans trigger Queue
+		end
 	end
 
 	--Triggers the first dice
@@ -294,6 +304,12 @@ function Round:triggerNextDice()
 			--On retire de la file
 			table.remove(self.diceFacesTriggerQueue, 1)
 			table.remove(self.dicesTriggerQueue, 1)
+
+			--On déclenche l'effet de sticker associé-
+			self.run:diceTriggeredEffect({
+				dice = self.triggerDiceHistory[#self.triggerDiceHistory],
+				face = self.triggerFaceHistory[#self.triggerFaceHistory],
+			})
 		else
 			--On retire de la file
 			table.remove(self.diceFacesTriggerQueue, 1)

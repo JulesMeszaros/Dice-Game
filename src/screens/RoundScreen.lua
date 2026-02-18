@@ -1066,8 +1066,11 @@ function RoundScreen:playFigure(figure, params)
 		and (G.currentRun.tutorialCanPlayFigure == true or not G.currentRun.tutorial)
 	then
 		self.round:playFigure(points, usedDices, figure)
-		self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure] - 1
+		if not (self.round.numberOfHands == 0 and G.currentRun.firstHandFigureSpare == true) then
+			self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure] - 1
+		end
 		self.round.run:stickerFigurePlayedEffect()
+		self.round.numberOfHands = self.round.numberOfHands + 1
 	end
 end
 --Reorganises the UI faces by face order (unselected dices)

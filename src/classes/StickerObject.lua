@@ -33,9 +33,7 @@ function Sticker:endRoundEffect(run)
 	print("endRound")
 end
 
-function Sticker:figurePlayedEffect(run)
-	print("figurePlyed")
-end
+function Sticker:figurePlayedEffect(run) end
 
 function Sticker:startTriggerEffect(run)
 	--A implementer
