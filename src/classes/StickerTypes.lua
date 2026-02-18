@@ -403,4 +403,46 @@ end
 
 StickerTypes.CogSticker = CogSticker
 
+--Ladder Sticker
+local LadderSticker = setmetatable({}, { __index = StickerObject })
+LadderSticker.__index = LadderSticker
+
+function LadderSticker:new()
+	local self = setmetatable(StickerObject:new(), LadderSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Stairs.png"
+
+	self.name = "Ladder"
+	self.description = "Small Straights only need three consecutives dices."
+	self.holographic = false
+	return self
+end
+
+function LadderSticker:buyEffect(run)
+	run.smlStraightsFaciliter = true
+end
+
+StickerTypes.LadderSticker = LadderSticker
+
+--Eyes Sticker
+local EyesSticker = setmetatable({}, { __index = StickerObject })
+EyesSticker.__index = EyesSticker
+
+function EyesSticker:new()
+	local self = setmetatable(StickerObject:new(), EyesSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Eyes.png"
+
+	self.name = "Eyes"
+	self.description = "Playing a figure two times in a row multiplies its base value by two."
+	self.holographic = false
+	return self
+end
+
+function EyesSticker:buyEffect(run)
+	run.consecutiveFigureMult = true
+end
+
+StickerTypes.EyesSticker = EyesSticker
+
 return StickerTypes

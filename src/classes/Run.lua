@@ -42,6 +42,7 @@ function Run:new(dices, gameCanvas, game, diceObjects, tutorial)
 	self.totalDisabled = 0
 	self.bestHand = 0
 	self.lastLeveledUpFigure = 0
+	self.lastPlayedFigure = 0
 	self.hivemindTriggers = 0
 
 	self.shop = nil

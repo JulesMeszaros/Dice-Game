@@ -398,6 +398,8 @@ end
 
 function Round:endTriggeringPhase()
 	self.phase = Constants.ROUND_STATES.PLAYING
+	G.currentRun.lastPlayedFigure = self.playedFigure
+	print(G.currentRun.lastPlayedFigure)
 
 	if self.remainingHands >= 1 then
 		self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles

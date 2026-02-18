@@ -46,6 +46,10 @@ function CalculatePoints.numberBasePoints(number, dices, level)
 		score = score + 50
 	end
 
+	if G.currentRun.lastPlayedFigure == number and G.currentRun.consecutiveFigureMult == true then
+		score = score * 2
+	end
+
 	return { score, usedDices }
 end
 
@@ -98,6 +102,10 @@ function CalculatePoints.brelanBasePoints(dices, level)
 
 	score = level * score
 
+	if G.currentRun.lastPlayedFigure == 8 and G.currentRun.consecutiveFigureMult == true then
+		score = score * 2
+	end
+
 	return { score, usedDices }
 end
 
@@ -145,6 +153,10 @@ function CalculatePoints.fullBasePoints(dices, level)
 	end
 
 	score = score * level
+
+	if G.currentRun.lastPlayedFigure == 10 and G.currentRun.consecutiveFigureMult == true then
+		score = score * 2
+	end
 
 	return { score, usedDices }
 end
@@ -198,6 +210,10 @@ function CalculatePoints.carreBasePoints(dices, level)
 
 	score = level * score
 
+	if G.currentRun.lastPlayedFigure == 9 and G.currentRun.consecutiveFigureMult == true then
+		score = score * 2
+	end
+
 	return { score, usedDices }
 end
 
@@ -213,8 +229,13 @@ function CalculatePoints.pttSuiteBasePoints(dices, level)
 		end
 	end
 
-	local suite = getStraight(drawedNumbers, 4)
-	--Ajouter une condition pour ne pas compter deux fois un meme nombre
+	local neededLength = 4
+	if G.currentRun.smlStraightsFaciliter == true then
+		neededLength = 3
+	end
+
+	local suite = getStraight(drawedNumbers, neededLength)
+
 	if suite then
 		score = 30
 		for dice, f in next, dices do
@@ -237,6 +258,10 @@ function CalculatePoints.pttSuiteBasePoints(dices, level)
 	end
 
 	score = level * score
+
+	if G.currentRun.lastPlayedFigure == 11 and G.currentRun.consecutiveFigureMult == true then
+		score = score * 2
+	end
 
 	return { score, usedDices }
 end
@@ -264,6 +289,9 @@ function CalculatePoints.gdSuiteBasePoints(dices, level)
 	end
 
 	score = level * score
+	if G.currentRun.lastPlayedFigure == 12 and G.currentRun.consecutiveFigureMult == true then
+		score = score * 2
+	end
 
 	return { score, usedDices }
 end
@@ -282,6 +310,9 @@ function CalculatePoints.chanceBasePoints(dices, level)
 	end
 
 	score = level * score
+	if G.currentRun.lastPlayedFigure == 7 and G.currentRun.consecutiveFigureMult == true then
+		score = score * 2
+	end
 
 	return { score, usedDices }
 end
@@ -312,6 +343,10 @@ function CalculatePoints.yatzeeBasePoints(dices, level)
 	end
 
 	score = level * score
+
+	if G.currentRun.lastPlayedFigure == 13 and G.currentRun.consecutiveFigureMult == true then
+		score = score * 2
+	end
 
 	return { score, usedDices }
 end
