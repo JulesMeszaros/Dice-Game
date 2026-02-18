@@ -1,3 +1,4 @@
+local AudioFiles = require("src.utils.AudioFiles")
 local TutorialEvents = require("src.utils.TutorialEvents")
 local Constants = require("src.utils.Constants")
 local DiceFace = require("src.classes.ui.DiceFace")
@@ -507,6 +508,7 @@ function Round:rerollDices() --Triggers the makeRoll function after clicking the
 	self.run:stickerRerollEffect()
 
 	if self.firstRoll == false then
+		G.audio:playSource(AudioFiles.REROLL_SOUND)
 		self:makeRoll(self.diceObjects)
 		self.firstRoll = true
 		return

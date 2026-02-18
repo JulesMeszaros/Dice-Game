@@ -12,6 +12,7 @@ local DiceFace = require("src.classes.ui.DiceFace")
 local Ciggie = require("src.classes.ui.Ciggie")
 local UI = require("src.utils.scripts.UI")
 local InfoBubble = require("src.classes.ui.InfoBubble")
+local AudioFiles = require("src.utils.AudioFiles")
 
 local GameScreen = {}
 GameScreen.__index = GameScreen

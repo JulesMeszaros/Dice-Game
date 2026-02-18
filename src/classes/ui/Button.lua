@@ -13,6 +13,9 @@ function Button:new(callback, spritePath, x, y, width, height, gameCanvas, mouse
 	local self = setmetatable(UIElement.new(), Button)
 	self.gameCanvas = gameCanvas
 
+	self.audioFile1 = AudioFiles.MOUSE_CLICK_1
+	self.audioFile2 = AudioFiles.MOUSE_CLICK_2
+
 	self.animator = Animator:new(self)
 	self:setSprite(love.graphics.newImage(spritePath))
 
@@ -98,7 +101,7 @@ function Button:clickEvent() --S'active lorsqu'un click est commencé
 
 	if self:isHovered() then
 		self.isBeingClicked = true
-		G.audio:buttonSound(true)
+		G.audio:buttonSound(true, self.audioFile1, self.audioFile2)
 
 		wasClicked = true
 	end
@@ -125,7 +128,7 @@ function Button:clickAction() end
 
 function Button:getCallback()
 	if self.isActivated == true then
-		G.audio:buttonSound(false)
+		G.audio:buttonSound(false, self.audioFile1, self.audioFile2)
 		return self.callbackFunction --Returns the function
 	else
 		return function() end --Doesnt do anything
@@ -165,4 +168,3 @@ function Button:cleanup()
 end
 
 return Button
-
