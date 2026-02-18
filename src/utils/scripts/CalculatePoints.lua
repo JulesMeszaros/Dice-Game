@@ -1,20 +1,35 @@
 local CalculatePoints = {}
 
 function CalculatePoints.numberBasePoints(number, dices, level)
-	--Calcul Pour les nombres simples
 	local score = 0
 	local usedDices = {}
 
+	local left = number - 1
+	local right = number + 1
+
+	-- wrap-around
+	if left < 1 then
+		left = 6
+	end
+	if right > 6 then
+		right = 1
+	end
+
 	for k, d in next, dices do
-		if d:getCurrentFaceObject().blank == false then
-			if d:getCurrentFaceObject().faceValue == number then
-				-- incrementing the score
+		local face = d:getCurrentFaceObject()
+
+		if face.blank == false then
+			local value = face.faceValue
+
+			if value == number then
 				score = score + number
-				-- adding the dice to the table of dices used for this face
+				table.insert(usedDices, d)
+			elseif G.currentRun.adjacentNumericalDices == true and (value == left or value == right) then
+				score = score + number
 				table.insert(usedDices, d)
 			end
 		else
-			if d:getCurrentFaceObject().name == "Star Dice" then
+			if face.name == "Star Dice" then
 				score = score + number
 			end
 			table.insert(usedDices, d)

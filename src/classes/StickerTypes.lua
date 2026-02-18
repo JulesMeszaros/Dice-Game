@@ -331,7 +331,7 @@ function BandaidSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Bandaid.png"
 
 	self.name = "Bandaid"
-	self.description = "Three Of A Kind can be played with two dices. Four Of A Kind can be played with three."
+	self.description = "Three Of a Kind and Four of a Kind can be played with a dice missing."
 	return self
 end
 
@@ -381,5 +381,26 @@ function GiftSticker:buyEffect(run)
 end
 
 StickerTypes.GiftSticker = GiftSticker
+
+--Cog Sticker
+local CogSticker = setmetatable({}, { __index = StickerObject })
+CogSticker.__index = CogSticker
+
+function CogSticker:new()
+	local self = setmetatable(StickerObject:new(), CogSticker)
+
+	self.sprite = "src/assets/sprites/stickers/Cog.png"
+
+	self.name = "Cog"
+	self.description = "Number figures can be played using adjacent face values."
+	self.holographic = true
+	return self
+end
+
+function CogSticker:buyEffect(run)
+	run.adjacentNumericalDices = true
+end
+
+StickerTypes.CogSticker = CogSticker
 
 return StickerTypes
