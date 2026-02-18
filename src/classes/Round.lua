@@ -512,6 +512,8 @@ function Round:rerollDices() --Triggers the makeRoll function after clicking the
 		self:makeRoll(self.diceObjects)
 		self.firstRoll = true
 		return
+	else
+		G.audio:playSource(AudioFiles.REROLL_SOUND_2)
 	end
 
 	local dicesToReroll = {}

@@ -41,6 +41,7 @@ local AudioFiles = {
 	MOUSE_CLICK_1 = love.sound.newDecoder("src/assets/sounds/click_on.ogg"),
 	MOUSE_CLICK_2 = love.sound.newDecoder("src/assets/sounds/click_off.ogg"),
 	REROLL_SOUND = love.sound.newDecoder("src/assets/sounds/Modern8.ogg"),
+	REROLL_SOUND_2 = love.sound.newDecoder("src/assets/sounds/Modern5.ogg"),
 }
 
 return AudioFiles
