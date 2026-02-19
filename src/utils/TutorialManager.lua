@@ -60,6 +60,12 @@ function TutorialManager:new(run)
 
 	self.toastCanvas = love.graphics.newCanvas(500, 125)
 
+	-- Flèches actives
+	self.activeArrows = {}
+	self.activeToastArrows = {}
+
+	self.arrowBounceTime = 0
+
 	return self
 end
 
@@ -222,18 +228,32 @@ function TutorialManager:update(dt)
 
 	self.animator:update(dt)
 	self.nextButton:update(dt)
+	self.arrowBounceTime = self.arrowBounceTime + dt
 end
 
 -- ============================================================
 -- Draw : si le message a une fonction draw personnalisée
 -- ============================================================
 function TutorialManager:draw()
-	if not self.current then
-		return
+	-- ===== POPUP =====
+	if self.current then
+		love.graphics.setColor(1, 1, 1, self.opacity)
+		love.graphics.draw(self.tutoPanelCanvas, self.x, self.y)
+		self.nextButton:draw()
+
+		for _, arrow in ipairs(self.activeArrows) do
+			self:_drawArrow(arrow)
+		end
 	end
 
-	if self.current.draw then
-		self.current.draw(self.run, self.current)
+	-- ===== TOAST =====
+	if self.currentToast then
+		love.graphics.setColor(1, 1, 1, 1)
+		love.graphics.draw(self.toastCanvas, self.tx, self.ty)
+
+		for _, arrow in ipairs(self.activeToastArrows) do
+			self:_drawArrow(arrow)
+		end
 	end
 end
 
@@ -282,19 +302,21 @@ function TutorialManager:_popNext()
 	if #self.queue > 0 then
 		self.current = table.remove(self.queue, 1)
 
-		-- valeur par défaut : blocking = true
 		if self.current.blocking == nil then
 			self.current.blocking = true
 		end
 
 		self.isBlocking = self.current.blocking
 
-		-- callback au moment où le message apparaît
+		--arrows popup
+		self.activeArrows = self.current.arrows or {}
+
 		if self.current.onStart then
 			self.current.onStart(self.run, self.current)
 		end
 	else
 		self.current = nil
+		self.activeArrows = {}
 		self.isBlocking = false
 		self.opacity = 0
 		self.x = -10000
@@ -311,15 +333,42 @@ function TutorialManager:_popNextToast()
 	if #self.toastQueue > 0 then
 		self.currentToast = table.remove(self.toastQueue, 1)
 
-		-- callback au moment où le message apparaît
+		-- 🔥 arrows toast
+		self.activeToastArrows = self.currentToast.arrows or {}
+
 		if self.currentToast.onStart then
 			self.currentToast.onStart(self.run, self.currentToast)
 		end
 	else
 		self.currentToast = nil
+		self.activeToastArrows = {}
 		self.tx = -10000
 		self.ty = -10000
 	end
+end
+
+function TutorialManager:_drawArrow(arrow)
+	local x, y
+
+	if arrow.target and arrow.target.getCenter then
+		local tx, ty = arrow.target:getCenter()
+		x = tx + (arrow.offsetX or 0)
+		y = ty + (arrow.offsetY or 0)
+	else
+		x = arrow.x or 0
+		y = arrow.y or 0
+	end
+
+	local bounce = 0
+	if arrow.animated then
+		bounce = math.sin(self.arrowBounceTime * 4) * 6
+	end
+
+	love.graphics.push()
+	love.graphics.translate(x, y + bounce)
+	love.graphics.rotate(math.rad(arrow.angle or 0))
+	love.graphics.draw(Sprites.TUTORIAL_ARROW, 0, 0)
+	love.graphics.pop()
 end
 
 --Interactions
