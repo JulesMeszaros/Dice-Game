@@ -3,9 +3,9 @@ local CalculateTarget = {}
 --Constantes
 local firstTarget = 80 --target de base du premier bureau du premier étage
 local secondOfficeFactor = 1.3 --facteur multipliant du score du premier bureau de l'étage pour obtenir le deuxieme bureau
-local managerFactor = 1.7 --Facteur multipliant pour obtenir le score du manager par rapport au premier bureau de l'étage
-local factorPerThreeFloors = 0.8 --Tout les trois étages, le score du premier bureau est multiplié par ce facteur
-local baseFloorMultiplier = 1.7
+local managerFactor = 2 --Facteur multipliant pour obtenir le score du manager par rapport au premier bureau de l'étage
+local factorPerThreeFloors = 1 --Tout les trois étages, le score du premier bureau est multiplié par ce facteur
+local baseFloorMultiplier = 2.4
 
 function firstOffice(floor)
 	if floor == 1 then
