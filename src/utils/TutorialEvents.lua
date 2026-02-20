@@ -24,6 +24,13 @@ function TutorialEvents.welcomeMessage()
 		arrows = {
 			{ x = 500, y = 500, angle = 268 },
 		},
+		buttons = {
+			G.currentGameScreen.uiElements.buttons.rerollButton,
+		},
+
+		draw = function(opts)
+			G.currentGameScreen:drawRightPanel(opts.dt, { drawDeck = false })
+		end,
 	})
 end
 

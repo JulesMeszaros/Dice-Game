@@ -445,30 +445,36 @@ function GameScreen:draw() end
 
 --==UI Draw functions==--
 
-function GameScreen:drawRightPanel(dt)
+function GameScreen:drawRightPanel(dt, opts)
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.rightPanel)
 	love.graphics.clear()
 
 	--draw ui
 	if self.screenType ~= Constants.RUN_STATES.ROUND and self.screenType ~= Constants.RUN_STATES.DICE_CUSTOMIZATION then
-		self:drawDeck(dt)
+		if opts == nil or opts.drawDeck == true then
+			self:drawDeck(dt)
+		end
 	end
 
 	if self.screenType == Constants.RUN_STATES.ROUND and self.showDeck == false then
-		self:drawDiceDetails(dt)
+		if opts == nil or opts.drawDeck == true then
+			self:drawDiceDetails(dt)
+		end
 	end
 
 	self:drawRoundDetails(dt)
 
 	--draw buttons
-	self.uiElements.buttons["menuButton"]:update(dt)
-	self.uiElements.buttons["deckButton"]:update(dt)
-	self.uiElements.buttons["planButton"]:update(dt)
+	if opts == nil or opts.drawButtons == true then
+		self.uiElements.buttons["menuButton"]:update(dt)
+		self.uiElements.buttons["deckButton"]:update(dt)
+		self.uiElements.buttons["planButton"]:update(dt)
 
-	self.uiElements.buttons["menuButton"]:draw()
-	self.uiElements.buttons["deckButton"]:draw()
-	self.uiElements.buttons["planButton"]:draw()
+		self.uiElements.buttons["menuButton"]:draw()
+		self.uiElements.buttons["deckButton"]:draw()
+		self.uiElements.buttons["planButton"]:draw()
+	end
 
 	love.graphics.setCanvas(currentCanvas)
 	love.graphics.draw(self.rightPanel, self.rightPanelX, self.rightPanelY)
@@ -1407,8 +1413,8 @@ function GameScreen:addAvailableHand(i)
 end
 
 --Tutorial
-function GameScreen:drawTutoText()
-	G.currentRun.tutorial:draw()
+function GameScreen:drawTutoText(dt)
+	G.currentRun.tutorial:draw(dt)
 end
 
 --==State modification functions==--

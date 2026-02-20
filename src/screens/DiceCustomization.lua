@@ -273,7 +273,7 @@ function DiceCustomization:updateCanvas(dt)
 	end
 
 	if self.run.tutorial then
-		self:drawTutoText()
+		self:drawTutoText(dt)
 	end
 
 	love.graphics.setCanvas(currentCanvas)

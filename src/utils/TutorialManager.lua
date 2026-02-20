@@ -234,7 +234,7 @@ end
 -- ============================================================
 -- Draw : si le message a une fonction draw personnalisée
 -- ============================================================
-function TutorialManager:draw()
+function TutorialManager:draw(dt)
 	-- ===== POPUP =====
 	if self.current then
 		--Dessin d'un fond transparant noir
@@ -242,13 +242,25 @@ function TutorialManager:draw()
 		love.graphics.rectangle("fill", 0, 0, Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
 		love.graphics.setColor(1, 1, 1, 1)
 
-		love.graphics.draw(self.tutoPanelCanvas, self.x, self.y)
-		self.nextButton:draw()
-
+		--Dessin des boutons highlight
+		if self.current.buttons then
+			for _, button in ipairs(self.current.buttons) do
+				button:draw()
+			end
+		end
+		--Dessin des fleches
 		for _, arrow in ipairs(self.activeArrows) do
 			self:_drawArrow(arrow)
 		end
 
+		--Fonction draw du panneau
+		if self.current.draw then
+			self.current.draw({ dt = dt })
+		end
+
+		--Dessin du panneau
+		love.graphics.draw(self.tutoPanelCanvas, self.x, self.y)
+		--Dessin du bouton Next
 		self.nextButton:draw()
 	end
 

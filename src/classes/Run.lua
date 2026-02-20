@@ -124,16 +124,20 @@ function Run:update(dt)
 		if self.currentState == Constants.RUN_STATES.ROUND then
 			--update Round
 			self.currentRound:update(dt)
+			G.currentGameScreen = self.currentRound.terrain
 		elseif self.currentState == Constants.RUN_STATES.SHOP then
 			--update shop
 			self.shop:update(dt)
+			self.currentGameScreen = self.shop
 		elseif self.currentState == Constants.RUN_STATES.ROUND_CHOICE then
 			--update shop
 			self.deskChoice:update(dt)
+			self.currentGameScreen = self.deskChoice
 		elseif self.currentState == Constants.RUN_STATES.GAME_OVER then
 			self.gameOver:update(dt)
 		elseif self.currentState == Constants.RUN_STATES.DICE_CUSTOMIZATION then
 			self.customizationScreen:update(dt)
+			self.currentGameScreen = self.customizationScreen
 		end
 	elseif self.displayInfoScreen == true and self.displayPauseMenu ~= true then
 		self.infoScreen:update(dt)
