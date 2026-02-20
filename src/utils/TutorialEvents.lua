@@ -13,7 +13,13 @@ function TutorialEvents.welcomeMessage()
 		pos = "ul",
 		onConfirm = function()
 			G.currentRun.tutorialCanReroll = true
-			G.currentRun.tutorial:pushToast({ text = "Press the [[REROLL!]] button.", key = "firstThrow" })
+			G.currentRun.tutorial:pushToast({
+				text = "Press the [[REROLL!]] button.",
+				key = "firstThrow",
+				arrows = {
+					{ x = 500, y = 500, angle = 268 },
+				},
+			})
 		end,
 		arrows = {
 			{ x = 500, y = 500, angle = 268 },

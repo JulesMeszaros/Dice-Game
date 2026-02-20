@@ -1408,33 +1408,7 @@ end
 
 --Tutorial
 function GameScreen:drawTutoText()
-	if self.run.tutorial and self.run.tutorial.current then
-		--Position de base
-		local x = 0
-		local y = Constants.VIRTUAL_GAME_HEIGHT - Sprites.TUTO_PANEL:getHeight()
-
-		--Position dans les autres coins si précisé
-
-		--Dessin d'un fond transparant noir
-		love.graphics.setColor(0, 0, 0, self.run.tutorial.opacity)
-		love.graphics.rectangle("fill", 0, 0, Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
-		love.graphics.setColor(1, 1, 1, 1)
-
-		--Dessin du panneau
-		--love.graphics.draw(self.run.tutorial.tutoPanelCanvas, self.run.tutorial.x, self.run.tutorial.y)
-		G.currentRun.tutorial:draw()
-		--dessin des fleches et du reste
-
-		--Dessin du bouton
-		self.run.tutorial.nextButton:draw()
-	end
-end
-
-function GameScreen:drawTutoToast()
-	if self.run.tutorial and self.run.tutorial.currentToast then
-		--Dessin du panneau
-		love.graphics.draw(self.run.tutorial.toastCanvas, self.run.tutorial.tx, self.run.tutorial.ty)
-	end
+	G.currentRun.tutorial:draw()
 end
 
 --==State modification functions==--

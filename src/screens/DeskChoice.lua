@@ -207,12 +207,8 @@ function DeskChoice:updateCanvas(dt)
 		self.infoBubble:draw()
 	end
 
-	if self.run.tutorial and self.run.tutorial.current then
+	if self.run.tutorial then
 		self:drawTutoText()
-	end
-
-	if self.run.tutorial and self.run.tutorial.currentToast then
-		self:drawTutoToast()
 	end
 
 	love.graphics.setCanvas(currentCanvas)

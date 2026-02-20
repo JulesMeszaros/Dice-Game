@@ -237,18 +237,24 @@ end
 function TutorialManager:draw()
 	-- ===== POPUP =====
 	if self.current then
+		--Dessin d'un fond transparant noir
+		love.graphics.setColor(0, 0, 0, self.opacity)
+		love.graphics.rectangle("fill", 0, 0, Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
+		love.graphics.setColor(1, 1, 1, 1)
+
 		love.graphics.draw(self.tutoPanelCanvas, self.x, self.y)
 		self.nextButton:draw()
 
 		for _, arrow in ipairs(self.activeArrows) do
 			self:_drawArrow(arrow)
 		end
+
+		self.nextButton:draw()
 	end
 
 	-- ===== TOAST =====
 	if self.currentToast then
 		love.graphics.draw(self.toastCanvas, self.tx, self.ty)
-
 		for _, arrow in ipairs(self.activeToastArrows) do
 			self:_drawArrow(arrow)
 		end
