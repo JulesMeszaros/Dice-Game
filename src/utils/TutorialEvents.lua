@@ -166,23 +166,43 @@ function TutorialEvents.firstRoundWin()
 		pos = "ul",
 	})
 	G.currentRun.tutorial:pushOnce("firstWin2", {
-		text = "You get money for each round you beat, depending on the coworker your beat. Add to that 1$ for each hand you didn't use.",
+		text = "When winning against a coworker, you get two new dice faces. See their effect by hovering them.",
 		pos = "ul",
+		draw = function(opts)
+			G.currentGameScreen.endRoundPopUp:updateCanvas(opts.dt, { rewards = true })
+
+			G.currentGameScreen.endRoundPopUp:draw()
+		end,
 	})
 	G.currentRun.tutorial:pushOnce("firstWin3", {
-		text = "Also, you earned two new ((dice faces))! Hover you mouse over them to see what their effect are.",
+		text = "You also win a Magic Wand! Magic Wands give special bonuses when used.",
 		pos = "ul",
+		draw = function(opts)
+			G.currentGameScreen.endRoundPopUp:updateCanvas(opts.dt, { rewards = true })
+			G.currentGameScreen.endRoundPopUp:draw()
+		end,
 	})
 	G.currentRun.tutorial:pushOnce("firstWin4", {
-		text = "Last, but not least, you earned your first magic wand ! Magic Wands give you an instant bonus when used, like an additional reroll or even 5 extra bucks when needed.",
+		text = "This one for instance gives you an additional turn during a round.",
 		pos = "ul",
+		draw = function(opts)
+			G.currentGameScreen.endRoundPopUp:updateCanvas(opts.dt, { rewards = true })
+			G.currentGameScreen.endRoundPopUp:draw()
+		end,
 	})
 	G.currentRun.tutorial:pushOnce("firstWin5", {
-		text = "Use them when needed by grabbing one of them and sliding it to the center of your screen.",
+		text = "Finally, you get some money, depending on the coworker you beat, plus one dollar per unused turn.",
 		pos = "ul",
 		onFinish = function()
 			G.currentRun.tutorialCanPlayStraights = false
 		end,
+		draw = function(opts)
+			G.currentGameScreen.endRoundPopUp:updateCanvas(opts.dt, { money = true })
+			G.currentGameScreen.endRoundPopUp:draw()
+		end,
+	})
+	G.currentRun.tutorial:pushOnce("firstWin6", {
+		text = "You can click [[Next!]] I'll show you how to customize your dices now.'",
 	})
 end
 

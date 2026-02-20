@@ -96,49 +96,61 @@ function EndRound:update(dt)
 	self:getCurrentlyHoveredObject()
 end
 
-function EndRound:updateCanvas(dt)
+function EndRound:updateCanvas(dt, opts)
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.canvas)
 	love.graphics.clear()
 
 	--Pop up content
-	self:drawMainCanvas(dt)
+	self:drawMainCanvas(dt, opts)
 
-	--UI faces
-	for i, uiFace in next, self.faceRewards do
-		uiFace:update(dt)
-		uiFace:draw()
-	end
+	if not opts or opts.rewards == true then
+		--UI faces
+		for i, uiFace in next, self.faceRewards do
+			uiFace:update(dt)
+			uiFace:draw()
+		end
 
-	if self.ciggieReward then
-		self.ciggieReward:update(dt)
-		self.ciggieReward:draw()
+		if self.ciggieReward then
+			self.ciggieReward:update(dt)
+			self.ciggieReward:draw()
+		end
 	end
 
 	love.graphics.setCanvas(currentCanvas)
 end
 
 --update the different canvas
-function EndRound:drawMainCanvas(dt)
+function EndRound:drawMainCanvas(dt, opts)
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.contentCanvas)
 	love.graphics.clear()
 
-	--Background
-	love.graphics.draw(Sprites.END_ROUND_BG, 0, 0)
-
 	self.youWon:update(dt)
-	self.youWon:draw()
+	if not opts or opts.background == true then
+		--Background
+		love.graphics.draw(Sprites.END_ROUND_BG, 0, 0)
 
-	--Money earned
+		self.youWon:draw()
+	end
+
 	self:updateEarnedMoney()
-	love.graphics.draw(self.moneyRewardCanvas, 40, 140)
-	--Dice rewards
+	if not opts or opts.money == true then
+		--Money earned
+		love.graphics.draw(self.moneyRewardCanvas, 40, 140)
+	end
+
 	self:updateRewardsCanvas()
-	love.graphics.draw(self.rewardsCanvas, 480, 140)
-	--Next Round button
+	if not opts or opts.rewards == true then
+		--Dice rewards
+		love.graphics.draw(self.rewardsCanvas, 480, 140)
+	end
+
 	self.nextRoundButton:update(dt)
-	self.nextRoundButton:draw()
+	--Next Round button
+	if not opts or opts.button == true then
+		self.nextRoundButton:draw()
+	end
 
 	love.graphics.setCanvas(currentCanvas)
 	love.graphics.draw(self.contentCanvas, self.contentX, self.contentY)
