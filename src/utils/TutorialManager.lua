@@ -310,13 +310,43 @@ end
 -- Interne : passer au prochain message
 -- ============================================================
 function TutorialManager:_popNext()
+	local duration = 0.2
 	-- on appelle onEnd si besoin
 	if self.current and self.current.onEnd then
 		self.current.onEnd(self.run, self.current)
 	end
 
 	if #self.queue > 0 then
+		local currentposition = nil
+		if self.current then
+			currentposition = self.current.pos
+		end
 		self.current = table.remove(self.queue, 1)
+
+		if currentposition and self.current.pos ~= currentposition then
+			if self.current.pos == "ul" then
+				self.animator:add("x", self.x, 30, duration, AnimationUtils.Easing.inOutQuad)
+				self.animator:add("y", self.y, 30, duration, AnimationUtils.Easing.inOutQuad)
+			elseif self.current.pos == "ur" then
+				self.animator:add(
+					"x",
+					self.x,
+					Constants.VIRTUAL_GAME_WIDTH - Sprites.TUTO_PANEL:getWidth() - 30,
+					duration,
+					AnimationUtils.Easing.inOutQuad
+				)
+				self.animator:add("y", self.y, 30, duration, AnimationUtils.Easing.inOutQuad)
+			else
+				self.animator:add("x", self.x, 30, duration, AnimationUtils.Easing.inOutQuad)
+				self.animator:add(
+					"y",
+					self.y,
+					Constants.VIRTUAL_GAME_HEIGHT - Sprites.TUTO_PANEL:getHeight() - 30,
+					duration,
+					AnimationUtils.Easing.inOutQuad
+				)
+			end
+		end
 
 		if self.current.blocking == nil then
 			self.current.blocking = true
@@ -383,7 +413,16 @@ function TutorialManager:_drawArrow(arrow)
 	love.graphics.translate(x + math.sin(angle) * bounce, y - math.cos(angle) * bounce)
 
 	love.graphics.rotate(angle)
-	love.graphics.draw(Sprites.POINTER, 0, 0, 0, 1 / 10, 1 / 10)
+	love.graphics.draw(
+		Sprites.POINTER,
+		0,
+		0,
+		0,
+		1 / 10,
+		1 / 10,
+		Sprites.POINTER:getWidth() / 2,
+		Sprites.POINTER:getHeight() / 2
+	)
 	love.graphics.pop()
 end
 

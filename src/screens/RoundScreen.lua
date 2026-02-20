@@ -720,59 +720,71 @@ function RoundScreen:drawDiceDetails()
 	love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
-function RoundScreen:drawPlayersInfos(dt)
+function RoundScreen:drawPlayersInfos(dt, opts)
 	local currentCanvas = love.graphics.getCanvas()
-	--Player
-	local playerYOffset = AnimationUtils.osccilate(self.timers.oscillationTimePlayer, 20, 8)
-	love.graphics.setCanvas(self.playerInfos)
-	love.graphics.clear()
-	love.graphics.draw(Sprites.PLAYER_INFOS, 0, 0)
-	--Avatar du joueur
-	G.playerLion:update(dt)
-	G.playerLion:draw(130, 125, 250, 250)
-
-	--Nom du joueur
-	love.graphics.draw(
-		self.playerName,
-		450,
-		37,
-		0,
-		1,
-		1,
-		self.playerName:getWidth() / 2,
-		self.playerName:getHeight() / 2
-	)
-
-	local scoreText = love.graphics.newText(font, tostring(self.round.roundScore))
-
-	self.playerScoreWavyText.text = tostring(self.round.roundScore)
-	self.playerScoreWavyText:update(dt)
-	self.playerScoreWavyText:draw(dt)
-
-	--Ennemy
-	local enemyYOffset = 0 --AnimationUtils.osccilate(self.timers.oscillationTimeEnemy, 20, 8)
-	love.graphics.setCanvas(self.enemyInfos)
-	love.graphics.clear()
-	love.graphics.draw(Sprites.ENEMY_INFOS, 0, 0)
-
-	--Name
-	love.graphics.draw(self.enemyName, 200, 175, 0, 1, 1, self.enemyName:getWidth() / 2, self.enemyName:getHeight() / 2)
-
-	local targetScoreText = love.graphics.newText(font, "Target : " .. tostring(self.round.targetScore))
-
-	self.enemyScoreWavyText:update(dt)
-	self.enemyScoreWavyText:draw(dt)
-
-	--Lion
-	self.round.enemyCharacter:update()
-	self.round.enemyCharacter:draw(390 + 120, 125, 250, 250)
 	local px, py = G.calculateParalaxeOffset(2)
-	love.graphics.setCanvas(currentCanvas)
-	-- Draw player/enemy infos with premultiplied alpha to prevent dark outlines on rounded corners
-	love.graphics.setBlendMode("alpha", "premultiplied")
-	love.graphics.draw(self.playerInfos, self.playerX + px, self.playerY + py)
-	love.graphics.draw(self.enemyInfos, self.enemyX + px, self.enemyY + py)
-	love.graphics.setBlendMode("alpha", "alphamultiply")
+
+	--Player
+	if opts == nil or opts.player == true then
+		local playerYOffset = AnimationUtils.osccilate(self.timers.oscillationTimePlayer, 20, 8)
+		love.graphics.setCanvas(self.playerInfos)
+		love.graphics.clear()
+		love.graphics.draw(Sprites.PLAYER_INFOS, 0, 0)
+		--Avatar du joueur
+		G.playerLion:update(dt)
+		G.playerLion:draw(130, 125, 250, 250)
+
+		--Nom du joueur
+		love.graphics.draw(
+			self.playerName,
+			450,
+			37,
+			0,
+			1,
+			1,
+			self.playerName:getWidth() / 2,
+			self.playerName:getHeight() / 2
+		)
+
+		local scoreText = love.graphics.newText(font, tostring(self.round.roundScore))
+
+		self.playerScoreWavyText.text = tostring(self.round.roundScore)
+		self.playerScoreWavyText:update(dt)
+		self.playerScoreWavyText:draw(dt)
+		love.graphics.setCanvas(currentCanvas)
+		love.graphics.draw(self.playerInfos, self.playerX + px, self.playerY + py)
+	end
+
+	if opts == nil or opts.enemy == true then
+		--Ennemy
+		local enemyYOffset = 0 --AnimationUtils.osccilate(self.timers.oscillationTimeEnemy, 20, 8)
+		love.graphics.setCanvas(self.enemyInfos)
+		love.graphics.clear()
+		love.graphics.draw(Sprites.ENEMY_INFOS, 0, 0)
+
+		--Name
+		love.graphics.draw(
+			self.enemyName,
+			200,
+			175,
+			0,
+			1,
+			1,
+			self.enemyName:getWidth() / 2,
+			self.enemyName:getHeight() / 2
+		)
+
+		local targetScoreText = love.graphics.newText(font, "Target : " .. tostring(self.round.targetScore))
+
+		self.enemyScoreWavyText:update(dt)
+		self.enemyScoreWavyText:draw(dt)
+
+		--Lion
+		self.round.enemyCharacter:update()
+		self.round.enemyCharacter:draw(390 + 120, 125, 250, 250)
+		love.graphics.setCanvas(currentCanvas)
+		love.graphics.draw(self.enemyInfos, self.enemyX + px, self.enemyY + py)
+	end
 end
 
 --==CREATE CANVAS FUNCTIONS==--
@@ -1061,12 +1073,23 @@ function RoundScreen:playFigure(figure, params)
 		--On vérifie aussi que la run tutorial peut jouer des figures
 		and (G.currentRun.tutorialCanPlayFigure == true or not G.currentRun.tutorial)
 	then
-		self.round:playFigure(points, usedDices, figure)
-		if not (self.round.numberOfHands == 0 and G.currentRun.firstHandFigureSpare == true) then
-			self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure] - 1
+		if
+			not G.currentRun.tutorial --On est pas en tuto
+			or not G.currentRun.tutorialCanPlayStraights --On peut jouer autre chose que des traights
+			or (figure == 12) --La figure est la grd straight
+		then
+			if self.run.tutorial then
+				self.run.tutorial:confirmToast("playFigure")
+			end
+
+			print(G.currentRun.tutorial, not G.currentRun.tutorialCanPlayStraights, figure == 12)
+			self.round:playFigure(points, usedDices, figure)
+			if not (self.round.numberOfHands == 0 and G.currentRun.firstHandFigureSpare == true) then
+				self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure] - 1
+			end
+			self.round.run:stickerFigurePlayedEffect()
+			self.round.numberOfHands = self.round.numberOfHands + 1
 		end
-		self.round.run:stickerFigurePlayedEffect()
-		self.round.numberOfHands = self.round.numberOfHands + 1
 	end
 end
 --Reorganises the UI faces by face order (unselected dices)

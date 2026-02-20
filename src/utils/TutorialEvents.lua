@@ -1,3 +1,4 @@
+local Constants = require("src.utils.Constants")
 local TutorialEvents = {}
 
 function TutorialEvents.welcomeMessage()
@@ -17,27 +18,23 @@ function TutorialEvents.welcomeMessage()
 				text = "Press the [[REROLL!]] button.",
 				key = "firstThrow",
 				arrows = {
-					{ x = 500, y = 500, angle = 268 },
+					{ x = Constants.VIRTUAL_GAME_WIDTH / 2, y = Constants.VIRTUAL_GAME_HEIGHT - 200, angle = 180 },
 				},
 			})
 		end,
 		arrows = {
-			{ x = 500, y = 500, angle = 268 },
+			{ x = Constants.VIRTUAL_GAME_WIDTH / 2, y = Constants.VIRTUAL_GAME_HEIGHT - 200, angle = 180 },
 		},
 		buttons = {
 			G.currentGameScreen.uiElements.buttons.rerollButton,
 		},
-
-		draw = function(opts)
-			G.currentGameScreen:drawRightPanel(opts.dt, { drawDeck = false })
-		end,
 	})
 end
 
 function TutorialEvents.firstRoll()
 	--Message affiché après le premier lancer. Explique comment reroll et sélectionner des dés.
 	G.currentRun.tutorial:pushOnce("firstRoll1", {
-		text = "Hey, good throw ! You almost got a Small Straight. Keep those 3, 4 and 5 by clicking on them and reroll the other two.",
+		text = "Not bad! I can see a 3, 4 and 5. Select these dices and reroll the other two, we can try to play a Large Straight.",
 		pos = "ul",
 		onConfirm = function()
 			G.currentRun.currentRound.terrain.firstThrow = true
@@ -52,7 +49,11 @@ end
 function TutorialEvents.secondRoll()
 	--Message affiché après le premier lancer. Explique comment reroll et sélectionner des dés.
 	G.currentRun.tutorial:pushOnce("secondRoll", {
-		text = "Too bad! But you still have one chance. Roll Again!",
+		text = "Too bad! We didnt roll the dices we needed...",
+		pos = "ul",
+	})
+	G.currentRun.tutorial:pushOnce("secondRoll2", {
+		text = "But don't fret, you can reroll up to two time for each turn you play so you still have one chance left. Reroll again !",
 		pos = "ul",
 		onConfirm = function()
 			G.currentRun.currentRound.terrain.secondThrow = true
@@ -60,42 +61,101 @@ function TutorialEvents.secondRoll()
 			G.currentRun.tutorial:pushToast({
 				text = "[[Reroll]] the two remaining dices",
 				key = "thirdThrow",
+				arrows = {
+					{ x = Constants.VIRTUAL_GAME_WIDTH / 2, y = Constants.VIRTUAL_GAME_HEIGHT - 200, angle = 180 },
+				},
 			})
 		end,
+		draw = function(opts)
+			G.currentGameScreen:drawRightPanel(opts.dt, { drawRoundDetails = true })
+		end,
+		arrows = {
+			{ x = 1600, y = 380, angle = 90 },
+		},
 	})
 end
 
-function TutorialEvents.thirdRoll()
+function TutorialEvents.selectLastDices()
 	--Message affiché après le premier lancer. Explique comment reroll et sélectionner des dés.
-	G.currentRun.tutorial:pushOnce("thirdroll1", {
-		text = "Nice! We just rolled a 2 AND a 6! Even better than a Small Straight, we just rolled a Large one. Select the two last dices by clicking on them also, and select the Large Straight on the table on your left.",
+	G.currentRun.tutorial:pushOnce("selectLastDices0", {
+		text = "Great! We rolled a Large Straight. Large Straight is one of the figure you can play to earn points and win rounds.",
+		pos = "ur",
+	})
+	G.currentRun.tutorial:pushOnce("selectLastDicesX", {
+		text = "To beat your coworker, you must reach his points target.",
+		pos = "ll",
+		draw = function(opts)
+			G.currentGameScreen:drawPlayersInfos(opts.dt, { enemy = true })
+		end,
+	})
+	G.currentRun.tutorial:pushOnce("selectLastDicesXX", {
+		text = "To do so, you have a limited number of turn. You start your run with 3 turns.",
+		pos = "ul",
+		draw = function(opts)
+			G.currentGameScreen:drawRightPanel(opts.dt, { drawRoundDetails = true })
+		end,
+		arrows = {
+			{ x = 1600, y = 250, angle = 90 },
+		},
+	})
+	G.currentRun.tutorial:pushOnce("selectLastDicesXXX", {
+		text = "This grid shows you the figures you can play and the points they give you. Large Straights are played with 5 numbers in a row: 2, 3, 4, 5 and 6 for instance.",
+		pos = "ur",
+		draw = function(opts)
+			G.currentGameScreen:drawFigureGrid(opts.dt)
+		end,
+	})
+	G.currentRun.tutorial:pushOnce("selectLastDicesZZ", {
+		text = "Select your two last dices and i'll show you how to play a figure !",
 		pos = "ur",
 
 		onConfirm = function()
+			G.currentRun.tutorial.isSelectingLastDices = true
 			G.currentRun.currentRound.terrain.thirdThrow = true
-			G.currentRun.tutorialCanPlayFigure = true
 			G.currentRun.tutorial:pushToast({
-				text = "Select the remaining dices and click on [[Large Straight]]",
-				key = "playFigure",
+				text = "Select the two remaining dices.",
+				key = "selectLastDices",
 			})
 		end,
 	})
 end
 
 function TutorialEvents.figureInfo()
-	G.currentRun.tutorial:pushOnce("thirdroll2", {
-		text = "As you can see, this figure gives us 25 points. But when you play a figure, each dice applies an effect based on its played side. Here your dices are a bit boring...",
+	G.currentRun.tutorial:pushOnce("figureinfo1", {
+		text = "As you can see, Large Straights give us 40 points. But that's not all !",
 		pos = "ur",
+		draw = function(opts)
+			G.currentGameScreen:drawFigureGrid(opts.dt)
+		end,
 	})
-	G.currentRun.tutorial:pushOnce("thirdroll3", {
-		text = "All they do is giving an additional 10 points when scored... You can see that by hovering your mouse above one of them.",
+	G.currentRun.tutorial:pushOnce("figureinfo2", {
+		text = "When playing a figure, each played dice triggers an unique effect from left to right.",
 		pos = "ur",
+		draw = function(opts)
+			G.currentGameScreen:drawFigureGrid(opts.dt)
+		end,
 	})
-	G.currentRun.tutorial:pushOnce("thirdroll4", {
-		text = "When added to our base 25 points though, these 10 points per dices should be enough to reach our 80 points objective. Play your large straight to win this round, i'll give you something special if you do.'",
+	G.currentRun.tutorial:pushOnce("figureinfo3", {
+		text = "You can hover your dices to see their effect. For now, you only have ((White Faces)). When triggered, they each add 10 points to your hand score.",
 		pos = "ur",
+		draw = function(opts)
+			G.currentGameScreen:drawFigureGrid(opts.dt)
+		end,
+	})
+	G.currentRun.tutorial:pushOnce("figureinfo4", {
+		text = "You can now click on the Large Straight on the figure table to play it, and watch your dices apply their effects !",
+		pos = "ur",
+		draw = function(opts)
+			G.currentGameScreen:drawFigureGrid(opts.dt)
+		end,
 		onConfirm = function()
 			G.currentRun.tutorialCanPlayFigure = true
+			G.currentRun.tutorialCanPlayStraights = true
+			G.currentRun.tutorial:pushToast({
+				text = "Play a Large Straight.",
+				key = "playFigure",
+				arrows = { { x = 500, y = 900, angle = 270 } },
+			})
 		end,
 	})
 end
@@ -120,6 +180,9 @@ function TutorialEvents.firstRoundWin()
 	G.currentRun.tutorial:pushOnce("firstWin5", {
 		text = "Use them when needed by grabbing one of them and sliding it to the center of your screen.",
 		pos = "ul",
+		onFinish = function()
+			G.currentRun.tutorialCanPlayStraights = false
+		end,
 	})
 end
 

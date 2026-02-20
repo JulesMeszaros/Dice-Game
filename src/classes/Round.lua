@@ -132,6 +132,10 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 end
 
 function Round:update(dt)
+	if #self.selectedDices == 5 and G.currentRun.tutorial and G.currentRun.tutorial.isSelectingLastDices == true then
+		G.currentRun.tutorial:confirmToast("selectLastDices")
+		TutorialEvents.figureInfo()
+	end
 	self.animator:update(dt)
 	--update le terrain
 	self.terrain:update(dt)
@@ -650,7 +654,7 @@ function Round:makeRoll(dices)
 					elseif self.run.usedRerolls == 1 then
 						TutorialEvents.secondRoll()
 					elseif self.run.usedRerolls == 2 then
-						TutorialEvents.thirdRoll()
+						TutorialEvents.selectLastDices()
 					end
 				end)
 			end
@@ -675,10 +679,6 @@ end
 
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
-	if self.run.tutorial then
-		self.run.tutorial:confirmToast("playFigure")
-	end
-
 	--Commencer la phase de déclenchement
 
 	--Si boss trésorier : on retire de l'argent selon le nombre de dés

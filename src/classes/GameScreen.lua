@@ -463,7 +463,9 @@ function GameScreen:drawRightPanel(dt, opts)
 		end
 	end
 
-	self:drawRoundDetails(dt)
+	if opts == nil or opts.drawRoundDetails == true then
+		self:drawRoundDetails(dt)
+	end
 
 	--draw buttons
 	if opts == nil or opts.drawButtons == true then
