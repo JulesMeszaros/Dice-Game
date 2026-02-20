@@ -25,8 +25,6 @@ function DiceCustomization:new(previousRound, newFaceObjects)
 		),
 		DiceCustomization
 	)
-	print("fdn", self.run.floorDeskNumber)
-	print("floornumber", self.run.floorNumber)
 
 	self.run = previousRound.run
 	--Table where we store the ui faces of the face objects earned
@@ -220,13 +218,7 @@ function DiceCustomization:updateCanvas(dt)
 		self.sellText:reset()
 	end
 
-	--Draw the deck dices on the canvas
-	for i, uiDice in next, self.uiDices do
-		for j, uiFace in next, uiDice do
-			uiFace:draw()
-		end
-	end
-
+	self:drawDeckDices()
 	self:drawNewFaces()
 	self:drawRewards()
 
@@ -595,6 +587,15 @@ function DiceCustomization:mousemoved(x, y, dx, dy, isDragging)
 end
 
 --==Draw UI==--
+
+function DiceCustomization:drawDeckDices()
+	--Draw the deck dices on the canvas
+	for i, uiDice in next, self.uiDices do
+		for j, uiFace in next, uiDice do
+			uiFace:draw()
+		end
+	end
+end
 
 function DiceCustomization:drawNewFacesCanvas()
 	local currentCanvas = love.graphics.getCanvas()

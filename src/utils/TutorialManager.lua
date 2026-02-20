@@ -11,6 +11,7 @@ TutorialManager.__index = TutorialManager
 
 function TutorialManager:new(run)
 	local self = setmetatable({}, TutorialManager)
+	self.highlightOpacity = 0
 
 	self.nextButton = Button:new(
 		function()
@@ -284,7 +285,7 @@ function TutorialManager:updateTutoCanvas()
 
 	love.graphics.draw(Sprites.TUTO_PANEL, 0, 0)
 	--Dessin du texte
-	UI.Text.drawFormattedText(self.current.text, 20, 20, Fonts.sora30, Sprites.TUTO_PANEL:getWidth() - 50, false)
+	UI.Text.drawFormattedText(self.current.text, 20, 20, Fonts.soraTutorial, Sprites.TUTO_PANEL:getWidth() - 50, false)
 
 	love.graphics.setCanvas(currentCanvas)
 end

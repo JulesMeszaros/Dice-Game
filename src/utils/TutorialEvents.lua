@@ -127,6 +127,7 @@ function TutorialEvents.figureInfo()
 		draw = function(opts)
 			G.currentGameScreen:drawFigureGrid(opts.dt)
 		end,
+		arrows = { { x = 500, y = 900, angle = 270 } },
 	})
 	G.currentRun.tutorial:pushOnce("figureinfo2", {
 		text = "When playing a figure, each played dice triggers an unique effect from left to right.",
@@ -203,27 +204,49 @@ function TutorialEvents.firstRoundWin()
 	})
 	G.currentRun.tutorial:pushOnce("firstWin6", {
 		text = "You can click [[Next!]] I'll show you how to customize your dices now.'",
+		pos = "ul",
 	})
 end
 
 function TutorialEvents.customizationScreen()
 	G.currentRun.tutorial:pushOnce("customScreen1", {
 		pos = "ur",
-		text = "This is the ((customization screen)). Here, you can use the dice faces you just earned to customize your dices.",
+		text = "This is the ((customization screen)). After each round, you can use the dice faces you just earned to customize your dices.",
+	})
+
+	G.currentRun.tutorial:pushOnce("customScreenx", {
+		pos = "ul",
+		text = "These are your 5 dices, layed down for you to modify them.",
+		draw = function(opts)
+			G.currentGameScreen:drawCustomizationMat()
+			G.currentGameScreen:drawDeckDices()
+			--print(G.currentGameScreen.screenType)
+		end,
 	})
 
 	G.currentRun.tutorial:pushOnce("customScreen2", {
-		text = "Each of the 6 sides of your 5 dices can be completely personalized. Want a dice with six 6? You are free to do so ! You can evenreorganize all of the existing faces right now.",
-		pos = "ur",
+		text = "Each of the 6 sides of your 5 dices can be completely personalized. You can swap faces across dices, and apply the faces in your inventory.",
+		pos = "ul",
+		draw = function(opts)
+			G.currentGameScreen:drawCustomizationMat()
+			G.currentGameScreen:drawDeckDices() --print(G.currentGameScreen.screenType)
+		end,
 	})
+
 	G.currentRun.tutorial:pushOnce("customScreen3", {
-		text = "You can drag and drop one of your fresh rewards on the face you want to apply it. When you are satisfied with your creation, hit[[NEXT OFFICE!]] to carry on.",
+		text = "Let your creativity speak by drag and dropping one of your rewards where you want to place it. Click confirm when you are satisfied with your work.",
 		pos = "ur",
 		onConfirm = function()
 			G.currentRun.tutorial:pushToast({
 				text = "Customize you dices with your rewards and ((confirm))",
 				key = "customizeDice",
 			})
+		end,
+		draw = function(opts)
+			G.currentGameScreen:drawRewardsMedium()
+			G.currentGameScreen:drawRewards()
+
+			--print(G.currentGameScreen.screenType)
 		end,
 	})
 end
