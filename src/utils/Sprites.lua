@@ -8,6 +8,7 @@ Sprites.PAUSE_BG = love.graphics.newImage("src/assets/sprites/ui/Pause Screen.pn
 
 Sprites.TUTO_PANEL = love.graphics.newImage("src/assets/sprites/ui/Tuto panel.png")
 Sprites.TUTO_TOAST = love.graphics.newImage("src/assets/sprites/ui/Tuto Toast.png")
+Sprites.POINTER = love.graphics.newImage("src/assets/sprites/ui/Pointer.png")
 
 Sprites.BUBBLE = love.graphics.newImage("src/assets/sprites/ui/Description Test.png")
 Sprites.DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Description.png")

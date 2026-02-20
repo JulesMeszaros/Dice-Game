@@ -1418,10 +1418,12 @@ function GameScreen:drawTutoText()
 		--Dessin d'un fond transparant noir
 		love.graphics.setColor(0, 0, 0, self.run.tutorial.opacity)
 		love.graphics.rectangle("fill", 0, 0, Constants.VIRTUAL_GAME_WIDTH, Constants.VIRTUAL_GAME_HEIGHT)
-		love.graphics.setColor(1, 1, 1)
+		love.graphics.setColor(1, 1, 1, 1)
 
 		--Dessin du panneau
-		love.graphics.draw(self.run.tutorial.tutoPanelCanvas, self.run.tutorial.x, self.run.tutorial.y)
+		--love.graphics.draw(self.run.tutorial.tutoPanelCanvas, self.run.tutorial.x, self.run.tutorial.y)
+		G.currentRun.tutorial:draw()
+		--dessin des fleches et du reste
 
 		--Dessin du bouton
 		self.run.tutorial.nextButton:draw()

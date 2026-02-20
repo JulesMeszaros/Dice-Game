@@ -237,7 +237,6 @@ end
 function TutorialManager:draw()
 	-- ===== POPUP =====
 	if self.current then
-		love.graphics.setColor(1, 1, 1, self.opacity)
 		love.graphics.draw(self.tutoPanelCanvas, self.x, self.y)
 		self.nextButton:draw()
 
@@ -248,7 +247,6 @@ function TutorialManager:draw()
 
 	-- ===== TOAST =====
 	if self.currentToast then
-		love.graphics.setColor(1, 1, 1, 1)
 		love.graphics.draw(self.toastCanvas, self.tx, self.ty)
 
 		for _, arrow in ipairs(self.activeToastArrows) do
@@ -360,14 +358,14 @@ function TutorialManager:_drawArrow(arrow)
 	end
 
 	local bounce = 0
-	if arrow.animated then
-		bounce = math.sin(self.arrowBounceTime * 4) * 6
-	end
+	bounce = math.sin(self.arrowBounceTime * 4) * 8
 
 	love.graphics.push()
-	love.graphics.translate(x, y + bounce)
-	love.graphics.rotate(math.rad(arrow.angle or 0))
-	love.graphics.draw(Sprites.TUTORIAL_ARROW, 0, 0)
+	local angle = math.rad(arrow.angle or 0)
+	love.graphics.translate(x + math.sin(angle) * bounce, y - math.cos(angle) * bounce)
+
+	love.graphics.rotate(angle)
+	love.graphics.draw(Sprites.POINTER, 0, 0, 0, 1 / 10, 1 / 10)
 	love.graphics.pop()
 end
 

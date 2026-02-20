@@ -15,6 +15,9 @@ function TutorialEvents.welcomeMessage()
 			G.currentRun.tutorialCanReroll = true
 			G.currentRun.tutorial:pushToast({ text = "Press the [[REROLL!]] button.", key = "firstThrow" })
 		end,
+		arrows = {
+			{ x = 500, y = 500, angle = 268 },
+		},
 	})
 end
 
