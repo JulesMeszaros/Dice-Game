@@ -64,7 +64,7 @@ function Badge:new(round, x, y, originalY, width, height, mousePosition, large)
 	return self
 end
 
-function Badge:update(dt)
+function Badge:update(dt, opts)
 	self.animator:update(dt)
 	self:getCurrentlyHoveredFace()
 
@@ -85,7 +85,7 @@ function Badge:update(dt)
 	self.scale = self:dampLerp(self.scale, self.targetedScale, speed, dt)
 
 	--update the Badge canvas
-	self:updateCanvas(dt)
+	self:updateCanvas(dt, opts)
 end
 
 function Badge:createCanvas(gameCanvas)

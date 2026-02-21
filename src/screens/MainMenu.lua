@@ -43,9 +43,9 @@ function MainMenu:new()
 			G.game:startNewRun(self.seedInput.text, false)
 		end,
 		"src/assets/sprites/ui/New Run.png",
-		618 + 678 / 2,
+		Constants.VIRTUAL_GAME_WIDTH / 2,
 		620 + 180 / 2,
-		678,
+		680,
 		180,
 		nil,
 		function()
@@ -58,10 +58,10 @@ function MainMenu:new()
 			G.game:startNewRun("IOXAHBAJ", true)
 		end,
 		"src/assets/sprites/ui/TutorialButton.png",
-		960,
+		Constants.VIRTUAL_GAME_WIDTH / 2,
 		930,
-		400,
-		130,
+		340,
+		90,
 		nil,
 		function()
 			return Inputs.getMouseInCanvas(0, 0)

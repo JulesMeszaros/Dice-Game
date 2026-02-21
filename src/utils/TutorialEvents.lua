@@ -141,6 +141,9 @@ function TutorialEvents.figureInfo()
 		pos = "ur",
 		draw = function(opts)
 			G.currentGameScreen:drawFigureGrid(opts.dt)
+			if G.currentGameScreen.currentlyHoveredObject then
+				G.currentGameScreen.infoBubble:draw()
+			end
 		end,
 	})
 	G.currentRun.tutorial:pushOnce("figureinfo4", {
@@ -173,6 +176,9 @@ function TutorialEvents.firstRoundWin()
 			G.currentGameScreen.endRoundPopUp:updateCanvas(opts.dt, { rewards = true })
 
 			G.currentGameScreen.endRoundPopUp:draw()
+			if G.currentGameScreen.currentlyHoveredObject then
+				G.currentGameScreen.infoBubble:draw()
+			end
 		end,
 	})
 	G.currentRun.tutorial:pushOnce("firstWin3", {
@@ -254,14 +260,20 @@ end
 function TutorialEvents.deskChoice()
 	--Doit expliquer qu'il y a 4 choix pour chaque bureau, avec des rewards différentes
 	G.currentRun.tutorial:pushOnce("deskChoice", {
-		text = "Time to choose your next oponent ! Before each round, you will be faced with four of your coworkers.",
+		text = "Before each round, you can choose your next oponent.",
 	})
 
 	G.currentRun.tutorial:pushOnce("deskChoice2", {
-		text = "Each coworker offers a unique reward, so chose wisely !",
+		text = "Each coworker offers a unique reward, so choose wisely !",
+		draw = function(opts)
+			G.currentGameScreen:updateChoiceCanvas(opts.dt, { rewards = true })
+			if G.currentGameScreen.currentlyHoveredObject then
+				G.currentGameScreen.infoBubble:draw()
+			end
+		end,
 	})
 	G.currentRun.tutorial:pushOnce("deskChoice3", {
-		text = "Again, you can hover your mouse hover the rewards to see their in-game effects. Click on the badge of the coworkeryou want to battle to start the next round.",
+		text = "Click on one of your coworkers badge to fight him.",
 		onConfirm = function()
 			G.currentRun.tutorialCanReroll = false
 			G.currentRun.deskChoice.canSelectRound = true
@@ -269,6 +281,9 @@ function TutorialEvents.deskChoice()
 				text = "Select your next oponent by clicking on a badge.",
 				key = "oponentSelect",
 			})
+		end,
+		draw = function(opts)
+			G.currentGameScreen:updateChoiceCanvas(opts.dt, { rewards = true })
 		end,
 	})
 end

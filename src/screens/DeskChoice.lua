@@ -298,11 +298,11 @@ function DeskChoice:generateChoiceCanvas()
 	end
 end
 
-function DeskChoice:updateChoiceCanvas(dt)
+function DeskChoice:updateChoiceCanvas(dt, opts)
 	local currentCanvas = love.graphics.getCanvas()
 
 	for i, badge in next, self.badges do
-		badge:update(dt)
+		badge:update(dt, opts)
 		badge:draw()
 	end
 end
