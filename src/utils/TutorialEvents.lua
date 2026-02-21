@@ -347,7 +347,7 @@ function TutorialEvents.infoMenu()
 	G.currentRun.tutorial:pushOnce("info3", {
 		pos = "ur",
 		text = "This screen can be exited by clicking the Info button once again.",
-		conConfirm = function()
+		onConfirm = function()
 			G.currentRun.tutorialInfos = false
 			G.currentRun.tutorialInfosEnd = true
 		end,
@@ -358,6 +358,9 @@ function TutorialEvents.secondRoundStart2()
 	G.currentRun.tutorial:pushOnce("info12", {
 		pos = "ur",
 		text = "Alright, I'll let you play this round on your own, good luck !",
+		onConfirm = function()
+			G.tutorialCanReroll = true
+		end,
 	})
 end
 

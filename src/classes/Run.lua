@@ -251,11 +251,11 @@ end
 
 function Run:toggleInfoScreen()
 	if self.displayInfoScreen == true then
-		self:endInfoScreen()
-
+		print(self.tutorialInfosEnd)
 		if self.tutorial and self.tutorialInfosEnd == true then
 			TutorialEvents.secondRoundStart2()
 		end
+		self:endInfoScreen()
 	else
 		self:startInfoScreen()
 
