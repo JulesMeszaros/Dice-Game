@@ -337,11 +337,18 @@ function TutorialEvents.infoMenu()
 	G.currentRun.tutorial:pushOnce("info1", {
 		pos = "ur",
 		text = "All of your figures are shown there, along with other useful informations.",
+		draw = function()
+			G.currentRun.infoScreen:drawGridLarge()
+		end,
 	})
 
 	G.currentRun.tutorial:pushOnce("info2", {
 		pos = "ur",
-		text = "This row of the table explain how figures can be played.",
+		text = "The rightmost column of the table explain how figures can be played.",
+
+		draw = function()
+			G.currentRun.infoScreen:drawGridLarge()
+		end,
 	})
 
 	G.currentRun.tutorial:pushOnce("info3", {
@@ -359,7 +366,7 @@ function TutorialEvents.secondRoundStart2()
 		pos = "ur",
 		text = "Alright, I'll let you play this round on your own, good luck !",
 		onConfirm = function()
-			G.tutorialCanReroll = true
+			G.currentRun.tutorialCanReroll = true
 		end,
 	})
 end
