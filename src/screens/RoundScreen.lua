@@ -697,6 +697,20 @@ function RoundScreen:drawDiceTray(x, y, dices2, dt)
 	love.graphics.draw(self.dice_tray, x, y) --On fixe son offset sur son angle superieur droit
 end
 
+function RoundScreen:drawDicesOnly()
+	--On déssine les autres dés
+	local px, py = G.calculateParalaxeOffset(3)
+	love.graphics.push()
+	love.graphics.translate(self.diceMatx + px, self.diceMaty + py)
+
+	for key, uiFace in next, self.diceFaces do
+		if uiFace ~= self.dragAndDroppedDice then
+			uiFace:draw()
+		end
+	end
+	love.graphics.pop()
+end
+
 function RoundScreen:drawDiceDetails()
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.diceDetailsCanvas)
@@ -1073,16 +1087,19 @@ function RoundScreen:playFigure(figure, params)
 		--On vérifie aussi que la run tutorial peut jouer des figures
 		and (G.currentRun.tutorialCanPlayFigure == true or not G.currentRun.tutorial)
 	then
+		print(not G.currentRun.tutorial, not G.currentRun.tutorialCanPlayStraights == true, figure == 12)
+		print("---")
+		print(G.currentRun.tutorialCanPlayStraights)
+
 		if
 			not G.currentRun.tutorial --On est pas en tuto
-			or not G.currentRun.tutorialCanPlayStraights --On peut jouer autre chose que des traights
+			or not G.currentRun.tutorialCanPlayStraights == true --On peut jouer autre chose que des traights
 			or (figure == 12) --La figure est la grd straight
 		then
 			if self.run.tutorial then
 				self.run.tutorial:confirmToast("playFigure")
 			end
 
-			print(G.currentRun.tutorial, not G.currentRun.tutorialCanPlayStraights, figure == 12)
 			self.round:playFigure(points, usedDices, figure)
 			if not (self.round.numberOfHands == 0 and G.currentRun.firstHandFigureSpare == true) then
 				self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure] - 1

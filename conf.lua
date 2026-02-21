@@ -5,6 +5,7 @@ function love.conf(t)
 	t.window.width = 1290
 	t.window.height = 720
 	t.window.title = "Dice Deluxe!"
+	t.title = "Dice Deluxe!"
 	t.window.resizable = true
 	t.window.vsync = 1
 	t.window.msaa = 0

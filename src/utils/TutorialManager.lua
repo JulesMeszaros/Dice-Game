@@ -249,10 +249,6 @@ function TutorialManager:draw(dt)
 				button:draw()
 			end
 		end
-		--Dessin des fleches
-		for _, arrow in ipairs(self.activeArrows) do
-			self:_drawArrow(arrow)
-		end
 
 		--Fonction draw du panneau
 		if self.current.draw then
@@ -263,6 +259,11 @@ function TutorialManager:draw(dt)
 		love.graphics.draw(self.tutoPanelCanvas, self.x, self.y)
 		--Dessin du bouton Next
 		self.nextButton:draw()
+
+		--Dessin des fleches
+		for _, arrow in ipairs(self.activeArrows) do
+			self:_drawArrow(arrow)
+		end
 	end
 
 	-- ===== TOAST =====

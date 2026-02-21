@@ -117,6 +117,15 @@ function TutorialEvents.selectLastDices()
 				key = "selectLastDices",
 			})
 		end,
+		draw = function(opts)
+			local px, py = G.calculateParalaxeOffset(3)
+			G.currentGameScreen:drawDiceTray(
+				G.currentGameScreen.diceMatx + px,
+				G.currentGameScreen.diceMaty + py,
+				G.currentGameScreen.diceFaces,
+				opts.dt
+			)
+		end,
 	})
 end
 
@@ -133,14 +142,14 @@ function TutorialEvents.figureInfo()
 		text = "When playing a figure, each played dice triggers an unique effect from left to right.",
 		pos = "ur",
 		draw = function(opts)
-			G.currentGameScreen:drawFigureGrid(opts.dt)
+			G.currentGameScreen:drawDicesOnly()
 		end,
 	})
 	G.currentRun.tutorial:pushOnce("figureinfo3", {
 		text = "You can hover your dices to see their effect. For now, you only have ((White Faces)). When triggered, they each add 10 points to your hand score.",
 		pos = "ur",
 		draw = function(opts)
-			G.currentGameScreen:drawFigureGrid(opts.dt)
+			G.currentGameScreen:drawDicesOnly()
 			if G.currentGameScreen.currentlyHoveredObject then
 				G.currentGameScreen.infoBubble:draw()
 			end
@@ -152,6 +161,8 @@ function TutorialEvents.figureInfo()
 		draw = function(opts)
 			G.currentGameScreen:drawFigureGrid(opts.dt)
 		end,
+		arrows = { { x = 500, y = 900, angle = 270 } },
+
 		onConfirm = function()
 			G.currentRun.tutorialCanPlayFigure = true
 			G.currentRun.tutorialCanPlayStraights = true
@@ -200,7 +211,7 @@ function TutorialEvents.firstRoundWin()
 	G.currentRun.tutorial:pushOnce("firstWin5", {
 		text = "Finally, you get some money, depending on the coworker you beat, plus one dollar per unused turn.",
 		pos = "ul",
-		onFinish = function()
+		onConfirm = function()
 			G.currentRun.tutorialCanPlayStraights = false
 		end,
 		draw = function(opts)
