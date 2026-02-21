@@ -1,3 +1,4 @@
+local TutorialEvents = require("src.utils.TutorialEvents")
 local PauseMenu = require("src.classes.ui.Pause")
 local Shop = require("src.screens.Shop")
 local DeskChoice = require("src.screens.DeskChoice")
@@ -153,7 +154,7 @@ function Run:update(dt)
 	end
 end
 
-function Run:draw(gameCanvas) --Render the game into the Game Canvas.
+function Run:draw(dt) --Render the game into the Game Canvas.
 	--Dessin de l'écran en cours
 	if self.currentState == Constants.RUN_STATES.ROUND then --check if we are in round
 		self:drawRound() --Draw the round
@@ -177,6 +178,11 @@ function Run:draw(gameCanvas) --Render the game into the Game Canvas.
 	--Pause screen
 	if self.displayPauseMenu == true and self.pauseMenu then
 		self.pauseMenu:draw()
+	end
+
+	--Tutorial
+	if self.tutorial then
+		self:drawTutoText(dt)
 	end
 end
 
@@ -246,8 +252,16 @@ end
 function Run:toggleInfoScreen()
 	if self.displayInfoScreen == true then
 		self:endInfoScreen()
+
+		if self.tutorial and self.tutorialInfosEnd == true then
+			TutorialEvents.secondRoundStart2()
+		end
 	else
 		self:startInfoScreen()
+
+		if self.tutorial and self.tutorialInfos == true then
+			TutorialEvents.infoMenu()
+		end
 	end
 end
 
@@ -427,6 +441,10 @@ end
 function Run:goToDiceCustomization()
 	self.customizationScreen = DiceCustomization:new(self.currentRound, self.facesInventory)
 	self.currentState = Constants.RUN_STATES.DICE_CUSTOMIZATION
+end
+
+function Run:drawTutoText(dt)
+	self.tutorial:draw(dt)
 end
 
 function Run:cleanup()

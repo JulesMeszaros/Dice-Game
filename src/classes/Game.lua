@@ -77,7 +77,7 @@ function Game:updateCanvas(dt)
 	if self.currentScreen == Constants.PAGES.MAIN_MENU then
 		self.mainMenu:draw()
 	elseif self.currentScreen == Constants.PAGES.GAME then
-		self.run:draw(self.gameCanvas)
+		self.run:draw(dt)
 	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
 		self.characterCreation:draw()
 	end

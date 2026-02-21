@@ -306,18 +306,58 @@ function TutorialEvents.secondRoundStart()
 	})
 	G.currentRun.tutorial:pushOnce("secondRound2", {
 		pos = "ur",
-		text = "As you can see, the line corresponding to your Large Straight is grayed. That is because you ran out of hands for this figure.",
+		text = "As you can see, your Large Straight is grayed out... That's because you can only play your figures a limited amount of time on each flor!'",
 	})
 	G.currentRun.tutorial:pushOnce("secondRound3", {
 		pos = "ur",
-		text = "Each figure can only be played once per floor! So be careful not to waste your best figures on your round.",
+		text = "That amount is indicated by the number of dot on each line of the table.",
 	})
 	G.currentRun.tutorial:pushOnce("secondRound4", {
 		pos = "ur",
-		text = "Each floor is composed of two coworkers and a manager. So you got two rounds before going to the next floor and regaining the ability to play your Large Straight.",
+		text = "A floor is composed of two coworkers and one manager, so you'll have to survive two more rounds before all your figures become available again",
+		onConfirm = function() end,
+	})
+	G.currentRun.tutorial:pushOnce("secondRound5", {
+		pos = "ur",
+		text = "You can click on the [[Info]] button to se how your other figures can be played.",
 		onConfirm = function()
-			G.currentRun.tutorialCanReroll = true
+			G.currentRun.tutorial:pushToast({
+				text = "Open the Info menu.",
+				key = "openInfoMenu",
+				arrows = {
+					{ x = 1780, y = 875, angle = 180 },
+				},
+			})
+			G.currentRun.tutorialInfos = true
 		end,
+	})
+end
+
+function TutorialEvents.infoMenu()
+	G.currentRun.tutorial:pushOnce("info1", {
+		pos = "ur",
+		text = "All of your figures are shown there, along with other useful informations.",
+	})
+
+	G.currentRun.tutorial:pushOnce("info2", {
+		pos = "ur",
+		text = "This row of the table explain how figures can be played.",
+	})
+
+	G.currentRun.tutorial:pushOnce("info3", {
+		pos = "ur",
+		text = "This screen can be exited by clicking the Info button once again.",
+		conConfirm = function()
+			G.currentRun.tutorialInfos = false
+			G.currentRun.tutorialInfosEnd = true
+		end,
+	})
+end
+
+function TutorialEvents.secondRoundStart2()
+	G.currentRun.tutorial:pushOnce("info12", {
+		pos = "ur",
+		text = "Alright, I'll let you play this round on your own, good luck !",
 	})
 end
 

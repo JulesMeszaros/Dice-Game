@@ -341,6 +341,9 @@ function GameScreen:new(floor, run, screenType, round)
 
 	self.uiElements.buttons["planButton"] = Button:new(
 		function()
+			if self.run.tutorial then
+				self.run.tutorial:confirmToast("openInfoMenu")
+			end
 			self.run:toggleInfoScreen()
 		end,
 		"src/assets/sprites/ui/Infos.png",
@@ -1412,11 +1415,6 @@ function GameScreen:addAvailableHand(i)
 		self.run.availableFigures[i] = self.run.availableFigures[i] + 1
 		self.addingAvailableHand = false
 	end
-end
-
---Tutorial
-function GameScreen:drawTutoText(dt)
-	G.currentRun.tutorial:draw(dt)
 end
 
 --==State modification functions==--

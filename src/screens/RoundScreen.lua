@@ -435,10 +435,6 @@ function RoundScreen:updateCanvas(dt)
 		self.infoBubble:draw()
 	end
 
-	if self.run.tutorial then
-		self:drawTutoText(dt)
-	end
-
 	love.graphics.setCanvas(currentCanvas)
 end
 
