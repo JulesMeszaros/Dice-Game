@@ -23,7 +23,6 @@ function Badge:new(round, x, y, originalY, width, height, mousePosition, large)
 
 	self.oscillatingTime = math.random(0, 200)
 	self.oscillatingY = 0
-	self.oscillatingR = 0
 
 	if self.bossBadge == true then
 		self.sprite = Sprites.BADGE_LARGE
@@ -70,7 +69,6 @@ function Badge:update(dt, opts)
 
 	self.oscillatingTime = self.oscillatingTime + dt
 	self.oscillatingY = AnimationUtils.osccilate(self.oscillatingTime, 8, 10)
-	self.oscillatingR = 0 --AnimationUtils.osccilate(self.oscillatingTime, 10, 0.02)
 
 	if self:isHovered() then
 		self.targetedScale = 0.95
@@ -195,16 +193,22 @@ end
 
 function Badge:draw()
 	local px, py = G.calculateParalaxeOffset(2)
-	love.graphics.draw(
-		self.uiCanvas,
-		self.x + self.uiCanvas:getWidth() / 2 + px,
-		self.y + self.oscillatingY + self.uiCanvas:getHeight() / 2 + py,
-		self.oscillatingR,
-		self.scale,
-		self.scale,
-		self.uiCanvas:getWidth() / 2,
-		self.uiCanvas:getHeight() / 2
-	)
+	local cx = self.x + px
+	local cy = self.y + self.oscillatingY + py
+	local mx, my = Inputs.getVirtualMousePosition()
+
+	local bw = self.uiCanvas:getWidth() * self.scale
+	local bh = self.uiCanvas:getHeight() * self.scale
+	local isHovered = self:isHovered() and 1.0 or 0.0
+
+	Shaders.tiltShader:send("mouse_pos", { mx, my })
+	Shaders.tiltShader:send("hovering", isHovered)
+	Shaders.tiltShader:send("badge_pos", { cx + bw / 2, cy + bh / 2 })
+	Shaders.tiltShader:send("badge_size", { bw, bh })
+
+	love.graphics.setShader(Shaders.tiltShader)
+	love.graphics.draw(self.uiCanvas, cx, cy, 0, self.scale, self.scale)
+	love.graphics.setShader()
 end
 
 function Badge:isHovered() --Check if mouse is above the face

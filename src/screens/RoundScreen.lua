@@ -41,7 +41,6 @@ function RoundScreen:new(round)
 
 	--Timers
 	self.timers = {
-		firstRerollTime = 0,
 		oscillationTimePlayer = math.random(0, 100),
 		oscillationTimeEnemy = math.random(0, 100),
 	}
@@ -72,7 +71,9 @@ function RoundScreen:new(round)
 	self.firstRollText =
 		UI.Text.TextWavy:new("Roll the dices!", self.canvas:getWidth() / 2, (self.canvas:getHeight() / 2) + 170, {
 			font = Fonts.soraBig,
+			amplitude = 5,
 			centered = true,
+			spacing = 0.2,
 			speed = 2,
 			revealSpeed = 0.4, -- lettres/seconde
 			popOvershoot = 0.1,
@@ -227,7 +228,6 @@ function RoundScreen:new(round)
 
 	--Start the round with the first roll
 	self.animator:addDelay(0.5, function()
-		self.timers.firstRerollTime = 0
 		self.showFirstRollText = true
 		self:generateCiggiesUI()
 
@@ -274,7 +274,6 @@ end
 function RoundScreen:update(dt)
 	self:getRerollButtonStatusTutorial()
 	if self.showDeck == false then
-		self.timers.firstRerollTime = self.timers.firstRerollTime + dt
 		self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy + dt
 		self.timers.oscillationTimePlayer = self.timers.oscillationTimePlayer + dt
 		-- Mark scores as changed when needed (this ensures text is updated when data changes)
