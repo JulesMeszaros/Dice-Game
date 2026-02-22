@@ -21,6 +21,8 @@ function Badge:new(round, x, y, originalY, width, height, mousePosition, large)
 	self:setX(x)
 	self:setY(originalY)
 
+	self.tiltOffset = math.random(0, 100)
+
 	self.oscillatingTime = math.random(0, 200)
 	self.oscillatingY = 0
 
@@ -205,6 +207,7 @@ function Badge:draw()
 	Shaders.tiltShader:send("hovering", isHovered)
 	Shaders.tiltShader:send("badge_pos", { cx + bw / 2, cy + bh / 2 })
 	Shaders.tiltShader:send("badge_size", { bw, bh })
+	Shaders.tiltShader:send("time", love.timer.getTime() + self.tiltOffset)
 
 	love.graphics.setShader(Shaders.tiltShader)
 	love.graphics.draw(
