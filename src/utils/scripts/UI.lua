@@ -153,6 +153,9 @@ function TextWavy:new(text, x, y, opts)
 	-- Animation d'apparition
 	o.revealSpeed = opts.revealSpeed or 1 -- temps total en secondes pour afficher tout le texte
 
+	-- Durée de vie (0 = infini)
+	o.lifetime = opts.lifetime or 0
+
 	--Ombre
 	-- Ombre
 	o.shadowOffset = opts.shadowOffset or { -5, 5 }
@@ -170,6 +173,14 @@ end
 
 function TextWavy:update(dt)
 	self.time = self.time + dt
+end
+
+function TextWavy:isDead()
+	if self.lifetime == 0 then
+		return false
+	end
+	local lastCharDisappearTime = self.lifetime + ((#self.text - 1) / #self.text * self.popTime) + self.popTime
+	return self.time >= lastCharDisappearTime
 end
 
 function TextWavy:reset()
@@ -197,28 +208,41 @@ function TextWavy:draw()
 
 	local visibleChars = math.min(textLen, math.floor(self.time / self.revealSpeed * textLen))
 
-	for i = 1, textLen do
-		if i <= visibleChars then
-			-- Calcul du progress du pop pour cette lettre
-			local charRevealTime = (i - 1) / textLen * self.revealSpeed
-			local timeSinceReveal = self.time - charRevealTime
-			local progress = math.min(1, timeSinceReveal / self.popTime)
+	local disappearing = self.lifetime > 0 and self.time >= self.lifetime
 
-			local scale = computePopScale(progress, self.popStart, self.popOvershoot)
+	for i = 1, textLen do
+		local charRevealTime = (i - 1) / textLen * self.revealSpeed
+		local timeSinceReveal = self.time - charRevealTime
+		local progressAppear = math.min(1, timeSinceReveal / self.popTime)
+
+		local visible = i <= visibleChars
+		local progressPop = progressAppear
+		local progressAngle = math.min(1, timeSinceReveal / self.popAngleTime)
+
+		if disappearing then
+			local timeSinceDisappear = self.time - self.lifetime - charRevealTime
+			if timeSinceDisappear >= 0 then
+				-- On inverse le progress : 1 -> 0
+				progressPop = 1 - math.min(1, timeSinceDisappear / self.popTime)
+				progressAngle = 1 - math.min(1, timeSinceDisappear / self.popAngleTime)
+			end
+			-- La lettre est invisible quand le pop est retombé à 0
+			if timeSinceDisappear >= self.popTime then
+				visible = false
+			end
+		end
+
+		if visible then
+			local scale = computePopScale(progressPop, self.popStart, self.popOvershoot)
+			local angle = computePopAngle(progressAngle, self.popAngleStart, self.popAngleOvershoot)
 			local offsetY = math.sin(self.time * self.speed + i * self.spacing) * self.amplitude
 			local color = getCharColor(self.colorStart, self.colorEnd, i, textLen)
 			local charW = self.charWidths[i]
-			local charH = self.font:getHeight()
-			local progressAngle = math.min(1, timeSinceReveal / self.popAngleTime)
 
-			local angle = computePopAngle(progressAngle, self.popAngleStart, self.popAngleOvershoot)
-			love.graphics.setColor(color)
 			love.graphics.push()
-
 			love.graphics.translate(x + px + charW / 2, y + py + offsetY + charH / 2)
 			love.graphics.scale(scale, scale)
-			love.graphics.rotate(-angle) -- négatif = sens anti-horaire en Love2D
-
+			love.graphics.rotate(-angle)
 			if self.shadow then
 				love.graphics.setColor(0, 0, 0, self.shadowOpacity)
 				love.graphics.print(
@@ -229,7 +253,6 @@ function TextWavy:draw()
 			end
 			love.graphics.setColor(color)
 			love.graphics.print(self.text:sub(i, i), -charW / 2, -charH / 2)
-
 			love.graphics.pop()
 		end
 		x = x + self.charWidths[i]
