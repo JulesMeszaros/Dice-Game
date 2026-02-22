@@ -207,7 +207,16 @@ function Badge:draw()
 	Shaders.tiltShader:send("badge_size", { bw, bh })
 
 	love.graphics.setShader(Shaders.tiltShader)
-	love.graphics.draw(self.uiCanvas, cx, cy, 0, self.scale, self.scale)
+	love.graphics.draw(
+		self.uiCanvas,
+		cx + self.uiCanvas:getWidth() / 2,
+		cy + self.uiCanvas:getHeight() / 2,
+		0,
+		self.scale,
+		self.scale,
+		self.uiCanvas:getWidth() / 2,
+		self.uiCanvas:getHeight() / 2
+	)
 	love.graphics.setShader()
 end
 

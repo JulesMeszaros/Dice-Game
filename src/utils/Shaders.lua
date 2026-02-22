@@ -588,10 +588,12 @@ vec4 position(mat4 transform_projection, vec4 vertex_position) {
         return transform_projection * vertex_position;
     }
 
-    vec2 mouse_offset = vertex_position.xy - mouse_pos;
-   vec2 center = badge_pos;
-float mid_dist = length(vertex_position.xy - center) / length(badge_size);    float scale = 0.000009 * (-0.03 - 0.3 * max(0.0, 0.3 - mid_dist))
+vec2 mouse_offset = vertex_position.xy - mouse_pos;
+vec2 center = badge_pos;
+float mid_dist = length(vertex_position.xy - center) / length(badge_size);    
+float scale = 0.0000095 * (-0.03 - 0.3 * max(0.0, 0.3 - mid_dist))
             * hovering * (length(mouse_offset) * length(mouse_offset)) / (2.0 - mid_dist);
+
     return transform_projection * vertex_position + vec4(0, 0, 0, scale);
 }
 #endif
