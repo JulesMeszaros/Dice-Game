@@ -69,6 +69,22 @@ function RoundScreen:new(round)
 		colorEnd = { 0, 0, 0 },
 	})
 
+	self.firstRollText =
+		UI.Text.TextWavy:new("Roll the dices!", self.canvas:getWidth() / 2, (self.canvas:getHeight() / 2) + 170, {
+			font = Fonts.soraBig,
+			centered = true,
+			speed = 2,
+			revealSpeed = 0.4, -- lettres/seconde
+			popOvershoot = 0.1,
+			shadow = true,
+			shadowOffset = { -10, 10 },
+			shadowOpacity = 0.2,
+			popAngleStart = 30,
+			popAngleOvershoot = 20,
+			colorStart = { 176 / 255, 169 / 255, 228 / 255, 1 },
+			colorEnd = { 221 / 255, 76 / 255, 173 / 255, 1 },
+		})
+
 	--FIGURE BUTTONS
 	self.clickedFigure = nil
 	--Calculate points functions
@@ -198,12 +214,7 @@ function RoundScreen:new(round)
 	self.dragAndDroppedCiggie = nil
 	self.dragAndDroppedFace = nil
 
-	--FACE DETAILS
-	self.pointsDetailsCanvas = nil
-
 	--DICE DETAILS
-	self.diceDetailsTimer = 0
-	self.diceDetailsTime = 0.5
 	--Creating the different ui faces that will be shown
 	self:createDiceNet()
 
@@ -343,15 +354,10 @@ function RoundScreen:updateCanvas(dt)
 		--self:drawDiceDetails()
 		--First round text
 		if self.showFirstRollText == true and self.round.firstRoll == false then
-			UI.Text.drawWavyText("Roll the dice!", self.canvas:getWidth() / 2, (self.canvas:getHeight() / 2) + 120, {
-				font = Fonts.soraBig,
-				time = self.timers.firstRerollTime,
-				centered = true,
-				speed = 2,
-				revealSpeed = 120, -- lettres/seconde
-				colorStart = { 176 / 255, 169 / 255, 228 / 255, 1 },
-				colorEnd = { 221 / 255, 76 / 255, 173 / 255, 1 },
-			})
+			self.firstRollText:update(dt)
+			self.firstRollText:draw(dt)
+		else
+			self.firstRollText:reset()
 		end
 
 		--Upgrading figure popup

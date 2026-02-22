@@ -103,6 +103,7 @@ function GameScreen:new(floor, run, screenType, round)
 			centered = true,
 			amplitude = 5,
 			speed = 2,
+			revealSpeed = 0.2,
 			colorStart = { 255 / 255, 178 / 255, 89 / 255 },
 			colorEnd = { 255 / 255, 178 / 255, 89 / 255 },
 		})
@@ -536,9 +537,6 @@ end
 --CiggiePopuup
 function GameScreen:drawCiggiePopup(dt)
 	--Update le timer pour le texte
-	if self.ciggiePopupTimer then
-		self.ciggiePopupTimer = self.ciggiePopupTimer + dt
-	end
 
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.ciggiePopupCanvas)
@@ -550,27 +548,21 @@ function GameScreen:drawCiggiePopup(dt)
 	love.graphics.setColor(1, 1, 1, 1)
 
 	--Texts
-	UI.Text.drawWavyText("Use Magic Wand?", self.canvas:getWidth() / 2, 100, {
-		centered = true,
-		time = self.ciggiePopupTimer,
-		font = Fonts.soraBig,
-		revealSpeed = 40,
-		amplitude = 3,
-		speed = 3,
-		colorStart = { 255 / 255, 178 / 255, 89 / 255 },
-		colorEnd = { 255 / 255, 178 / 255, 89 / 255 },
-	})
+	if not self.useCiggyText then
+		self.useCiggyText =
+			UI.Text.TextWavy:new(self.currentlyDraggedCiggie.representedObject.name, self.canvas:getWidth() / 2, 220, {
+				centered = true,
+				font = Fonts.soraFirstRoll,
+				revealSpeed = 0.2,
+				amplitude = 3,
+				speed = 3,
+				colorStart = { 255 / 255, 178 / 255, 89 / 255 },
+				colorEnd = { 249 / 255, 130 / 255, 132 / 255 },
+			})
+	end
 
-	UI.Text.drawWavyText(self.currentlyDraggedCiggie.representedObject.name, self.canvas:getWidth() / 2, 220, {
-		centered = true,
-		time = self.ciggiePopupTimer,
-		font = Fonts.soraFirstRoll,
-		revealSpeed = 40,
-		amplitude = 3,
-		speed = 3,
-		colorStart = { 255 / 255, 178 / 255, 89 / 255 },
-		colorEnd = { 249 / 255, 130 / 255, 132 / 255 },
-	})
+	self.useCiggyText:update(dt)
+	self.useCiggyText:draw()
 
 	--Sell Rect
 	local a = self.ciggiePopupAlpha / self.targetCiggiePopupAlpha
@@ -1255,9 +1247,11 @@ end
 
 function GameScreen:startCiggiePopUp()
 	local d = 0.2
-	self.ciggiePopupTimer = 0
 
 	self.sellCiggieText:reset()
+	if self.useCiggyText then
+		self.useCiggyText:reset()
+	end
 
 	self.animator:addGroup({
 		{
