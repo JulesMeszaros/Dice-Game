@@ -42,7 +42,7 @@ function Infos:new(run)
 		amplitude = 2.5,
 		speed = 2,
 		font = Fonts.soraBig,
-		revealSpeed = 1000,
+		revealSpeed = 0.2,
 		centered = true,
 		colorStart = { 255 / 255, 178 / 255, 89 / 255 },
 		colorEnd = { 255 / 255, 178 / 255, 89 / 255 },
@@ -529,7 +529,7 @@ function Infos:drawRoundDetails(dt)
 
 	self.moneyWavyText.x = self.moneyCanvas:getWidth() / 2
 	self.moneyWavyText.y = self.moneyCanvas:getHeight() / 2
-	self.moneyWavyText.text = moneyText
+	self.moneyWavyText:setText(moneyText)
 
 	self.moneyWavyText:update(dt)
 	self.moneyWavyText:draw()

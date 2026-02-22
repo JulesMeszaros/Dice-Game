@@ -93,6 +93,7 @@ function GameScreen:new(floor, run, screenType, round)
 		centered = true,
 		colorStart = { 255 / 255, 178 / 255, 89 / 255 },
 		colorEnd = { 255 / 255, 178 / 255, 89 / 255 },
+		revealSpeed = 0.3,
 	})
 
 	--Wavy Texts
@@ -754,7 +755,7 @@ function GameScreen:drawRoundDetails(dt)
 
 	self.moneyWavyText.x = self.moneyCanvas:getWidth() / 2
 	self.moneyWavyText.y = self.moneyCanvas:getHeight() / 2
-	self.moneyWavyText.text = moneyText
+	self.moneyWavyText:setText(moneyText)
 
 	self.moneyWavyText:update(dt)
 	self.moneyWavyText:draw()

@@ -52,7 +52,7 @@ function DeskChoice:new(floor, run)
 				speed = 3,
 				centered = true,
 				font = Fonts.soraLarge,
-				revealSpeed = 40,
+				revealSpeed = 1,
 			})
 			--Description de boss (nom)
 			self.bossWavyTitle = UI.Text.TextWavy:new(
@@ -65,7 +65,7 @@ function DeskChoice:new(floor, run)
 					speed = 1,
 					centered = true,
 					font = Fonts.sora30,
-					revealSpeed = 40,
+					revealSpeed = 1,
 				}
 			)
 
@@ -80,7 +80,7 @@ function DeskChoice:new(floor, run)
 					speed = 1,
 					centered = true,
 					font = Fonts.soraSmall,
-					revealSpeed = 40,
+					revealSpeed = 1,
 				}
 			)
 		end)

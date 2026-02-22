@@ -59,6 +59,7 @@ function RunEnd:new(run, round)
 		colorStart = { 40 / 255, 40 / 255, 46 / 255 },
 		amplitude = 4,
 		speed = 2,
+		revealSpeed = 0.5,
 	})
 
 	--Button

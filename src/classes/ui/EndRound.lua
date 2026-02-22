@@ -37,6 +37,7 @@ function EndRound:new(run, round)
 		font = Fonts.soraYouWon,
 		colorStart = { 40 / 255, 40 / 255, 46 / 255 },
 		amplitude = 4,
+		revealSpeed = 0.5,
 		speed = 2,
 	})
 

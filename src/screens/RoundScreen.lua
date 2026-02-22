@@ -758,7 +758,7 @@ function RoundScreen:drawPlayersInfos(dt, opts)
 
 		local scoreText = love.graphics.newText(font, tostring(self.round.roundScore))
 
-		self.playerScoreWavyText.text = tostring(self.round.roundScore)
+		self.playerScoreWavyText:setText(tostring(self.round.roundScore))
 		self.playerScoreWavyText:update(dt)
 		self.playerScoreWavyText:draw(dt)
 		love.graphics.setCanvas(currentCanvas)

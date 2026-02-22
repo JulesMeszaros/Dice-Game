@@ -65,35 +65,108 @@ end
 TextWavy = {}
 TextWavy.__index = TextWavy
 
+-- ─── Helpers privés ───────────────────────────────────────────────────────────
+
+local function computeCharWidths(font, text)
+	local widths = {}
+	local total = 0
+	for i = 1, #text do
+		local w = font:getWidth(text:sub(i, i))
+		widths[i] = w
+		total = total + w
+	end
+	return widths, total
+end
+
+local function getCharColor(colorStart, colorEnd, index, textLen)
+	local t = (textLen > 1) and ((index - 1) / (textLen - 1)) or 0
+	return lerpColor(colorStart, colorEnd, t)
+end
+
+local function computePopScale(progress, popStart, popOvershoot)
+	-- progress : 0 -> 1 (1 = lettre complètement apparue)
+	if progress <= 0 then
+		return popStart
+	end
+	if progress >= 1 then
+		return 1
+	end
+	-- Courbe avec overshoot : monte jusqu'à 1+overshoot puis redescend à 1
+	local peak = 0.6 -- moment où on atteint le pic (entre 0 et 1)
+	if progress < peak then
+		local t = progress / peak
+		return popStart + (1 + popOvershoot - popStart) * (t * t)
+	else
+		local t = (progress - peak) / (1 - peak)
+		return 1 + popOvershoot * (1 - t) * (1 - t)
+	end
+end
+
+local function computePopAngle(progress, angleStart, angleOvershoot)
+	if progress <= 0 then
+		return angleStart
+	end
+	if progress >= 1 then
+		return 0
+	end
+	local peak = 0.6
+	if progress < peak then
+		local t = progress / peak
+		return angleStart + (-angleOvershoot - angleStart) * (t * t)
+	else
+		local t = (progress - peak) / (1 - peak)
+		return -angleOvershoot * (1 - t) * (1 - t)
+	end
+end
+-- ─── Constructeur ─────────────────────────────────────────────────────────────
+
 function TextWavy:new(text, x, y, opts)
-	local self = setmetatable({}, TextWavy)
+	local o = setmetatable({}, TextWavy)
 	opts = opts or {}
 
-	self.text = text
-	self.x = x
-	self.y = y
-	self.amplitude = opts.amplitude or 10
-	self.speed = opts.speed or 6
-	self.spacing = opts.spacing or 0.3
-	self.font = opts.font or love.graphics.getFont()
-	self.centered = opts.centered or false
-	self.colorStart = opts.colorStart or { 1, 1, 1, 1 }
-	self.colorEnd = opts.colorEnd or self.colorStart
-	self.revealSpeed = opts.revealSpeed or 20
-	self.time = 0
-	self.layer = 4
+	-- Position & contenu
+	o.text = text
+	o.x = x
+	o.y = y
+	o.centered = opts.centered or false
+	o.layer = opts.layer or 4
 
-	-- Pré-calcul des largeurs de caractères
-	self.charWidths = {}
-	self.totalWidth = 0
-	for i = 1, #text do
-		local w = self.font:getWidth(text:sub(i, i))
-		table.insert(self.charWidths, w)
-		self.totalWidth = self.totalWidth + w
-	end
+	-- Rendu du texte
+	o.font = opts.font or love.graphics.getFont()
+	o.colorStart = opts.colorStart or { 1, 1, 1, 1 }
+	o.colorEnd = opts.colorEnd or o.colorStart
 
-	return self
+	-- Animation d'ondulation
+	o.amplitude = opts.amplitude or 10
+	o.speed = opts.speed or 6
+	o.spacing = opts.spacing or 0.3
+
+	--Paramètres de l'effet de pop
+	o.popTime = opts.popTime or 0.3
+	o.popOvershoot = opts.popOvershoot or 0.2
+	o.popStart = opts.popStart or 0
+	--Pop Angle
+	o.popAngleStart = math.rad(opts.popAngleStart or 50)
+	o.popAngleOvershoot = math.rad(opts.popAngleOvershoot or 30)
+	o.popAngleTime = opts.popAngleTime or o.popTime * 1.2
+
+	-- Animation d'apparition
+	o.revealSpeed = opts.revealSpeed or 1 -- temps total en secondes pour afficher tout le texte
+
+	--Ombre
+	-- Ombre
+	o.shadowOffset = opts.shadowOffset or { -5, 5 }
+	o.shadowOpacity = opts.shadowOpacity or 0.3
+	o.shadow = opts.shadow or false
+
+	-- État interne
+	o.time = 0
+	o.charWidths, o.totalWidth = computeCharWidths(o.font, o.text)
+
+	return o
 end
+
+-- ─── API publique ─────────────────────────────────────────────────────────────
 
 function TextWavy:update(dt)
 	self.time = self.time + dt
@@ -103,39 +176,61 @@ function TextWavy:reset()
 	self.time = 0
 end
 
+function TextWavy:setText(text)
+	self.text = text
+	self.charWidths, self.totalWidth = computeCharWidths(self.font, self.text)
+end
+
 function TextWavy:draw()
 	love.graphics.setFont(self.font)
-	--TODO: peut etre ne mettre à jour cette portion du code que quand le text change d'une frame à l'autre?
-	self.charWidths = {}
-	self.totalWidth = 0
-	for i = 1, #self.text do
-		local w = self.font:getWidth(self.text:sub(i, i))
-		table.insert(self.charWidths, w)
-		self.totalWidth = self.totalWidth + w
-	end
 
-	local totalHeight = self.font:getHeight()
 	local px, py = G.calculateParalaxeOffset(self.layer)
-
 	local x = self.x
 	local y = self.y
+	local textLen = #self.text
+	local charH = self.font:getHeight()
+
 	if self.centered then
 		x = x - self.totalWidth / 2
-		y = y - totalHeight / 2
+		y = y - charH / 2
 	end
 
-	local visibleChars = math.min(#self.text, math.floor(self.time * self.revealSpeed))
+	local visibleChars = math.min(textLen, math.floor(self.time / self.revealSpeed * textLen))
 
-	for i = 1, #self.text do
-		local char = self.text:sub(i, i)
+	for i = 1, textLen do
 		if i <= visibleChars then
+			-- Calcul du progress du pop pour cette lettre
+			local charRevealTime = (i - 1) / textLen * self.revealSpeed
+			local timeSinceReveal = self.time - charRevealTime
+			local progress = math.min(1, timeSinceReveal / self.popTime)
+
+			local scale = computePopScale(progress, self.popStart, self.popOvershoot)
 			local offsetY = math.sin(self.time * self.speed + i * self.spacing) * self.amplitude
+			local color = getCharColor(self.colorStart, self.colorEnd, i, textLen)
+			local charW = self.charWidths[i]
+			local charH = self.font:getHeight()
+			local progressAngle = math.min(1, timeSinceReveal / self.popAngleTime)
 
-			local t = (#self.text > 1) and ((i - 1) / (#self.text - 1)) or 0
-			local color = lerpColor(self.colorStart, self.colorEnd, t)
+			local angle = computePopAngle(progressAngle, self.popAngleStart, self.popAngleOvershoot)
 			love.graphics.setColor(color)
+			love.graphics.push()
 
-			love.graphics.print(char, x + px, y + py + offsetY)
+			love.graphics.translate(x + px + charW / 2, y + py + offsetY + charH / 2)
+			love.graphics.scale(scale, scale)
+			love.graphics.rotate(-angle) -- négatif = sens anti-horaire en Love2D
+
+			if self.shadow then
+				love.graphics.setColor(0, 0, 0, self.shadowOpacity)
+				love.graphics.print(
+					self.text:sub(i, i),
+					-charW / 2 + self.shadowOffset[1],
+					-charH / 2 + self.shadowOffset[2]
+				)
+			end
+			love.graphics.setColor(color)
+			love.graphics.print(self.text:sub(i, i), -charW / 2, -charH / 2)
+
+			love.graphics.pop()
 		end
 		x = x + self.charWidths[i]
 	end
