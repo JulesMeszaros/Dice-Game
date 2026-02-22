@@ -210,6 +210,19 @@ function Badge:draw()
 	Shaders.tiltShader:send("time", love.timer.getTime() + self.tiltOffset)
 
 	love.graphics.setShader(Shaders.tiltShader)
+	--Ombre
+	love.graphics.setColor(0, 0, 0, 0.4)
+	love.graphics.draw(
+		self.uiCanvas,
+		cx + self.uiCanvas:getWidth() / 2 - 8,
+		cy + self.uiCanvas:getHeight() / 2 + 8,
+		0,
+		self.scale,
+		self.scale,
+		self.uiCanvas:getWidth() / 2,
+		self.uiCanvas:getHeight() / 2
+	)
+	love.graphics.setColor(1, 1, 1)
 	love.graphics.draw(
 		self.uiCanvas,
 		cx + self.uiCanvas:getWidth() / 2,

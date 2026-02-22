@@ -268,6 +268,9 @@ function RoundScreen:new(round)
 		self.diceFaces[diceobject] = diceFaceUI
 	end
 
+	--Texts de trigger
+	self.triggerTexts = {}
+
 	return self
 end
 
@@ -438,6 +441,12 @@ function RoundScreen:updateCanvas(dt)
 		--self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
 		self.infoBubble:update(dt)
 		self.infoBubble:draw()
+	end
+
+	--Texts de trigger
+	for i, text in next, self.triggerTexts do
+		text:update(dt)
+		text:draw()
 	end
 
 	love.graphics.setCanvas(currentCanvas)
