@@ -426,10 +426,6 @@ function GameScreen:new(floor, run, screenType, round)
 		)
 	end
 
-	--Timers
-	self.upgradeHandPopupTimer = 0
-	self.firstRollTextTimer = 0
-
 	-- Cached text objects for performance
 	self.scoreTexts = {}
 	self.handTexts = {}
@@ -536,8 +532,6 @@ function GameScreen:drawHorizontalDice(dt)
 end
 --CiggiePopuup
 function GameScreen:drawCiggiePopup(dt)
-	--Update le timer pour le texte
-
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.ciggiePopupCanvas)
 	love.graphics.clear()
@@ -1327,14 +1321,16 @@ end
 
 --UPGRADING FIGURE HANDS POPUP--
 function GameScreen:startUpgradingFigurePopup()
-	self.upgradeHandPopupTimer = 0
+	if self.chooseFigureText then
+		for i, t in next, self.chooseFigureText do
+			t:reset()
+		end
+	end
 end
 
 function GameScreen:endUpgradingFigurePopup() end
 
 function GameScreen:drawUpgradingFigurePopup(dt)
-	self.upgradeHandPopupTimer = self.upgradeHandPopupTimer + dt
-
 	local currentCanvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.upgradingFigureCanvas)
 	love.graphics.clear()
@@ -1344,60 +1340,88 @@ function GameScreen:drawUpgradingFigurePopup(dt)
 	love.graphics.rectangle("fill", 0, 0, self.upgradingFigureCanvas:getWidth(), self.upgradingFigureCanvas:getHeight())
 	love.graphics.setColor(1, 1, 1, 1)
 
-	UI.Text.drawWavyText("Choose a figure", self.canvas:getWidth() / 2, 250, {
-		font = Fonts.soraBig,
-		time = self.upgradeHandPopupTimer,
-		centered = true,
-		speed = 1.5,
-		spacing = 0.5,
-		amplitude = 2,
-		revealSpeed = 50, -- lettres/seconde
-		colorStart = { 255 / 255, 178 / 255, 89 / 255, 1 },
-		colorEnd = { 221 / 255, 76 / 255, 173 / 255, 1 },
-	})
-	UI.Text.drawWavyText("to upgrade!", self.canvas:getWidth() / 2, 330, {
-		font = Fonts.soraBig,
-		time = self.upgradeHandPopupTimer,
-		centered = true,
-		speed = 1.5,
-		amplitude = 2,
-		spacing = 0.5,
-		revealSpeed = 50, -- lettres/seconde
-		colorStart = { 255 / 255, 178 / 255, 89 / 255, 1 },
-		colorEnd = { 221 / 255, 76 / 255, 173 / 255, 1 },
-	})
+	if not self.chooseFigureText then
+		self.chooseFigureText = {
+			UI.Text.TextWavy:new("Choose a figure", self.canvas:getWidth() / 2, 250, {
+				font = Fonts.soraBig,
+				centered = true,
+				speed = 1.5,
+				spacing = 0.5,
+				amplitude = 2,
+				revealSpeed = 0.5, -- lettres/seconde
+				colorStart = { 255 / 255, 178 / 255, 89 / 255, 1 },
+				colorEnd = { 221 / 255, 76 / 255, 173 / 255, 1 },
+			}),
+			UI.Text.TextWavy:new("to upgrade!", self.canvas:getWidth() / 2, 330, {
+				font = Fonts.soraBig,
+				centered = true,
+				speed = 1.5,
+				amplitude = 2,
+				spacing = 0.5,
+				revealSpeed = 0.5, -- lettres/seconde
+				colorStart = { 255 / 255, 178 / 255, 89 / 255, 1 },
+				colorEnd = { 221 / 255, 76 / 255, 173 / 255, 1 },
+			}),
+		}
+	end
+
+	for i, t in next, self.chooseFigureText do
+		t:update(dt)
+		t:draw()
+	end
 
 	local hoveredFigureLabel = Constants.FIGURES_LABELS[self:getCurrentlyHoveredLine()]
 
 	if hoveredFigureLabel then
-		UI.Text.drawWavyText(hoveredFigureLabel, self.canvas:getWidth() / 2, 550, {
-			font = Fonts.soraRewardTotal,
-			time = self.upgradeHandPopupTimer,
-			centered = true,
-			speed = 3,
-			amplitude = 2,
-			revealSpeed = 50, -- lettres/seconde
-			colorStart = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()],
-			colorEnd = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()],
-		})
+		if not self.hoveredFigureText then
+			self.hoveredFigureText = {
+				UI.Text.TextWavy:new(hoveredFigureLabel, self.canvas:getWidth() / 2, 550, {
+					font = Fonts.soraRewardTotal,
+					centered = true,
+					speed = 3,
+					amplitude = 2,
+					revealSpeed = 0.1, -- lettres/seconde
+					colorStart = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()],
+					colorEnd = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()],
+				}),
 
-		UI.Text.drawWavyText(
+				UI.Text.TextWavy:new(
+					tostring(self.run.baseAvailableHands[self:getCurrentlyHoveredLine()])
+						.. " -> "
+						.. tostring(self.run.baseAvailableHands[self:getCurrentlyHoveredLine()] + 1),
+					self.canvas:getWidth() / 2,
+					600,
+					{
+						font = Fonts.soraMedium,
+						centered = true,
+						speed = 3,
+						amplitude = 2,
+						revealSpeed = 0.1, -- lettres/seconde
+						colorStart = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()],
+						colorEnd = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()],
+					}
+				),
+			}
+		end
+
+		self.hoveredFigureText[1]:setText(hoveredFigureLabel)
+		self.hoveredFigureText[2]:setText(
 			tostring(self.run.baseAvailableHands[self:getCurrentlyHoveredLine()])
 				.. " -> "
-				.. tostring(self.run.baseAvailableHands[self:getCurrentlyHoveredLine()] + 1),
-			self.canvas:getWidth() / 2,
-			600,
-			{
-				font = Fonts.soraMedium,
-				time = self.upgradeHandPopupTimer,
-				centered = true,
-				speed = 3,
-				amplitude = 2,
-				revealSpeed = 50, -- lettres/seconde
-				colorStart = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()],
-				colorEnd = Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()],
-			}
+				.. tostring(self.run.baseAvailableHands[self:getCurrentlyHoveredLine()] + 1)
 		)
+
+		for i, t in next, self.hoveredFigureText do
+			t:setColor(Constants.FIGURES_COLORS[self:getCurrentlyHoveredLine()])
+			t:update(dt)
+			t:draw()
+		end
+	else
+		if self.hoveredFigureText then
+			for i, t in next, self.hoveredFigureText do
+				t:reset()
+			end
+		end
 	end
 
 	love.graphics.setCanvas(currentCanvas)
