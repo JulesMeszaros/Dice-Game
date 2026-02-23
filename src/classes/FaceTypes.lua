@@ -863,7 +863,7 @@ function RiskyBusiness:buildTriggerEffects(round)
 		{
 			type = "money",
 			fn = function()
-				removeMoney(round, 5)
+				removeMoney(round, 5, self)
 			end,
 		},
 	}
@@ -1063,14 +1063,14 @@ function StockOption:buildTriggerEffects(round)
 		table.insert(effects, {
 			type = "money",
 			fn = function()
-				addMoney(round, 10)
+				addMoney(round, 10, self)
 			end,
 		})
 	else
 		table.insert(effects, {
 			type = "money",
 			fn = function()
-				removeMoney(round, 5)
+				removeMoney(round, 5, self)
 			end,
 		})
 	end
@@ -1258,7 +1258,7 @@ function LoyaltyCard:buildTriggerEffects(round)
 			type = "money",
 			fn = function()
 				local level = round.run.figuresInfos[round.playedFigure].level
-				addMoney(round, level)
+				addMoney(round, level, self)
 			end,
 		},
 		{
@@ -1996,7 +1996,7 @@ function BountyHunter:buildTriggerEffects(round)
 		table.insert(effects, {
 			type = "money",
 			fn = function()
-				addMoney(round, 10)
+				addMoney(round, 10, self)
 			end,
 		})
 	end
@@ -2440,7 +2440,7 @@ function DimeDice:buildTriggerEffects(round)
 		table.insert(effects, {
 			type = "money",
 			fn = function()
-				addMoney(round, i * 4)
+				addMoney(round, i * 4, self)
 			end,
 		})
 	end
@@ -3011,17 +3011,53 @@ end
 
 function addMoney(round, m, face)
 	round.terrain:setMoneyTo(round.run.money + m)
+	table.insert(
+		round.terrain.triggerTexts,
+		UI.Text.TextWavy:new(
+			"+" .. m .. "$!",
+			round.terrain.diceFaces[face.diceObject].x + round.terrain.diceMatx,
+			500,
+			{
+				font = Fonts.soraRewardTotal,
+				colorStart = { 255 / 255, 178 / 255, 89 / 255, 1 },
+				revealSpeed = 0.1,
+				lifetime = 0.5,
+				popAngleStart = 0,
+				centered = true,
+				popOvershoot = 0.4,
+				popStart = 1,
+			}
+		)
+	)
 end
 
-function removeMoney(round, m)
+function removeMoney(round, m, face)
 	round.terrain:setMoneyTo(round.run.money - m)
+	table.insert(
+		round.terrain.triggerTexts,
+		UI.Text.TextWavy:new(
+			"-" .. m .. "$!",
+			round.terrain.diceFaces[face.diceObject].x + round.terrain.diceMatx,
+			500,
+			{
+				font = Fonts.soraRewardTotal,
+				colorStart = { 255 / 255, 25 / 255, 25 / 255, 1 },
+				revealSpeed = 0.1,
+				lifetime = 0.5,
+				popAngleStart = 0,
+				centered = true,
+				popOvershoot = 0.4,
+				popStart = 1,
+			}
+		)
+	)
 end
 
 function setMoney(round, m)
-	round.run.money = 0
+	round.run.money = m
 end
 
-function upgradeStat(object, stat, v)
+function upgradeStat(object, stat, v, face)
 	object[stat] = object[stat] + v
 end
 
