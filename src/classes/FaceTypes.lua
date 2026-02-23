@@ -346,7 +346,7 @@ function Apparition:new(faceValue, pointsValue)
 end
 
 function Apparition:triggerEffect(round)
-	multiplyScore(round, 2)
+	multiplyScore(round, 2, self)
 end
 
 FaceTypes.Apparition = Apparition
@@ -452,7 +452,7 @@ end
 
 function AshtrayDice:triggerEffect(round)
 	--Complementary effect triggered by the face
-	multiplyScore(round, (1 + 0.1 * round.run.totalUsedCiggie))
+	multiplyScore(round, (1 + 0.1 * round.run.totalUsedCiggie), self)
 end
 
 function AshtrayDice:getDescription(run)
@@ -613,7 +613,7 @@ function MusicDice:triggerEffect(round)
 
 	--Multiplie le score par deux si il y a exactement 4 dés sélectionnés
 	if table.getn(round.selectedDices) == 4 then
-		multiplyScore(round, 2)
+		multiplyScore(round, 2, self)
 	end
 
 	addScore(round, self.pointsValue, self)
@@ -655,7 +655,7 @@ function Signature:triggerEffect(round)
 end
 
 function Signature:uniqueEffect(round)
-	multiplyScore(round, 3)
+	multiplyScore(round, 3, self)
 end
 
 FaceTypes.Signature = Signature
@@ -692,7 +692,7 @@ function SniperDice:triggerEffect(round)
 end
 
 function SniperDice:backupEffect(round)
-	multiplyScore(round, self.backupScoreValue)
+	multiplyScore(round, self.backupScoreValue, self)
 	self.backupScoreValue = self.backupScoreValue + 0.2
 end
 
@@ -735,7 +735,7 @@ function Spotlight:triggerEffect(round)
 end
 
 function Spotlight:firstEffect(round)
-	multiplyScore(round, 3)
+	multiplyScore(round, 3, self)
 end
 
 FaceTypes.Spotlight = Spotlight
@@ -800,7 +800,7 @@ end
 
 function CryptoDice:triggerEffect(round)
 	--Complementary effect triggered by the face
-	multiplyScore(round, 3)
+	multiplyScore(round, 3, self)
 	if round.run.money > 0 then
 		setMoney(round, 0)
 	end
@@ -1005,7 +1005,7 @@ function MagicDice:triggerEffect(round)
 	--Complementary effect triggered by the face
 
 	if table.getn(round.run.ciggiesObjects) >= 2 then
-		multiplyScore(round, table.getn(round.run.ciggiesObjects))
+		multiplyScore(round, table.getn(round.run.ciggiesObjects, self))
 	end
 end
 
@@ -1041,7 +1041,7 @@ function ReturnOnInvestment:backupEffect(round)
 	local i = math.floor(round.run.money / 10)
 	local f = i * 1.5
 	if f > 0 then
-		multiplyScore(round, f)
+		multiplyScore(round, f, self)
 	end
 end
 
@@ -1431,7 +1431,7 @@ function Sacrifice:triggerEffect(round)
 		end
 	end
 
-	multiplyScore(round, 1 + (i * 1.5))
+	multiplyScore(round, 1 + (i * 1.5), self)
 end
 
 function Sacrifice:backupEffect(round)
@@ -1585,7 +1585,7 @@ end
 function Adrenaline:triggerEffect(round)
 	addScore(round, self:getPointsValue(run, self))
 	if round.remainingHands <= 1 then
-		multiplyScore(round, 3)
+		multiplyScore(round, 3, self)
 	end
 end
 
@@ -1629,7 +1629,7 @@ function NegativeDice:triggerEffect(round)
 		end
 	end
 
-	multiplyScore(round, math.max(1, i))
+	multiplyScore(round, math.max(1, i, self))
 end
 
 function NegativeDice:getDescription(run)
@@ -1785,7 +1785,7 @@ function DieAndRetry:new(faceValue, pointsValue)
 end
 
 function DieAndRetry:triggerEffect(round)
-	multiplyScore(round, math.max(1, 2 * self.totaldisabled))
+	multiplyScore(round, math.max(1, 2 * self.totaldisabled, self))
 end
 
 function DieAndRetry:getDescription(run)
@@ -1862,7 +1862,7 @@ function UndeadDice:triggerEffect(round)
 			end
 		end
 	end
-	multiplyScore(round, math.max(1, 2 * i))
+	multiplyScore(round, math.max(1, 2 * i, self))
 end
 
 function UndeadDice:getDescription(run)
@@ -1909,7 +1909,7 @@ end
 function AllIn:triggerEffect(round)
 	local i = round.run.availableFigures[round.playedFigure] + 1
 	round.run.availableFigures[round.playedFigure] = 0
-	multiplyScore(round, math.max(1, 2 * i))
+	multiplyScore(round, math.max(1, 2 * i, self))
 end
 
 function AllIn:getDescription(run)
@@ -1991,7 +1991,7 @@ function FortuneDice:triggerEffect(round)
 		round.terrain:generateCiggiesUI()
 	end
 
-	multiplyScore(round, math.max(1, 1.5 * math.floor(round.run.money / 10)))
+	multiplyScore(round, math.max(1, 1.5 * math.floor(round.run.money / 10, self)))
 
 	addScore(round, self.pointsValue, self)
 end
@@ -2111,7 +2111,7 @@ end
 function LuckyStar:triggerEffect(round)
 	addScore(round, 10, self)
 	if round.playedFigure == Constants.FIGURES.CHANCE then
-		multiplyScore(round, 3)
+		multiplyScore(round, 3, self)
 	end
 end
 
@@ -2153,7 +2153,7 @@ function Doom:triggerEffect(round)
 end
 
 function Doom:backupEffect(round)
-	multiplyScore(round, 3)
+	multiplyScore(round, 3, self)
 end
 
 FaceTypes.Doom = Doom
@@ -2189,7 +2189,7 @@ end
 function Godspeed:triggerEffect(round)
 	local nbTurns = round.remainingHands
 	round.remainingHands = 1
-	multiplyScore(round, 5 * nbTurns)
+	multiplyScore(round, 5 * nbTurns, self)
 end
 
 function Godspeed:getDescription(run)
@@ -2260,7 +2260,7 @@ function WizardDice:new(faceValue, pointsValue)
 end
 
 function WizardDice:triggerEffect(round)
-	multiplyScore(round, math.max(1, round.usedCiggiesRound * 1.5))
+	multiplyScore(round, math.max(1, round.usedCiggiesRound * 1.5, self))
 end
 
 FaceTypes.WizardDice = WizardDice
@@ -2438,7 +2438,7 @@ function TimeDice:triggerEffect(round)
 		i = i + round.run.baseAvailableHands[j]
 	end
 
-	multiplyScore(round, math.max(1, 0.1 * i))
+	multiplyScore(round, math.max(1, 0.1 * i, self))
 end
 
 function TimeDice:getDescription(run)
@@ -2532,8 +2532,21 @@ end
 FaceTypes.DiamondDice = DiamondDice
 
 --UTILS--
-function multiplyScore(round, f)
+function multiplyScore(round, f, face)
 	round.handScore = round.handScore * f
+	table.insert(
+		round.terrain.triggerTexts,
+		UI.Text.TextWavy:new("X" .. f .. "", round.terrain.diceFaces[face.diceObject].x + round.terrain.diceMatx, 500, {
+			font = Fonts.soraRewardTotal,
+			colorStart = { 232 / 255, 79 / 255, 79 / 255, 1 },
+			revealSpeed = 0.15,
+			lifetime = 0.5,
+			popAngleStart = 0,
+			centered = true,
+			popOvershoot = 0.4,
+			popStart = 1,
+		})
+	)
 end
 
 function addScore(round, f, face)
