@@ -536,7 +536,7 @@ function SteelDice:buildTriggerEffects(round)
 		{
 			type = "score",
 			fn = function()
-				addScore(round, math.max(0, 10 - round.run.money, self) * 10)
+				addScore(round, math.max(0, 10 - round.run.money) * 10, self)
 			end,
 		},
 	}
@@ -1460,7 +1460,7 @@ function TwinFlame:buildTriggerEffects(round)
 		{
 			type = "score",
 			fn = function()
-				addScore(round, self:getPointsValue(round.run, self))
+				addScore(round, self:getPointsValue(round.run), self)
 			end,
 		},
 	}
@@ -1564,7 +1564,7 @@ function Necromancer:buildTriggerEffects(round)
 		{
 			type = "score",
 			fn = function()
-				addScore(round, self:getPointsValue(round.run, self))
+				addScore(round, self:getPointsValue(round.run), self)
 			end,
 		},
 	}
@@ -1612,7 +1612,7 @@ function SixthSense:buildTriggerEffects(round)
 		{
 			type = "score",
 			fn = function()
-				addScore(round, self:getPointsValue(round.run, self))
+				addScore(round, self:getPointsValue(round.run), self)
 			end,
 		},
 	}
@@ -1740,7 +1740,7 @@ function CheckeredDice:buildTriggerEffects(round)
 		{
 			type = "score",
 			fn = function()
-				addScore(round, self:getPointsValue(round.run, self))
+				addScore(round, self:getPointsValue(round.run), self)
 			end,
 		},
 	}
@@ -1791,7 +1791,7 @@ function StarDice:buildTriggerEffects(round)
 		{
 			type = "score",
 			fn = function()
-				addScore(round, self:getPointsValue(round.run, self))
+				addScore(round, self:getPointsValue(round.run), self)
 			end,
 		},
 	}
@@ -1826,7 +1826,7 @@ function Resurection:new(faceValue, pointsValue)
 end
 
 function Resurection:triggerEffect(round)
-	addScore(round, self:getPointsValue(run, self))
+	addScore(round, self:getPointsValue(run), self)
 end
 
 function Resurection:buildFirstEffects(round)
@@ -1880,7 +1880,7 @@ function Adrenaline:buildTriggerEffects(round)
 		{
 			type = "score",
 			fn = function()
-				addScore(round, self:getPointsValue(round.run, self))
+				addScore(round, self:getPointsValue(round.run), self)
 			end,
 		},
 	}
@@ -1980,7 +1980,7 @@ function BountyHunter:buildTriggerEffects(round)
 		{
 			type = "score",
 			fn = function()
-				addScore(round, self:getPointsValue(round.run, self))
+				addScore(round, self:getPointsValue(round.run), self)
 			end,
 		},
 	}
