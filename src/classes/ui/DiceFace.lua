@@ -326,6 +326,29 @@ function DiceFace:trigger(round) --Lance le trigger du dé
 	end)
 end
 
+function DiceFace:triggerEffect(effect, round)
+	self.animator:addDelay(0.05)
+	self.animator:addDelay(0.05, function()
+		effect.fn()
+		round.terrain:animateHandScore()
+	end)
+	self.animator:addGroup({
+		{ property = "scaleX", from = 1.5, targetValue = 1, duration = 0.3 },
+		{ property = "scaleY", from = 1.5, targetValue = 1, duration = 0.3 },
+		{
+			property = "rotation",
+			from = 0.5,
+			targetValue = 0,
+			duration = 0.3,
+			easing = AnimationUtils.Easing.easeOutBack,
+		},
+	})
+	self.animator:addDelay(0.0, function()
+		self.targetedScale = 1
+		self.round:triggerNextEffect()
+	end)
+end
+
 function DiceFace:triggerBackup(round)
 	self.animator:addDelay(0.1)
 

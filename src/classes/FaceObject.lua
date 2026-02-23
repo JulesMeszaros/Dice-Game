@@ -57,6 +57,96 @@ end
 
 --==Trigger functions==--
 
+--Utils
+
+--Detecte si il est premier
+function FaceObject:isFirst(round)
+	local _, dicesOrder = round:getDicesOrder(round.usedDices)
+	return self == dicesOrder[1]:getCurrentFaceObject()
+end
+
+--Detexte s'il est unique dans la main
+function FaceObject:isUnique(round)
+	local _, dicesOrder = round:getDicesOrder(round.usedDices)
+	for _, dice in next, dicesOrder do
+		if dice:getCurrentFaceObject() ~= self and dice:getCurrentFaceObject().name == self.name then
+			return false
+		end
+	end
+	return true
+end
+
+--Detecte s'il est full hand (surement jamais utilisé...)
+function FaceObject:isFullHand(round)
+	local _, dicesOrder = round:getDicesOrder(round.usedDices)
+	for _, dice in next, dicesOrder do
+		if dice:getCurrentFaceObject().name ~= self.name then
+			return false
+		end
+	end
+	return true
+end
+
+--Construction de la chaîne d'effets (vides)
+function FaceObject:buildTriggerEffects(round)
+	return {}
+end
+function FaceObject:buildFirstEffects(round)
+	return {}
+end
+function FaceObject:buildReplayEffects(round)
+	return {}
+end
+function FaceObject:buildFullHandEffects(round)
+	return {}
+end
+function FaceObject:buildUniqueEffects(round)
+	return {}
+end
+
+function FaceObject:buildEffects(round)
+	--Cette fonction construit la chaine d'effet totale de la face de dé, en commencant par les effets first, puis replay, puis fullHand, puis unique, puis classiques.
+	--Elle retourne une liste d'effets dans une grande liste.
+	local effects = {}
+
+	-- Compteurs incrémentés à chaque trigger, peu importe la source
+	self.totalTriggered = self.totalTriggered + 1
+	self.roundTriggered = self.roundTriggered + 1
+
+	-- Stats de save
+	if G.saveManager.data["stats"]["dices"][self.id] then
+		G.saveManager.data["stats"]["dices"][self.id] = G.saveManager.data["stats"]["dices"][self.id] + 1
+	else
+		G.saveManager.data["stats"]["dices"][self.id] = 1
+	end
+
+	local function append(list)
+		for _, e in next, list do
+			table.insert(effects, e)
+		end
+	end
+
+	if self.first == true and self:isFirst(round) then
+		append(self:buildFirstEffects(round))
+	end
+
+	if self.roundTriggered > 1 and self.replay == true then
+		append(self:buildReplayEffects(round))
+	end
+
+	if self.fullHand == true and self:isFullHand(round) then
+		append(self:buildFullHandEffects(round))
+	end
+
+	if self.unique == true and self:isUnique(round) then
+		append(self:buildUniqueEffects(round))
+	end
+
+	append(self:buildTriggerEffects(round))
+
+	return effects
+end
+
 function FaceObject:resetStats()
 	self.roundTriggered = 0
 	self.disabled = false

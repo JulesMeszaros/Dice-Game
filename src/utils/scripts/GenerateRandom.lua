@@ -75,9 +75,9 @@ function GenerateRandom.generateUniqueNumbersShop(min, max, n)
 end
 
 function GenerateRandom.faceObjectReward(forbiddenKeys, c, u, r) --Les parametres c u r representent respectivement la proba d'avoir une face common, uncommon, ou rare.
-	local commonRate = c or 75
-	local uncommonRate = u or 20
-	local rareRate = r or 5
+	local commonRate = 100 --c or 75
+	local uncommonRate = 0 --u or 20
+	local rareRate = 0 --r or 5
 	local totalRate = commonRate + uncommonRate + rareRate
 
 	local randomRarity = G.rngEnemies:random(1, 100)

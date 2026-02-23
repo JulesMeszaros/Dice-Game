@@ -33,9 +33,6 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 	self.phase = Constants.ROUND_STATES.PLAYING
 	self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
 	self.dicesOrder = {} --Same but for the dice objects
-	self.diceFacesTriggerQueue = {} --Dice queue for the triggers. get modified during the trigger phase
-	self.dicesTriggerQueue = {} --Same but for the dices
-	self.diceFacesBackupQueue = {} --Dice queue for the triggers. get modified during the trigger phase
 	self.dicesBackupQueue = {} --Same but for the dices
 
 	self.currentlyTriggeredDice = nil
@@ -248,81 +245,66 @@ function Round:getDicesOrder(usedDices)
 	return sortedDiceFaces, sortedDices
 end
 
-function Round:startTriggeringPhase(usedDices, figure)
+function Round:startTriggeringPhase(usedDices, figure) --Nouvelle versionn commence par ajouter tous les effets des dés dans la queue des effets
 	self.phase = Constants.ROUND_STATES.TRIGGERING
-	self.triggerDiceHistory = {}
 	self.triggerFaceHistory = {}
 	self.usedDices = usedDices
 	self.playedFigure = figure
-	--Creates the list of dices to trigger, sorted according to their position on the terrain
+	self.effectsTriggerQueue = {}
 
-	local sortedDiceFaces = {}
-	for i, k in next, self.selectedDices do
-		for j, d in next, usedDices do
-			if d == k then
-				table.insert(sortedDiceFaces, self.terrain.diceFaces[k])
+	local _, sortedDices = self:getDicesOrder(usedDices)
+
+	for _, dice in next, sortedDices do
+		local diceFace = self.terrain.diceFaces[dice]
+		local faceObject = dice:getCurrentFaceObject()
+
+		local effects = faceObject:buildEffects(self)
+
+		local function insertEffects()
+			for _, effect in next, effects do
+				table.insert(self.effectsTriggerQueue, {
+					dice = dice,
+					diceFace = diceFace,
+					effect = effect,
+				})
 			end
 		end
-	end
-	local sortedDices = {}
-	for i, d in next, self.selectedDices do
-		for j, k in next, usedDices do
-			if k == d then
-				table.insert(sortedDices, d)
-			end
-		end
-	end
 
-	--Create the dice face trigger queue
-	for k, df in next, sortedDiceFaces do
-		table.insert(self.diceFacesTriggerQueue, df) --Copie la liste dans trigger Queue
-		--Si on est au dernier tour et qu'on a le sticker nécécité , on ajoute une deuxieme fois chaque dé dans la queue
+		insertEffects()
+		-- Double trigger si dernier tour avec sticker approprié
 		if self.remainingHands == 1 and self.run.lastTurnDoubleTrigger == true then
-			table.insert(self.diceFacesTriggerQueue, df) --Copie la liste dans trigger Queue
+			insertEffects()
 		end
 	end
 
-	--Create the dice trigger queue
-	for k, d in next, sortedDices do
-		table.insert(self.dicesTriggerQueue, d) --Copie la liste dans trigger Queue
-		--Si on est au dernier tour et qu'on a le sticker nécécité , on ajoute une deuxieme fois chaque dé dans la queue
-		--Si on est au dernier tour et qu'on a le sticker nécécité , on ajoute une deuxieme fois chaque dé dans la queue
-		if self.remainingHands == 1 and self.run.lastTurnDoubleTrigger == true then
-			table.insert(self.dicesTriggerQueue, d) --Copie la liste dans trigger Queue
-		end
-	end
-
-	--Triggers the first dice
-	self:triggerNextDice()
+	self:triggerNextEffect()
 end
 
-function Round:triggerNextDice()
-	if table.getn(self.dicesTriggerQueue) >= 1 then --S'il reste des dés dans la liste de triggers
-		if self.diceFacesTriggerQueue[1].representedObject.disabled == false then --On vérifie que la face n'est pas désactivée avant de la jouer
-			--On déclenche le dé
-			self.diceFacesTriggerQueue[1]:trigger(self)
+--Fonction qui ajoute l'effet suivant à la queue des effets
+function Round:triggerNextEffect()
+	if #self.effectsTriggerQueue >= 1 then
+		local current = self.effectsTriggerQueue[1]
+		table.remove(self.effectsTriggerQueue, 1)
 
-			--On ajoute à l'historique (en dernière position)
-			table.insert(self.triggerDiceHistory, self.dicesTriggerQueue[1])
-			table.insert(self.triggerFaceHistory, self.diceFacesTriggerQueue[1])
+		-- On vérifie que la face n'est pas désactivée
+		if current.diceFace.representedObject.disabled == false then
+			-- On ajoute à l'historique
+			table.insert(self.triggerFaceHistory, current.diceFace)
 
-			--On retire de la file
-			table.remove(self.diceFacesTriggerQueue, 1)
-			table.remove(self.dicesTriggerQueue, 1)
+			-- On déclenche l'animation et l'effet
+			current.diceFace:triggerEffect(current.effect, self)
 
-			--On déclenche l'effet de sticker associé-
+			-- On notifie les stickers
 			self.run:diceTriggeredEffect({
-				dice = self.triggerDiceHistory[#self.triggerDiceHistory],
-				face = self.triggerFaceHistory[#self.triggerFaceHistory],
+				dice = current.dice,
+				face = current.diceFace,
+				effect = current.effect,
 			})
 		else
-			--On retire de la file
-			table.remove(self.diceFacesTriggerQueue, 1)
-			table.remove(self.dicesTriggerQueue, 1)
-
-			self:triggerNextDice()
+			-- Face désactivée, on passe au suivant directement
+			self:triggerNextEffect()
 		end
-	else --ends the trigger phase, starts the backup triggers (TODO)
+	else
 		self:startBackupPhase()
 	end
 end
@@ -418,6 +400,7 @@ function Round:triggerNextBackupDice(disabled)
 end
 
 function Round:endTriggeringPhase()
+	print("fin de trigger")
 	self.phase = Constants.ROUND_STATES.PLAYING
 	G.currentRun.lastPlayedFigure = self.playedFigure
 	print(G.currentRun.lastPlayedFigure)
@@ -666,10 +649,8 @@ function Round:drawDices(dices)
 	--Tire uniquement les dés donnés en paramètre et retourne une table avec comme clé les dés et en valeur le numéro de face tiré.
 
 	local faceObjects = self.drawedFaceObjects
-	print("____________ROLL_______________")
 	for key, dice in next, dices do
 		local n = G.rngDices:random(1, dice:getNbFaces()) --Prend un index dans les faces du dé
-		print(key .. " " .. n)
 		local faceObject = dice:getFace(n)
 		faceObjects[dice] = faceObject
 	end
