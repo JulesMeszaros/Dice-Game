@@ -501,8 +501,7 @@ function FlameSticker:diceTriggeredEffect(run, opts)
 	if opts.face.representedObject.faceValue == self.choosenNumber then
 		local r = math.random(1, 2)
 		if r == 1 then
-			table.insert(G.currentRun.currentRound.diceFacesTriggerQueue, 1, opts.face)
-			table.insert(G.currentRun.currentRound.dicesTriggerQueue, 1, opts.dice)
+			G.currentRun.currentRound:injectDiceEffectsAtFront(opts.dice)
 		end
 	end
 end

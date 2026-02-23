@@ -294,18 +294,39 @@ function Round:triggerNextEffect()
 			-- On déclenche l'animation et l'effet
 			current.diceFace:triggerEffect(current.effect, self)
 
-			-- On notifie les stickers
-			self.run:diceTriggeredEffect({
-				dice = current.dice,
-				face = current.diceFace,
-				effect = current.effect,
-			})
+			-- On vérifie si le prochain effet appartient à un dé différent
+			local nextEntry = self.effectsTriggerQueue[1]
+			local isLastEffectOfDice = (nextEntry == nil) or (nextEntry.dice ~= current.dice)
+
+			if isLastEffectOfDice then
+				-- On notifie les stickers
+				self.run:diceTriggeredEffect({
+					dice = current.dice,
+					face = current.diceFace,
+					effect = current.effect,
+				})
+			end
 		else
 			-- Face désactivée, on passe au suivant directement
+			table.remove(self.effectsTriggerQueue, 1)
 			self:triggerNextEffect()
 		end
 	else
 		self:startBackupPhase()
+	end
+end
+
+--Permet l'injection d'un effet de dé en tête de queue.
+--Le parametre passé est un dé objet
+function Round:injectDiceEffectsAtFront(dice)
+	local faceObject = dice:getCurrentFaceObject()
+	local effects = faceObject:buildEffects(self)
+	for i = #effects, 1, -1 do
+		table.insert(self.effectsTriggerQueue, 1, {
+			dice = dice,
+			diceFace = self.terrain.diceFaces[dice],
+			effect = effects[i],
+		})
 	end
 end
 
