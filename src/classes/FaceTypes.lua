@@ -2969,6 +2969,108 @@ end
 
 FaceTypes.TimeDice = TimeDice
 
+--==Hivemind==--
+local Hivemind = setmetatable({}, { __index = FaceObject })
+Hivemind.__index = Hivemind
+
+function Hivemind:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), Hivemind)
+
+	--Metadatas about the BlackStar
+	self.name = "Hivemind"
+	self.tier = "Common"
+	self.id = 63
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Hivemind.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	return self
+end
+
+function Hivemind:buildTriggerEffects(round)
+	return {
+		{
+			type = "update",
+			fn = function()
+				round.run.hivemindTriggers = round.run.hivemindTriggers + 1
+			end,
+		},
+		{
+			type = "score",
+			fn = function()
+				addScore(round, round.run.hivemindTriggers * 20, self)
+			end,
+		},
+	}
+end
+
+function Hivemind:getDescription(run)
+	return "[[+20pts]] for each time this dice type was triggering this run (currently : [[+"
+		.. tostring(20 * run.hivemindTriggers)
+		.. "pts]]."
+end
+
+FaceTypes.Hivemind = Hivemind
+
+--==DiamondDice==--
+local DiamondDice = setmetatable({}, { __index = FaceObject })
+DiamondDice.__index = DiamondDice
+
+function DiamondDice:new(faceValue, pointsValue)
+	local self = setmetatable(FaceObject:new(), DiamondDice)
+
+	--Metadatas about the BlackStar
+	self.name = "Diamond Dice"
+	self.tier = "Uncommon"
+	self.id = 64
+
+	--Metadatas about the graphics of the BlackStar
+	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Diamond Dice.png")
+	self.spriteSheet:setFilter("linear", "linear")
+
+	self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
+
+	--Round status
+	self.faceValue = faceValue --Le numéro de face que le dé représente
+	self.pointsValue = 10 --This is the points scored by the dice
+	self.totalTriggered = 0
+
+	return self
+end
+
+function DiamondDice:buildTriggerEffects(round)
+	return {
+		{
+			type = "score",
+			fn = function()
+				addScore(round, 10, self)
+			end,
+		},
+		{
+			type = "money",
+			fn = function()
+				addMoney(round, math.min(20, math.floor(round.run.money / 3)), self)
+			end,
+		},
+	}
+end
+
+function DiamondDice:getDescription(run)
+	return "[[+10pts]]. Adds 1$ for every 3$ in bank. Currently : +"
+		.. tostring(math.min(20, math.floor(run.money / 3)))
+		.. "$ (max : 20$)."
+end
+
+FaceTypes.DiamondDice = DiamondDice
+
 --UTILS--
 function multiplyScore(round, f, face)
 	round.handScore = round.handScore * f
