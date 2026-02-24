@@ -1,7 +1,9 @@
-# DICE GAME (WIP)
+# DICE DELUXE! (WIP)
 
+Dice Deluxe est un projet de roguelike deck-builder inspiré des mécaniques du Yahtzee, développé sous le moteur LÖVE2D en LUA.
+Son développement a débuté en mai 2025, et est aujourd'hui en cours.
 
-LE jeu de Yatzee, mais en beaucoup mieux.
+Il s'agit du premier jeu développé par AEROSOL DELUXE Interactive.
 
 ## Installation et lancment du jeu
 
