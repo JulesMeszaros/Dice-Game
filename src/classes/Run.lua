@@ -367,7 +367,6 @@ function Run:mousereleased(x, y, button, istouch, presses)
 		self.infoScreen:mousereleased(x, y, button, istouch, presses)
 	else
 		self.pauseMenu:mousereleased(x, y, button, istouch, presses)
-		print("msoudo<D-s>")
 	end
 
 	--Deactivate dragging

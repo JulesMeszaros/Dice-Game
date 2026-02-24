@@ -32,7 +32,6 @@ function GameOver:new(run, round)
 	local maxPlayedCount = 0
 
 	for figure, info in pairs(G.game.run.figuresInfos) do
-		print(figure, info.playcount)
 		if info.playcount > maxPlayedCount then
 			maxPlayed = figure
 			maxPlayedCount = info.playcount

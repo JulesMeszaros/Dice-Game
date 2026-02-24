@@ -207,7 +207,6 @@ function BackToBackSticker:new()
 end
 
 function BackToBackSticker:ciggieUsedEffect(run)
-	print(run.lastUsedCiggie.name)
 	local randomInt = math.random(1, 4)
 
 	if randomInt == 4 and table.getn(run.ciggiesObjects) < run.maxCiggies then
@@ -497,7 +496,6 @@ function FlameSticker:startRoundEffect(run)
 end
 
 function FlameSticker:diceTriggeredEffect(run, opts)
-	print(opts.face.representedObject.faceValue)
 	if opts.face.representedObject.faceValue == self.choosenNumber then
 		local r = math.random(1, 2)
 		if r == 1 then

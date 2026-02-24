@@ -3109,85 +3109,22 @@ FaceTypes.DiamondDice = DiamondDice
 --UTILS--
 function multiplyScore(round, f, face)
 	round.handScore = round.handScore * f
-	table.insert(
-		round.terrain.triggerTexts,
-		UI.Text.TextWavy:new("X" .. f .. "", round.terrain.diceFaces[face.diceObject].x + round.terrain.diceMatx, 500, {
-			font = Fonts.soraRewardTotal,
-			colorStart = { 232 / 255, 79 / 255, 79 / 255, 1 },
-			revealSpeed = 0.15,
-			lifetime = 0.5,
-			popAngleStart = 0,
-			centered = true,
-			popOvershoot = 0.4,
-			popStart = 1,
-		})
-	)
+	round.terrain:addTriggerText("X" .. f, face, { colorStart = { 232 / 255, 79 / 255, 79 / 255, 1 } })
 end
 
 function addScore(round, f, face)
 	round.handScore = round.handScore + f
-	table.insert(
-		round.terrain.triggerTexts,
-		UI.Text.TextWavy:new(
-			"+" .. f .. "pts",
-			round.terrain.diceFaces[face.diceObject].x + round.terrain.diceMatx,
-			500,
-			{
-				font = Fonts.soraRewardTotal,
-				colorStart = { 232 / 255, 79 / 255, 79 / 255, 1 },
-				revealSpeed = 0.15,
-				lifetime = 0.5,
-				popAngleStart = 0,
-				centered = true,
-				popOvershoot = 0.4,
-				popStart = 1,
-			}
-		)
-	)
+	round.terrain:addTriggerText("+" .. f, face, { colorStart = { 232 / 255, 79 / 255, 79 / 255, 1 } })
 end
 
 function addMoney(round, m, face)
 	round.terrain:setMoneyTo(round.run.money + m)
-	table.insert(
-		round.terrain.triggerTexts,
-		UI.Text.TextWavy:new(
-			"+" .. m .. "$!",
-			round.terrain.diceFaces[face.diceObject].x + round.terrain.diceMatx,
-			500,
-			{
-				font = Fonts.soraRewardTotal,
-				colorStart = { 255 / 255, 178 / 255, 89 / 255, 1 },
-				revealSpeed = 0.1,
-				lifetime = 0.5,
-				popAngleStart = 0,
-				centered = true,
-				popOvershoot = 0.4,
-				popStart = 1,
-			}
-		)
-	)
+	round.terrain:addTriggerText("+" .. m .. "$!", face, { colorStart = { 255 / 255, 178 / 255, 89 / 255, 1 } })
 end
 
 function removeMoney(round, m, face)
 	round.terrain:setMoneyTo(round.run.money - m)
-	table.insert(
-		round.terrain.triggerTexts,
-		UI.Text.TextWavy:new(
-			"-" .. m .. "$!",
-			round.terrain.diceFaces[face.diceObject].x + round.terrain.diceMatx,
-			500,
-			{
-				font = Fonts.soraRewardTotal,
-				colorStart = { 255 / 255, 25 / 255, 25 / 255, 1 },
-				revealSpeed = 0.1,
-				lifetime = 0.5,
-				popAngleStart = 0,
-				centered = true,
-				popOvershoot = 0.4,
-				popStart = 1,
-			}
-		)
-	)
+	round.terrain:addTriggerText("-" .. m .. "$!", face, { colorStart = { 255 / 255, 25 / 255, 25 / 255, 1 } })
 end
 
 function setMoney(round, m)

@@ -1183,6 +1183,31 @@ function RoundScreen:highlightDices(usedDices)
 	end
 end
 
+--Trigger Texts
+--Ce sont les textes qui s'affichent en dessous des dés au trigger avec un message affiché dessous
+--Fonction centralisée pour modifier tous les comportements d'un coup si besoin
+
+function RoundScreen:addTriggerText(text, face, opts)
+	opts = opts or {}
+	local colorStart = opts.colorStart or { 1, 1, 1, 1 }
+	local colorEnd = opts.colorEnd or colorStart
+
+	table.insert(
+		self.triggerTexts,
+		UI.Text.TextWavy:new(text, self.diceFaces[face.diceObject].x + self.diceMatx, 500, {
+			font = Fonts.soraRewardTotal,
+			colorStart = colorStart,
+			colorEnd = colorEnd,
+			revealSpeed = 0.1,
+			lifetime = 0.5,
+			popAngleStart = 0,
+			centered = true,
+			popOvershoot = 0.4,
+			popStart = 1,
+		})
+	)
+end
+
 --generic functions
 
 function moveElement(list, fromIndex, toIndex)

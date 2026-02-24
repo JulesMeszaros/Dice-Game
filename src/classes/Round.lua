@@ -77,13 +77,9 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 
 		self.bossType = Constants.BOSS_TYPES[randomKey]
 
-		print("etage", self.run.floorNumber)
-
 		if self.run.tutorial and self.run.floorNumber == 1 then
 			self.bossType = 2
 		end
-
-		print("type", self.bossType)
 	end
 
 	if self.roundType == Constants.ROUND_TYPES.BOSS then
@@ -149,7 +145,6 @@ function Round:endRound()
 	if self.roundScore >= self.targetScore then
 		--Cas ou on vient de battre le dernier manager
 		if self.floorNumber == Constants.FLOORS_BY_RUN and self.roundType == Constants.ROUND_TYPES.BOSS then
-			print("You win the run!!!")
 			self.terrain.runWinPopup = RunEnd:new(self.run, self)
 			self.phase = Constants.ROUND_STATES.RUN_END
 			G.saveManager:save()
@@ -492,10 +487,8 @@ function Round:triggerNextBackupEffect()
 end
 
 function Round:endTriggeringPhase()
-	print("fin de trigger")
 	self.phase = Constants.ROUND_STATES.PLAYING
 	G.currentRun.lastPlayedFigure = self.playedFigure
-	print(G.currentRun.lastPlayedFigure)
 
 	if self.remainingHands >= 1 then
 		self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
@@ -511,8 +504,6 @@ function Round:endTriggeringPhase()
 		if self.handScore > self.run.bestHand then
 			self.run.bestHand = self.handScore
 		end
-
-		print("Best run hand : ", self.run.bestHand)
 
 		self.handScore = 0
 	end

@@ -84,7 +84,6 @@ function EndRound:new(run, round)
 
 	if G.currentRun.tutorial then
 		self.animator:addDelay(0.3, TutorialEvents.firstRoundWin)
-		print("djkldjskljsdkljdl")
 	end
 
 	G.backgroundChange(Constants.BACKGROUND_COLORS.GREEN, 0.5)

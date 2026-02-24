@@ -8,7 +8,6 @@ function SaveManager:new(filename, defaultData)
 	self.data = {}
 
 	if love.filesystem.getInfo(self.filename) then
-		print(love.filesystem.getInfo(self.filename).modtime)
 		self:load()
 	else
 		self.data = self.defaultData
@@ -72,4 +71,3 @@ function SaveManager:update(key, value, mode)
 end
 
 return SaveManager
-
