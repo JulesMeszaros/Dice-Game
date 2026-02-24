@@ -71,8 +71,6 @@ function InfoBubble:update(dt)
 	self.previousObject = self.object
 	self.object = self.screen.currentlyHoveredObject
 
-	--print(self.screen.currentlyHoveredObject.representedObject.name)
-	--TODO : bugfig : corriger le bug qui ne met pas à jour la bulle apres un reroll si on survolle le meme dé qu'avant le reroll
 	if self.previousObject ~= self.object then
 		self.sideBubbles = nil
 		if self.object.representedObject.objectType == "Dice Face" then

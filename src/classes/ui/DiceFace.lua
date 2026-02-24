@@ -298,9 +298,13 @@ end
 function DiceFace:triggerEffect(effect, round)
 	self.animator:addDelay(0.05)
 	self.animator:addDelay(0.05, function()
-		effect.fn()
+		effect.fn() --Déclenchement de l'effet
 		round.terrain:animateHandScore()
 	end)
+
+	--Ajout d'un texte de trigger (WIP)
+	self:createTriggerText(round, effect)
+
 	self.animator:addGroup({
 		{ property = "scaleX", from = 1.5, targetValue = 1, duration = 0.3 },
 		{ property = "scaleY", from = 1.5, targetValue = 1, duration = 0.3 },
@@ -360,6 +364,23 @@ function DiceFace:triggerBackup(round)
 			easing = AnimationUtils.Easing.easeOutBack,
 		},
 	})
+end
+
+function DiceFace:createTriggerText(round, effect)
+	local type = effect.type or "other"
+
+	if type == "mult" or type == "score" or type == "money" then
+		return true
+	elseif type == "upgrade" then
+		local message = effect.message or "Upgrade!"
+		round.terrain:addTriggerText(message, self, { colorStart = { 0.2, 0.1, 0.8 } })
+	elseif type == "replay" then
+		local message = effect.message or "Replay!"
+		round.terrain:addTriggerText(message, self, { colorStart = { 0.2, 0.1, 0.8 } })
+	else
+		local message = effect.message or "Trigger!"
+		round.terrain:addTriggerText("Trigger!", self, { colorStart = { 0.2, 0.1, 0.8 } })
+	end
 end
 
 --==GET/SET FUNCTIONS==--

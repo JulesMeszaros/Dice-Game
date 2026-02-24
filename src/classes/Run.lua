@@ -251,7 +251,6 @@ end
 
 function Run:toggleInfoScreen()
 	if self.displayInfoScreen == true then
-		print(self.tutorialInfosEnd)
 		if self.tutorial and self.tutorialInfosEnd == true then
 			TutorialEvents.secondRoundStart2()
 		end
@@ -303,8 +302,6 @@ function Run:keypressed(key)
 	elseif self.currentState == Constants.RUN_STATES.DICE_CUSTOMIZATION then
 		self.customizationScreen:keypressed(key)
 	end
-
-	print(key)
 
 	if key == "escape" then
 		self:togglePauseMenu()

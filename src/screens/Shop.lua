@@ -1081,7 +1081,6 @@ function Shop:generateNewShop()
 	if self.firstShopGeneration == true then
 		--Variable de la figure la plus jouée. On la met à 0, comme ca dans l'éventualité ou toutes les figures sont à 0, on peut skip le sticker MorningBrew
 		for figure, info in pairs(self.run.figuresInfos) do
-			print(figure, info.playcount)
 			if info.playcount > maxPlayedCount then
 				maxPlayed = figure
 				maxPlayedCount = info.playcount
@@ -1240,7 +1239,6 @@ function Shop:generateRandomStickers()
 	local holoKey = popRandom(possibleStickersHolo)
 	if holoKey then
 		table.insert(self.availableStickers, self:generateRandomSticker({ holoKey }))
-		print("prout")
 	else
 		-- ===== 3) Sinon un 4e normal =====
 		local key = popRandom(possibleStickers)

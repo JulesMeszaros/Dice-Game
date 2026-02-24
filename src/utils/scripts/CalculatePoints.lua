@@ -148,7 +148,6 @@ function CalculatePoints.fullBasePoints(dices, level)
 			end
 
 			score = 25
-			print(sum)
 		end
 	end
 

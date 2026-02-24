@@ -262,6 +262,7 @@ function StrikeOfLuck:buildTriggerEffects(round)
 		},
 		{ --Ajout de la cigarette random
 			type = "other",
+			message = "+1 Wand!",
 			fn = function()
 				if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies then
 					local c = GenerateRandom.CiggieObject()
@@ -307,7 +308,7 @@ end
 function Copyprinter:buildTriggerEffects(round)
 	return {
 		{
-			type = "other",
+			type = "replay",
 			fn = function()
 				local _, dicesOrder = round:getDicesOrder(round.usedDices)
 				local leftDice = nil
@@ -448,6 +449,7 @@ function ClockWorkDice:buildTriggerEffects(round)
 	if self.faceValue > 1 and self.roundTriggered <= 1 then
 		table.insert(effects, {
 			type = "update",
+			message = "-1!",
 			fn = function()
 				--Decrease the face value by one
 				self.faceValue = self.faceValue - 1
@@ -768,7 +770,7 @@ end
 function SniperDice:buildBackupEffects(round)
 	return {
 		{
-			type = "update",
+			type = "upgrade",
 			fn = function()
 				self.backupScoreValue = self.backupScoreValue + 0.2
 			end,
@@ -963,7 +965,7 @@ function Patience:buildTriggerEffects(round)
 			end,
 		},
 		{
-			type = "update",
+			type = "upgrade",
 			fn = function()
 				upgradeStat(self, "pointsValue", 30)
 			end,
@@ -1008,7 +1010,7 @@ function DataDice:buildTriggerEffects(round)
 
 	if round.playedFigure < 7 then
 		table.insert(effects, {
-			type = "update",
+			type = "upgrade",
 			fn = function()
 				upgradeStat(self, "pointsValue", 10)
 			end,
@@ -1016,7 +1018,7 @@ function DataDice:buildTriggerEffects(round)
 	else
 		if self.pointsValue >= 10 then
 			table.insert(effects, {
-				type = "update",
+				type = "upgrade",
 				fn = function()
 					upgradeStat(self, "pointsValue", -10)
 				end,
@@ -1129,7 +1131,7 @@ function RainbowDice:buildTriggerEffects(round)
 
 	if round.playedFigure == Constants.FIGURES.SMALL_SUITE or round.playedFigure == Constants.LARGE_SUITE then
 		table.insert(effects, {
-			type = "update",
+			type = "upgrade",
 			fn = function()
 				upgradeStat(self, "pointsValue", 50)
 			end,
@@ -1332,7 +1334,7 @@ function MirrorDice:buildTriggerEffects(round)
 
 	if sameDices > 1 then
 		table.insert(effects, {
-			type = "update",
+			type = "upgrade",
 			fn = function()
 				upgradeStat(self, "pointsValue", (sameDices - 1) * 10)
 			end,
@@ -1388,7 +1390,7 @@ function CookieDice:buildTriggerEffects(round)
 	local i = math.floor(math.random(1, 2))
 	if i == 1 then
 		table.insert(effects, {
-			type = "update",
+			type = "upgrade",
 			message = "Level Up!",
 			fn = function()
 				round.run:levelUpFigure(round.playedFigure)
@@ -1537,7 +1539,7 @@ function FaxMachine:buildTriggerEffects(round)
 	if dicesOrder[1]:getCurrentFaceObject() ~= self then
 		return {
 			{
-				type = "other",
+				type = "replay",
 				fn = function()
 					round:injectDiceEffectsAtFront(dicesOrder[1])
 				end,
@@ -1547,6 +1549,7 @@ function FaxMachine:buildTriggerEffects(round)
 		return {
 			{
 				type = "other",
+				message = "Nope",
 				fn = function() end,
 			},
 		}
@@ -1723,7 +1726,7 @@ end
 function Sacrifice:buildBackupEffects(round)
 	return {
 		{
-			type = "other",
+			type = "Ghosted!",
 			fn = function()
 				local _, dicesOrder = round:getDicesOrder(round.usedDices)
 				dicesOrder[1]:getCurrentFaceObject().ghost = true
@@ -1860,7 +1863,7 @@ end
 function Resurection:buildFirstEffects(round)
 	return {
 		{
-			type = "other",
+			type = "Resurected!",
 			fn = function()
 				for _, dice in next, round.run.diceObjects do
 					dice:getCurrentFaceObject().disabled = false
@@ -2355,7 +2358,7 @@ function Poltergeist:buildTriggerEffects(round)
 	}
 	if round.handRefunded == false then
 		table.insert(effects, {
-			type = "other",
+			type = "Refunded!",
 			fn = function()
 				round.handRefunded = true
 				round.run.availableFigures[round.playedFigure] = round.run.availableFigures[round.playedFigure] + 1
@@ -2401,7 +2404,7 @@ function FortuneDice:buildTriggerEffects(round)
 
 	if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies then
 		table.insert(effects, {
-			type = "other",
+			type = "+1 Wand!",
 			fn = function()
 				local c = CiggieTypes.Fortune:new()
 				table.insert(round.run.ciggiesObjects, c)
@@ -2668,7 +2671,7 @@ function Godspeed:buildTriggerEffects(round)
 
 	return {
 		{
-			type = "update",
+			type = "Consumed!",
 			fn = function()
 				round.remainingHands = 1
 			end,
@@ -2845,14 +2848,15 @@ function Echo:buildTriggerEffects(round)
 
 	if round.playedFigure == self.currentFigure then
 		table.insert(effects, {
-			type = "update",
+			type = "upgrade",
 			fn = function()
 				self.consecutiveCount = self.consecutiveCount + 1
 			end,
 		})
 	else
 		table.insert(effects, {
-			type = "other", -- animation de reset
+			message = "Reset!",
+			type = "upgrade", -- animation de reset
 			fn = function()
 				self.currentFigure = round.playedFigure
 				self.consecutiveCount = 1
@@ -2969,7 +2973,7 @@ function TimeDice:buildTriggerEffects(round)
 
 	if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies then
 		table.insert(effects, {
-			type = "other",
+			type = "+1 Wand!",
 			fn = function()
 				local c = CiggieTypes.Time:new()
 				table.insert(round.run.ciggiesObjects, c)
@@ -3033,7 +3037,7 @@ end
 function Hivemind:buildTriggerEffects(round)
 	return {
 		{
-			type = "update",
+			type = "upgrade",
 			fn = function()
 				round.run.hivemindTriggers = round.run.hivemindTriggers + 1
 			end,

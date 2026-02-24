@@ -173,7 +173,6 @@ function GameScreen:new(floor, run, screenType, round)
 	--Permet de mettre à jour le nbr de rerolls et de mains pour la premiere main si le nombre de rerolls de base a augmenté depuis la création de cet objet...
 	if self.screenType == Constants.RUN_STATES.ROUND then
 		self.animator:addDelay(0.1, function()
-			print(self.run.baseRerolls, "rerolls")
 			self.round.availableRerolls = self.run.baseRerolls
 			self.round.remainingHands = self.run.baseHands
 		end)

@@ -172,8 +172,6 @@ function MainMenu:mousepressed(x, y, button, istouch, presses)
 
 	--Text input (temporaire)
 	self.seedInput:mousepressed()
-
-	print(self.seedInput.text)
 end
 
 function MainMenu:mousereleased(x, y, button, istouch, presses)

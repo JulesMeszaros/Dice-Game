@@ -1097,10 +1097,6 @@ function RoundScreen:playFigure(figure, params)
 		--On vérifie aussi que la run tutorial peut jouer des figures
 		and (G.currentRun.tutorialCanPlayFigure == true or not G.currentRun.tutorial)
 	then
-		print(not G.currentRun.tutorial, not G.currentRun.tutorialCanPlayStraights == true, figure == 12)
-		print("---")
-		print(G.currentRun.tutorialCanPlayStraights)
-
 		if
 			not G.currentRun.tutorial --On est pas en tuto
 			or not G.currentRun.tutorialCanPlayStraights == true --On peut jouer autre chose que des traights
@@ -1201,9 +1197,10 @@ function RoundScreen:addTriggerText(text, face, opts)
 			revealSpeed = 0.1,
 			lifetime = 0.5,
 			popAngleStart = 0,
+			popAngleOvershoot = 10,
 			centered = true,
-			popOvershoot = 0.4,
-			popStart = 1,
+			popOvershoot = 0.2,
+			popStart = 0.5,
 		})
 	)
 end
