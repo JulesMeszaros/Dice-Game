@@ -183,15 +183,6 @@ function FaceObject:resetStats()
 	self.disabled = false
 end
 
-function FaceObject:triggerBackup(round, uiFace)
-	-- Pour l'effet backup
-	self:backupEffect(round)
-	uiFace.animator:addDelay(0.0, function()
-		uiFace.targetedScale = 1
-		uiFace.round:triggerNextBackupDice()
-	end)
-end
-
 --Triggers effects
 
 function FaceObject:triggerEffect(round)

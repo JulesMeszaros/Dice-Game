@@ -296,8 +296,8 @@ end
 
 --==TRIGGER FUNCTIONS==--
 function DiceFace:triggerEffect(effect, round)
-	self.animator:addDelay(0.05)
-	self.animator:addDelay(0.05, function()
+	self.animator:addDelay(0.01)
+	self.animator:addDelay(0.01, function()
 		effect.fn() --Déclenchement de l'effet
 		round.terrain:animateHandScore()
 	end)
@@ -350,13 +350,25 @@ end
 
 function DiceFace:createTriggerAnimation(round, effect)
 	self.animator:addGroup({
-		{ property = "scaleX", from = 1.5, targetValue = 1, duration = 0.3 },
-		{ property = "scaleY", from = 1.5, targetValue = 1, duration = 0.3 },
+		{
+			property = "scaleX",
+			from = 1.8,
+			targetValue = 1,
+			duration = 0.25,
+			easing = AnimationUtils.Easing.easeOutBack,
+		},
+		{
+			property = "scaleY",
+			from = 1.8,
+			targetValue = 1,
+			duration = 0.25,
+			easing = AnimationUtils.Easing.easeOutBack,
+		},
 		{
 			property = "rotation",
-			from = 0.5,
+			from = -0.3,
 			targetValue = 0,
-			duration = 0.3,
+			duration = 0.25,
 			easing = AnimationUtils.Easing.easeOutBack,
 		},
 	})

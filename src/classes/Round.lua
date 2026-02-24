@@ -385,64 +385,6 @@ function Round:startBackupPhase() --Nouvelle version
 	self:triggerNextBackupEffect()
 end
 
-function Round:triggerNextBackupDice(disabled)
-	if table.getn(self.dicesBackupQueue) >= 1 then --Si il reste au moins un dé non à backup
-		if self.diceFacesBackupQueue[1].representedObject.disabled == false then
-			self.diceFacesBackupQueue[1]:triggerBackup(self) --On trigger l'effer backup depuis l'objet UI
-
-			--On ajoute à l'historique des backup
-			table.insert(self.backupDiceHistory, self.dicesBackupQueue[1])
-			table.insert(self.backupFaceHistory, self.diceFacesBackupQueue[1])
-
-			--On retire de la file
-			table.remove(self.diceFacesBackupQueue, 1)
-			table.remove(self.dicesBackupQueue, 1)
-		else
-			--On retire de la file
-			table.remove(self.diceFacesBackupQueue, 1)
-			table.remove(self.dicesBackupQueue, 1)
-
-			self:triggerNextBackupDice()
-		end
-	else
-		--On termine la phase de trigger
-
-		--Désactiver les dés ghosts qui ne sont pas utilisés dans la figure.
-		--Liste des dés non utilisés
-		local unusedDices = {}
-		for i, d in next, self.diceObjects do
-			if self:containsDice(self.usedDices, d) then
-			else
-				table.insert(unusedDices, d)
-			end
-		end
-
-		--On désactive les dés ghosts qui ne sont pas utilisés
-		for i, d in next, unusedDices do
-			if d:getCurrentFaceObject().ghost == true and d:getCurrentFaceObject().wasJustReenabled ~= true then
-				self.terrain.diceFaces[d]:disable(self.run)
-			end
-		end
-
-		local j = 0
-		for i, diceface in next, self.terrain.diceFaces do
-			j = j + 1
-			diceface.representedObject.wasJustReenabled = false
-			if j == 5 then
-				diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
-				diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
-				diceface.animator:addDelay(0.2, function()
-					self:endTriggeringPhase()
-				end) --On termine le round mais uniquement quand le dernier dé a terminé son animation
-			else
-				diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
-				diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
-				diceface.animator:addDelay(0.2)
-			end
-		end
-	end
-end
-
 function Round:triggerNextBackupEffect()
 	if #self.backupEffectsQueue >= 1 then
 		local current = self.backupEffectsQueue[1]
