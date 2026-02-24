@@ -582,29 +582,21 @@ extern float hovering;
 extern vec2 badge_pos;
 extern vec2 badge_size;
 extern float time;
-
 #ifdef VERTEX
 vec4 position(mat4 transform_projection, vec4 vertex_position) {
     vec2 center = badge_pos;
     vec2 vertex_from_center = vertex_position.xy - center;
-
-    // Tilt automatique qui tourne dans le temps
     float autoTiltX = sin(time * 0.8) * length(badge_size) * 0.27;
     float autoTiltY = cos(time * 0.8) * length(badge_size) * 0.27;
-vec2 auto_offset = (vertex_position.xy - (center + vec2(autoTiltX, autoTiltY))) / badge_size;
-
-    // On blend entre le tilt auto et le tilt souris selon hovering
-vec2 mouse_offset = (vertex_position.xy - mouse_pos) / badge_size;
+    vec2 auto_offset = (vertex_position.xy - (center + vec2(autoTiltX, autoTiltY))) / badge_size;
+    vec2 mouse_offset = (vertex_position.xy - mouse_pos) / badge_size;
     vec2 final_offset = mix(auto_offset, mouse_offset, hovering);
-
     float mid_dist = length(vertex_from_center) / length(badge_size);
     float scale = 1.4 * (-0.03 - 0.3 * max(0.0, 0.3 - mid_dist))
             * (length(final_offset) * length(final_offset)) / (2.0 - mid_dist);
-
     return transform_projection * vertex_position + vec4(0, 0, 0, scale);
 }
 #endif
-
 #ifdef PIXEL
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     return Texel(texture, texture_coords) * color;

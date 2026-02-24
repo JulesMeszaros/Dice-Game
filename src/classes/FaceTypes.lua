@@ -448,7 +448,7 @@ function ClockWorkDice:buildTriggerEffects(round)
 
 	if self.faceValue > 1 and self.roundTriggered <= 1 then
 		table.insert(effects, {
-			type = "update",
+			type = "upgrade",
 			message = "-1!",
 			fn = function()
 				--Decrease the face value by one
@@ -930,6 +930,7 @@ function CryptoDice:buildTriggerEffects(round)
 	if round.run.money > 0 then
 		table.insert(effects, {
 			type = "money",
+			message = "No Money!",
 			fn = function()
 				setMoney(round, 0)
 			end,
@@ -3142,7 +3143,7 @@ function removeMoney(round, m, face)
 end
 
 function setMoney(round, m)
-	round.run.money = m
+	round.terrain:setMoneyTo(m)
 end
 
 function upgradeStat(object, stat, v, face)

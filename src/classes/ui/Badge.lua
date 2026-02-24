@@ -198,19 +198,15 @@ function Badge:draw()
 	local cx = self.x + px
 	local cy = self.y + self.oscillatingY + py
 	local mx, my = Inputs.getVirtualMousePosition()
-
 	local bw = self.uiCanvas:getWidth() * self.scale
 	local bh = self.uiCanvas:getHeight() * self.scale
 	local isHovered = self:isHovered() and 1.0 or 0.0
-
 	Shaders.tiltShader:send("mouse_pos", { mx, my })
 	Shaders.tiltShader:send("hovering", isHovered)
 	Shaders.tiltShader:send("badge_pos", { cx + bw / 2, cy + bh / 2 })
 	Shaders.tiltShader:send("badge_size", { bw, bh })
 	Shaders.tiltShader:send("time", love.timer.getTime() + self.tiltOffset)
-
 	love.graphics.setShader(Shaders.tiltShader)
-	--Ombre
 	love.graphics.setColor(0, 0, 0, 0.4)
 	love.graphics.draw(
 		self.uiCanvas,

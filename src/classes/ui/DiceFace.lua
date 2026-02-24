@@ -344,7 +344,7 @@ function DiceFace:createTriggerText(round, effect)
 		round.terrain:addTriggerText(message, self, { colorStart = { 0.2, 0.1, 0.8 } })
 	else
 		local message = effect.message or "Trigger!"
-		round.terrain:addTriggerText("Trigger!", self, { colorStart = { 0.2, 0.1, 0.8 } })
+		round.terrain:addTriggerText(message, self, { colorStart = { 0.2, 0.1, 0.8 } })
 	end
 end
 
