@@ -304,18 +304,9 @@ function DiceFace:triggerEffect(effect, round)
 
 	--Ajout d'un texte de trigger (WIP)
 	self:createTriggerText(round, effect)
+	--Animation de trigger (WIP)
+	self:createTriggerAnimation(round, effect)
 
-	self.animator:addGroup({
-		{ property = "scaleX", from = 1.5, targetValue = 1, duration = 0.3 },
-		{ property = "scaleY", from = 1.5, targetValue = 1, duration = 0.3 },
-		{
-			property = "rotation",
-			from = 0.5,
-			targetValue = 0,
-			duration = 0.3,
-			easing = AnimationUtils.Easing.easeOutBack,
-		},
-	})
 	self.animator:addDelay(0.0, function()
 		self.targetedScale = 1
 		self.round:triggerNextEffect()
@@ -328,42 +319,16 @@ function DiceFace:triggerBackupEffect(effect, round)
 		effect.fn()
 		round.terrain:animateHandScore()
 	end)
-	self.animator:addGroup({
-		{ property = "scaleX", from = 1.5, targetValue = 1, duration = 0.3 },
-		{ property = "scaleY", from = 1.5, targetValue = 1, duration = 0.3 },
-		{
-			property = "rotation",
-			from = 0.5,
-			targetValue = 0,
-			duration = 0.3,
-			easing = AnimationUtils.Easing.easeOutBack,
-		},
-	})
+
+	--Text de trigger
+	self:createTriggerText(round, effect)
+	--Animation de trigger (WIP)
+	self:createTriggerAnimation(round, effect)
+
 	self.animator:addDelay(0.0, function()
 		self.targetedScale = 1
 		self.round:triggerNextBackupEffect()
 	end)
-end
-
-function DiceFace:triggerBackup(round)
-	self.animator:addDelay(0.1)
-
-	self.animator:addDelay(0.05, function()
-		self.representedObject:triggerBackup(round, self)
-		round.terrain:animateHandScore()
-	end) --On déclenche l'effet du dé ici
-
-	self.animator:addGroup({
-		{ property = "scaleX", from = 1.5, targetValue = 1, duration = 0.3 },
-		{ property = "scaleY", from = 1.5, targetValue = 1, duration = 0.3 },
-		{
-			property = "rotation",
-			from = 0.5,
-			targetValue = 0,
-			duration = 0.3,
-			easing = AnimationUtils.Easing.easeOutBack,
-		},
-	})
 end
 
 function DiceFace:createTriggerText(round, effect)
@@ -381,6 +346,20 @@ function DiceFace:createTriggerText(round, effect)
 		local message = effect.message or "Trigger!"
 		round.terrain:addTriggerText("Trigger!", self, { colorStart = { 0.2, 0.1, 0.8 } })
 	end
+end
+
+function DiceFace:createTriggerAnimation(round, effect)
+	self.animator:addGroup({
+		{ property = "scaleX", from = 1.5, targetValue = 1, duration = 0.3 },
+		{ property = "scaleY", from = 1.5, targetValue = 1, duration = 0.3 },
+		{
+			property = "rotation",
+			from = 0.5,
+			targetValue = 0,
+			duration = 0.3,
+			easing = AnimationUtils.Easing.easeOutBack,
+		},
+	})
 end
 
 --==GET/SET FUNCTIONS==--

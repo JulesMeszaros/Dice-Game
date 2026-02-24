@@ -2404,7 +2404,8 @@ function FortuneDice:buildTriggerEffects(round)
 
 	if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies then
 		table.insert(effects, {
-			type = "+1 Wand!",
+			type = "other",
+			message = "+1 Wand!",
 			fn = function()
 				local c = CiggieTypes.Fortune:new()
 				table.insert(round.run.ciggiesObjects, c)
@@ -2846,7 +2847,7 @@ end
 function Echo:buildTriggerEffects(round)
 	local effects = {}
 
-	if round.playedFigure == self.currentFigure then
+	if round.playedFigure == self.currentFigure or self.currentFigure == 0 then
 		table.insert(effects, {
 			type = "upgrade",
 			fn = function()
@@ -2973,7 +2974,8 @@ function TimeDice:buildTriggerEffects(round)
 
 	if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies then
 		table.insert(effects, {
-			type = "+1 Wand!",
+			type = "other",
+			message = "+1 Wand!",
 			fn = function()
 				local c = CiggieTypes.Time:new()
 				table.insert(round.run.ciggiesObjects, c)
