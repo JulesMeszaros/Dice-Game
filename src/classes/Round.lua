@@ -362,6 +362,34 @@ function Round:startBackupPhase()
 	self:triggerNextBackupDice()
 end
 
+function Round:startBackupPhase() --Nouvelle version
+	self.backupEffectsQueue = {}
+
+	local unselectedDices = self:getUnSelectedDices()
+	local dices = {}
+	for i, _ in next, unselectedDices do
+		table.insert(dices, i)
+	end
+
+	local facesOrder, dicesOrder = self:getDicesOrder(dices)
+
+	for i, f in next, facesOrder do
+		if f.representedObject.backup == true then
+			local faceObject = f.representedObject
+			local effects = faceObject:buildBackupEffects(self)
+			for _, effect in next, effects do
+				table.insert(self.backupEffectsQueue, {
+					dice = dicesOrder[i],
+					diceFace = f,
+					effect = effect,
+				})
+			end
+		end
+	end
+
+	self:triggerNextBackupEffect()
+end
+
 function Round:triggerNextBackupDice(disabled)
 	if table.getn(self.dicesBackupQueue) >= 1 then --Si il reste au moins un dé non à backup
 		if self.diceFacesBackupQueue[1].representedObject.disabled == false then
@@ -411,6 +439,49 @@ function Round:triggerNextBackupDice(disabled)
 				diceface.animator:addDelay(0.2, function()
 					self:endTriggeringPhase()
 				end) --On termine le round mais uniquement quand le dernier dé a terminé son animation
+			else
+				diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
+				diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
+				diceface.animator:addDelay(0.2)
+			end
+		end
+	end
+end
+
+function Round:triggerNextBackupEffect()
+	if #self.backupEffectsQueue >= 1 then
+		local current = self.backupEffectsQueue[1]
+		table.remove(self.backupEffectsQueue, 1)
+
+		if current.diceFace.representedObject.disabled == false then
+			current.diceFace:triggerBackupEffect(current.effect, self)
+		else
+			self:triggerNextBackupEffect()
+		end
+	else
+		-- Désactive les dés ghosts non utilisés
+		local unusedDices = {}
+		for _, d in next, self.diceObjects do
+			if not self:containsDice(self.usedDices, d) then
+				table.insert(unusedDices, d)
+			end
+		end
+
+		for _, d in next, unusedDices do
+			if d:getCurrentFaceObject().ghost == true and d:getCurrentFaceObject().wasJustReenabled ~= true then
+				self.terrain.diceFaces[d]:disable(self.run)
+			end
+		end
+
+		local j = 0
+		for _, diceface in next, self.terrain.diceFaces do
+			j = j + 1
+			if j == 5 then
+				diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
+				diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
+				diceface.animator:addDelay(0.2, function()
+					self:endTriggeringPhase()
+				end)
 			else
 				diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
 				diceface.animator:add("y", diceface.y - 20, 1000, 0.2)

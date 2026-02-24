@@ -765,9 +765,21 @@ function SniperDice:buildTriggerEffects(round)
 	return {}
 end
 
-function SniperDice:backupEffect(round)
-	multiplyScore(round, self.backupScoreValue, self)
-	self.backupScoreValue = self.backupScoreValue + 0.2
+function SniperDice:buildBackupEffects(round)
+	return {
+		{
+			type = "update",
+			fn = function()
+				self.backupScoreValue = self.backupScoreValue + 0.2
+			end,
+		},
+		{
+			type = "mult",
+			fn = function()
+				multiplyScore(round, self.backupScoreValue, self)
+			end,
+		},
+	}
 end
 
 function SniperDice:getDescription(run)
@@ -1211,12 +1223,22 @@ function ReturnOnInvestment:new(faceValue, pointsValue)
 	return self
 end
 
-function ReturnOnInvestment:backupEffect(round)
+function ReturnOnInvestment:buildBackupEffects(round)
 	local i = math.floor(round.run.money / 10)
 	local f = i * 1.5
+
 	if f > 0 then
-		multiplyScore(round, f, self)
+		return {
+			{
+				type = "mult",
+				fn = function()
+					multiplyScore(round, f, self)
+				end,
+			},
+		}
 	end
+
+	return {}
 end
 
 function ReturnOnInvestment:getDescription(run)
@@ -1698,10 +1720,16 @@ function Sacrifice:buildTriggerEffects(round)
 	}
 end
 
-function Sacrifice:backupEffect(round)
-	local facesOrder, dicesOrder = round:getDicesOrder(round.usedDices)
-
-	dicesOrder[1]:getCurrentFaceObject().ghost = true
+function Sacrifice:buildBackupEffects(round)
+	return {
+		{
+			type = "other",
+			fn = function()
+				local _, dicesOrder = round:getDicesOrder(round.usedDices)
+				dicesOrder[1]:getCurrentFaceObject().ghost = true
+			end,
+		},
+	}
 end
 
 function Sacrifice:getDescription(run)
@@ -2594,8 +2622,15 @@ function Doom:buildTriggerEffects(round)
 	}
 end
 
-function Doom:backupEffect(round)
-	multiplyScore(round, 3, self)
+function Doom:buildBackupEffects(round)
+	return {
+		{
+			type = "mult",
+			fn = function()
+				multiplyScore(round, 3, self)
+			end,
+		},
+	}
 end
 
 FaceTypes.Doom = Doom

@@ -104,6 +104,10 @@ function FaceObject:buildUniqueEffects(round)
 	return {}
 end
 
+function FaceObject:buildBackupEffects(round)
+	return {}
+end
+
 function FaceObject:buildEffects(round)
 	--Cette fonction construit la chaine d'effet totale de la face de dé, en commencant par les effets first, puis replay, puis fullHand, puis unique, puis classiques.
 	--Elle retourne une liste d'effets dans une grande liste.
@@ -143,6 +147,33 @@ function FaceObject:buildEffects(round)
 	end
 
 	append(self:buildTriggerEffects(round))
+
+	return effects
+end
+
+function FaceObject:builBackUpEffects(round)
+	--Cette fonction construit la chaine d'effet totale de la face de dé, en commencant par les effets first, puis replay, puis fullHand, puis unique, puis classiques.
+	--Elle retourne une liste d'effets dans une grande liste.
+	local effects = {}
+
+	-- Compteurs incrémentés à chaque trigger, peu importe la source
+	self.totalTriggered = self.totalTriggered + 1
+	self.roundTriggered = self.roundTriggered + 1
+
+	-- Stats de save
+	if G.saveManager.data["stats"]["dices"][self.id] then
+		G.saveManager.data["stats"]["dices"][self.id] = G.saveManager.data["stats"]["dices"][self.id] + 1
+	else
+		G.saveManager.data["stats"]["dices"][self.id] = 1
+	end
+
+	local function append(list)
+		for _, e in next, list do
+			table.insert(effects, e)
+		end
+	end
+
+	append(self:buildBackupTriggerEffects(round))
 
 	return effects
 end

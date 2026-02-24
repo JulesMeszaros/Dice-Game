@@ -111,7 +111,7 @@ function TextWavy:new(text, x, y, opts)
 	o.popAngleTime = opts.popAngleTime or o.popTime * 1.2
 
 	-- Animation d'apparition
-	o.revealSpeed = opts.revealSpeed or 1 -- temps total en secondes pour afficher tout le texte
+	o.revealSpeed = opts.revealSpeed or 0.5 -- temps total en secondes pour afficher tout le texte
 
 	-- Durée de vie (0 = infini)
 	o.lifetime = opts.lifetime or 0
