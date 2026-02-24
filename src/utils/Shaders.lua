@@ -604,38 +604,34 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
 #endif
 ]])
 
-Shaders.plasticShader = love.graphics.newShader([[
-extern vec2 badge_size;
-extern vec2 mouse_pos;
-extern vec2 badge_pos;
+Shaders.holoShader = love.graphics.newShader([[
+extern vec2 orientation;
 
 #ifdef PIXEL
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     vec4 texColor = Texel(texture, texture_coords);
 
-    // Direction de la "lumière" basée sur la position de la souris par rapport au badge
-    vec2 mouse_offset = (mouse_pos - badge_pos) / badge_size;
-    mouse_offset = clamp(mouse_offset, -1.0, 1.0);
-
-    // UV centrées entre -1 et 1
     vec2 uv = texture_coords * 2.0 - 1.0;
 
-    // Reflet directionnel : plus fort là où la lumière pointe
-    float highlight = dot(uv, mouse_offset);
+    // Reflet directionnel principal
+    float highlight = dot(uv, orientation);
     highlight = clamp(highlight, 0.0, 1.0);
-    highlight = pow(highlight, 2.0); // concentre le reflet
+    highlight = pow(highlight, 2.0);
 
-    // Reflet de bord (fresnel) : plus fort sur les bords du badge
-    float fresnel = 1.0 - abs(dot(uv, normalize(uv)));
-    fresnel = pow(fresnel, 3.0);
+    // Bandes de reflet qui bougent avec l'orientation
+    vec2 shiftedUV = uv + orientation * 0.5;
+    float bands = sin(dot(shiftedUV, vec2(3.0, 3.0)) * 3.0) * 0.5 + 0.5;
+    bands = pow(bands, 3.0);
 
-    // Dégradé de relief subtil
-    float relief = dot(uv, vec2(mouse_offset.x, -mouse_offset.y)) * 0.04;
+    // Fresnel sur les bords
+    float fresnel = 1.0 - abs(dot(normalize(uv), uv));
+    fresnel = pow(fresnel, 2.0);
 
-    vec3 finalColor = texColor.rgb
-        + vec3(highlight * 0.25)   // reflet directionnel blanc
-        + vec3(fresnel * 0.15)     // lueur de bord
-        + vec3(relief);            // relief subtil
+    // Combinaison des effets en blanc
+    float reflection = clamp(highlight * 0.4 + bands * highlight * 0.3 + fresnel * 0.2, 0.0, 0.5);
+
+    vec3 finalColor = texColor.rgb + vec3(reflection);
+    finalColor = clamp(finalColor, 0.0, 1.0);
 
     return vec4(finalColor, texColor.a);
 }

@@ -66,6 +66,31 @@ function Badge:new(round, x, y, originalY, width, height, mousePosition, large)
 end
 
 function Badge:update(dt, opts)
+	local px, py = G.calculateParalaxeOffset(2)
+
+	local cx = self.x + px
+	local cy = self.y + self.oscillatingY + py
+	local mx, my = Inputs.getVirtualMousePosition()
+	local bw = self.uiCanvas:getWidth() * self.scale
+	local bh = self.uiCanvas:getHeight() * self.scale
+	local isHovered = self:isHovered() and 1.0 or 0.0
+	local orientX, orientY
+	if self:isHovered() then
+		local mx, my = Inputs.getVirtualMousePosition()
+		local centerX = cx + bw / 2
+		local centerY = cy + bh / 2
+		-- On normalise par rapport aux dimensions non-scalées
+		orientX = math.max(-1, math.min(1, (mx - centerX) / (self.uiCanvas:getWidth() / 2)))
+		orientY = math.max(-1, math.min(1, (my - centerY) / (self.uiCanvas:getHeight() / 2)))
+	else
+		local t = love.timer.getTime() + self.tiltOffset
+		orientX = math.sin(t * 0.8) * 0.27
+		orientY = math.cos(t * 0.8) * 0.27
+	end
+
+	self.orientX = orientX
+	self.orientY = orientY
+
 	self.animator:update(dt)
 	self:getCurrentlyHoveredFace()
 
@@ -103,23 +128,19 @@ end
 
 function Badge:updateCanvas(dt)
 	local currentCanvas = love.graphics.getCanvas()
-
 	love.graphics.setCanvas(self.uiCanvas)
 	love.graphics.clear()
-	love.graphics.setShader(Shaders.grayRainbowShader)
 
-	Shaders.grayRainbowShader:send("time", 4 * self.scale)
-	Shaders.grayRainbowShader:send("frequency", 0.3)
-	Shaders.grayRainbowShader:send("intensity", 0.3)
-
-	love.graphics.draw(self.sprite, 0, 0) -- add the background
-
+	-- Background avec shader plastic
+	love.graphics.setShader(Shaders.holoShader)
+	Shaders.holoShader:send("orientation", { self.orientX or 0, self.orientY or 0 })
+	love.graphics.draw(self.sprite, 0, 0)
 	love.graphics.setShader()
-	--Lion
+
+	-- Personnage ennemi
 	self.round.enemyCharacter:update(dt)
 	if self.bossBadge == true then
 		self.round.enemyCharacter:draw(50 + 130, 150 + 135, 250, 250)
-		--Nom de l'ennemi
 		love.graphics.setColor(91 / 255, 113 / 255, 254 / 255)
 		love.graphics.draw(
 			self.enemyName,
@@ -134,7 +155,6 @@ function Badge:updateCanvas(dt)
 		love.graphics.setColor(1, 1, 1)
 	else
 		self.round.enemyCharacter:draw(120, 195, 200, 200)
-		--Nom de l'ennemi
 		love.graphics.setColor(91 / 255, 113 / 255, 254 / 255)
 		love.graphics.draw(
 			self.enemyName,
@@ -149,7 +169,7 @@ function Badge:updateCanvas(dt)
 		love.graphics.setColor(1, 1, 1)
 	end
 
-	--Texts
+	-- Textes
 	local jobDeskText = love.graphics.newText(
 		Fonts.soraLightMini,
 		"Office " .. tostring(self.round.deskNumber) .. " - " .. tostring(self.round.enemyJob)
@@ -162,7 +182,6 @@ function Badge:updateCanvas(dt)
 			"Office " .. tostring(self.round.deskNumber) .. " - " .. tostring(self.round.enemyJob)
 		)
 		targetText = love.graphics.newText(Fonts.soraMedium, "Target : " .. tostring(self.round.targetScore))
-
 		love.graphics.draw(
 			jobDeskText,
 			self.uiCanvas:getWidth() / 2,
@@ -189,7 +208,6 @@ function Badge:updateCanvas(dt)
 	end
 
 	self:updateFaceCanvas(dt)
-
 	love.graphics.setCanvas(currentCanvas)
 end
 
