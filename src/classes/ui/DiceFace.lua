@@ -307,7 +307,7 @@ function DiceFace:triggerEffect(effect, round)
 	--Animation de trigger (WIP)
 	self:createTriggerAnimation(round, effect)
 
-	self.animator:addDelay(0.0, function()
+	self.animator:addDelay(0.2, function()
 		self.targetedScale = 1
 		self.round:triggerNextEffect()
 	end)
@@ -354,21 +354,21 @@ function DiceFace:createTriggerAnimation(round, effect)
 			property = "scaleX",
 			from = 1.8,
 			targetValue = 1,
-			duration = 0.25,
+			duration = 0.3,
 			easing = AnimationUtils.Easing.easeOutBack,
 		},
 		{
 			property = "scaleY",
 			from = 1.8,
 			targetValue = 1,
-			duration = 0.25,
+			duration = 0.3,
 			easing = AnimationUtils.Easing.easeOutBack,
 		},
 		{
 			property = "rotation",
 			from = -0.3,
 			targetValue = 0,
-			duration = 0.25,
+			duration = 0.3,
 			easing = AnimationUtils.Easing.easeOutBack,
 		},
 	})

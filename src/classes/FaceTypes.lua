@@ -665,22 +665,30 @@ function MusicDice:new(faceValue, pointsValue)
 end
 
 function MusicDice:buildTriggerEffects(round)
-	return {
-		{
+	local effects = {}
+
+	table.insert(
+		effects,
+		{ {
 			type = "score",
 			fn = function()
 				addScore(round, self.pointsValue, self)
 			end,
-		},
-		{
-			type = "mult",
-			fn = function()
-				if table.getn(round.selectedDices) == 4 then
+		} }
+	)
+
+	if table.getn(round.selectedDices) == 4 then
+		table.insert(effects, {
+			{
+
+				type = "mult",
+				fn = function()
 					multiplyScore(round, 2, self)
-				end
-			end,
-		},
-	}
+				end,
+			},
+		})
+	end
+	return effects
 end
 
 FaceTypes.MusicDice = MusicDice
