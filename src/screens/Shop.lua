@@ -1849,6 +1849,9 @@ function Shop:detectStickerPositionOnTerrain(sticker)
 end
 
 function Shop:buySticker(sticker)
+	if self.run.tutorial then
+		self.run.tutorial:confirmToast("stickerBuy")
+	end
 	--On ajout le stickerObject à la liste des stickerObject de la run
 	table.insert(self.run.stickers, sticker.representedObject)
 	--On ajoute le sticker UI à la liste de la run

@@ -457,24 +457,12 @@ end
 
 function TutorialEvents.shop()
 	G.currentRun.tutorial:pushOnce("shop", {
-		text = "Welcome to the shop!",
+		text = "Welcome to the shop! You can access this place after exiting a floor.",
 		pos = "ul",
 	})
 	G.currentRun.tutorial:pushOnce("shop1", {
-		text = "Every floor ends with a shop. Here you can buy everything you need to improve your run with your hard earned money.",
-		pos = "ul",
-	})
-	G.currentRun.tutorial:pushOnce("givingMoney", {
-		text = "Because I like you, im giving you 10$ so you can treat yourself right. But only for this one time!",
-		pos = "ul",
-		onConfirm = function()
-			G.currentRun.shop:setMoneyTo(G.currentRun.money + 10)
-		end,
-	})
-
-	G.currentRun.tutorial:pushOnce("shop2", {
-		text = "Now, buy yourself a dice face of your choice. ((Slide a dice face to your inventory to buy it)).",
-		pos = "ul",
+		text = "Here you can buy differents items to improve your run and enhance your dices. Try to ((drag and drop)) a dice face to your inventory do buy it!",
+		pos = "ur",
 		onConfirm = function()
 			G.currentRun.shop.canBuyDiceFace = true
 			G.currentRun.tutorial:pushToast({
@@ -482,28 +470,46 @@ function TutorialEvents.shop()
 				key = "diceFaceBuy",
 			})
 		end,
+		draw = function()
+			for i, faceUI in next, G.currentGameScreen.availableFaceObjectsUI do
+				faceUI:draw()
+			end
+		end,
 	})
 end
 
 function TutorialEvents.shop2()
 	G.currentRun.tutorial:pushOnce("presentingStickers", {
 		text = "Great! You just bought your first dice face. You'll be able to apply it to one of your dices after exiting the shop.",
-		pos = "ul",
+		pos = "ur",
 		onStart = function()
 			G.currentRun.tutorial:confirmToast("diceFaceBuy")
 		end,
 	})
 
 	G.currentRun.tutorial:pushOnce("presentingStickers2", {
-		text = "Here, you can also buy stickers that can grant you permanent bonuses and abilities. They are a little bit expensives, but worth it!",
-		pos = "ul",
+		text = "You can also buy Stickers! Stickers grant you powerful bonuses. They cost a bit, but they are worth it.",
+		pos = "ur",
+		onConfirm = function()
+			G.currentRun.money = G.currentRun.money + 10
+		end,
+		draw = function()
+			for s, sticker in next, G.currentGameScreen.stickersUI do
+				sticker:draw()
+			end
+		end,
 	})
 	G.currentRun.tutorial:pushOnce("presentingStickers3", {
-		text = "There are two types of Stickers. Normal ones and Holographics. Holographic Stickers have more powerfull advantages, but cost a little more.",
+		text = "Some are rarer than other, but they also cost more.",
 		pos = "ul",
+		draw = function()
+			for s, sticker in next, G.currentGameScreen.stickersUI do
+				sticker:draw()
+			end
+		end,
 	})
 	G.currentRun.tutorial:pushOnce("presentingStickers4", {
-		text = "Grab one of them and your play mat will appear. Drop it where you want to stick it to buy it!",
+		text = "Grab a sticker, and your play mat will appear. Drop it where you want to stick it to buy it then.",
 		pos = "ul",
 		onConfirm = function()
 			G.currentRun.shop.canBuySticker = true
@@ -513,29 +519,68 @@ function TutorialEvents.shop2()
 				key = "stickerBuy",
 			})
 		end,
+		draw = function()
+			for s, sticker in next, G.currentGameScreen.stickersUI do
+				sticker:draw()
+			end
+		end,
 	})
 end
 
 function TutorialEvents.shop3()
-	G.currentRun.tutorial:pushOnce("finishingShopPres", {
-		text = "Great Choice! Magic Wands are also on your disposal! Grab one and slide it to your Magic Wand Box to add it to your inventory.",
+	G.currentRun.tutorial:pushOnce("greatChoice", {
+		text = "Great choice!",
 		pos = "ul",
 		onStart = function()
 			G.currentRun.tutorial:confirmToast("dstickerBuy")
 		end,
 	})
-	G.currentRun.tutorial:pushOnce("finishingShopPres2", {
-		text = "Finally, figures can be leveled up. Drinking a coffee will permanently increase the base value of the corresponding figure.",
+	G.currentRun.tutorial:pushOnce("finishingShopPres", {
+		text = "The Shop allows you to buy Magic Wands by ((drag and droping)) them in your Magic Wand box..",
 		pos = "ul",
+		draw = function() --Shop Ciggie UI
+			for i, ciggieUI in next, G.currentGameScreen.availableCiggieObjectsUI do
+				ciggieUI:draw()
+			end
+		end,
+	})
+	G.currentRun.tutorial:pushOnce("finishingShopPres2", {
+		text = "Also, you can level up your figures buy drinking its associated coffee. Leveling up a figure will increase its base value when played.",
+		pos = "ul",
+		draw = function() --Shop Ciggie UI
+			--Coffee UI
+
+			local px, py = G.calculateParalaxeOffset(3)
+			love.graphics.push()
+			love.graphics.translate(G.currentGameScreen.shopBGTX + px, G.currentGameScreen.shopBGTY + py)
+
+			if G.currentGameScreen.availableCoffeesUI then
+				for i, btn in next, G.currentGameScreen.availableCoffeesUI do
+					btn:draw()
+				end
+			end
+			love.graphics.pop()
+		end,
 	})
 
 	G.currentRun.tutorial:pushOnce("finishingShopPres3", {
-		text = "You can always refresh the shop if the selection is not your cup of tea. But be careful, it cost money! And the price keeps going up each time you refresh it.",
+		text = "Finally, the shop can be rerolled. But be carefull, doing so cost money, and the price will increase each time you reroll it.",
 		pos = "ul",
+		draw = function() --Shop Ciggie UI
+			--Coffee UI
+
+			local px, py = G.calculateParalaxeOffset(3)
+			love.graphics.push()
+			love.graphics.translate(G.currentGameScreen.shopBGTX + px, G.currentGameScreen.shopBGTY + py)
+
+			G.currentGameScreen.uiElements.buttons["rerollShopButton"]:draw()
+
+			love.graphics.pop()
+		end,
 	})
 
 	G.currentRun.tutorial:pushOnce("finishingShopPres4", {
-		text = "Okay i'll let you skim through everything there is and let you spend your last dollars. You can click [[Next!]] to carry on to the customization screen.",
+		text = "Alright  i'll let you finish your shopping before carrying on to your customization workbench.",
 		pos = "ul",
 		onConfirm = function()
 			G.currentRun.shop.canBuySticker = true
