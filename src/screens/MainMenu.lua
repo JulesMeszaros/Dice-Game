@@ -68,6 +68,99 @@ function MainMenu:new()
 		end
 	)
 
+	self.uiElements.buttons["options"] = Button:new(
+		function()
+			print("options")
+		end,
+		"src/assets/sprites/ui/OptionsButton.png",
+		270,
+		530 + 130 / 2,
+		500,
+		130,
+		nil,
+		function()
+			return Inputs.getMouseInCanvas(0, 0)
+		end
+	)
+	self.uiElements.buttons["exit"] = Button:new(
+		function()
+			love.event.quit()
+		end,
+		"src/assets/sprites/ui/ExitButton.png",
+		270,
+		850 + 130 / 2,
+		500,
+		130,
+		nil,
+		function()
+			return Inputs.getMouseInCanvas(0, 0)
+		end
+	)
+
+	self.uiElements.buttons["character"] = Button:new(
+		function()
+			print("character")
+		end,
+		"src/assets/sprites/ui/CharacterButton.png",
+		1370 + 500 / 2,
+		850 + 130 / 2,
+		500,
+		130,
+		nil,
+		function()
+			return Inputs.getMouseInCanvas(0, 0)
+		end
+	)
+	self.uiElements.buttons["collection"] = Button:new(
+		function()
+			print("collection")
+		end,
+		"src/assets/sprites/ui/CollectionButton.png",
+		1370 + 500 / 2,
+		530 + 130 / 2,
+		500,
+		130,
+		nil,
+		function()
+			return Inputs.getMouseInCanvas(0, 0)
+		end
+	)
+	self.uiElements.buttons["credits"] = Button:new(
+		function()
+			print("credits")
+		end,
+		"src/assets/sprites/ui/CréditsButton.png",
+		270,
+		690 + 130 / 2,
+		500,
+		130,
+		nil,
+		function()
+			return Inputs.getMouseInCanvas(0, 0)
+		end
+	)
+	self.uiElements.buttons["stats"] = Button:new(
+		function()
+			print("stats")
+		end,
+		"src/assets/sprites/ui/StatsButton.png",
+		1370 + 500 / 2,
+		690 + 130 / 2,
+		500,
+		130,
+		nil,
+		function()
+			return Inputs.getMouseInCanvas(0, 0)
+		end
+	)
+
+	self.uiElements.buttons["stats"]:setActivated(false)
+	self.uiElements.buttons["collection"]:setActivated(false)
+	self.uiElements.buttons["character"]:setActivated(false)
+	self.uiElements.buttons["credits"]:setActivated(false)
+	self.uiElements.buttons["options"]:setActivated(false)
+
+	--Boutons de liens
 	self.uiElements.buttons["website"] = Button:new(
 		function()
 			love.system.openURL("http://adx.n8scape.fr")
@@ -122,7 +215,16 @@ function MainMenu:updateCanvas(dt)
 	love.graphics.clear()
 
 	--Main title
-	love.graphics.draw(Sprites.MAIN_LOGO, self.canvas:getWidth() / 2, 75, 0, 1, 1, Sprites.MAIN_LOGO:getWidth() / 2, 0)
+	love.graphics.draw(
+		Sprites.MAIN_LOGO,
+		self.canvas:getWidth() / 2,
+		75,
+		0,
+		0.8,
+		0.8,
+		Sprites.MAIN_LOGO:getWidth() / 2,
+		0
+	)
 
 	--Text box (temporaire)
 	love.graphics.draw(

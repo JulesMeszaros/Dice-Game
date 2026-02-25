@@ -31,7 +31,7 @@ function CharacterCreation:new()
 		"Create your avatar !",
 		self.canvas:getWidth() / 2,
 		100,
-		{ amplitude = 5, speed = 3, spacing = 0.3, font = Fonts.soraBig, revealSpeed = 10, centered = true }
+		{ amplitude = 2, speed = 3, spacing = 0.3, font = Fonts.soraBig, revealSpeed = 1, centered = true }
 	)
 
 	self.welcomeText.layer = 1
