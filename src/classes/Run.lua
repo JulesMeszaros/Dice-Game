@@ -143,14 +143,16 @@ function Run:update(dt)
 	elseif self.displayInfoScreen == true and self.displayPauseMenu ~= true then
 		self.infoScreen:update(dt)
 		self.infoScreen:updateCanvas(dt)
-	else
-		self.pauseMenu:update(dt)
 	end
 
 	if self.tutorial then
 		self.tutorial:update(dt)
 		self.tutorial:updateTutoCanvas()
 		self.tutorial:updateToastCanvas()
+	end
+
+	if self.displayPauseMenu then
+		self.pauseMenu:update(dt)
 	end
 end
 
@@ -175,14 +177,14 @@ function Run:draw(dt) --Render the game into the Game Canvas.
 		self.infoScreen:draw()
 	end
 
-	--Pause screen
-	if self.displayPauseMenu == true and self.pauseMenu then
-		self.pauseMenu:draw()
-	end
-
 	--Tutorial
 	if self.tutorial then
 		self:drawTutoText(dt)
+	end
+
+	--Pause screen
+	if self.displayPauseMenu == true and self.pauseMenu then
+		self.pauseMenu:draw()
 	end
 end
 
@@ -323,7 +325,7 @@ function Run:mousepressed(x, y, button, istouch, presses)
 	self.dragOriginX = x
 	self.dragOriginY = y
 
-	if self.tutorial and self.tutorial.current then
+	if self.tutorial and self.tutorial.current and not self.displayPauseMenu then
 		--self.tutorial:confirm()
 		self.tutorial:mousepressed(x, y, button, istouch, presses)
 	elseif self.displayInfoScreen == false and self.displayPauseMenu ~= true then
@@ -340,7 +342,9 @@ function Run:mousepressed(x, y, button, istouch, presses)
 		end
 	elseif self.displayInfoScreen == true and self.displayPauseMenu ~= true then
 		self.infoScreen:mousepressed(x, y, button, istouch, presses)
-	else
+	end
+
+	if self.displayPauseMenu then
 		self.pauseMenu:mousepressed(x, y, button, istouch, presses)
 	end
 end
@@ -362,7 +366,9 @@ function Run:mousereleased(x, y, button, istouch, presses)
 		end
 	elseif self.displayInfoScreen == true and self.displayPauseMenu ~= true then
 		self.infoScreen:mousereleased(x, y, button, istouch, presses)
-	else
+	end
+
+	if self.displayPauseMenu then
 		self.pauseMenu:mousereleased(x, y, button, istouch, presses)
 	end
 
