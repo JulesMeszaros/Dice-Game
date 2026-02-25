@@ -241,6 +241,10 @@ function RoundScreen:new(round)
 		if self.run.tutorial and self.run.roundNumber == 2 then
 			TutorialEvents.secondRoundStart()
 		end
+
+		if self.run.tutorial and self.round.roundType == Constants.ROUND_TYPES.BOSS then
+			TutorialEvents.managerRound()
+		end
 	end)
 
 	self.diceFaces = {}

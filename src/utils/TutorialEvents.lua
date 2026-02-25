@@ -373,19 +373,85 @@ end
 
 function TutorialEvents.managerSelection()
 	G.currentRun.tutorial:pushOnce("managerSelection", {
-		text = "Time to fight the first floor's manager!",
+		text = "This is the first floor manager.",
 		pos = "ur",
 	})
 	G.currentRun.tutorial:pushOnce("managerSelection2", {
-		text = "The manager is a special kind of oponent. He can apply special rules to the round.",
+		text = "Managers apply special rules to their round. This one prevents you from playing non-numerical figures...",
 		pos = "ur",
+		draw = function(opts)
+			G.currentGameScreen:drawBossDesc(opts.dt)
+		end,
 	})
 	G.currentRun.tutorial:pushOnce("managerSelection3", {
-		text = "This one prevents you from playing non-numbered figures. Interesting... you can't play either Full Houses, Straights and so on...",
+		text = "That means you can't play either Full Houses, Straights, Three of a Kind and so on... You must improvise with those rules!",
 		pos = "ur",
 		onConfirm = function()
 			G.currentRun.deskChoice.canSelectRound = true
 		end,
+		draw = function(opts)
+			G.currentGameScreen:drawBossDesc(opts.dt)
+		end,
+	})
+end
+
+function TutorialEvents.managerRound()
+	G.currentRun.tutorial:pushOnce("managerRound1", {
+		text = "Oof! All of your non-numerical figures are down!",
+		pos = "ur",
+	})
+
+	G.currentRun.tutorial:pushOnce("managerRound2", {
+		text = "Lucky you, your last round earned you an Ebb! Ebb can regenerate your hands for your figures.",
+		pos = "ll",
+		draw = function()
+			G.currentGameScreen:drawCiggiesTray()
+
+			--Ciggies UI
+			for i, ciggie in next, G.currentGameScreen.uiElements.ciggiesUI do
+				if G.currentGameScreen.dragAndDroppedCiggie ~= ciggie then
+					ciggie:draw()
+				end
+			end
+
+			G.currentGameScreen:drawCiggiesTrayFront()
+		end,
+	})
+	G.currentRun.tutorial:pushOnce("managerRound3", {
+		text = "That means you can reuse the numercal figures you used earlier before accessing the next floor. ",
+		pos = "ll",
+		draw = function()
+			G.currentGameScreen:drawCiggiesTray()
+
+			--Ciggies UI
+			for i, ciggie in next, G.currentGameScreen.uiElements.ciggiesUI do
+				if G.currentGameScreen.dragAndDroppedCiggie ~= ciggie then
+					ciggie:draw()
+				end
+			end
+
+			G.currentGameScreen:drawCiggiesTrayFront()
+		end,
+	})
+	G.currentRun.tutorial:pushOnce("managerRound4", {
+		text = "If you need to, drag and drop it to the center of your screen to use it.",
+		pos = "ll",
+		draw = function()
+			G.currentGameScreen:drawCiggiesTray()
+
+			--Ciggies UI
+			for i, ciggie in next, G.currentGameScreen.uiElements.ciggiesUI do
+				if G.currentGameScreen.dragAndDroppedCiggie ~= ciggie then
+					ciggie:draw()
+				end
+			end
+
+			G.currentGameScreen:drawCiggiesTrayFront()
+		end,
+	})
+	G.currentRun.tutorial:pushOnce("managerRound5", {
+		text = "Alright, i'll let you beat this guy. Good luck!",
+		pos = "ur",
 	})
 end
 
