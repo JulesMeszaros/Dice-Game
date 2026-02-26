@@ -221,6 +221,19 @@ Constants.PARALAXE_MAX_OFFSET = {
 	0,
 }
 
+Constants.COLORS = {
+	POINTS = { 0, 0, 1 },
+	MULT = { 1, 0, 0 },
+	WANDS = { 1, 0, 1 },
+	MONEY = { 1, 1, 0 },
+	TURNS = { 0.5, 0.5, 1 },
+	REROLLS = { 1, 0, 0 },
+	GHOST = { 1, 0, 0 },
+	BLANK = { 0.5, 0.5, 0.5 },
+	DICE_FACE = { 1, 0, 0 },
+	COFFEE = { 1, 0, 1 },
+}
+
 --TODO
 Constants.BACKGROUND_COLORS = {
 	DARK_GRAY = { 40 / 255, 40 / 255, 43 / 255 },
