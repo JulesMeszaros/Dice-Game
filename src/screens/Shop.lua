@@ -1237,7 +1237,8 @@ function Shop:generateRandomStickers()
 
 	-- ===== 2) Sticker holo si possible =====
 	local holoKey = popRandom(possibleStickersHolo)
-	if holoKey then
+	local randomHoloChance = G.rngShop:random(10)
+	if holoKey and randomHoloChance == 1 then
 		table.insert(self.availableStickers, self:generateRandomSticker({ holoKey }))
 	else
 		-- ===== 3) Sinon un 4e normal =====

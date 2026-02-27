@@ -718,9 +718,7 @@ function RoundScreen:drawDicesOnly()
 	love.graphics.translate(self.diceMatx + px, self.diceMaty + py)
 
 	for key, uiFace in next, self.diceFaces do
-		if uiFace ~= self.dragAndDroppedDice then
-			uiFace:draw()
-		end
+		uiFace:draw()
 	end
 	love.graphics.pop()
 end

@@ -307,6 +307,7 @@ function DiceFace:triggerEffect(effect, round)
 	--Animation de trigger (WIP)
 	self:createTriggerAnimation(round, effect)
 
+
 	self.animator:addDelay(0.2, function()
 		self.targetedScale = 1
 		self.round:triggerNextEffect()

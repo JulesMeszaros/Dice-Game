@@ -8,7 +8,6 @@ local FaceTypes = require("src.classes.FaceTypes")
 local StickerTypes = require("src.classes.StickerTypes")
 local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 local SaveManager = require("src.utils.SaveManager")
-local seed = os.time()
 
 G = {
 	saveManager = SaveManager:new("profile.lua"),
@@ -117,13 +116,32 @@ G.stickerNames = GenerateRandom.sorted(G.stickerNames)
 G.basicStickers = GenerateRandom.sorted(G.basicStickers)
 G.holoStickers = GenerateRandom.sorted(G.holoStickers)
 
-applyCRT = true
+G.applyCRT = true
 
 function G.backgroundChange(color, time)
+	time = time or 0.6
 	G.bgAnimator:addGroup({
-		{ property = "backgroundR", from = G.backgroundR, targetValue = color[1], duration = 0.6 },
-		{ property = "backgroundG", from = G.backgroundG, targetValue = color[2], duration = 0.6 },
-		{ property = "backgroundB", from = G.backgroundB, targetValue = color[3], duration = 0.6 },
+		{
+			property = "backgroundR",
+			from = G.backgroundR,
+			targetValue = color[1],
+			duration = time,
+			easing = AnimationUtils.Easing.inOutCubic,
+		},
+		{
+			property = "backgroundG",
+			from = G.backgroundG,
+			targetValue = color[2],
+			duration = time,
+			easing = AnimationUtils.Easing.inOutCubic,
+		},
+		{
+			property = "backgroundB",
+			from = G.backgroundB,
+			targetValue = color[3],
+			duration = time,
+			easing = AnimationUtils.Easing.inOutCubic,
+		},
 	})
 end
 
@@ -219,7 +237,8 @@ function love.draw()
 	-- set scanline opacity (0 = no scanlines, 1 = full effect)
 	Shaders.crt:send("scanOpacity", 0.5)
 	Shaders.crt:send("lineWidth", love.graphics.getHeight() / 180)
-	if applyCRT then
+
+	if G.applyCRT then
 		love.graphics.setShader(Shaders.crt)
 	end
 

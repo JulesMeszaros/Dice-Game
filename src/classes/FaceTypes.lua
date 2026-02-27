@@ -1785,7 +1785,7 @@ function CheckeredDice:buildTriggerEffects(round)
 		},
 	}
 
-	if round.run.availableFigures[round.playedFigure] == 0 then
+	if round.run.availableFigures[round.playedFigure] ==  1 then
 		table.insert(effects, {
 			type = "score",
 			fn = function()
