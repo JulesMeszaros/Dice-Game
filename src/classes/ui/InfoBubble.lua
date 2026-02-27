@@ -285,7 +285,15 @@ function InfoBubble:generateDiceBubble()
 
 	self.time = 0
 	--Name
-	local name = love.graphics.newText(Fonts.soraName, self.object.representedObject.name)
+	local name = "Dice"
+	if not self.object.representedObject.blank then
+		name = love.graphics.newText(
+			Fonts.soraName,
+			self.object.representedObject.name .. " – " .. self.object.representedObject.faceValue .. ""
+		)
+	else
+		name = love.graphics.newText(Fonts.soraName, self.object.representedObject.name)
+	end
 
 	--Creation de la largeur
 	local width = math.max(name:getWidth() + 40, 350)

@@ -1785,7 +1785,7 @@ function CheckeredDice:buildTriggerEffects(round)
 		},
 	}
 
-	if round.run.availableFigures[round.playedFigure] ==  1 then
+	if round.run.availableFigures[round.playedFigure] == 1 then
 		table.insert(effects, {
 			type = "score",
 			fn = function()
@@ -2790,7 +2790,7 @@ function RecursiveDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), RecursiveDice)
 
 	--Metadatas about the BlackStar
-	self.name = "Recursive Dice"
+	self.name = "Uncommon"
 	self.tier = "Rare"
 	self.id = 59
 
@@ -2834,7 +2834,7 @@ function Echo:new(faceValue, pointsValue)
 
 	--Metadatas about the BlackStar
 	self.name = "Echo"
-	self.tier = "Common"
+	self.tier = "Rare"
 	self.id = 60
 
 	--Metadatas about the graphics of the BlackStar
@@ -2861,6 +2861,9 @@ function Echo:buildTriggerEffects(round)
 			type = "upgrade",
 			fn = function()
 				self.consecutiveCount = self.consecutiveCount + 1
+				if(self.currentFigure == 0)then
+					self.currentFigure = round.playedFigure
+				end
 			end,
 		})
 	else
@@ -2885,7 +2888,13 @@ function Echo:buildTriggerEffects(round)
 end
 
 function Echo:getDescription(run)
-	return "Scoring : adds [[50pts]] for each consecutive times this dice was scored in the played figure."
+	local currentFigure = "None"
+	if self.currentFigure ~= 0 then
+		currentFigure = Constants.FIGURES_LABELS[self.currentFigure]
+	end
+
+	return "Scoring : adds [[50pts]] for each consecutive times this dice was scored in the played figure. Current figure : "
+		.. currentFigure
 end
 
 FaceTypes.Echo = Echo
