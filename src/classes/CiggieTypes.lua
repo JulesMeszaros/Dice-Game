@@ -191,6 +191,16 @@ function Channel:usageCondition(round)
 	return round.run.lastLeveledUpFigure ~= 0
 end
 
+function Channel:getDescription()
+	local lastfig = ""
+
+	if G.currentRun.lastLeveledUpFigure ~= 0 then
+		lastfig = " (" .. Constants.FIGURES_LABELS[G.currentRun.lastLeveledUpFigure] .. ")"
+	end
+
+	return "Level Up your last leveled up figure" .. lastfig
+end
+
 function Channel:effect(screen)
 	screen.run:levelUpFigure(screen.run.lastLeveledUpFigure)
 end

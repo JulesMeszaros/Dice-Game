@@ -504,6 +504,7 @@ function FlameSticker:diceTriggeredEffect(run, opts)
 	end
 end
 
-StickerTypes.FlameSticker = FlameSticker
+--Retiré pour le moment pcq avec le nouveau système de triggers, les dés à plusieurs effets ont beauuuucoup plus de chances d'être retrigger
+--StickerTypes.FlameSticker = FlameSticker
 
 return StickerTypes
