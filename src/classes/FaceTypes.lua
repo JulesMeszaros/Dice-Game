@@ -976,14 +976,14 @@ function Patience:buildTriggerEffects(round)
 		{
 			type = "upgrade",
 			fn = function()
-				upgradeStat(self, "pointsValue", 30)
+				upgradeStat(self, "pointsValue", 20)
 			end,
 		},
 	}
 end
 
 function Patience:getDescription(run)
-	return "[[+" .. tostring(self.pointsValue) .. "pts]], this value is increased by [[30pts]] each time it's triggered"
+	return "[[+" .. tostring(self.pointsValue) .. "pts]], this value is increased by [[20pts]] each time it's triggered"
 end
 
 FaceTypes.Patience = Patience
@@ -2411,7 +2411,7 @@ end
 function FortuneDice:buildTriggerEffects(round)
 	local effects = {}
 
-	if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies then
+	if #round.run.ciggiesObjects < round.run.maxCiggies then
 		table.insert(effects, {
 			type = "other",
 			message = "+1 Wand!",
@@ -2790,8 +2790,8 @@ function RecursiveDice:new(faceValue, pointsValue)
 	local self = setmetatable(FaceObject:new(), RecursiveDice)
 
 	--Metadatas about the BlackStar
-	self.name = "Uncommon"
-	self.tier = "Rare"
+	self.name = "Recursive Dice"
+	self.tier = "Uncommon"
 	self.id = 59
 
 	--Metadatas about the graphics of the BlackStar
@@ -2834,7 +2834,7 @@ function Echo:new(faceValue, pointsValue)
 
 	--Metadatas about the BlackStar
 	self.name = "Echo"
-	self.tier = "Rare"
+	self.tier = "Uncommon"
 	self.id = 60
 
 	--Metadatas about the graphics of the BlackStar
@@ -2861,7 +2861,7 @@ function Echo:buildTriggerEffects(round)
 			type = "upgrade",
 			fn = function()
 				self.consecutiveCount = self.consecutiveCount + 1
-				if(self.currentFigure == 0)then
+				if self.currentFigure == 0 then
 					self.currentFigure = round.playedFigure
 				end
 			end,

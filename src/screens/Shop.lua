@@ -908,9 +908,9 @@ function Shop:generateNewShop()
 	self:generateAvailableFaces()
 	self:generateAvailableCiggies()
 
-	--if self.firstShopGeneration == true then
-	self:generateRandomStickers()
-	--end
+	if self.firstShopGeneration == true then
+		self:generateRandomStickers()
+	end
 
 	-- Clear previous UI lists completely
 	for k in pairs(self.availableFaceObjectsUI or {}) do
@@ -1103,9 +1103,9 @@ function Shop:generateNewShop()
 	end
 
 	--Stickers
-	--if self.firstShopGeneration == true then
-	self:generateStickersUI()
-	--end
+	if self.firstShopGeneration == true then
+		self:generateStickersUI()
+	end
 	--Generate the price tags
 	self:createFacesPriceTags()
 	self.firstShopGeneration = false
@@ -1237,7 +1237,7 @@ function Shop:generateRandomStickers()
 
 	-- ===== 2) Sticker holo si possible =====
 	local holoKey = popRandom(possibleStickersHolo)
-	local randomHoloChance = G.rngShop:random(10)
+	local randomHoloChance = G.rngShop:random(5)
 	if holoKey and randomHoloChance == 1 then
 		table.insert(self.availableStickers, self:generateRandomSticker({ holoKey }))
 	else
