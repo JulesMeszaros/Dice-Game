@@ -667,25 +667,20 @@ end
 function MusicDice:buildTriggerEffects(round)
 	local effects = {}
 
-	table.insert(
-		effects,
-		{ {
-			type = "score",
-			fn = function()
-				addScore(round, self.pointsValue, self)
-			end,
-		} }
-	)
+	table.insert(effects, {
+		type = "score",
+		fn = function()
+			addScore(round, self.pointsValue, self)
+		end,
+	})
 
 	if table.getn(round.selectedDices) == 4 then
 		table.insert(effects, {
-			{
 
-				type = "mult",
-				fn = function()
-					multiplyScore(round, 2, self)
-				end,
-			},
+			type = "mult",
+			fn = function()
+				multiplyScore(round, 2, self)
+			end,
 		})
 	end
 	return effects
