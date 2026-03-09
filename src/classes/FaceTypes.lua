@@ -2135,14 +2135,16 @@ function Upcycling:buildTriggerEffects(round)
 		{
 			type = "score",
 			fn = function()
-				addScore(round, 50 * round.availableRerolls, self)
+				addScore(round, 30 * G.currentRun.savedRerolls, self)
 			end,
 		},
 	}
 end
 
 function Upcycling:getDescription(run)
-	return "Adds [[50pts]] per remaining reroll."
+	return "[[+30pts]] per rerolls not used during this run (currently : [[+"
+		.. 30 * G.currentRun.savedRerolls
+		.. "pts]])"
 end
 
 FaceTypes.Upcycling = Upcycling
@@ -3077,7 +3079,7 @@ function TimeDice:getDescription(run)
 	for j = 1, 13 do
 		i = i + run.baseAvailableHands[j]
 	end
-	return "Adds a Time Magic Wand to inventory. Adds ((X0.2)) for total playable figure (currently : ((X"
+	return "Adds a Time Magic Wand to inventory. ((X0.2)) mutiplied by the total number of playable figures (currently : ((X"
 		.. tostring(i * 0.2)
 		.. ")))"
 end

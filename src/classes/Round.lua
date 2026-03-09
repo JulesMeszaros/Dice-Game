@@ -686,6 +686,7 @@ end
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
 	--Commencer la phase de déclenchement
+	G.currentRun.savedRerolls = G.currentRun.savedRerolls + self.availableRerolls
 
 	--Si boss trésorier : on retire de l'argent selon le nombre de dés
 	if self.roundType == Constants.ROUND_TYPES.BOSS and self.bossType == Constants.BOSS_TYPES.TRESORIER then

@@ -57,6 +57,7 @@ function Run:new(dices, gameCanvas, game, diceObjects, tutorial)
 	self.draggingTreshold = 10
 	--Gameplay variables
 	self.usedRerolls = 0 --total rerolls used for this game
+	self.savedRerolls = 0
 	--Run variables
 
 	self.roundNumber = 0 --Représente le numéro de round total
