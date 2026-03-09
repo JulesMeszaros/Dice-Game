@@ -16,7 +16,7 @@ local Constants = {
 	BASE_MAX_HANDS_FIGURES = 3,
 
 	--Debug
-	SHOP_EVERY_DESK = false,
+	SHOP_EVERY_DESK = true,
 	OVERPOWER = false,
 	DEBUG = true,
 
@@ -175,7 +175,7 @@ Constants.BOSS_TYPES = {
 	CHEF_COMPTABLE = 2,
 	TRESORIER = 3,
 	RESPONSABLE_SECURITE = 5,
-	CHEF_RD = 4,
+	--CHEF_RD = 4,
 }
 
 Constants.BOSS_TYPES_DESC = {

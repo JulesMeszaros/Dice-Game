@@ -337,7 +337,7 @@ function Apparition:new(faceValue, pointsValue)
 
 	--Metadatas about the BlackStar
 	self.name = "Apparition"
-	self.tier = "Uncommon"
+	self.tier = "Common"
 	self.id = 10
 	self.description = "((X2))."
 
@@ -859,12 +859,12 @@ function RiskyBusiness:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the RiskyBusiness
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Risky Business.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "[[+100pts]], -10$."
+	self.description = "[[+150pts]], -10$."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the RiskyBusiness in px (in the png)
 
 	--Numbered status
 	self.faceValue = faceValue --This is the face represented by the face (the number shown)
-	self.pointsValue = 100 --This is the points scored by the dice
+	self.pointsValue = 150 --This is the points scored by the dice
 	self.totalTriggered = 0
 	return self
 end
@@ -910,28 +910,59 @@ function CryptoDice:new(faceValue, pointsValue)
 	self.faceValue = faceValue --This is the face represented by the face (the number shown)
 	self.pointsValue = 10 --This is the points scored by the dice
 	self.totalTriggered = 0
+	self.multFactor = 3
+
 	return self
 end
 
 function CryptoDice:buildTriggerEffects(round)
-	local effects = {
-		{
-			type = "mult",
-			fn = function()
-				multiplyScore(round, 3, self)
-			end,
-		},
-	}
-	if round.run.money > 0 then
-		table.insert(effects, {
-			type = "money",
-			message = "No Money!",
-			fn = function()
+	local effects = {}
+
+	--On upgrade en ajoutant 0.2 par 10$ consommés
+
+	table.insert(effects, {
+		type = "upgrade",
+		message = "Upgrade!",
+		fn = function()
+			--Si argent sup à 0
+			if round.run.money > 0 then
+				local money = round.run.money
+				--Calcul du facteur
+				local factor = math.floor(round.run.money / 10) * 0.2
+				print(round.run.money)
+				--Si le facteur est sup à 0, on ajoute.
+				if factor > 0 then
+					self.multFactor = self.multFactor + factor
+				end
+			end
+		end,
+	})
+
+	--On met l'agent à 0 si l'argent est sup à 0
+	table.insert(effects, {
+		type = "other",
+		message = "Bankrupt!",
+		fn = function()
+			if round.run.money > 0 then
 				setMoney(round, 0)
-			end,
-		})
-	end
+			end
+		end,
+	})
+
+	--On termine par le mult
+	table.insert(effects, {
+		type = "mult",
+		fn = function()
+			multiplyScore(round, self.multFactor, self)
+		end,
+	})
 	return effects
+end
+
+function CryptoDice:getDescription(run)
+	return "((X"
+		.. self.multFactor
+		.. ")) and lowers the money to 0$. For every 10$ consumed, adds ((0.2)) to this number."
 end
 
 FaceTypes.CryptoDice = CryptoDice
@@ -1859,33 +1890,50 @@ function Resurection:new(faceValue, pointsValue)
 	self.pointsValue = 10 --This is the points scored by the dice
 	self.totalTriggered = 0
 
-	self.first = true
-
 	return self
 end
 
-function Resurection:triggerEffect(round)
-	addScore(round, self:getPointsValue(run), self)
-end
+function Resurection:buildTriggerEffects(round)
+	local effects = {}
 
-function Resurection:buildFirstEffects(round)
-	return {
-		{
-			type = "Resurected!",
-			fn = function()
-				for _, dice in next, round.run.diceObjects do
-					dice:getCurrentFaceObject().disabled = false
-					dice:getCurrentFaceObject().wasJustReenabled = true
+	--Resurection et scaling du dé
+	table.insert(effects, {
+		type = "other",
+		message = "Resurrected!",
+		fn = function()
+			--Boucle des dés
+			for _, dice in next, round.run.diceObjects do
+				--Boucle des faces
+				for i, face in next, dice:getAllFaces() do
+					--ON récup si le dé est désac
+					local disabled = face.disabled
+					--On le réactive
+					face.disabled = false
+					--S'il est ghost, on s'assure qu'il ne soit pas re-désactivé
+					face.wasJustReenabled = true
+					--S'il était désactivé, on ajoute 50 points à la points value
+					if disabled == true then
+						self.pointsValue = self.pointsValue + 50
+					end
 				end
-			end,
-		},
-	}
+			end
+		end,
+	})
+
+	table.insert(effects, {
+		type = "score",
+		fn = function()
+			addScore(round, self:getPointsValue(run), self)
+		end,
+	})
+
+	return effects
 end
 
 function Resurection:getDescription(run)
 	return "Scoring : [[+"
 		.. self:getPointsValue(run)
-		.. "]]. First : reenables every disabled dice face in the play mat."
+		.. "]]. First : reenables every disabled dice face in the deck. For each face resurected, adds +50pts to this number."
 end
 
 FaceTypes.Resurection = Resurection
