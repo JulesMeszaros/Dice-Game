@@ -152,7 +152,7 @@ function BlueDice:new(faceValue, pointsValue)
 end
 
 function BlueDice:getDescription(run)
-	return "[[+2pts]] per used rerolls this building (currently : [[" .. tostring(2 * run.usedRerolls) .. "pts]] )."
+	return "[[+2pts]] per used rerolls this building (currently : [[+" .. tostring(2 * run.usedRerolls) .. "pts]] )."
 end
 
 function BlueDice:buildTriggerEffects(round)
@@ -226,7 +226,7 @@ function StrikeOfLuck:new(faceValue, pointsValue)
 	self.name = "Strike Of Luck"
 	self.tier = "Common"
 	self.id = 7
-	self.description = "[[+10pts]], adds a random Magic Wand to the inventory"
+	self.description = "[[+10pts]]. Adds a random Magic Wand to the inventory"
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Strike of Luck.png")
@@ -422,7 +422,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
 	self.id = 12
 	self.tier = "Common"
 	self.description =
-		"[[+30pts]] multiplied by this face's number. Decreases the face number by one the first time you score this Face in an Office."
+		"[[+30pts]] multiplied by its face number. Face number decreases by 1 on first trigger in each office."
 
 	--Metadatas about the graphics of the ClockWorkDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Clockwork Dice.png")
@@ -490,9 +490,11 @@ function AshtrayDice:new(faceValue, pointsValue)
 end
 
 function AshtrayDice:getDescription(run)
-	return "x(("
-		.. (1 + 0.1 * run.totalUsedCiggie)
-		.. ")). This factor is upgraded by ((0.1)) each time a cigarette is smoked"
+	self.description = "((X"
+		.. tostring(1 + 0.1 * run.totalUsedCiggie)
+		.. ")). Gains ((+X0.1)) for each Magic Wand used in this building (currently : ((X"
+		.. tostring(1 + 0.1 * run.totalUsedCiggie)
+		.. ")))"
 end
 
 function AshtrayDice:buildTriggerEffects(round)
@@ -545,7 +547,7 @@ function SteelDice:buildTriggerEffects(round)
 end
 
 function SteelDice:getDescription(run)
-	return "[[+10pts]] for each $ under 10$ (currently : [[+" .. (math.max(0, 10 - run.money) * 15) .. "pts]])"
+	return "[[+10pts]] for each $ missing from 10$ (currently : [[+" .. (math.max(0, 10 - run.money) * 15) .. "pts]])"
 end
 
 FaceTypes.SteelDice = SteelDice
@@ -561,7 +563,7 @@ function DoubleDown:new(faceValue, pointsValue)
 	self.name = "Double Down"
 	self.id = 16
 	self.tier = "Common"
-	self.description = "[[+40pts]] per even dices in scored hand"
+	self.description = "[[+40pts]] per even dices scored"
 
 	--Metadatas about the graphics of the DoubleDown
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Double Down.png")
@@ -606,7 +608,7 @@ function OddJob:new(faceValue, pointsValue)
 	self.name = "Odd Job"
 	self.id = 15
 	self.tier = "Common"
-	self.description = "[[+40pts]] per odd dices in scored hand"
+	self.description = "[[+40pts]] per odd dices scored"
 
 	--Metadatas about the graphics of the OddJob
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Odd Job.png")
@@ -650,7 +652,7 @@ function MusicDice:new(faceValue, pointsValue)
 	self.name = "Music Dice"
 	self.id = 17
 	self.tier = "Common"
-	self.description = "[[+10pts]], (X4)) if played hand contains exactly 4 dices"
+	self.description = "[[+10pts]]. ((X4)) if exactly 4 dices are scored."
 
 	--Metadatas about the graphics of the MusicDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Tempo Dice.png")
@@ -699,7 +701,7 @@ function Signature:new(faceValue, pointsValue)
 	self.name = "Signature"
 	self.id = 18
 	self.tier = "Common"
-	self.description = "[[+10pts]]. ((X3)) if this dice is the only Signature payed in this hand."
+	self.description = "[[+10pts]]. ((X3)) if the only Signature in the played hand."
 
 	--Metadatas about the graphics of the Signature
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Signature Dice.png")
@@ -788,7 +790,9 @@ function SniperDice:buildBackupEffects(round)
 end
 
 function SniperDice:getDescription(run)
-	return "Backup : ((X" .. self.backupScoreValue .. ")). Value goes up by ((0.2pts))"
+	self.description = "Backup : ((X"
+		.. tostring(self.backupScoreValue)
+		.. ")). Multiplier increases by ((+X0.2)) each trigger."
 end
 
 FaceTypes.SniperDice = SniperDice
@@ -960,9 +964,7 @@ function CryptoDice:buildTriggerEffects(round)
 end
 
 function CryptoDice:getDescription(run)
-	return "((X"
-		.. self.multFactor
-		.. ")) and lowers the money to 0$. For every 10$ consumed, adds ((0.2)) to this number."
+	return "((X" .. tostring(self.multFactor) .. ")). Empties the bank and gains ((+X0.2)) for every 10$ lost."
 end
 
 FaceTypes.CryptoDice = CryptoDice
@@ -1009,7 +1011,7 @@ function Patience:buildTriggerEffects(round)
 end
 
 function Patience:getDescription(run)
-	return "[[+" .. tostring(self.pointsValue) .. "pts]], this value is increased by [[20pts]] each time it's triggered"
+	return "[[+" .. tostring(self.pointsValue) .. "pts]]. Gains [[+20pts]] on each trigger."
 end
 
 FaceTypes.Patience = Patience
@@ -1029,8 +1031,7 @@ function DataDice:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the DataDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Number Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description =
-		"Scoring : [[+10pts]], increases by [[20pts]] if figure is a numbered figure (1, 2, 3,...) decreases by [[10pts]] if not."
+
 	self.faceDimmension = 120 --sets the dimmensions for a face of the DataDice in px (in the png)
 
 	--Numbered status
@@ -1075,7 +1076,7 @@ end
 function DataDice:getDescription(run)
 	return "[[+"
 		.. tostring(self.pointsValue)
-		.. "pts]], this value increases by [[10pts]] if the played figure is a numbered figure, decreases by [[10pts]] if not."
+		.. "pts]]. Gains [[+10pts]] when scored in a numbered figure, loses [[-10pts]] otherwise."
 end
 
 FaceTypes.DataDice = DataDice
@@ -1095,7 +1096,7 @@ function StockOption:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the StockOption
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Stock Option.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "Scoring : [[+10pts]], +10$, 1/2 chance of loosing 5$ instead."
+	self.description = "Scoring : [[+10pts]]. +10$, 1/2 chance of loosing 5$ instead."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the StockOption in px (in the png)
 
 	--Numbered status
@@ -1152,7 +1153,7 @@ function RainbowDice:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the RainbowDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Straight Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "Scoring : [[+10pts]], goes up by 50pts if played in a small or large straight."
+	self.description = "[[+10pts]], goes up by 50pts if played in a Small Straight or Large Straight."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the RainbowDice in px (in the png)
 
 	--Numbered status
@@ -1187,7 +1188,7 @@ end
 function RainbowDice:getDescription(run)
 	return "Scoring : [[+"
 		.. tostring(self.pointsValue)
-		.. "pts]], goes up by 50pts if played in a small or large straight."
+		.. "pts]], goes up by 50pts if scored in a Small Straight or Large Straight."
 end
 
 FaceTypes.RainbowDice = RainbowDice
@@ -1231,6 +1232,12 @@ function MagicDice:buildTriggerEffects(round)
 	end
 
 	return effects
+end
+
+function MagicDice:getDescription(run)
+	return ". Multiplies by the number of Magic Wands held (min : 2) (currently : ((X"
+		.. math.max(1, table.getn(run.ciggiesObjects))
+		.. ")))"
 end
 
 FaceTypes.MagicDice = MagicDice
@@ -1280,7 +1287,7 @@ function ReturnOnInvestment:buildBackupEffects(round)
 end
 
 function ReturnOnInvestment:getDescription(run)
-	return "Backup : Multiplies the score by ((1.5)) for each 15$ in bank (currently : (("
+	return "Backup : ((X1.5)) for each 15$ in bank (currently : (("
 		.. tostring(math.floor(run.money / 15) * 1.5)
 		.. ")))"
 end
@@ -1302,7 +1309,7 @@ function LoyaltyCard:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the LoyaltyCard
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Royalty Card.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "Scoring : Gives the level of the played figure in $. [[+10pts]]"
+	self.description = "[[+10pts]]. Gives the level of the played figure in $"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the LoyaltyCard in px (in the png)
 
 	--Numbered status
@@ -1347,7 +1354,6 @@ function MirrorDice:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the MirrorDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Mirror Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "Scoring : [[+10pts]], gains [[10pts]] by played dice with the same number as this one"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the MirrorDice in px (in the png)
 
 	--Numbered status
@@ -1372,7 +1378,7 @@ function MirrorDice:buildTriggerEffects(round)
 		table.insert(effects, {
 			type = "upgrade",
 			fn = function()
-				upgradeStat(self, "pointsValue", (sameDices - 1) * 10)
+				upgradeStat(self, "pointsValue", (sameDices - 1) * 15)
 			end,
 		})
 	end
@@ -1388,9 +1394,7 @@ function MirrorDice:buildTriggerEffects(round)
 end
 
 function MirrorDice:getDescription(run)
-	return "Scoring : [[+"
-		.. tostring(self.pointsValue)
-		.. "pts]], gains [[10pts]] by played dice with the same number as this one"
+	return "[[+" .. tostring(self.pointsValue) .. "pts]]. Gains [[15pts]] by scored dice sharing the same face number"
 end
 
 FaceTypes.MirrorDice = MirrorDice
@@ -1410,7 +1414,7 @@ function CookieDice:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the CookieDice
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Cookie Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "Scoring : [[+10pts]], 1/3 chances of upgrading the played figure by one level"
+	self.description = "[[+10pts]], 1/3 chances of upgrading the played figure by one level"
 	self.faceDimmension = 120 --sets the dimmensions for a face of the CookieDice in px (in the png)
 
 	--Numbered status
@@ -1483,9 +1487,9 @@ function InsomniacDice:buildTriggerEffects(round)
 end
 
 function InsomniacDice:getDescription(run)
-	return "Scoring : [[+"
+	return "[[+"
 		.. tostring(10 + (20 * run.totalUsedCoffees))
-		.. "pts]], goes up by [[20pts]] for each coffee used in this building."
+		.. "pts]]. Gains [[+20pts]] for each coffee used in this building."
 end
 
 FaceTypes.InsomniacDice = InsomniacDice
@@ -1505,7 +1509,7 @@ function TwinFlame:new(faceValue, pointsValue)
 	--Metadatas about the graphics of the TwinFlame
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Twin Flame.png")
 	self.spriteSheet:setFilter("linear", "linear")
-	self.description = "[[+10pts]], clones a random magic wand in hand."
+	self.description = "[[+10pts]]. Clones a random Magic Wand held."
 	self.faceDimmension = 120 --sets the dimmensions for a face of the TwinFlame in px (in the png)
 
 	--Numbered status
@@ -1639,9 +1643,9 @@ function Necromancer:getPointsValue(run)
 end
 
 function Necromancer:getDescription(run)
-	return "Scoring : [[+"
+	return "[[+"
 		.. self:getPointsValue(run)
-		.. "pts]]. Goes up by [[45pts]] each time a dice got disabled in this office"
+		.. "pts]]. Gains [[+45pts]] for each time a dice got disabled in this building"
 end
 
 FaceTypes.Necromancer = Necromancer
@@ -1694,11 +1698,11 @@ function SixthSense:getDescription(run)
 		end
 	end
 
-	return "Scoring : [[+"
+	return "[[+"
 		.. tostring(self:getPointsValue(run))
-		.. "pts]]. Goes up by [[50pts]] for each dice face in deck currently disabled. (currently : (("
+		.. "pts]]. Gains [[+50pts]] for each dice face currently disabled in your deck (currently : [[+"
 		.. tostring(i * 50)
-		.. "pts)))"
+		.. "pts]])"
 end
 
 function SixthSense:getPointsValue(run)
@@ -1775,7 +1779,7 @@ function Sacrifice:buildBackupEffects(round)
 end
 
 function Sacrifice:getDescription(run)
-	return "Scoring : Multiplies the score by ((1.5)) for each Ghost dice in hand or on the play mat. Backup : Adds Ghost effect to leftmost scored dice."
+	return "((X1.5)) for each Ghost dice in hand or on the play mat. \n Backup : Adds Ghost effect to the leftmost scored dice."
 end
 
 FaceTypes.Sacrifice = Sacrifice
@@ -1796,7 +1800,8 @@ function CheckeredDice:new(faceValue, pointsValue)
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Checkered Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the CheckeredDice in px (in the png)
-	self.description = "Scoring : +100pts if the played figure has exactly one remaining hand left."
+	self.description =
+		"[[+10pts]]. [[+100pts]] if the played figure has exactly one remaining hand left for this floor."
 	--Numbered status
 	self.faceValue = faceValue --This is the face represented by the face (the number shown)
 	self.pointsValue = 10 --This is the points scored by the dice
@@ -1845,7 +1850,7 @@ function StarDice:new(faceValue, pointsValue)
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Star Dice.png")
 	self.spriteSheet:setFilter("linear", "linear")
 	self.faceDimmension = 120 --sets the dimmensions for a face of the StarDice in px (in the png)
-	self.description = "Scoring : [[+70pts]]. Can be counted as any number for numbered figures."
+	self.description = "[[+70pts]]. Can be played as any number in numbered figures."
 	--Numbered status
 	self.faceValue = faceValue --This is the face represented by the face (the number shown)
 	self.pointsValue = 70 --This is the points scored by the dice
@@ -1931,9 +1936,9 @@ function Resurection:buildTriggerEffects(round)
 end
 
 function Resurection:getDescription(run)
-	return "Scoring : [[+"
+	return "[[+"
 		.. self:getPointsValue(run)
-		.. "]]. First : reenables every disabled dice face in the deck. For each face resurected, adds +50pts to this number."
+		.. "pts]]. Revives every dice face in the deck currently disabled and gains [[+50pts]] for each revived dice face."
 end
 
 FaceTypes.Resurection = Resurection
@@ -1985,7 +1990,7 @@ function Adrenaline:buildTriggerEffects(round)
 end
 
 function Adrenaline:getDescription(run)
-	return "Scoring : [[+" .. self:getPointsValue(run) .. "]]. If this is the last turn, ((X5))."
+	return "[[+" .. self:getPointsValue(run) .. "]]. ((X5)) If current turn is in the last turn."
 end
 
 FaceTypes.Adrenaline = Adrenaline
@@ -2033,7 +2038,7 @@ function NegativeDice:buildTriggerEffects(round)
 end
 
 function NegativeDice:getDescription(run)
-	return "Scoring : Multiplies the hand score for each empty space in played hand"
+	return "Multiplies the score by the number of empty spaces in the played hand."
 end
 
 FaceTypes.NegativeDice = NegativeDice
@@ -2098,9 +2103,9 @@ function BountyHunter:getDescription(run)
 			figure = "Numbered Figure"
 		end
 
-		return "Scoring : +15$ if scored in a " .. figure .. "."
+		return "[[+10pts]]. +15$ if scored in a " .. figure .. ". (selected figure changes each hand)"
 	else
-		return "Scoring : Adds 15$ if scored in a selected figure (selected figure changes each hand)"
+		return "[[+10pts]]. Adds 15$ if scored in a selected figure (selected figure changes each hand)"
 	end
 end
 
@@ -2142,7 +2147,7 @@ function Upcycling:buildTriggerEffects(round)
 end
 
 function Upcycling:getDescription(run)
-	return "[[+30pts]] per rerolls not used during this run (currently : [[+"
+	return "[[+30pts]] for each reroll spared in this building (currently : [[+"
 		.. 30 * G.currentRun.savedRerolls
 		.. "pts]])"
 end
@@ -2187,7 +2192,7 @@ function Ectoplasm:buildTriggerEffects(round)
 end
 
 function Ectoplasm:getDescription(run)
-	return "((+200pts))"
+	return "[[+200pts]]"
 end
 
 FaceTypes.Ectoplasm = Ectoplasm
@@ -2230,9 +2235,9 @@ function DieAndRetry:buildTriggerEffects(round)
 end
 
 function DieAndRetry:getDescription(run)
-	return "Scoring : Multiplies the hand by ((2)), multiplied by the number of times this dice was disabled (currently : ((x"
-		.. math.max(1, 2 * self.totaldisabled)
-		.. "))"
+	return "((X2)) per time this dice was disabled (currently : ((X"
+		.. tostring(math.max(1, 2 * self.totaldisabled))
+		.. ")))"
 end
 
 FaceTypes.DieAndRetry = DieAndRetry
@@ -2273,7 +2278,7 @@ function InvisibleHand:buildTriggerEffects(round)
 end
 
 function InvisibleHand:getDescription(run)
-	return "Adds [[+1pts]] per 1$ spent this building (currently : [[" .. tostring(run.totalspent) .. "]])"
+	return "[[+1pts]] per 1$ spent in this building (currently : [[+" .. tostring(run.totalspent) .. "pts]])"
 end
 
 FaceTypes.InvisibleHand = InvisibleHand
@@ -2331,9 +2336,7 @@ function UndeadDice:getDescription(run)
 		end
 	end
 
-	return "Scoring : Multiplies the hand by ((2)), multiplied by the current number of disabled dices in deck (currently : (("
-		.. math.max(1, 2 * i)
-		.. "))"
+	return "((X2)) per dice face currently disabled in your deck (currently : ((X" .. math.max(1, 2 * i) .. "))"
 end
 
 FaceTypes.UndeadDice = UndeadDice
@@ -2376,7 +2379,7 @@ function AllIn:buildTriggerEffects(round)
 end
 
 function AllIn:getDescription(run)
-	return "Every Figure Use of the played Figure is spent. ((X2)) for each spent Figure Use."
+	return "Every remaining hands of the played Figure is spent. ((X2)) per spent hand."
 end
 
 FaceTypes.AllIn = AllIn
@@ -2401,7 +2404,7 @@ function Poltergeist:new(faceValue, pointsValue)
 	self.faceValue = faceValue --This is the face represented by the face (the number shown)
 	self.pointsValue = 10 --This is the points scored by the dice
 	self.totalTriggered = 0
-	self.description = "Scoring : [[+20pts]]. Refunds the figure use."
+	self.description = "[[+20pts]]. Refunds the figure hand."
 
 	self.ghost = true
 
@@ -2442,7 +2445,7 @@ function FortuneDice:new(faceValue, pointsValue)
 	self.name = "Fortune Dice"
 	self.tier = "Rare"
 	self.id = 51
-	self.description = "Scoring : Adds a Fortune Magic Wand to the inventory"
+	self.description = "Adds a Fortune Magic Wand to your inventory"
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Fortune Dice.png")
@@ -2486,7 +2489,7 @@ function FortuneDice:buildTriggerEffects(round)
 end
 
 function FortuneDice:getDescription(run)
-	return "Adds a Fortune Magic Wand to inventory. Adds ((X0.5)) for each 15$ in bank (currently : ((X"
+	return "Adds a Fortune Magic Wand to your inventory. ((X1.5)) per 15$ in bank (currently : ((X"
 		.. tostring(math.max(1, 1.5 * math.floor(run.money / 15)))
 		.. ")))"
 end
@@ -2503,7 +2506,7 @@ function DimeDice:new(faceValue, pointsValue)
 	self.name = "Dime Dice"
 	self.tier = "Common"
 	self.id = 53
-	self.description = "[[+10pts]]. +4$ per played dice with the same number as this one."
+	self.description = "[[+10pts]]. +4$ per scored dice with the same face number as this one."
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Dime Dice.png")
@@ -2588,7 +2591,7 @@ function CapitalistDice:buildTriggerEffects(round)
 end
 
 function CapitalistDice:getDescription(run)
-	return "[[+3pts]] par $ in bank (currently : [[+" .. tostring(math.floor(run.money * 3)) .. "pts]])"
+	return "[[+3pts]] per $ in bank (currently : [[+" .. tostring(math.floor(run.money * 3)) .. "pts]])"
 end
 
 FaceTypes.CapitalistDice = CapitalistDice
@@ -2616,7 +2619,7 @@ function LuckyStar:new(faceValue, pointsValue)
 	self.pointsValue = 10 --This is the points scored by the dice
 	self.totalTriggered = 0
 
-	self.description = "Scoring : [[+10pts]], ((x3)) if played hand is a Chance"
+	self.description = "[[+10pts]]. ((x3)) if played in a Chance"
 	self.blank = true
 	return self
 end
@@ -2668,7 +2671,7 @@ function Doom:new(faceValue, pointsValue)
 	self.pointsValue = 10 --This is the points scored by the dice
 	self.totalTriggered = 0
 
-	self.description = "Scoring : [[+100pts]], Backup : ((x3))."
+	self.description = "[[+100pts]]. \n Backup : ((x3))"
 
 	self.backup = true
 	self.ghost = true
@@ -2723,8 +2726,6 @@ function Godspeed:new(faceValue, pointsValue)
 	self.pointsValue = 10 --This is the points scored by the dice
 	self.totalTriggered = 0
 
-	self.description = "Scoring : [[+100pts]], Backup : ((x3))."
-
 	return self
 end
 
@@ -2748,7 +2749,7 @@ function Godspeed:buildTriggerEffects(round)
 end
 
 function Godspeed:getDescription(run)
-	return "Lowers your turns left to 0. Multiplies the score ((by 5)) for each turn discarded."
+	return "Lowers your turns left to 0. ((X5)) per turn consumed."
 end
 
 FaceTypes.Godspeed = Godspeed
@@ -2790,6 +2791,12 @@ function WitchDice:buildTriggerEffects(round)
 			end,
 		},
 	}
+end
+
+function WitchDice:getDescription(run)
+	return "[[+50pts]] per Magic Wand Used in this office (currently : [[+"
+		.. tostring(round.usedCiggiesRound * 50)
+		.. "pts]])"
 end
 
 FaceTypes.WitchDice = WitchDice
@@ -2834,9 +2841,9 @@ function WizardDice:buildTriggerEffects(round)
 end
 
 function WizardDice:getDescription(run)
-	return "[[X1.5pts]] for each Magic Wand Used in this office. (Currently : X"
+	return "((X1.5)) per Magic Wand Used in this office (currently : ((X"
 		.. math.max(1, round.usedCiggiesRound * 1.5)
-		.. ")"
+		.. ")))"
 end
 
 FaceTypes.WizardDice = WizardDice
@@ -2879,7 +2886,7 @@ function RecursiveDice:buildTriggerEffects(round)
 end
 
 function RecursiveDice:getDescription(run)
-	return "Scoring : adds [[20pts]] for each time the played figure was used this run."
+	return "[[+20pts]] for each time the played figure was played in this building."
 end
 FaceTypes.RecursiveDice = RecursiveDice
 
@@ -2951,8 +2958,11 @@ function Echo:getDescription(run)
 		currentFigure = Constants.FIGURES_LABELS[self.currentFigure]
 	end
 
-	return "Scoring : adds [[50pts]] for each consecutive times this dice was scored in the played figure. Current figure : "
+	return "[[+"
+		.. 50 * self.consecutiveCount
+		.. "pts]]. Gains [[+50pts]] for each consecutive times this dice was scored in the played figure (current figure : "
 		.. currentFigure
+		.. ")"
 end
 
 FaceTypes.Echo = Echo
@@ -3010,9 +3020,7 @@ function CrossedOut:getDescription(run)
 		end
 	end
 
-	return "Scoring : adds [[50pts]] for each currently unplayable figure (currently: [["
-		.. tostring(50 * i)
-		.. "pts]])"
+	return "[[+50pts]] per currently unplayable figure (currently: [[+" .. tostring(50 * i) .. "pts]])"
 end
 FaceTypes.CrossedOut = CrossedOut
 
@@ -3079,7 +3087,7 @@ function TimeDice:getDescription(run)
 	for j = 1, 13 do
 		i = i + run.baseAvailableHands[j]
 	end
-	return "Adds a Time Magic Wand to inventory. ((X0.2)) mutiplied by the total number of playable figures (currently : ((X"
+	return "Adds a Time Magic Wand to your inventory. ((X0.2)) per total number of playable figures (currently : ((X"
 		.. tostring(i * 0.2)
 		.. ")))"
 end
@@ -3130,7 +3138,7 @@ function Hivemind:buildTriggerEffects(round)
 end
 
 function Hivemind:getDescription(run)
-	return "[[+20pts]] for each time this dice type was triggering this run (currently : [[+"
+	return "[[+20pts]] for each time this type of face was triggered in this building. (currently : [[+"
 		.. tostring(20 * run.hivemindTriggers)
 		.. "pts]]."
 end
@@ -3174,16 +3182,16 @@ function DiamondDice:buildTriggerEffects(round)
 		{
 			type = "money",
 			fn = function()
-				addMoney(round, math.min(20, math.floor(round.run.money / 3)), self)
+				addMoney(round, math.min(20, math.floor(round.run.money / 5)), self)
 			end,
 		},
 	}
 end
 
 function DiamondDice:getDescription(run)
-	return "[[+10pts]]. Adds 1$ for every 3$ in bank. Currently : +"
-		.. tostring(math.min(20, math.floor(run.money / 3)))
-		.. "$ (max : 20$)."
+	return "[[+10pts]]. +1$ for every 5$ in bank (currently : +"
+		.. tostring(math.min(20, math.floor(run.money / 5)))
+		.. "$) (max : 20$)"
 end
 
 FaceTypes.DiamondDice = DiamondDice
