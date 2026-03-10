@@ -13,7 +13,7 @@ function FreeRoller:new()
 	self.usableIn = Constants.RUN_STATES.ROUND
 
 	self.name = "Free Roller"
-	self.description = "Adds one additionnal reroll to the current hand"
+	self.description = "+1 reroll to the current turn"
 
 	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Free Roller Cigarette.png")
 	return self
@@ -35,7 +35,7 @@ function Turnns:new()
 	self.usableIn = Constants.RUN_STATES.ROUND
 
 	self.name = "Turnn's"
-	self.description = "Adds one additionnal turn to the current round"
+	self.description = "+1 turn to the current round"
 
 	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Turnn's Cigarette.png")
 	return self
@@ -58,7 +58,7 @@ function Fortune:new()
 	self.usableIn = "any"
 
 	self.name = "Fortune"
-	self.description = "Adds 5$ to the balance"
+	self.description = "+5$"
 
 	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Fortune Cigarette.png")
 	return self
@@ -120,7 +120,7 @@ function Time:new()
 	self.usableIn = { Constants.RUN_STATES.ROUND, Constants.RUN_STATES.SHOP, Constants.RUN_STATES.ROUND_CHOICE }
 
 	self.name = "Time"
-	self.description = "Lets you add one additionnal hand per round to a choosen figure"
+	self.description = "Adds an additional play to a choosen figure."
 
 	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Time Cigarette.png")
 	return self
@@ -159,7 +159,7 @@ function Ebb:new()
 	self.usableIn = { Constants.RUN_STATES.ROUND, Constants.RUN_STATES.SHOP, Constants.RUN_STATES.ROUND_CHOICE }
 
 	self.name = "Ebb"
-	self.description = "Restores your available hands for every figures."
+	self.description = "Restores your hands for every figures."
 
 	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Ebb Cigarette.png")
 	return self
@@ -198,7 +198,7 @@ function Channel:getDescription()
 		lastfig = " (" .. Constants.FIGURES_LABELS[G.currentRun.lastLeveledUpFigure] .. ")"
 	end
 
-	return "Level Up your last leveled up figure" .. lastfig
+	return "Level Up your last leveled up figure : " .. lastfig
 end
 
 function Channel:effect(screen)
