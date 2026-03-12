@@ -13,7 +13,7 @@ function MoneyBagSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Moneybag.png"
 
 	self.name = "Bonus Check"
-	self.description = "+3$ at the end of each office."
+	self.description = "££+3$££ at the end of each ;;office;;."
 
 	return self
 end
@@ -34,7 +34,7 @@ function RerollAdderSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Repeat.png"
 
 	self.name = "Last Chance"
-	self.description = "+1 reroll per hand"
+	self.description = "**+1 reroll** per ++turn++"
 
 	return self
 end
@@ -55,7 +55,7 @@ function ShopRerollSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Plus.png"
 
 	self.name = "On The House"
-	self.description = "Sets the base price for the shop reroll to 0$."
+	self.description = "Sets the base price for the shop reroll to ££0$££."
 
 	return self
 end
@@ -76,7 +76,7 @@ function ThirteenthMonthSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Coin.png"
 
 	self.name = "13th Month"
-	self.description = "+5$ at the end of each office."
+	self.description = "££+5$££ at the end of each ;;office;;."
 	self.holographic = true
 
 	return self
@@ -102,7 +102,7 @@ function HelpingHandSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Thumbs Up.png"
 
 	self.name = "Helping Hand"
-	self.description = "+1 additionnal turn per office"
+	self.description = "+++1 turn++ per office"
 
 	return self
 end
@@ -124,7 +124,7 @@ function MorningBrewSticker:new()
 
 	self.name = "Morning Brew"
 	self.description =
-		"The coffee corresponding to your most played figure always appear in first generation of every shop."
+		"The >>coffee>> corresponding to your most played --figure-- always appear in first generation of every shop."
 
 	return self
 end
@@ -158,7 +158,7 @@ function HardSkillsSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Bolt.png"
 
 	self.name = "Hard Skills"
-	self.description = "Increases the hand limit per floor by 1 for your figures."
+	self.description = "Increases the hand limit per ::floor:: by 1 for your --figures--."
 
 	return self
 end
@@ -180,7 +180,7 @@ function DeepPocketsSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Star.png"
 
 	self.name = "Deep Pockets"
-	self.description = "+1 slot in your Magic Wands storage."
+	self.description = "+1 slot in your ^^Magic Wands^^ storage."
 
 	return self
 end
@@ -202,7 +202,7 @@ function BackToBackSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Cloud.png"
 
 	self.name = "Back To Back"
-	self.description = "Magic Wands have 1 out of 4 chance of being cloned when used."
+	self.description = "^^Magic Wands^^ have 1/4 chance of being cloned when used."
 
 	return self
 end
@@ -240,7 +240,7 @@ function ThinkDifferentSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Lightbulb.png"
 
 	self.name = "Think Different"
-	self.description = "Full Houses can be played with Two Pairs of dices."
+	self.description = "--Full Houses-- can be played with Two Pairs of dices."
 	self.holographic = true
 	return self
 end
@@ -265,7 +265,7 @@ function CloverSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Clover1.png"
 
 	self.name = "Clover"
-	self.description = "Gives an additionnal hand per floor to the Chance."
+	self.description = "Gives an additionnal hand per floor to the --Chance--."
 	self.holographic = false
 	return self
 end
@@ -287,7 +287,7 @@ function ShamrockSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Clover2.png"
 
 	self.name = "Shamrock"
-	self.description = "Gives another additionnal hand per floor to the Chance."
+	self.description = "Gives another additionnal hand per floor to the --Chance--."
 	self.holographic = true
 	return self
 end
@@ -313,7 +313,7 @@ function BandaidSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Bandaid.png"
 
 	self.name = "Bandaid"
-	self.description = "Three Of a Kind and Four of a Kind can be played with a dice missing."
+	self.description = "--Three Of a Kind-- and --Four of a Kind-- can be played with a dice missing."
 	return self
 end
 
@@ -334,7 +334,7 @@ function TrophySticker:new()
 	self.sprite = "src/assets/sprites/stickers/Trophy.png"
 
 	self.name = "Trophy"
-	self.description = "Adds a bonus of [[+50pts]] to the Ones base points."
+	self.description = "Adds a bonus of [[+50pts]] to the --Ones-- base points."
 	return self
 end
 
@@ -354,7 +354,7 @@ function GiftSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Gift.png"
 
 	self.name = "Gift"
-	self.description = "Numerical figures count an additional dice in their base points."
+	self.description = "--Numerical figures-- count an additional dice in their base points."
 	return self
 end
 
@@ -374,7 +374,8 @@ function CogSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Cog.png"
 
 	self.name = "Cog"
-	self.description = "Number figures can be played using adjacent face values (eg. Fives can be played with 4 and 3)."
+	self.description =
+		"--Numerical figures-- can be played using adjacent &&face values&& (eg. --Fives-- can be played with &&4&& and &&3&&)."
 	self.holographic = true
 	return self
 end
@@ -395,7 +396,7 @@ function LadderSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Stairs.png"
 
 	self.name = "Ladder"
-	self.description = "Small Straights only need three consecutives dices."
+	self.description = "--Small Straights-- only need three consecutives dices."
 	self.holographic = false
 	return self
 end
@@ -416,7 +417,7 @@ function EyesSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Eyes.png"
 
 	self.name = "Eyes"
-	self.description = "The base score of the previously played figure is multiplied by two."
+	self.description = "The base score of the previously played --figure-- is multiplied by two."
 	self.holographic = true
 	return self
 end
@@ -437,7 +438,7 @@ function CheckmarkSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Checkmark.png"
 
 	self.name = "Checkmark"
-	self.description = "Your first turn in an office doesn't spend any figure hand."
+	self.description = "Your first ++turn++ in an ;;office;; doesn't spend any figure hand."
 	self.holographic = false
 	return self
 end
@@ -458,7 +459,7 @@ function ClockSticker:new()
 	self.sprite = "src/assets/sprites/stickers/Clock.png"
 
 	self.name = "Clock"
-	self.description = "Each dice is triggered a second time on your last turn."
+	self.description = "Each &&dice&& is triggered a second time on your last ++turn++."
 	self.holographic = true
 	return self
 end
@@ -487,9 +488,9 @@ function FlameSticker:new()
 end
 
 function FlameSticker:getDescription()
-	return "Dices have 1 chance out of 2 of being re-triggered if their face is a (("
+	return "&&Dices&& have 1 chance out of 2 of being re-triggered if their face is a ((&&"
 		.. self.choosenNumber
-		.. ")) (number changes each round)."
+		.. "&&)) (number changes each round)."
 end
 
 function FlameSticker:startRoundEffect(run)
