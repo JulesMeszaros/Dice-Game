@@ -247,7 +247,9 @@ function love.draw()
 	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 	love.graphics.setColor(1, 1, 1)
 
+	--Dessin de l'écran de jeu
 	game:draw()
+
 	love.graphics.setShader()
 	-- Update the cached FPS text object
 	fpstext:set("fps:" .. delta)
