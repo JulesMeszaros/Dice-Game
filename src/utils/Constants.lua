@@ -1,5 +1,14 @@
 local Sprites = require("src.utils.Sprites")
 
+local function Color(hex, value)
+	return {
+		tonumber(string.sub(hex, 2, 3), 16) / 256,
+		tonumber(string.sub(hex, 4, 5), 16) / 256,
+		tonumber(string.sub(hex, 6, 7), 16) / 256,
+		value or 1,
+	}
+end
+
 local Constants = {
 	--Game metadatas
 	VIRTUAL_GAME_WIDTH = 1920,
@@ -222,16 +231,19 @@ Constants.PARALAXE_MAX_OFFSET = {
 }
 
 Constants.COLORS = {
-	POINTS = { 0, 0, 1 },
-	MULT = { 1, 0, 0 },
-	WANDS = { 1, 0, 1 },
-	MONEY = { 1, 1, 0 },
-	TURNS = { 0.5, 0.5, 1 },
-	REROLLS = { 1, 0, 0 },
-	GHOST = { 1, 0, 0 },
-	BLANK = { 0.5, 0.5, 0.5 },
-	DICE_FACE = { 1, 0, 0 },
-	COFFEE = { 1, 0, 1 },
+	POINTS = Color("#E84F4F"),
+	MULT = Color("#5B71FE"),
+	WANDS = Color("#DD4CAD"),
+	MONEY = Color("#FF8F0D"),
+	TURNS = Color("#F98284"),
+	REROLLS = Color("#62BBFE"),
+	GHOST = Color("#6A0FB9"),
+	BLANK = Color("#4C566D"),
+	DICE = Color("#7A89EF"),
+	COFFEE = Color("#C36C4D"),
+	FLOOR = Color("#FF6893"),
+	OFFICE = Color("#897BF2"),
+	FIGURE = Color("#DE7027"),
 }
 
 --TODO

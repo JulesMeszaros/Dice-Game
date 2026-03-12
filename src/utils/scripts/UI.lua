@@ -1,3 +1,4 @@
+local Constants = require("src.utils.Constants")
 local UI = {}
 
 --UTILS
@@ -233,9 +234,19 @@ function drawFormattedText(text, x, y, font, maxWidth, centered)
 	love.graphics.setFont(font)
 	-- Configuration des couleurs et délimiteurs
 	local textFormats = {
-		{ open = "[[", close = "]]", color = { 1, 0, 0 } }, -- Rouge
-		{ open = "((", close = "))", color = { 0, 0, 1 } }, -- Bleu
-		{ open = "{{", close = "}}", color = { 0, 1, 1 } }, -- Vert (exemple)
+		{ open = "[[", close = "]]", color = Constants.COLORS.POINTS }, -- points
+		{ open = "((", close = "))", color = Constants.COLORS.MULT }, -- mult
+		{ open = "^^", close = "^^", color = Constants.COLORS.WANDS }, -- mult
+		{ open = "££", close = "££", color = Constants.COLORS.MONEY }, -- mult
+		{ open = "++", close = "++", color = Constants.COLORS.TURNS }, -- mult
+		{ open = "**", close = "**", color = Constants.COLORS.REROLLS }, -- mult
+		{ open = "!!", close = "!!", color = Constants.COLORS.GHOST }, -- mult
+		{ open = "@@", close = "@@", color = Constants.COLORS.BLANK }, -- mult
+		{ open = "&&", close = "&&", color = Constants.COLORS.DICE }, -- mult
+		{ open = ">>", close = ">>", color = Constants.COLORS.COFFEE }, -- mult
+		{ open = "::", close = "::", color = Constants.COLORS.FLOOR }, -- mult
+		{ open = ";;", close = ";;", color = Constants.COLORS.OFFICE }, -- mult
+		{ open = "--", close = "--", color = Constants.COLORS.FIGURE }, -- mult
 	}
 
 	local defaultColor = { 0, 0, 0 }
