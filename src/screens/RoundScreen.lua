@@ -1195,7 +1195,7 @@ function RoundScreen:addTriggerText(text, face, opts)
 		UI.Text.TextWavy:new(
 			text,
 			self.diceFaces[face.diceObject].x + self.diceMatx,
-			self.diceFaces[face.diceObject].y - 150,
+			self.diceFaces[face.diceObject].y + 120 + self.diceMaty,
 			{
 				font = Fonts.soraRewardTotal,
 				colorStart = colorStart,
