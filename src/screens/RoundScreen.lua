@@ -1192,18 +1192,23 @@ function RoundScreen:addTriggerText(text, face, opts)
 
 	table.insert(
 		self.triggerTexts,
-		UI.Text.TextWavy:new(text, self.diceFaces[face.diceObject].x + self.diceMatx, 500, {
-			font = Fonts.soraRewardTotal,
-			colorStart = colorStart,
-			colorEnd = colorEnd,
-			revealSpeed = 0.1,
-			lifetime = 0.5,
-			popAngleStart = 0,
-			popAngleOvershoot = 10,
-			centered = true,
-			popOvershoot = 0.2,
-			popStart = 0.5,
-		})
+		UI.Text.TextWavy:new(
+			text,
+			self.diceFaces[face.diceObject].x + self.diceMatx,
+			self.diceFaces[face.diceObject].y - 150,
+			{
+				font = Fonts.soraRewardTotal,
+				colorStart = colorStart,
+				colorEnd = colorEnd,
+				revealSpeed = 0.1,
+				lifetime = 0.5,
+				popAngleStart = 0,
+				popAngleOvershoot = 10,
+				centered = true,
+				popOvershoot = 0.2,
+				popStart = 0.5,
+			}
+		)
 	)
 end
 

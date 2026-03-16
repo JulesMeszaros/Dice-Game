@@ -98,7 +98,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 		end
 	end
 
-	if self.bossType == Constants.BOSS_TYPES.CHEF_RD then
+	if self.bossType and self.bossType == Constants.BOSS_TYPES.CHEF_RD then
 		self.remainingHands = self.remainingHands + self.availableRerolls
 		self.availableRerolls = 0
 	end
@@ -435,7 +435,7 @@ function Round:endTriggeringPhase()
 	if self.remainingHands >= 1 then
 		self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
 		self:resetselectedDices()
-		if self.bossType == Constants.BOSS_TYPES.CHEF_RD then
+		if self.bossType and self.bossType == Constants.BOSS_TYPES.CHEF_RD then
 			self.availableRerolls = 0
 		else
 			self.availableRerolls = self.run.baseRerolls

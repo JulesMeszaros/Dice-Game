@@ -341,7 +341,7 @@ function Apparition:new(faceValue, pointsValue)
 	self.name = "Apparition"
 	self.tier = "Common"
 	self.id = 10
-	self.description = "((X2))."
+	self.description = "((X2))"
 
 	--Metadatas about the graphics of the BlackStar
 	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Apparition.png")
@@ -2143,15 +2143,15 @@ function Upcycling:buildTriggerEffects(round)
 		{
 			type = "score",
 			fn = function()
-				addScore(round, 30 * G.currentRun.savedRerolls, self)
+				addScore(round, 20 * G.currentRun.savedRerolls, self)
 			end,
 		},
 	}
 end
 
 function Upcycling:getDescription(run)
-	return "[[+30pts]] for each **reroll** spared in this building (currently : [[+"
-		.. 30 * G.currentRun.savedRerolls
+	return "[[+20pts]] for each **reroll** spared in this building (currently : [[+"
+		.. 20 * G.currentRun.savedRerolls
 		.. "pts]])"
 end
 
@@ -2795,9 +2795,13 @@ function WitchDice:buildTriggerEffects(round)
 end
 
 function WitchDice:getDescription(run)
-	return "[[+50pts]] per ^^Magic Wand^^ used in this ;;office;; (currently : [[+"
-		.. tostring(round.usedCiggiesRound * 50)
-		.. "pts]])"
+	if run.currentState == Constants.RUN_STATES.ROUND then
+		return "[[+50pts]] per ^^Magic Wand^^ used in this ;;office;; (currently : [[+"
+			.. tostring(run.round.usedCiggiesRound * 50)
+			.. "pts]])"
+	else
+		return "[[+50pts]] per ^^Magic Wand^^ used in this ;;office;;."
+	end
 end
 
 FaceTypes.WitchDice = WitchDice
@@ -2840,9 +2844,13 @@ function WizardDice:buildTriggerEffects(round)
 end
 
 function WizardDice:getDescription(run)
-	return "((X1.5)) per ^^Magic Wand^^ used in this ;;office;; (currently : ((X"
-		.. math.max(1, round.usedCiggiesRound * 1.5)
-		.. ")))"
+	if run.currentState == Constants.RUN_STATES.ROUND then
+		return "((X1.5)) per ^^Magic Wand^^ used in this ;;office;; (currently : ((X"
+			.. math.max(1, run.round.usedCiggiesRound * 1.5)
+			.. ")))"
+	else
+		return "((X1.5)) per ^^Magic Wand^^ used in this ;;office;;"
+	end
 end
 
 FaceTypes.WizardDice = WizardDice

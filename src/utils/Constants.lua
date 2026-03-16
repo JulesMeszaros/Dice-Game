@@ -25,7 +25,7 @@ local Constants = {
 	BASE_MAX_HANDS_FIGURES = 3,
 
 	--Debug
-	SHOP_EVERY_DESK = true,
+	SHOP_EVERY_DESK = false,
 	OVERPOWER = false,
 	DEBUG = true,
 
