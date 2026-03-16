@@ -265,6 +265,7 @@ function StrikeOfLuck:buildTriggerEffects(round)
 		{ --Ajout de la cigarette random
 			type = "other",
 			message = "+1 Wand!",
+			color = Constants.COLORS.WANDS,
 			fn = function()
 				if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies then
 					local c = GenerateRandom.CiggieObject()
@@ -947,6 +948,7 @@ function CryptoDice:buildTriggerEffects(round)
 	--On met l'agent à 0 si l'argent est sup à 0
 	table.insert(effects, {
 		type = "other",
+		color = Constants.COLORS.MONEY,
 		message = "Bankrupt!",
 		fn = function()
 			if round.run.money > 0 then
@@ -1532,6 +1534,7 @@ function TwinFlame:buildTriggerEffects(round)
 
 	table.insert(effects, {
 		type = "other",
+		color = Constants.COLORS.WANDS,
 		message = "Duplicated!",
 		fn = function()
 			if
@@ -1593,7 +1596,8 @@ function FaxMachine:buildTriggerEffects(round)
 		return {
 			{
 				type = "other",
-				message = "Nope",
+				color = Constants.COLORS.WANDS,
+				message = "Nope!",
 				fn = function() end,
 			},
 		}
@@ -1770,7 +1774,9 @@ end
 function Sacrifice:buildBackupEffects(round)
 	return {
 		{
-			type = "Ghosted!",
+			type = "other",
+			message = "Ghosted!",
+			color = Constants.COLORS.GHOST,
 			fn = function()
 				local _, dicesOrder = round:getDicesOrder(round.usedDices)
 				dicesOrder[1]:getCurrentFaceObject().ghost = true
@@ -2472,6 +2478,7 @@ function FortuneDice:buildTriggerEffects(round)
 	if #round.run.ciggiesObjects < round.run.maxCiggies then
 		table.insert(effects, {
 			type = "other",
+			color = Constants.COLORS.WANDS,
 			message = "+1 Wand!",
 			fn = function()
 				local c = CiggieTypes.Fortune:new()
@@ -2737,7 +2744,9 @@ function Godspeed:buildTriggerEffects(round)
 
 	return {
 		{
-			type = "Consumed!",
+			type = "other",
+			message = "Godspeed!",
+			color = Constants.COLORS.TURNS,
 			fn = function()
 				round.remainingHands = 1
 			end,
@@ -3065,6 +3074,7 @@ function TimeDice:buildTriggerEffects(round)
 	if table.getn(round.run.ciggiesObjects) < round.run.maxCiggies then
 		table.insert(effects, {
 			type = "other",
+			color = Constants.COLORS.WANDS,
 			message = "+1 Wand!",
 			fn = function()
 				local c = CiggieTypes.Time:new()
@@ -3205,22 +3215,22 @@ FaceTypes.DiamondDice = DiamondDice
 --UTILS--
 function multiplyScore(round, f, face)
 	round.handScore = round.handScore * f
-	round.terrain:addTriggerText("X" .. f, face, { colorStart = { 232 / 255, 79 / 255, 79 / 255, 1 } })
+	round.terrain:addTriggerText("X" .. f, face, { colorStart = Constants.COLORS.MULT })
 end
 
 function addScore(round, f, face)
 	round.handScore = round.handScore + f
-	round.terrain:addTriggerText("+" .. f, face, { colorStart = { 232 / 255, 79 / 255, 79 / 255, 1 } })
+	round.terrain:addTriggerText("+" .. f, face, { colorStart = Constants.COLORS.POINTS })
 end
 
 function addMoney(round, m, face)
 	round.terrain:setMoneyTo(round.run.money + m)
-	round.terrain:addTriggerText("+" .. m .. "$!", face, { colorStart = { 255 / 255, 178 / 255, 89 / 255, 1 } })
+	round.terrain:addTriggerText("+" .. m .. "$!", face, { colorStart = Constants.COLORS.MONEY })
 end
 
 function removeMoney(round, m, face)
 	round.terrain:setMoneyTo(round.run.money - m)
-	round.terrain:addTriggerText("-" .. m .. "$!", face, { colorStart = { 255 / 255, 25 / 255, 25 / 255, 1 } })
+	round.terrain:addTriggerText("-" .. m .. "$!", face, { colorStart = Constants.COLORS.GHOST })
 end
 
 function setMoney(round, m)

@@ -338,13 +338,13 @@ function DiceFace:createTriggerText(round, effect)
 		return true
 	elseif type == "upgrade" then
 		local message = effect.message or "Upgrade!"
-		round.terrain:addTriggerText(message, self, { colorStart = { 0.2, 0.1, 0.8 } })
+		round.terrain:addTriggerText(message, self, { colorStart = effect.color or { 0.2, 0.1, 0.8 } })
 	elseif type == "replay" then
 		local message = effect.message or "Replay!"
-		round.terrain:addTriggerText(message, self, { colorStart = { 0.2, 0.1, 0.8 } })
+		round.terrain:addTriggerText(message, self, { colorStart = effect.color or { 0.2, 0.1, 0.8 } })
 	else
 		local message = effect.message or "Trigger!"
-		round.terrain:addTriggerText(message, self, { colorStart = { 0.2, 0.1, 0.8 } })
+		round.terrain:addTriggerText(message, self, { colorStart = effect.color or { 1, 0.1, 0.8 } })
 	end
 end
 
