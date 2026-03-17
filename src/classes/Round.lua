@@ -452,7 +452,17 @@ function Round:endTriggeringPhase()
 
 	self.run:stickerEndTriggeringPhaseEffect()
 
-	if self.roundScore >= self.targetScore or self.remainingHands <= 0 then
+	local nomorehand = true
+
+	-- On vérifie qu'il reste bien des figures à jouer
+	for key, figure in next, Constants.FIGURES do
+		if G.currentRun.availableFigures[figure] > 0 and G.currentRun.currentRound.disabledFigures[figure] == false then
+			nomorehand = false
+		end
+	end
+
+	--Si plus de main dispo, plus de tour dispo, ou si le score est superieur au target : on termine le round
+	if self.roundScore >= self.targetScore or self.remainingHands <= 0 or nomorehand then
 		self:endRound()
 	else
 		self.firstRoll = false
