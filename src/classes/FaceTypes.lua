@@ -3018,7 +3018,7 @@ function CrossedOut:buildTriggerEffects(round)
 			fn = function()
 				local i = 0
 				for j = 1, 13 do
-					if round.run.availableFigures[j] == 0 then
+					if round.run.availableFigures[j] == 0 or round.disabledFigures[j] == true then
 						i = i + 1
 					end
 				end
@@ -3031,7 +3031,7 @@ end
 function CrossedOut:getDescription(run)
 	local i = 0
 	for j = 1, 13 do
-		if run.availableFigures[j] == 0 then
+		if round.run.availableFigures[j] == 0 or round.disabledFigures[j] == true then
 			i = i + 1
 		end
 	end
