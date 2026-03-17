@@ -686,7 +686,7 @@ function MusicDice:buildTriggerEffects(round)
 
 			type = "mult",
 			fn = function()
-				multiplyScore(round, 2, self)
+				multiplyScore(round, 4, self)
 			end,
 		})
 	end
@@ -2804,7 +2804,7 @@ function WitchDice:buildTriggerEffects(round)
 end
 
 function WitchDice:getDescription(run)
-	if run.currentState == Constants.RUN_STATES.ROUND then
+	if run.round then
 		return "[[+50pts]] per ^^Magic Wand^^ used in this ;;office;; (currently : [[+"
 			.. tostring(run.round.usedCiggiesRound * 50)
 			.. "pts]])"
@@ -2853,7 +2853,7 @@ function WizardDice:buildTriggerEffects(round)
 end
 
 function WizardDice:getDescription(run)
-	if run.currentState == Constants.RUN_STATES.ROUND then
+	if run.round then
 		return "((X1.5)) per ^^Magic Wand^^ used in this ;;office;; (currently : ((X"
 			.. math.max(1, run.round.usedCiggiesRound * 1.5)
 			.. ")))"
