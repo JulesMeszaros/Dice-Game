@@ -165,8 +165,14 @@ local backgroundCanvas = nil
 
 bgShader = love.graphics.newShader("src/utils/bg.glsl")
 
+https = nil
+local overlayStats = require("lib.overlayStats")
+local runtimeLoader = require("runtime.loader")
+
 function love.load()
-	--bien randomiser le jeu
+  https = runtimeLoader.loadHTTPS()
+  -- Your game load here
+  --bien randomiser le jeu
 	math.randomseed(os.clock() * 1000000)
 	for i = 0, os.clock() * 1000000 do
 		math.random()
@@ -194,14 +200,44 @@ function love.load()
 
 	-- Create background canvas
 	backgroundCanvas = love.graphics.newCanvas(love.graphics.getWidth(), love.graphics.getHeight())
+
+
+  
+  overlayStats.load() -- Should always be called last
 end
 
-function love.textinput(t)
-	game:textinput(t)
+function love.draw()
+  -- Your game draw here
+  Shaders.crt:send("amount", 0.0025)
+	Shaders.crt:send("warp", 0.15)
+	Shaders.crt:send("scan", 0.2)
+	-- set scanline opacity (0 = no scanlines, 1 = full effect)
+	Shaders.crt:send("scanOpacity", 0.5)
+	Shaders.crt:send("lineWidth", love.graphics.getHeight() / 180)
+
+	if G.applyCRT then
+		love.graphics.setShader(Shaders.crt)
+	end
+
+	-- drawBackground()
+	love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
+	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+	love.graphics.setColor(1, 1, 1)
+
+	--Dessin de l'écran de jeu
+	game:draw()
+
+	love.graphics.setShader()
+	-- Update the cached FPS text object
+	fpstext:set("fps:" .. delta)
+	--love.graphics.draw(fpstext, love.graphics.getWidth() - 5, 5, 0, 1, 1, fpstext:getWidth(), 0)
+
+  overlayStats.draw() -- Should always be called last
 end
 
 function love.update(dt)
-	if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
+  -- Your game update here
+  if love.timer.getTime() % 5 < dt then -- toutes les 5 secondes
 		--print("Memory: " .. math.floor(collectgarbage("count")) .. " KB")
 	end
 
@@ -228,36 +264,12 @@ function love.update(dt)
 			love.timer.sleep(sleepTime)
 		end
 	end
-end
 
-function love.draw()
-	Shaders.crt:send("amount", 0.0025)
-	Shaders.crt:send("warp", 0.15)
-	Shaders.crt:send("scan", 0.2)
-	-- set scanline opacity (0 = no scanlines, 1 = full effect)
-	Shaders.crt:send("scanOpacity", 0.5)
-	Shaders.crt:send("lineWidth", love.graphics.getHeight() / 180)
-
-	if G.applyCRT then
-		love.graphics.setShader(Shaders.crt)
-	end
-
-	-- drawBackground()
-	love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
-	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-	love.graphics.setColor(1, 1, 1)
-
-	--Dessin de l'écran de jeu
-	game:draw()
-
-	love.graphics.setShader()
-	-- Update the cached FPS text object
-	fpstext:set("fps:" .. delta)
-	--love.graphics.draw(fpstext, love.graphics.getWidth() - 5, 5, 0, 1, 1, fpstext:getWidth(), 0)
+  overlayStats.update(dt) -- Should always be called last
 end
 
 function love.keypressed(key)
-	game:keypressed(key)
+  game:keypressed(key)
 
 	if key == "@" then
 		G.saveManager:save()
@@ -274,6 +286,21 @@ function love.keypressed(key)
 			end
 		end
 	end
+
+  if key == "escape" and love.system.getOS() ~= "Web" then
+    love.event.quit()
+  else
+    overlayStats.handleKeyboard(key) -- Should always be called last
+  end
+end
+
+
+function love.textinput(t)
+	game:textinput(t)
+end
+
+function love.touchpressed(id, x, y, dx, dy, pressure)
+  overlayStats.handleTouch(id, x, y, dx, dy, pressure) -- Should always be called last
 end
 
 function love.mousepressed(x, y, button, istouch, presses)

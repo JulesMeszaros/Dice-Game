@@ -1,3 +1,6 @@
+.direnv/
+.vscode/settings.json
+game/log.txt
 .vscode
 misc
 build
