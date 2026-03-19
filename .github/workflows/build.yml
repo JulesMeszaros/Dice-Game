@@ -164,6 +164,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
+          #owner: ${{ github.repository_owner }}
           release_name: ${{ env.PRODUCT_NAME }} ${{ github.ref_name }} is out! ️🕹️
           body: |
             ${{ env.PRODUCT_COMPANY }} is delighted to announce the release of ${{ env.PRODUCT_NAME }} ${{ github.ref_name }}! 🎉
