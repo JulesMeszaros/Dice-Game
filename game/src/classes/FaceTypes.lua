@@ -152,7 +152,9 @@ function BlueDice:new(faceValue, pointsValue)
 end
 
 function BlueDice:getDescription(run)
-  return "[[+2pts]] per used **rerolls** this building (currently : [[+" .. tostring(2 * run.usedRerolls) .. "pts]] )."
+  return "[[+2pts]] per used **rerolls** this building (currently : [[+"
+    .. tostring(2 * (run.usedRerolls or 0))
+    .. "pts]] )."
 end
 
 function BlueDice:buildTriggerEffects(round)
@@ -492,9 +494,9 @@ end
 
 function AshtrayDice:getDescription(run)
   return "((X"
-    .. tostring(1 + 0.1 * run.totalUsedCiggie)
+    .. tostring(1 + 0.1 * (run.totalUsedCiggie or 0))
     .. ")). Gains ((+X0.1)) for each ^^Magic Wand^^ used in this building (currently : ((X"
-    .. tostring(1 + 0.1 * run.totalUsedCiggie)
+    .. tostring(1 + 0.1 * (run.totalUsedCiggie or 0))
     .. ")))"
 end
 
@@ -1236,7 +1238,7 @@ end
 
 function MagicDice:getDescription(run)
   return ". Multiplies by the number of ^^Magic Wands^^ held (min : 2) (currently : ((X"
-    .. math.max(1, table.getn(run.ciggiesObjects))
+    .. math.max(1, table.getn(run.ciggiesObjects or {}))
     .. ")))"
 end
 
@@ -3024,7 +3026,10 @@ end
 function CrossedOut:getDescription(run)
   local i = 0
   for j = 1, 13 do
-    if round.run.availableFigures[j] == 0 or round.disabledFigures[j] == true then
+    if
+      round.run.availableFigures[j] == 0
+      or (run.currentState == Constants.RUN_STATES.ROUND and run.currentRound.disabledFigures[j] == true)
+    then
       i = i + 1
     end
   end
