@@ -3027,7 +3027,7 @@ function CrossedOut:getDescription(run)
   local i = 0
   for j = 1, 13 do
     if
-      round.run.availableFigures[j] == 0
+      run.availableFigures[j] == 0
       or (run.currentState == Constants.RUN_STATES.ROUND and run.currentRound.disabledFigures[j] == true)
     then
       i = i + 1
