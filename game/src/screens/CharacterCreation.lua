@@ -41,7 +41,7 @@ function CharacterCreation:new()
 		980,
 		900,
 		90,
-		{ noSpace = false, maxChars = 10, noSpecial = true, forceCaps = false }
+		{ noSpace = false, maxChars = 10, noSpecial = true, forceCaps = false, defaultText="Lionnel.le" }
 	)
 	self.nameInput.layer = 2
 
