@@ -22,7 +22,7 @@ function TextField:new(x, y, width, fontSize, args)
 	self.sprite = nil -- TextField ne rend pas de sprite
 
 	-- Text management
-	self.text = ""
+	self.text = args.defaultText or ""
 	self.focused = false
 	self.font = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", fontSize)
 
