@@ -935,7 +935,7 @@ function CryptoDice:buildTriggerEffects(round)
       if round.run.money > 0 then
         local money = round.run.money
         --Calcul du facteur
-        local factor = math.floor(round.run.money / 10) * 0.2
+        local factor = math.floor(round.run.money / 10) * 0.5
         print(round.run.money)
         --Si le facteur est sup à 0, on ajoute.
         if factor > 0 then
@@ -968,7 +968,7 @@ function CryptoDice:buildTriggerEffects(round)
 end
 
 function CryptoDice:getDescription(run)
-  return "((X" .. tostring(self.multFactor) .. ")). Empties the bank and gains ((+X0.2)) for every ££10$££ lost."
+  return "((X" .. tostring(self.multFactor) .. ")). Empties the bank and gains ((+X0.5)) for every ££10$££ lost."
 end
 
 FaceTypes.CryptoDice = CryptoDice
@@ -1237,7 +1237,7 @@ function MagicDice:buildTriggerEffects(round)
 end
 
 function MagicDice:getDescription(run)
-  return ". Multiplies by the number of ^^Magic Wands^^ held (min : 2) (currently : ((X"
+  return "Multiplies by the number of ^^Magic Wands^^ held (min : 2) (currently : ((X"
     .. math.max(1, table.getn(run.ciggiesObjects or {}))
     .. ")))"
 end
