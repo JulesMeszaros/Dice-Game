@@ -25,7 +25,7 @@ function Shop:new(run)
 
   if self.run.tutorial then
     --Tutorial variables
-    if self.run.floorNumber == 1 then
+    if self.run.floorNumber == 2 then
       self.canBuyDiceFace = false
       self.canBuySticker = false
       self.canBuyAnything = false
@@ -39,9 +39,6 @@ function Shop:new(run)
       self.canGoToNextRound = true
     end
   end
-
-  print(self.run.floorNumber)
-  print(self.canBuySticker)
 
   self.priceTagsScale = 1
   self:createDeck()
@@ -588,7 +585,7 @@ function Shop:mousereleased(x, y, button, istouch, presses)
         (sticker.representedObject.holographic == true and self.run.money >= Constants.BASE_HOLO_STICKER_PRICE)
         or (sticker.representedObject.holographic == false and self.run.money >= Constants.BASE_STICKER_PRICE)
       then
-        if not self.tutorial or self.canBuySticker == true then
+        if not self.run.tutorial or self.canBuySticker == true then
           self:buySticker(sticker)
 
           if sticker.representedObject.holographic == true then
