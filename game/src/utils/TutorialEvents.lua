@@ -402,7 +402,7 @@ function TutorialEvents.managerRound()
   })
 
   G.currentRun.tutorial:pushOnce("managerRound2", {
-    text = "Lucky you, your last round earned you an ^^Ebb!^^ Ebb can regenerate your hands for your figures.",
+    text = "Lucky you, your last round earned you an ^^Ebb!^^ Ebb can regenerate all your plays for your figures.",
     pos = "ll",
     draw = function()
       G.currentGameScreen:drawCiggiesTray()

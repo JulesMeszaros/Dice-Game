@@ -1,4 +1,5 @@
 local AudioFiles = require("src.utils.AudioFiles")
+local CiggieTypes = require("game.src.classes.CiggieTypes")
 local TutorialEvents = require("src.utils.TutorialEvents")
 local Constants = require("src.utils.Constants")
 local DiceFace = require("src.classes.ui.DiceFace")
@@ -17,795 +18,808 @@ local Round = {}
 Round.__index = Round
 
 function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObjects, roundType, faceRewards)
-	local self = setmetatable({}, Round)
+  local self = setmetatable({}, Round)
 
-	self.animator = Animator:new(self)
-	self.selectedDices = {}
-	self.drawedFaceObjects = {}
+  self.animator = Animator:new(self)
+  self.selectedDices = {}
+  self.drawedFaceObjects = {}
 
-	self.dragOriginX = nil
-	self.dragOriginY = nil
-	self.roundScore = 0
-	self.faceRewards = faceRewards
+  self.dragOriginX = nil
+  self.dragOriginY = nil
+  self.roundScore = 0
+  self.faceRewards = faceRewards
 
-	--==Triggering Phase==--
-	self.handScore = 0
-	self.phase = Constants.ROUND_STATES.PLAYING
-	self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
-	self.dicesOrder = {} --Same but for the dice objects
-	self.dicesBackupQueue = {} --Same but for the dices
+  --==Triggering Phase==--
+  self.handScore = 0
+  self.phase = Constants.ROUND_STATES.PLAYING
+  self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
+  self.dicesOrder = {} --Same but for the dice objects
+  self.dicesBackupQueue = {} --Same but for the dices
 
-	self.currentlyTriggeredDice = nil
-	self.diceFaces = {} -- Objets visuels
-	self.baseReward = baseReward
-	self.ciggieReward = GenerateRandom.CiggieObject()
-	self.triggerDiceHistory = {}
-	self.triggerFaceHistory = {}
+  self.currentlyTriggeredDice = nil
+  self.diceFaces = {} -- Objets visuels
+  self.baseReward = baseReward
+  self.ciggieReward = GenerateRandom.CiggieObject()
 
-	self.run = run
+  self.triggerDiceHistory = {}
+  self.triggerFaceHistory = {}
 
-	--Current Round Parameters
-	self.numberOfHands = 0
-	self.firstRoll = false
-	self.nround = n
-	self.floorNumber = floor
-	self.deskNumber = desk
-	self.roundType = roundType
+  self.run = run
 
-	self.remainingHands = self.run.baseHands
-	self.availableRerolls = self.run.baseRerolls
+  --Current Round Parameters
+  self.numberOfHands = 0
+  self.firstRoll = false
+  self.nround = n
+  self.floorNumber = floor
+  self.deskNumber = desk
+  self.roundType = roundType
 
-	self.bountyHunterFigure = G.rngGeneral:random(1, 13)
-	self.handRefunded = false --utilisée pour annuler l'utilisation d'une main
-	self.usedCiggiesRound = 0
+  self.remainingHands = self.run.baseHands
+  self.availableRerolls = self.run.baseRerolls
 
-	--Disabled figures (for bosses)
-	self.disabledFigures = {}
-	for i = 1, 13 do
-		table.insert(self.disabledFigures, false)
-	end --De base, aucune figure n'est désactivée.
+  self.bountyHunterFigure = G.rngGeneral:random(1, 13)
+  self.handRefunded = false --utilisée pour annuler l'utilisation d'une main
+  self.usedCiggiesRound = 0
+  --Récompenses fixes pour les rounds de tutorial
+  print(self.run.floorDeskNumber)
+  if self.run.tutorial == true then
+    --Premier round : Turnns
+    if self.nround == 0 then
+      self.ciggieReward = CiggieTypes.Turnns
+    end
+    --Deuxième round : Ebb
+    if self.nround == 1 then
+      self.ciggieReward = CiggieTypes.Ebb
+    end
+  end
 
-	--Choix du type de manager
-	if self.roundType == Constants.ROUND_TYPES.BOSS then
-		-- Pick a random key from Constants.BOSS_TYPES
-		local bossKeys = {}
-		for k, _ in pairs(Constants.BOSS_TYPES) do
-			table.insert(bossKeys, k)
-		end
-		local sortedBosses = GenerateRandom.sorted(bossKeys)
-		local randomKey = sortedBosses[G.rngEnemies:random(#sortedBosses)]
+  --Disabled figures (for bosses)
+  self.disabledFigures = {}
+  for i = 1, 13 do
+    table.insert(self.disabledFigures, false)
+  end --De base, aucune figure n'est désactivée.
 
-		self.bossType = Constants.BOSS_TYPES[randomKey]
+  --Choix du type de manager
+  if self.roundType == Constants.ROUND_TYPES.BOSS then
+    -- Pick a random key from Constants.BOSS_TYPES
+    local bossKeys = {}
+    for k, _ in pairs(Constants.BOSS_TYPES) do
+      table.insert(bossKeys, k)
+    end
+    local sortedBosses = GenerateRandom.sorted(bossKeys)
+    local randomKey = sortedBosses[G.rngEnemies:random(#sortedBosses)]
 
-		if self.run.tutorial and self.run.floorNumber == 1 then
-			self.bossType = 2
-		end
-	end
+    self.bossType = Constants.BOSS_TYPES[randomKey]
 
-	if self.roundType == Constants.ROUND_TYPES.BOSS then
-		--Boss Project Manager : on désactive les figures numériques
-		if self.bossType == Constants.BOSS_TYPES.CHEF_DE_PROJET then
-			for i = 1, 6 do
-				self.disabledFigures[i] = true
-			end
-		end
+    if self.run.tutorial and self.run.floorNumber == 1 then
+      self.bossType = 2
+    end
+  end
 
-		--Boss Chef comptable : on désactive les figures non numériques
-		if self.bossType == Constants.BOSS_TYPES.CHEF_COMPTABLE then
-			for i = 7, 13 do
-				self.disabledFigures[i] = true
-			end
-		end
-	end
+  if self.roundType == Constants.ROUND_TYPES.BOSS then
+    --Boss Project Manager : on désactive les figures numériques
+    if self.bossType == Constants.BOSS_TYPES.CHEF_DE_PROJET then
+      for i = 1, 6 do
+        self.disabledFigures[i] = true
+      end
+    end
 
-	if self.bossType and self.bossType == Constants.BOSS_TYPES.CHEF_RD then
-		self.remainingHands = self.remainingHands + self.availableRerolls
-		self.availableRerolls = 0
-	end
+    --Boss Chef comptable : on désactive les figures non numériques
+    if self.bossType == Constants.BOSS_TYPES.CHEF_COMPTABLE then
+      for i = 7, 13 do
+        self.disabledFigures[i] = true
+      end
+    end
+  end
 
-	--Ennemy metadata
-	self.enemyName = GenerateRandom.name()
-	self.enemyCharacter = Lion:new()
-	if self.roundType == Constants.ROUND_TYPES.BASE then
-		self.enemyJob = Constants.EMPLOIS[G.rngEnemies:random(#Constants.EMPLOIS)]
-	else
-		self.enemyJob = "Manager"
-	end
+  if self.bossType and self.bossType == Constants.BOSS_TYPES.CHEF_RD then
+    self.remainingHands = self.remainingHands + self.availableRerolls
+    self.availableRerolls = 0
+  end
 
-	--Ciggies
-	self.ciggiesObjects = self.run.ciggiesObjects
+  --Ennemy metadata
+  self.enemyName = GenerateRandom.name()
+  self.enemyCharacter = Lion:new()
+  if self.roundType == Constants.ROUND_TYPES.BASE then
+    self.enemyJob = Constants.EMPLOIS[G.rngEnemies:random(#Constants.EMPLOIS)]
+  else
+    self.enemyJob = "Manager"
+  end
 
-	--Dices
-	self.diceObjects = diceObjects
-	self.targetScore = target or (0 + 20 * (n - 1)) --Calcul à revoir bien sur
+  --Ciggies
+  self.ciggiesObjects = self.run.ciggiesObjects
 
-	self.terrain = RoundScreen:new(self)
+  --Dices
+  self.diceObjects = diceObjects
+  self.targetScore = target or (0 + 20 * (n - 1)) --Calcul à revoir bien sur
 
-	return self
+  self.terrain = RoundScreen:new(self)
+
+  return self
 end
 
 function Round:update(dt)
-	if #self.selectedDices == 5 and G.currentRun.tutorial and G.currentRun.tutorial.isSelectingLastDices == true then
-		G.currentRun.tutorial:confirmToast("selectLastDices")
-		TutorialEvents.figureInfo()
-	end
-	self.animator:update(dt)
-	--update le terrain
-	self.terrain:update(dt)
+  if #self.selectedDices == 5 and G.currentRun.tutorial and G.currentRun.tutorial.isSelectingLastDices == true then
+    G.currentRun.tutorial:confirmToast("selectLastDices")
+    TutorialEvents.figureInfo()
+  end
+  self.animator:update(dt)
+  --update le terrain
+  self.terrain:update(dt)
 end
 
 --==ROUND FUNCTION==--
 function Round:endRound()
-	for i, d in next, self.diceObjects do
-		for j, f in next, d:getAllFaces() do
-			f:resetStats()
-		end
-	end
+  for i, d in next, self.diceObjects do
+    for j, f in next, d:getAllFaces() do
+      f:resetStats()
+    end
+  end
 
-	if self.roundScore >= self.targetScore then
-		--Cas ou on vient de battre le dernier manager
-		if self.floorNumber == Constants.FLOORS_BY_RUN and self.roundType == Constants.ROUND_TYPES.BOSS then
-			self.terrain.runWinPopup = RunEnd:new(self.run, self)
-			self.phase = Constants.ROUND_STATES.RUN_END
-			G.saveManager:save()
-		else
-			--CREATE A END ROUND SCREEN
-			self.terrain.endRoundPopUp = EndRound:new(self.run, self)
-			self.phase = Constants.ROUND_STATES.END_ROUND
-		end
-	else
-		--CREATE A GAME OVER SCREEN
-		self.terrain.gameOverPopup = GameOver:new(self.run, self)
-		if self.run.tutorial and self.run.floorNumber == 1 then
-			TutorialEvents.gameOver()
-		end
-		self.phase = Constants.ROUND_STATES.GAME_OVER
-		--Enregistrement de la partie
-		G.saveManager:save()
-	end
+  if self.roundScore >= self.targetScore then
+    --Cas ou on vient de battre le dernier manager
+    if self.floorNumber == Constants.FLOORS_BY_RUN and self.roundType == Constants.ROUND_TYPES.BOSS then
+      self.terrain.runWinPopup = RunEnd:new(self.run, self)
+      self.phase = Constants.ROUND_STATES.RUN_END
+      G.saveManager:save()
+    else
+      --CREATE A END ROUND SCREEN
+      self.terrain.endRoundPopUp = EndRound:new(self.run, self)
+      self.phase = Constants.ROUND_STATES.END_ROUND
+    end
+  else
+    --CREATE A GAME OVER SCREEN
+    self.terrain.gameOverPopup = GameOver:new(self.run, self)
+    if self.run.tutorial and self.run.floorNumber == 1 then
+      TutorialEvents.gameOver()
+    end
+    self.phase = Constants.ROUND_STATES.GAME_OVER
+    --Enregistrement de la partie
+    G.saveManager:save()
+  end
 
-	--self.terrain:outAnimation()
+  --self.terrain:outAnimation()
 end
 
 --==MOUSE/KEYBOARD FUNCTIONS==--
 
 function Round:keypressed(key)
-	self.terrain:keypressed(key)
-	--(Mainly for debug)
-	if Constants.DEBUG == true then
-		if key == "h" then --add 10 hands
-			self.remainingHands = self.remainingHands + 10
-		end
+  self.terrain:keypressed(key)
+  --(Mainly for debug)
+  if Constants.DEBUG == true then
+    if key == "h" then --add 10 hands
+      self.remainingHands = self.remainingHands + 10
+    end
 
-		if key == "r" then --set rerolls to 10
-			self.availableRerolls = self.availableRerolls + 10
-		end
+    if key == "r" then --set rerolls to 10
+      self.availableRerolls = self.availableRerolls + 10
+    end
 
-		if key == "a" then --skip round
-			self.roundScore = 10000000
-			self:endRound()
-		end
-	end
+    if key == "a" then --skip round
+      self.roundScore = 10000000
+      self:endRound()
+    end
+  end
 end
 
 --==TRIGGERING PHASE==--
 function Round:getDicesOrder(usedDices)
-	--[[
+  --[[
     Cette fonction permet de récupèrer les dés dans l'ordre de trigger
     -> Retourne une liste des dés dans l'ordre à trigger
     L'ordre est le suivant : de gauche à droite et de bas en haut
     ]]
 
-	self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
-	self.dicesOrder = {} --Same but for the dice objects
+  self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
+  self.dicesOrder = {} --Same but for the dice objects
 
-	--Créée deux listes
-	local diceFaces = {}
-	local dices = {}
+  --Créée deux listes
+  local diceFaces = {}
+  local dices = {}
 
-	for i, dice in next, usedDices do
-		table.insert(diceFaces, self.terrain.diceFaces[dice])
-		table.insert(dices, dice)
-	end
+  for i, dice in next, usedDices do
+    table.insert(diceFaces, self.terrain.diceFaces[dice])
+    table.insert(dices, dice)
+  end
 
-	local indexes = {} --Liste d'indexes servant de base pour le tri des dés et des dicefaces
-	--Remplissage des indexes
-	for i = 1, table.getn(usedDices) do
-		table.insert(indexes, i)
-	end
-	-- Trie des indexes
-	table.sort(indexes, function(a, b)
-		local da = diceFaces[a]
-		local db = diceFaces[b]
+  local indexes = {} --Liste d'indexes servant de base pour le tri des dés et des dicefaces
+  --Remplissage des indexes
+  for i = 1, table.getn(usedDices) do
+    table.insert(indexes, i)
+  end
+  -- Trie des indexes
+  table.sort(indexes, function(a, b)
+    local da = diceFaces[a]
+    local db = diceFaces[b]
 
-		if da.targetX ~= db.targetX then
-			return da.targetX < db.targetX
-		elseif da.targetY ~= db.targetY then
-			return da.targetY < db.targetY
-		end
-	end)
+    if da.targetX ~= db.targetX then
+      return da.targetX < db.targetX
+    elseif da.targetY ~= db.targetY then
+      return da.targetY < db.targetY
+    end
+  end)
 
-	-- Trie les dés à partir des indexes
-	local sortedDices = {}
-	for i, index in ipairs(indexes) do
-		table.insert(sortedDices, dices[index])
-	end
+  -- Trie les dés à partir des indexes
+  local sortedDices = {}
+  for i, index in ipairs(indexes) do
+    table.insert(sortedDices, dices[index])
+  end
 
-	-- Trie les DiceFaces à partir des dés triés
-	local sortedDiceFaces = {}
-	for k, d in next, sortedDices do
-		table.insert(sortedDiceFaces, self.terrain.diceFaces[d])
-	end
+  -- Trie les DiceFaces à partir des dés triés
+  local sortedDiceFaces = {}
+  for k, d in next, sortedDices do
+    table.insert(sortedDiceFaces, self.terrain.diceFaces[d])
+  end
 
-	return sortedDiceFaces, sortedDices
+  return sortedDiceFaces, sortedDices
 end
 
 function Round:startTriggeringPhase(usedDices, figure) --Nouvelle versionn commence par ajouter tous les effets des dés dans la queue des effets
-	self.phase = Constants.ROUND_STATES.TRIGGERING
-	self.triggerFaceHistory = {}
-	self.usedDices = usedDices
-	self.playedFigure = figure
-	self.effectsTriggerQueue = {}
+  self.phase = Constants.ROUND_STATES.TRIGGERING
+  self.triggerFaceHistory = {}
+  self.usedDices = usedDices
+  self.playedFigure = figure
+  self.effectsTriggerQueue = {}
 
-	local _, sortedDices = self:getDicesOrder(usedDices)
+  local _, sortedDices = self:getDicesOrder(usedDices)
 
-	for _, dice in next, sortedDices do
-		local diceFace = self.terrain.diceFaces[dice]
-		local faceObject = dice:getCurrentFaceObject()
+  for _, dice in next, sortedDices do
+    local diceFace = self.terrain.diceFaces[dice]
+    local faceObject = dice:getCurrentFaceObject()
 
-		local effects = faceObject:buildEffects(self)
+    local effects = faceObject:buildEffects(self)
 
-		local function insertEffects()
-			for _, effect in next, effects do
-				table.insert(self.effectsTriggerQueue, {
-					dice = dice,
-					diceFace = diceFace,
-					effect = effect,
-				})
-			end
-		end
+    local function insertEffects()
+      for _, effect in next, effects do
+        table.insert(self.effectsTriggerQueue, {
+          dice = dice,
+          diceFace = diceFace,
+          effect = effect,
+        })
+      end
+    end
 
-		insertEffects()
-		-- Double trigger si dernier tour avec sticker approprié
-		if self.remainingHands == 1 and self.run.lastTurnDoubleTrigger == true then
-			insertEffects()
-		end
-	end
+    insertEffects()
+    -- Double trigger si dernier tour avec sticker approprié
+    if self.remainingHands == 1 and self.run.lastTurnDoubleTrigger == true then
+      insertEffects()
+    end
+  end
 
-	self:triggerNextEffect()
+  self:triggerNextEffect()
 end
 
 --Fonction qui ajoute l'effet suivant à la queue des effets
 function Round:triggerNextEffect()
-	if #self.effectsTriggerQueue >= 1 then
-		local current = self.effectsTriggerQueue[1]
-		table.remove(self.effectsTriggerQueue, 1)
+  if #self.effectsTriggerQueue >= 1 then
+    local current = self.effectsTriggerQueue[1]
+    table.remove(self.effectsTriggerQueue, 1)
 
-		-- On vérifie que la face n'est pas désactivée
-		if current.diceFace.representedObject.disabled == false then
-			-- On ajoute à l'historique
-			table.insert(self.triggerFaceHistory, current.diceFace)
+    -- On vérifie que la face n'est pas désactivée
+    if current.diceFace.representedObject.disabled == false then
+      -- On ajoute à l'historique
+      table.insert(self.triggerFaceHistory, current.diceFace)
 
-			-- On déclenche l'animation et l'effet
-			current.diceFace:triggerEffect(current.effect, self)
+      -- On déclenche l'animation et l'effet
+      current.diceFace:triggerEffect(current.effect, self)
 
-			-- On vérifie si le prochain effet appartient à un dé différent
-			local nextEntry = self.effectsTriggerQueue[1]
-			local isLastEffectOfDice = (nextEntry == nil) or (nextEntry.dice ~= current.dice)
+      -- On vérifie si le prochain effet appartient à un dé différent
+      local nextEntry = self.effectsTriggerQueue[1]
+      local isLastEffectOfDice = (nextEntry == nil) or (nextEntry.dice ~= current.dice)
 
-			if isLastEffectOfDice then
-				-- On notifie les stickers
-				self.run:diceTriggeredEffect({
-					dice = current.dice,
-					face = current.diceFace,
-					effect = current.effect,
-				})
-			end
-		else
-			-- Face désactivée, on passe au suivant directement
-			table.remove(self.effectsTriggerQueue, 1)
-			self:triggerNextEffect()
-		end
-	else
-		self:startBackupPhase()
-	end
+      if isLastEffectOfDice then
+        -- On notifie les stickers
+        self.run:diceTriggeredEffect({
+          dice = current.dice,
+          face = current.diceFace,
+          effect = current.effect,
+        })
+      end
+    else
+      -- Face désactivée, on passe au suivant directement
+      table.remove(self.effectsTriggerQueue, 1)
+      self:triggerNextEffect()
+    end
+  else
+    self:startBackupPhase()
+  end
 end
 
 --Permet l'injection d'un effet de dé en tête de queue.
 --Le parametre passé est un dé objet
 function Round:injectDiceEffectsAtFront(dice)
-	local faceObject = dice:getCurrentFaceObject()
-	local effects = faceObject:buildEffects(self)
-	for i = #effects, 1, -1 do
-		table.insert(self.effectsTriggerQueue, 1, {
-			dice = dice,
-			diceFace = self.terrain.diceFaces[dice],
-			effect = effects[i],
-		})
-	end
+  local faceObject = dice:getCurrentFaceObject()
+  local effects = faceObject:buildEffects(self)
+  for i = #effects, 1, -1 do
+    table.insert(self.effectsTriggerQueue, 1, {
+      dice = dice,
+      diceFace = self.terrain.diceFaces[dice],
+      effect = effects[i],
+    })
+  end
 end
 
 function Round:startBackupPhase()
-	self.backupDiceHistory = {}
-	self.backupFaceHistory = {}
+  self.backupDiceHistory = {}
+  self.backupFaceHistory = {}
 
-	--Get the list of dices to use
-	local unselectedDices = self:getUnSelectedDices()
-	local dices = {}
+  --Get the list of dices to use
+  local unselectedDices = self:getUnSelectedDices()
+  local dices = {}
 
-	for i, b in next, unselectedDices do
-		table.insert(dices, i)
-	end
+  for i, b in next, unselectedDices do
+    table.insert(dices, i)
+  end
 
-	--On récupère l'ordre à la fois des objets UI et des dés associés
-	local facesOrder, dicesOrder = self:getDicesOrder(dices)
+  --On récupère l'ordre à la fois des objets UI et des dés associés
+  local facesOrder, dicesOrder = self:getDicesOrder(dices)
 
-	--On alimente la liste de dés à
-	for i, f in next, facesOrder do
-		if f.representedObject.backup == true then
-			table.insert(self.diceFacesBackupQueue, f)
-		end
-	end
+  --On alimente la liste de dés à
+  for i, f in next, facesOrder do
+    if f.representedObject.backup == true then
+      table.insert(self.diceFacesBackupQueue, f)
+    end
+  end
 
-	for i, d in next, dicesOrder do
-		if d:getCurrentFaceObject().backup == true then
-			table.insert(self.dicesBackupQueue, d)
-		end
-	end
+  for i, d in next, dicesOrder do
+    if d:getCurrentFaceObject().backup == true then
+      table.insert(self.dicesBackupQueue, d)
+    end
+  end
 
-	--trigger the first backup dice
-	self:triggerNextBackupDice()
+  --trigger the first backup dice
+  self:triggerNextBackupDice()
 end
 
 function Round:startBackupPhase() --Nouvelle version
-	self.backupEffectsQueue = {}
+  self.backupEffectsQueue = {}
 
-	local unselectedDices = self:getUnSelectedDices()
-	local dices = {}
-	for i, _ in next, unselectedDices do
-		table.insert(dices, i)
-	end
+  local unselectedDices = self:getUnSelectedDices()
+  local dices = {}
+  for i, _ in next, unselectedDices do
+    table.insert(dices, i)
+  end
 
-	local facesOrder, dicesOrder = self:getDicesOrder(dices)
+  local facesOrder, dicesOrder = self:getDicesOrder(dices)
 
-	for i, f in next, facesOrder do
-		if f.representedObject.backup == true then
-			local faceObject = f.representedObject
-			local effects = faceObject:buildBackupEffects(self)
-			for _, effect in next, effects do
-				table.insert(self.backupEffectsQueue, {
-					dice = dicesOrder[i],
-					diceFace = f,
-					effect = effect,
-				})
-			end
-		end
-	end
+  for i, f in next, facesOrder do
+    if f.representedObject.backup == true then
+      local faceObject = f.representedObject
+      local effects = faceObject:buildBackupEffects(self)
+      for _, effect in next, effects do
+        table.insert(self.backupEffectsQueue, {
+          dice = dicesOrder[i],
+          diceFace = f,
+          effect = effect,
+        })
+      end
+    end
+  end
 
-	self:triggerNextBackupEffect()
+  self:triggerNextBackupEffect()
 end
 
 function Round:triggerNextBackupEffect()
-	if #self.backupEffectsQueue >= 1 then
-		local current = self.backupEffectsQueue[1]
-		table.remove(self.backupEffectsQueue, 1)
+  if #self.backupEffectsQueue >= 1 then
+    local current = self.backupEffectsQueue[1]
+    table.remove(self.backupEffectsQueue, 1)
 
-		if current.diceFace.representedObject.disabled == false then
-			current.diceFace:triggerBackupEffect(current.effect, self)
-		else
-			self:triggerNextBackupEffect()
-		end
-	else
-		-- Désactive les dés ghosts non utilisés
-		local unusedDices = {}
-		for _, d in next, self.diceObjects do
-			if not self:containsDice(self.usedDices, d) then
-				table.insert(unusedDices, d)
-			end
-		end
+    if current.diceFace.representedObject.disabled == false then
+      current.diceFace:triggerBackupEffect(current.effect, self)
+    else
+      self:triggerNextBackupEffect()
+    end
+  else
+    -- Désactive les dés ghosts non utilisés
+    local unusedDices = {}
+    for _, d in next, self.diceObjects do
+      if not self:containsDice(self.usedDices, d) then
+        table.insert(unusedDices, d)
+      end
+    end
 
-		for _, d in next, unusedDices do
-			if d:getCurrentFaceObject().ghost == true and d:getCurrentFaceObject().wasJustReenabled ~= true then
-				self.terrain.diceFaces[d]:disable(self.run)
-			end
-		end
+    for _, d in next, unusedDices do
+      if d:getCurrentFaceObject().ghost == true and d:getCurrentFaceObject().wasJustReenabled ~= true then
+        self.terrain.diceFaces[d]:disable(self.run)
+      end
+    end
 
-		local j = 0
-		for _, diceface in next, self.terrain.diceFaces do
-			j = j + 1
-			if j == 5 then
-				diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
-				diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
-				diceface.animator:addDelay(0.2, function()
-					self:endTriggeringPhase()
-				end)
-			else
-				diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
-				diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
-				diceface.animator:addDelay(0.2)
-			end
-		end
-	end
+    local j = 0
+    for _, diceface in next, self.terrain.diceFaces do
+      j = j + 1
+      if j == 5 then
+        diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
+        diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
+        diceface.animator:addDelay(0.2, function()
+          self:endTriggeringPhase()
+        end)
+      else
+        diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
+        diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
+        diceface.animator:addDelay(0.2)
+      end
+    end
+  end
 end
 
 function Round:endTriggeringPhase()
-	self.phase = Constants.ROUND_STATES.PLAYING
-	G.currentRun.lastPlayedFigure = self.playedFigure
+  self.phase = Constants.ROUND_STATES.PLAYING
+  G.currentRun.lastPlayedFigure = self.playedFigure
 
-	if self.remainingHands >= 1 then
-		self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
-		self:resetselectedDices()
-		if self.bossType and self.bossType == Constants.BOSS_TYPES.CHEF_RD then
-			self.availableRerolls = 0
-		else
-			self.availableRerolls = self.run.baseRerolls
-		end
+  if self.remainingHands >= 1 then
+    self.remainingHands = self.remainingHands - 1 -- On retire une main aux mains disponibles
+    self:resetselectedDices()
+    if self.bossType and self.bossType == Constants.BOSS_TYPES.CHEF_RD then
+      self.availableRerolls = 0
+    else
+      self.availableRerolls = self.run.baseRerolls
+    end
 
-		self.roundScore = self.roundScore + self.handScore
+    self.roundScore = self.roundScore + self.handScore
 
-		if self.handScore > self.run.bestHand then
-			self.run.bestHand = self.handScore
-		end
+    if self.handScore > self.run.bestHand then
+      self.run.bestHand = self.handScore
+    end
 
-		self.handScore = 0
-	end
+    self.handScore = 0
+  end
 
-	self.run:stickerEndTriggeringPhaseEffect()
+  self.run:stickerEndTriggeringPhaseEffect()
 
-	local nomorehand = true
+  local nomorehand = true
 
-	-- On vérifie qu'il reste bien des figures à jouer
-	for key, figure in next, Constants.FIGURES do
-		if G.currentRun.availableFigures[figure] > 0 and G.currentRun.currentRound.disabledFigures[figure] == false then
-			nomorehand = false
-		end
-	end
+  -- On vérifie qu'il reste bien des figures à jouer
+  for key, figure in next, Constants.FIGURES do
+    if G.currentRun.availableFigures[figure] > 0 and G.currentRun.currentRound.disabledFigures[figure] == false then
+      nomorehand = false
+    end
+  end
 
-	--Si plus de main dispo, plus de tour dispo, ou si le score est superieur au target : on termine le round
-	if self.roundScore >= self.targetScore or self.remainingHands <= 0 or nomorehand then
-		self:endRound()
-	else
-		self.firstRoll = false
-		self.terrain.timers.firstRerollTime = 0
-	end
+  --Si plus de main dispo, plus de tour dispo, ou si le score est superieur au target : on termine le round
+  if self.roundScore >= self.targetScore or self.remainingHands <= 0 or nomorehand then
+    self:endRound()
+  else
+    self.firstRoll = false
+    self.terrain.timers.firstRerollTime = 0
+  end
 
-	--Reset des stats de trigger phase
-	self.handRefunded = false
-	self.bountyHunterFigure = G.rngGeneral:random(1, 13)
+  --Reset des stats de trigger phase
+  self.handRefunded = false
+  self.bountyHunterFigure = G.rngGeneral:random(1, 13)
 end
 
 --==DICE FUNCTIONS==--
 
 --TODO: à bouger dans roundscreen
 function Round:updateselectedDices(uiFace)
-	--si le dé donné en paramètre est sélectionné et pas encore dans la liste, on l'ajoute à la fin de la liste.
-	--si il est sélectionné mais pas dans la liste, on le laisse
-	--si il est désélectionné et dans la liste, on le retire.
+  --si le dé donné en paramètre est sélectionné et pas encore dans la liste, on l'ajoute à la fin de la liste.
+  --si il est sélectionné mais pas dans la liste, on le laisse
+  --si il est désélectionné et dans la liste, on le retire.
 
-	if uiFace:getIsSelected() then -- Dé sélectionné
-		if not self:containsDice(self.selectedDices, uiFace:getDiceObject()) then
-			table.insert(self.selectedDices, uiFace:getDiceObject()) -- Ajoute le dé à la fin
-			G.audio:playSelectSound()
+  if uiFace:getIsSelected() then -- Dé sélectionné
+    if not self:containsDice(self.selectedDices, uiFace:getDiceObject()) then
+      table.insert(self.selectedDices, uiFace:getDiceObject()) -- Ajoute le dé à la fin
+      G.audio:playSelectSound()
 
-			for i, f in next, self.terrain.unselectedDices do
-				if f == uiFace then
-					table.remove(self.terrain.unselectedDices, i)
-				end
-			end
-		end
-	else
-		if self:containsDice(self.selectedDices, uiFace:getDiceObject()) then -- Dé non sélectionné
-			for i, dice in ipairs(self.selectedDices) do
-				if dice == uiFace:getDiceObject() then
-					G.audio:playDeselectSound()
+      for i, f in next, self.terrain.unselectedDices do
+        if f == uiFace then
+          table.remove(self.terrain.unselectedDices, i)
+        end
+      end
+    end
+  else
+    if self:containsDice(self.selectedDices, uiFace:getDiceObject()) then -- Dé non sélectionné
+      for i, dice in ipairs(self.selectedDices) do
+        if dice == uiFace:getDiceObject() then
+          G.audio:playDeselectSound()
 
-					table.remove(self.selectedDices, i) --Trouve le dé dans la liste et le supprime
-					--On l'ajoute à la liste des dés non sélectionnés
-					if self.terrain.unselectedDices then
-						table.insert(self.terrain.unselectedDices, uiFace)
-					else
-						self.terrain.unselectedDices = {}
-						table.insert(self.terrain.unselectedDices, uiFace)
-					end
-					break
-				end
-			end
-		end
-	end
+          table.remove(self.selectedDices, i) --Trouve le dé dans la liste et le supprime
+          --On l'ajoute à la liste des dés non sélectionnés
+          if self.terrain.unselectedDices then
+            table.insert(self.terrain.unselectedDices, uiFace)
+          else
+            self.terrain.unselectedDices = {}
+            table.insert(self.terrain.unselectedDices, uiFace)
+          end
+          break
+        end
+      end
+    end
+  end
 
-	--Update the selected dices position
-	self.terrain:updateSelectedPosDices()
-	--Update the unselected dices position
-	self.terrain:updateUnselectedPosDices()
+  --Update the selected dices position
+  self.terrain:updateSelectedPosDices()
+  --Update the unselected dices position
+  self.terrain:updateUnselectedPosDices()
 
-	local us = self:getUnSelectedDices()
+  local us = self:getUnSelectedDices()
 end
 
 --==REROLL FUNCTIONS==--
 function Round:rerollDices() --Triggers the makeRoll function after clicking the reroll button
-	self.terrain.rerollingTimer = 2
-	G.animator:finishAll()
-	G.animator:add("waveY", -6, 0, 1.0, AnimationUtils.Easing.outQuad)
+  self.terrain.rerollingTimer = 2
+  G.animator:finishAll()
+  G.animator:add("waveY", -6, 0, 1.0, AnimationUtils.Easing.outQuad)
 
-	self.run:stickerRerollEffect()
+  self.run:stickerRerollEffect()
 
-	if self.firstRoll == false then
-		G.audio:playSource(AudioFiles.REROLL_SOUND)
-		self:makeRoll(self.diceObjects)
-		self.firstRoll = true
-		return
-	else
-		G.audio:playSource(AudioFiles.REROLL_SOUND_2)
-	end
+  if self.firstRoll == false then
+    G.audio:playSource(AudioFiles.REROLL_SOUND)
+    self:makeRoll(self.diceObjects)
+    self.firstRoll = true
+    return
+  else
+    G.audio:playSource(AudioFiles.REROLL_SOUND_2)
+  end
 
-	local dicesToReroll = {}
-	--Add 1 to the total rerolls used this run
-	self.run.usedRerolls = self.run.usedRerolls + 1
-	--On créée la liste des dés à reroll
-	for k, d in next, self.diceObjects do
-		if not self:containsDice(self.selectedDices, d) then
-			table.insert(dicesToReroll, d)
-		end
-	end
+  local dicesToReroll = {}
+  --Add 1 to the total rerolls used this run
+  self.run.usedRerolls = self.run.usedRerolls + 1
+  --On créée la liste des dés à reroll
+  for k, d in next, self.diceObjects do
+    if not self:containsDice(self.selectedDices, d) then
+      table.insert(dicesToReroll, d)
+    end
+  end
 
-	--On désactive les dés ghost qui sont reroll
-	for k, d in next, dicesToReroll do
-		if d:getCurrentFaceObject().ghost == true then
-			self.terrain.diceFaces[d]:disable(self.run)
-		end
-	end
+  --On désactive les dés ghost qui sont reroll
+  for k, d in next, dicesToReroll do
+    if d:getCurrentFaceObject().ghost == true then
+      self.terrain.diceFaces[d]:disable(self.run)
+    end
+  end
 
-	if self.availableRerolls > 0 then
-		self:makeRoll(dicesToReroll)
-		self.availableRerolls = self.availableRerolls - 1
-	end
+  if self.availableRerolls > 0 then
+    self:makeRoll(dicesToReroll)
+    self.availableRerolls = self.availableRerolls - 1
+  end
 end
 
 function Round:makeRoll(dices)
-	local draw = self:drawDices(dices) --draw the dices
-	for key, dice in next, self.diceObjects do
-		dice:setCurrentFaceObject(self.drawedFaceObjects[dice])
-		self.terrain.diceFaces[dice]:setFaceObject(self.drawedFaceObjects[dice]) --update the ui
-	end
+  local draw = self:drawDices(dices) --draw the dices
+  for key, dice in next, self.diceObjects do
+    dice:setCurrentFaceObject(self.drawedFaceObjects[dice])
+    self.terrain.diceFaces[dice]:setFaceObject(self.drawedFaceObjects[dice]) --update the ui
+  end
 
-	local rerolledDiceFaces = {}
-	for k, d in next, dices do
-		rerolledDiceFaces[d] = self.terrain.diceFaces[d]
-	end
+  local rerolledDiceFaces = {}
+  for k, d in next, dices do
+    rerolledDiceFaces[d] = self.terrain.diceFaces[d]
+  end
 
-	for key, dice in next, dices do --Creates the roll animation for the rerolled dices
-		self.terrain.diceFaces[dice].isRolling = true
+  for key, dice in next, dices do --Creates the roll animation for the rerolled dices
+    self.terrain.diceFaces[dice].isRolling = true
 
-		local randomXPos = G.rngGeneral:random(80, self.terrain.dice_tray:getWidth() - 80)
-		local randomYPos = G.rngGeneral:random(220, self.terrain.dice_tray:getHeight() - 150)
-		local randomR = ((G.rngGeneral:random(0, 1000) / 1000) * 5) - 2.5 --(1001 angles possibles entre -2.5 et 5 radians)
+    local randomXPos = G.rngGeneral:random(80, self.terrain.dice_tray:getWidth() - 80)
+    local randomYPos = G.rngGeneral:random(220, self.terrain.dice_tray:getHeight() - 150)
+    local randomR = ((G.rngGeneral:random(0, 1000) / 1000) * 5) - 2.5 --(1001 angles possibles entre -2.5 et 5 radians)
 
-		--Set initial position (random X axis, under the terrain)
-		self.terrain.diceFaces[dice]:setX(self.terrain.dice_tray:getWidth() / 2)
-		--self.terrain.diceFaces[dice].targetX = 2000
-		self.terrain.diceFaces[dice]:setY(self.terrain.dice_tray:getHeight() + 100)
-		--self.terrain.diceFaces[dice].targetY = 2000
-		self.terrain.diceFaces[dice].rotation = 0
+    --Set initial position (random X axis, under the terrain)
+    self.terrain.diceFaces[dice]:setX(self.terrain.dice_tray:getWidth() / 2)
+    --self.terrain.diceFaces[dice].targetX = 2000
+    self.terrain.diceFaces[dice]:setY(self.terrain.dice_tray:getHeight() + 100)
+    --self.terrain.diceFaces[dice].targetY = 2000
+    self.terrain.diceFaces[dice].rotation = 0
 
-		--Add an animation to make them roll--
+    --Add an animation to make them roll--
 
-		--Add a small delay relative to the number of dices to rolls
-		self.terrain.diceFaces[dice].animator:addDelay(((5 - table.getn(dices)) / 5) * 0.4)
+    --Add a small delay relative to the number of dices to rolls
+    self.terrain.diceFaces[dice].animator:addDelay(((5 - table.getn(dices)) / 5) * 0.4)
 
-		--Add a small random delay to add some relaness
-		self.terrain.diceFaces[dice].animator:addDelay((G.rngGeneral:random(0, 100) / 100) * 0.2)
-		local rollDuration = (G.rngGeneral:random(50, 100) / 100) * 0.6
-		if self.availableRerolls == 1 then
-			rollDuration = rollDuration + 0.3
-		end
+    --Add a small random delay to add some relaness
+    self.terrain.diceFaces[dice].animator:addDelay((G.rngGeneral:random(0, 100) / 100) * 0.2)
+    local rollDuration = (G.rngGeneral:random(50, 100) / 100) * 0.6
+    if self.availableRerolls == 1 then
+      rollDuration = rollDuration + 0.3
+    end
 
-		self.terrain.diceFaces[dice].animator:addGroup({
-			{
-				property = "x",
-				from = self.terrain.canvas:getWidth() / 2,
-				targetValue = randomXPos,
-				duration = rollDuration,
-				onComplete = function() end,
-				easing = AnimationUtils.Easing.outCubic,
-			},
-			{
-				property = "targetX",
-				from = self.terrain.canvas:getWidth() / 2,
-				targetValue = randomXPos,
-				duration = rollDuration,
-				onComplete = function() end,
-			},
-			{
-				property = "y",
-				from = self.terrain.canvas:getHeight() + 100,
-				targetValue = randomYPos,
-				duration = rollDuration,
-				onComplete = function() end,
-				easing = AnimationUtils.Easing.outCubic,
-			},
-			{
-				property = "targetY",
-				from = self.terrain.canvas:getHeight() + 100,
-				targetValue = randomYPos,
-				duration = rollDuration,
-				onComplete = function() end,
-			},
-			{
-				property = "rotation",
-				from = -0,
-				targetValue = randomR,
-				duration = rollDuration,
-				onComplete = function() end,
-				easing = AnimationUtils.Easing.outCubic,
-			},
-			{
-				property = "baseRotation",
-				from = -0,
-				targetValue = randomR,
-				duration = rollDuration,
-				onComplete = function() end,
-				easing = AnimationUtils.Easing.outCubic,
-			},
-			{
-				property = "displayedNumber",
-				from = 2,
-				targetValue = 6,
-				duration = rollDuration * 2,
-				easing = AnimationUtils.makeRandomEasing(0.3, 0.00000005, function(t)
-					return 1 - t
-				end),
-			},
-		})
-		self.terrain.diceFaces[dice].animator:addDelay(0.00, function()
-			self.terrain.diceFaces[dice].displayedNumber = nil
-			self.terrain.diceFaces[dice]:updateSprite()
-		end)
-		--On stock tous les dés non sélectionnés dans la liste unselectedDiceFaces
-		--self.terrain.unselectedDices = rerolledDiceFaces
-		self.terrain.diceFaces[dice].animator:addDelay(0.6, function()
-			self.terrain:sortUnselectedDices(rerolledDiceFaces)
+    self.terrain.diceFaces[dice].animator:addGroup({
+      {
+        property = "x",
+        from = self.terrain.canvas:getWidth() / 2,
+        targetValue = randomXPos,
+        duration = rollDuration,
+        onComplete = function() end,
+        easing = AnimationUtils.Easing.outCubic,
+      },
+      {
+        property = "targetX",
+        from = self.terrain.canvas:getWidth() / 2,
+        targetValue = randomXPos,
+        duration = rollDuration,
+        onComplete = function() end,
+      },
+      {
+        property = "y",
+        from = self.terrain.canvas:getHeight() + 100,
+        targetValue = randomYPos,
+        duration = rollDuration,
+        onComplete = function() end,
+        easing = AnimationUtils.Easing.outCubic,
+      },
+      {
+        property = "targetY",
+        from = self.terrain.canvas:getHeight() + 100,
+        targetValue = randomYPos,
+        duration = rollDuration,
+        onComplete = function() end,
+      },
+      {
+        property = "rotation",
+        from = -0,
+        targetValue = randomR,
+        duration = rollDuration,
+        onComplete = function() end,
+        easing = AnimationUtils.Easing.outCubic,
+      },
+      {
+        property = "baseRotation",
+        from = -0,
+        targetValue = randomR,
+        duration = rollDuration,
+        onComplete = function() end,
+        easing = AnimationUtils.Easing.outCubic,
+      },
+      {
+        property = "displayedNumber",
+        from = 2,
+        targetValue = 6,
+        duration = rollDuration * 2,
+        easing = AnimationUtils.makeRandomEasing(0.3, 0.00000005, function(t)
+          return 1 - t
+        end),
+      },
+    })
+    self.terrain.diceFaces[dice].animator:addDelay(0.00, function()
+      self.terrain.diceFaces[dice].displayedNumber = nil
+      self.terrain.diceFaces[dice]:updateSprite()
+    end)
+    --On stock tous les dés non sélectionnés dans la liste unselectedDiceFaces
+    --self.terrain.unselectedDices = rerolledDiceFaces
+    self.terrain.diceFaces[dice].animator:addDelay(0.6, function()
+      self.terrain:sortUnselectedDices(rerolledDiceFaces)
 
-			if self.run.tutorial then
-				self.terrain.animator:addDelay(0.3, function()
-					if self.run.usedRerolls == 0 then
-						TutorialEvents.firstRoll()
-					elseif self.run.usedRerolls == 1 then
-						TutorialEvents.secondRoll()
-					elseif self.run.usedRerolls == 2 then
-						TutorialEvents.selectLastDices()
-					end
-				end)
-			end
-		end)
-	end
+      if self.run.tutorial then
+        self.terrain.animator:addDelay(0.3, function()
+          if self.run.usedRerolls == 0 then
+            TutorialEvents.firstRoll()
+          elseif self.run.usedRerolls == 1 then
+            TutorialEvents.secondRoll()
+          elseif self.run.usedRerolls == 2 then
+            TutorialEvents.selectLastDices()
+          end
+        end)
+      end
+    end)
+  end
 end
 
 function Round:drawDices(dices)
-	--Tire uniquement les dés donnés en paramètre et retourne une table avec comme clé les dés et en valeur le numéro de face tiré.
+  --Tire uniquement les dés donnés en paramètre et retourne une table avec comme clé les dés et en valeur le numéro de face tiré.
 
-	local faceObjects = self.drawedFaceObjects
-	for key, dice in next, dices do
-		local n = G.rngDices:random(1, dice:getNbFaces()) --Prend un index dans les faces du dé
-		local faceObject = dice:getFace(n)
-		faceObjects[dice] = faceObject
-	end
-	--Retourne les indexes des faces dans l'objet dé
-	self.drawedFaceObjects = faceObjects --Sets the drawed face objects
+  local faceObjects = self.drawedFaceObjects
+  for key, dice in next, dices do
+    local n = G.rngDices:random(1, dice:getNbFaces()) --Prend un index dans les faces du dé
+    local faceObject = dice:getFace(n)
+    faceObjects[dice] = faceObject
+  end
+  --Retourne les indexes des faces dans l'objet dé
+  self.drawedFaceObjects = faceObjects --Sets the drawed face objects
 end
 
 --==FIGURE FUNCTIONS==--
 function Round:playFigure(points, usedDices, figure) --Function that triggers the hand
-	--Commencer la phase de déclenchement
-	G.currentRun.savedRerolls = G.currentRun.savedRerolls + self.availableRerolls
+  --Commencer la phase de déclenchement
+  G.currentRun.savedRerolls = G.currentRun.savedRerolls + self.availableRerolls
 
-	--Si boss trésorier : on retire de l'argent selon le nombre de dés
-	if self.roundType == Constants.ROUND_TYPES.BOSS and self.bossType == Constants.BOSS_TYPES.TRESORIER then
-		self.terrain:setMoneyTo(self.run.money - table.getn(usedDices))
-	end
+  --Si boss trésorier : on retire de l'argent selon le nombre de dés
+  if self.roundType == Constants.ROUND_TYPES.BOSS and self.bossType == Constants.BOSS_TYPES.TRESORIER then
+    self.terrain:setMoneyTo(self.run.money - table.getn(usedDices))
+  end
 
-	if self.disabledFigures[figure] == false then
-		self:startTriggeringPhase(usedDices, figure)
+  if self.disabledFigures[figure] == false then
+    self:startTriggeringPhase(usedDices, figure)
 
-		--Add one to the playcount
-		self.run.figuresInfos[figure].playcount = self.run.figuresInfos[figure].playcount + 1
+    --Add one to the playcount
+    self.run.figuresInfos[figure].playcount = self.run.figuresInfos[figure].playcount + 1
 
-		--Ajouter le score de base de la figure à la main
-		self.handScore = self.handScore + points -- On ajoute les points au score
-		self.terrain.handScoreDisplay = self.handScore
-	else
-		--On termine la phase de trigger
+    --Ajouter le score de base de la figure à la main
+    self.handScore = self.handScore + points -- On ajoute les points au score
+    self.terrain.handScoreDisplay = self.handScore
+  else
+    --On termine la phase de trigger
 
-		--Désactiver les dés ghosts qui ne sont pas utilisés dans la figure.
-		--Liste des dés non utilisés (tous)
-		local unusedDices = {}
-		for i, d in next, self.diceObjects do
-			table.insert(unusedDices, d)
-		end
+    --Désactiver les dés ghosts qui ne sont pas utilisés dans la figure.
+    --Liste des dés non utilisés (tous)
+    local unusedDices = {}
+    for i, d in next, self.diceObjects do
+      table.insert(unusedDices, d)
+    end
 
-		--On désactive les dés ghosts qui ne sont pas utilisés
-		for i, d in next, unusedDices do
-			if d:getCurrentFaceObject().ghost == true and d:getCurrentFaceObject().wasJustReenabled ~= true then
-				self.terrain.diceFaces[d]:disable(self.run)
-			end
-		end
+    --On désactive les dés ghosts qui ne sont pas utilisés
+    for i, d in next, unusedDices do
+      if d:getCurrentFaceObject().ghost == true and d:getCurrentFaceObject().wasJustReenabled ~= true then
+        self.terrain.diceFaces[d]:disable(self.run)
+      end
+    end
 
-		--On rollback
-		local j = 0
-		for i, diceface in next, self.terrain.diceFaces do
-			j = j + 1
-			diceface.representedObject.wasJustReenabled = false
-			if j == 5 then
-				diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
-				diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
-				diceface.animator:addDelay(0.2, function()
-					self:endTriggeringPhase()
-				end) --On termine le round mais uniquement quand le dernier dé a terminé son animation
-			else
-				diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
-				diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
-				diceface.animator:addDelay(0.2)
-			end
-		end
-	end
+    --On rollback
+    local j = 0
+    for i, diceface in next, self.terrain.diceFaces do
+      j = j + 1
+      diceface.representedObject.wasJustReenabled = false
+      if j == 5 then
+        diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
+        diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
+        diceface.animator:addDelay(0.2, function()
+          self:endTriggeringPhase()
+        end) --On termine le round mais uniquement quand le dernier dé a terminé son animation
+      else
+        diceface.animator:add("y", diceface.y, diceface.y - 20, 0.1)
+        diceface.animator:add("y", diceface.y - 20, 1000, 0.2)
+        diceface.animator:addDelay(0.2)
+      end
+    end
+  end
 end
 
 --==UTILS==--
 function Round:getUnSelectedDices()
-	local unSelectedDices = {}
-	for i, dice in next, self.diceObjects do
-		local selected = false
-		for d, selectedDices in next, self.selectedDices do
-			if selectedDices == dice then
-				selected = true
-			end
-		end
-		if selected == false then
-			unSelectedDices[dice] = self.terrain.diceFaces[dice]
-		end
-	end
-	return unSelectedDices
+  local unSelectedDices = {}
+  for i, dice in next, self.diceObjects do
+    local selected = false
+    for d, selectedDices in next, self.selectedDices do
+      if selectedDices == dice then
+        selected = true
+      end
+    end
+    if selected == false then
+      unSelectedDices[dice] = self.terrain.diceFaces[dice]
+    end
+  end
+  return unSelectedDices
 end
 
 function Round:addToScore(n)
-	self.roundScore = self.roundScore + n
+  self.roundScore = self.roundScore + n
 end
 
 function Round:resetselectedDices()
-	self.selectedDices = {} --remove the dices
-	for key, uiFace in next, self.terrain.diceFaces do --unselect the UI Faces
-		uiFace:setSelected(false)
-		uiFace.anchorX = nil
-		uiFace.anchorY = nil
-	end
+  self.selectedDices = {} --remove the dices
+  for key, uiFace in next, self.terrain.diceFaces do --unselect the UI Faces
+    uiFace:setSelected(false)
+    uiFace.anchorX = nil
+    uiFace.anchorY = nil
+  end
 end
 
 function Round:containsDice(diceList, targetDice)
-	--Fonction pour vérifier qu'un élément est dans une liste
-	for _, dice in ipairs(diceList) do
-		if dice == targetDice then
-			return true
-		end
-	end
-	return false
+  --Fonction pour vérifier qu'un élément est dans une liste
+  for _, dice in ipairs(diceList) do
+    if dice == targetDice then
+      return true
+    end
+  end
+  return false
 end
 
 function Round:resetRound()
-	local newRound = self:new(
-		self.nround,
-		self.floorNumber,
-		self.deskNumber,
-		nil,
-		self.run,
-		self.baseReward,
-		self.targetScore,
-		self.diceObjects,
-		self.roundType,
-		self.faceRewards
-	)
+  local newRound = self:new(
+    self.nround,
+    self.floorNumber,
+    self.deskNumber,
+    nil,
+    self.run,
+    self.baseReward,
+    self.targetScore,
+    self.diceObjects,
+    self.roundType,
+    self.faceRewards
+  )
 
-	newRound.enemyCharacter = self.enemyCharacter
+  newRound.enemyCharacter = self.enemyCharacter
 
-	self.run.currentRound = newRound
+  self.run.currentRound = newRound
 end
 
 return Round

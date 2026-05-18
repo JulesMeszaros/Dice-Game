@@ -26,1159 +26,1148 @@ local font = Fonts.soraSmall
 local font30 = Fonts.soraMedium
 
 function RoundScreen:new(round)
-	local self =
-		setmetatable(Screen:new(round.run.currentFloor, round.run, Constants.RUN_STATES.ROUND, round), RoundScreen)
+  local self =
+    setmetatable(Screen:new(round.run.currentFloor, round.run, Constants.RUN_STATES.ROUND, round), RoundScreen)
 
-	--Tutorial variables
-	self.firstThrow = false
-	self.secondThrow = false
-	self.thirdThrow = false
+  --Tutorial variables
+  self.firstThrow = false
+  self.secondThrow = false
+  self.thirdThrow = false
 
-	self.gameCanvas = round.gameCanvas
-	self.round = round
-	self.endRoundPopUp = nil
-	self.gameOverPopup = nil
+  self.gameCanvas = round.gameCanvas
+  self.round = round
+  self.endRoundPopUp = nil
+  self.gameOverPopup = nil
 
-	--Timers
-	self.timers = {
-		oscillationTimePlayer = math.random(0, 100),
-		oscillationTimeEnemy = math.random(0, 100),
-	}
+  --Timers
+  self.timers = {
+    oscillationTimePlayer = math.random(0, 100),
+    oscillationTimeEnemy = math.random(0, 100),
+  }
 
-	self.rerollingTimer = 0
+  self.rerollingTimer = 0
 
-	self.playerScoreWavyText = UI.Text.TextWavy:new("0", 390, 72, {
-		amplitude = 1,
-		speed = 1.5,
-		font = Fonts.soraSmall,
-		centered = false,
-		colorStart = { 0, 0, 0 },
-		colorEnd = { 0, 0, 0 },
-	})
+  self.playerScoreWavyText = UI.Text.TextWavy:new("0", 390, 72, {
+    amplitude = 1,
+    speed = 1.5,
+    font = Fonts.soraSmall,
+    centered = false,
+    colorStart = { 0, 0, 0 },
+    colorEnd = { 0, 0, 0 },
+  })
 
-	self.playerName = love.graphics.newText(Fonts.sora30, G.playerName)
-	self.enemyName = love.graphics.newText(Fonts.sora30, self.round.enemyName)
+  self.playerName = love.graphics.newText(Fonts.sora30, G.playerName)
+  self.enemyName = love.graphics.newText(Fonts.sora30, self.round.enemyName)
 
-	self.enemyScoreWavyText = UI.Text.TextWavy:new(tostring(self.round.targetScore), 20, 215, {
-		amplitude = 1,
-		speed = 1.5,
-		font = Fonts.soraSmall,
-		centered = false,
-		colorStart = { 0, 0, 0 },
-		colorEnd = { 0, 0, 0 },
-	})
+  self.enemyScoreWavyText = UI.Text.TextWavy:new(tostring(self.round.targetScore), 20, 215, {
+    amplitude = 1,
+    speed = 1.5,
+    font = Fonts.soraSmall,
+    centered = false,
+    colorStart = { 0, 0, 0 },
+    colorEnd = { 0, 0, 0 },
+  })
 
-	self.firstRollText =
-		UI.Text.TextWavy:new("Roll the dices!", self.canvas:getWidth() / 2, (self.canvas:getHeight() / 2) + 170, {
-			font = Fonts.soraBig,
-			amplitude = 5,
-			centered = true,
-			spacing = 0.2,
-			speed = 2,
-			revealSpeed = 0.4, -- lettres/seconde
-			popOvershoot = 0.1,
-			shadow = true,
-			shadowOffset = { -10, 10 },
-			shadowOpacity = 0.2,
-			popAngleStart = 30,
-			popAngleOvershoot = 20,
-			colorStart = { 176 / 255, 169 / 255, 228 / 255, 1 },
-			colorEnd = { 221 / 255, 76 / 255, 173 / 255, 1 },
-		})
+  self.firstRollText =
+    UI.Text.TextWavy:new("Roll the dices!", self.canvas:getWidth() / 2, (self.canvas:getHeight() / 2) + 170, {
+      font = Fonts.soraBig,
+      amplitude = 5,
+      centered = true,
+      spacing = 0.2,
+      speed = 2,
+      revealSpeed = 0.4, -- lettres/seconde
+      popOvershoot = 0.1,
+      shadow = true,
+      shadowOffset = { -10, 10 },
+      shadowOpacity = 0.2,
+      popAngleStart = 30,
+      popAngleOvershoot = 20,
+      colorStart = { 176 / 255, 169 / 255, 228 / 255, 1 },
+      colorEnd = { 221 / 255, 76 / 255, 173 / 255, 1 },
+    })
 
-	--FIGURE BUTTONS
-	self.clickedFigure = nil
-	--Calculate points functions
-	self.calcBasePoints = {
-		function()
-			return CalculatePoints.numberBasePoints(1, self.round.selectedDices, self.round.run.figuresInfos[1].level)
-		end,
-		function()
-			return CalculatePoints.numberBasePoints(2, self.round.selectedDices, self.round.run.figuresInfos[2].level)
-		end,
-		function()
-			return CalculatePoints.numberBasePoints(3, self.round.selectedDices, self.round.run.figuresInfos[3].level)
-		end,
-		function()
-			return CalculatePoints.numberBasePoints(4, self.round.selectedDices, self.round.run.figuresInfos[4].level)
-		end,
-		function()
-			return CalculatePoints.numberBasePoints(5, self.round.selectedDices, self.round.run.figuresInfos[5].level)
-		end,
-		function()
-			return CalculatePoints.numberBasePoints(6, self.round.selectedDices, self.round.run.figuresInfos[6].level)
-		end,
-		function()
-			return CalculatePoints.chanceBasePoints(self.round.selectedDices, self.round.run.figuresInfos[7].level)
-		end,
-		function()
-			return CalculatePoints.brelanBasePoints(self.round.selectedDices, self.round.run.figuresInfos[8].level)
-		end,
-		function()
-			return CalculatePoints.carreBasePoints(self.round.selectedDices, self.round.run.figuresInfos[9].level)
-		end,
-		function()
-			return CalculatePoints.fullBasePoints(self.round.selectedDices, self.round.run.figuresInfos[10].level)
-		end,
-		function()
-			return CalculatePoints.pttSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[11].level)
-		end,
-		function()
-			return CalculatePoints.gdSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[12].level)
-		end,
-		function()
-			return CalculatePoints.yatzeeBasePoints(self.round.selectedDices, self.round.run.figuresInfos[13].level)
-		end,
-	}
+  --FIGURE BUTTONS
+  self.clickedFigure = nil
+  --Calculate points functions
+  self.calcBasePoints = {
+    function()
+      return CalculatePoints.numberBasePoints(1, self.round.selectedDices, self.round.run.figuresInfos[1].level)
+    end,
+    function()
+      return CalculatePoints.numberBasePoints(2, self.round.selectedDices, self.round.run.figuresInfos[2].level)
+    end,
+    function()
+      return CalculatePoints.numberBasePoints(3, self.round.selectedDices, self.round.run.figuresInfos[3].level)
+    end,
+    function()
+      return CalculatePoints.numberBasePoints(4, self.round.selectedDices, self.round.run.figuresInfos[4].level)
+    end,
+    function()
+      return CalculatePoints.numberBasePoints(5, self.round.selectedDices, self.round.run.figuresInfos[5].level)
+    end,
+    function()
+      return CalculatePoints.numberBasePoints(6, self.round.selectedDices, self.round.run.figuresInfos[6].level)
+    end,
+    function()
+      return CalculatePoints.chanceBasePoints(self.round.selectedDices, self.round.run.figuresInfos[7].level)
+    end,
+    function()
+      return CalculatePoints.brelanBasePoints(self.round.selectedDices, self.round.run.figuresInfos[8].level)
+    end,
+    function()
+      return CalculatePoints.carreBasePoints(self.round.selectedDices, self.round.run.figuresInfos[9].level)
+    end,
+    function()
+      return CalculatePoints.fullBasePoints(self.round.selectedDices, self.round.run.figuresInfos[10].level)
+    end,
+    function()
+      return CalculatePoints.pttSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[11].level)
+    end,
+    function()
+      return CalculatePoints.gdSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[12].level)
+    end,
+    function()
+      return CalculatePoints.yatzeeBasePoints(self.round.selectedDices, self.round.run.figuresInfos[13].level)
+    end,
+  }
 
-	self.calculatePointsFunctions = {
-		function()
-			self:playFigure(
-				Constants.FIGURES.ONES,
-				CalculatePoints.numberBasePoints(1, self.round.selectedDices, self.round.run.figuresInfos[1].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.TWOS,
-				CalculatePoints.numberBasePoints(2, self.round.selectedDices, self.round.run.figuresInfos[2].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.THREES,
-				CalculatePoints.numberBasePoints(3, self.round.selectedDices, self.round.run.figuresInfos[3].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.FOURS,
-				CalculatePoints.numberBasePoints(4, self.round.selectedDices, self.round.run.figuresInfos[4].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.FIVES,
-				CalculatePoints.numberBasePoints(5, self.round.selectedDices, self.round.run.figuresInfos[5].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.SIXS,
-				CalculatePoints.numberBasePoints(6, self.round.selectedDices, self.round.run.figuresInfos[6].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.CHANCE,
-				CalculatePoints.chanceBasePoints(self.round.selectedDices, self.round.run.figuresInfos[7].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.THREE_OAK,
-				CalculatePoints.brelanBasePoints(self.round.selectedDices, self.round.run.figuresInfos[8].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.FOUR_OAK,
-				CalculatePoints.carreBasePoints(self.round.selectedDices, self.round.run.figuresInfos[9].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.FULL_HOUSE,
-				CalculatePoints.fullBasePoints(self.round.selectedDices, self.round.run.figuresInfos[10].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.SMALL_SUITE,
-				CalculatePoints.pttSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[11].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.LARGE_SUITE,
-				CalculatePoints.gdSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[12].level)
-			)
-		end,
-		function()
-			self:playFigure(
-				Constants.FIGURES.DELUXE,
-				CalculatePoints.yatzeeBasePoints(self.round.selectedDices, self.round.run.figuresInfos[13].level)
-			)
-		end,
-	}
+  self.calculatePointsFunctions = {
+    function()
+      self:playFigure(
+        Constants.FIGURES.ONES,
+        CalculatePoints.numberBasePoints(1, self.round.selectedDices, self.round.run.figuresInfos[1].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.TWOS,
+        CalculatePoints.numberBasePoints(2, self.round.selectedDices, self.round.run.figuresInfos[2].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.THREES,
+        CalculatePoints.numberBasePoints(3, self.round.selectedDices, self.round.run.figuresInfos[3].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.FOURS,
+        CalculatePoints.numberBasePoints(4, self.round.selectedDices, self.round.run.figuresInfos[4].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.FIVES,
+        CalculatePoints.numberBasePoints(5, self.round.selectedDices, self.round.run.figuresInfos[5].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.SIXS,
+        CalculatePoints.numberBasePoints(6, self.round.selectedDices, self.round.run.figuresInfos[6].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.CHANCE,
+        CalculatePoints.chanceBasePoints(self.round.selectedDices, self.round.run.figuresInfos[7].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.THREE_OAK,
+        CalculatePoints.brelanBasePoints(self.round.selectedDices, self.round.run.figuresInfos[8].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.FOUR_OAK,
+        CalculatePoints.carreBasePoints(self.round.selectedDices, self.round.run.figuresInfos[9].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.FULL_HOUSE,
+        CalculatePoints.fullBasePoints(self.round.selectedDices, self.round.run.figuresInfos[10].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.SMALL_SUITE,
+        CalculatePoints.pttSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[11].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.LARGE_SUITE,
+        CalculatePoints.gdSuiteBasePoints(self.round.selectedDices, self.round.run.figuresInfos[12].level)
+      )
+    end,
+    function()
+      self:playFigure(
+        Constants.FIGURES.DELUXE,
+        CalculatePoints.yatzeeBasePoints(self.round.selectedDices, self.round.run.figuresInfos[13].level)
+      )
+    end,
+  }
 
-	self.dragAndDroppedCiggie = nil
-	self.dragAndDroppedFace = nil
+  self.dragAndDroppedCiggie = nil
+  self.dragAndDroppedFace = nil
 
-	--DICE DETAILS
-	--Creating the different ui faces that will be shown
-	self:createDiceNet()
+  --DICE DETAILS
+  --Creating the different ui faces that will be shown
+  self:createDiceNet()
 
-	--Ciggies
-	self.hoveredByCiggie = nil
+  --Ciggies
+  self.hoveredByCiggie = nil
 
-	--Hand Score
-	self.handScoreRX, self.handScoreRY = 1
-	self.handScoreRot = 0
+  --Hand Score
+  self.handScoreRX, self.handScoreRY = 1
+  self.handScoreRot = 0
 
-	--Start the round with the first roll
-	self.animator:addDelay(0.5, function()
-		self.showFirstRollText = true
-		self:generateCiggiesUI()
+  --Start the round with the first roll
+  self.animator:addDelay(0.5, function()
+    self.showFirstRollText = true
+    self:generateCiggiesUI()
 
-		--Active l'effet des stickers concernés
-		self.round.run:stickerStartRoundEffect()
+    --Active l'effet des stickers concernés
+    self.round.run:stickerStartRoundEffect()
 
-		if self.run.tutorial then
-			TutorialEvents.welcomeMessage()
-		end
+    if self.run.tutorial then
+      TutorialEvents.welcomeMessage()
+    end
 
-		if self.run.tutorial and self.run.roundNumber == 2 then
-			TutorialEvents.secondRoundStart()
-		end
+    if self.run.tutorial and self.run.roundNumber == 2 then
+      TutorialEvents.secondRoundStart()
+    end
 
-		if self.run.tutorial and self.round.roundType == Constants.ROUND_TYPES.BOSS then
-			TutorialEvents.managerRound()
-		end
-	end)
+    if self.run.tutorial and self.round.roundType == Constants.ROUND_TYPES.BOSS then
+      TutorialEvents.managerRound()
+    end
+  end)
 
-	self.diceFaces = {}
-	self.unselectedDices = {}
-	--On créé des objets pour les nouveaux diceFaces
-	for key, diceobject in next, self.round.diceObjects do
-		local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
-			diceobject, --Dice Object
-			diceobject:getFace(1), --La face représentée
-			self.canvas:getWidth() / 2, --X Position (centerd)
-			self.canvas:getHeight() + 70, --Yposition (centerd)
-			120, --Width/Height
-			true, --is Selectable
-			true, --isHoverable,
-			function()
-				return Inputs.getMouseInCanvas(510, 320)
-			end,
-			self.round,
-			510,
-			320
-		)
+  self.diceFaces = {}
+  self.unselectedDices = {}
+  --On créé des objets pour les nouveaux diceFaces
+  for key, diceobject in next, self.round.diceObjects do
+    local diceFaceUI = DiceFace:new( --Créée l'élément UI de la face de dé
+      diceobject, --Dice Object
+      diceobject:getFace(1), --La face représentée
+      self.canvas:getWidth() / 2, --X Position (centerd)
+      self.canvas:getHeight() + 70, --Yposition (centerd)
+      120, --Width/Height
+      true, --is Selectable
+      true, --isHoverable,
+      function()
+        return Inputs.getMouseInCanvas(510, 320)
+      end,
+      self.round,
+      510,
+      320
+    )
 
-		diceFaceUI.reduceOnHover = false --Aggrandis quand on hover
+    diceFaceUI.reduceOnHover = false --Aggrandis quand on hover
 
-		self.diceFaces[diceobject] = diceFaceUI
-	end
+    self.diceFaces[diceobject] = diceFaceUI
+  end
 
-	--Texts de trigger
-	self.triggerTexts = {}
+  --Texts de trigger
+  self.triggerTexts = {}
 
-	return self
+  return self
 end
 
 function RoundScreen:update(dt)
-	self:getRerollButtonStatusTutorial()
-	if self.showDeck == false then
-		self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy + dt
-		self.timers.oscillationTimePlayer = self.timers.oscillationTimePlayer + dt
-		-- Mark scores as changed when needed (this ensures text is updated when data changes)
-		-- For now, we'll update every few frames to be safe, but this could be optimized further
-		if love.timer.getTime() % 0.1 < dt then
-			self.scoresChanged = true
-		end
+  --print(self.round.ciggieReward.name)
+  self:getRerollButtonStatusTutorial()
+  if self.showDeck == false then
+    self.timers.oscillationTimeEnemy = self.timers.oscillationTimeEnemy + dt
+    self.timers.oscillationTimePlayer = self.timers.oscillationTimePlayer + dt
+    -- Mark scores as changed when needed (this ensures text is updated when data changes)
+    -- For now, we'll update every few frames to be safe, but this could be optimized further
+    if love.timer.getTime() % 0.1 < dt then
+      self.scoresChanged = true
+    end
 
-		if self.rerollingTimer >= 0 then
-			self.rerollingTimer = self.rerollingTimer - dt
-		end
+    if self.rerollingTimer >= 0 then
+      self.rerollingTimer = self.rerollingTimer - dt
+    end
 
-		--Update dices UI
-		for key, dice in next, self.diceFaces do
-			dice:update(dt)
-		end
-	end
+    --Update dices UI
+    for key, dice in next, self.diceFaces do
+      dice:update(dt)
+    end
+  end
 
-	if self.showDeck == true and self.deckScreen then
-		self.deckScreen:update(dt)
-	end
+  if self.showDeck == true and self.deckScreen then
+    self.deckScreen:update(dt)
+  end
 
-	--Reset Bouton de figure et Dé survolé
-	self.currentlyHoveredFigure = nil
+  --Reset Bouton de figure et Dé survolé
+  self.currentlyHoveredFigure = nil
 
-	self.animator:update(dt)
+  self.animator:update(dt)
 
-	--Hover infos
-	self:getCurrentlyHoveredDice() --Le dé survolé
-	self:getCurrentlyHoveredCiggie() --Ciggie survolée
-	if self.round.roundType == Constants.ROUND_TYPES.BOSS then
-		self:getCurrentlyHoveredBoss()
-	end
-	self:getCurrentlyHoveredObject()
+  --Hover infos
+  self:getCurrentlyHoveredDice() --Le dé survolé
+  self:getCurrentlyHoveredCiggie() --Ciggie survolée
+  if self.round.roundType == Constants.ROUND_TYPES.BOSS then
+    self:getCurrentlyHoveredBoss()
+  end
+  self:getCurrentlyHoveredObject()
 
-	--Utilities buttons
-	for key, button in next, self.uiElements.buttons do
-		self.uiElements.buttons["rerollButton"]:setActivated(
-			(self.round.availableRerolls > 0 or self.round.firstRoll == false)
-				and table.getn(self.round.selectedDices) < table.getn(self.round.diceObjects)
-				and self.round.phase ~= Constants.ROUND_STATES.TRIGGERING
-				and self.rerollingTimer <= 0
-				and (
-					(G.currentRun.tutorialCanReroll == true and self:getRerollButtonStatusTutorial())
-					or not G.currentRun.tutorial
-				)
-		)
+  --Utilities buttons
+  for key, button in next, self.uiElements.buttons do
+    self.uiElements.buttons["rerollButton"]:setActivated(
+      (self.round.availableRerolls > 0 or self.round.firstRoll == false)
+        and table.getn(self.round.selectedDices) < table.getn(self.round.diceObjects)
+        and self.round.phase ~= Constants.ROUND_STATES.TRIGGERING
+        and self.rerollingTimer <= 0
+        and (
+          (G.currentRun.tutorialCanReroll == true and self:getRerollButtonStatusTutorial())
+          or not G.currentRun.tutorial
+        )
+    )
 
-		button:update(dt)
-	end
+    button:update(dt)
+  end
 
-	--Ciggies UI
-	for i, ciggie in next, self.uiElements.ciggiesUI do
-		ciggie:update(dt)
-	end
+  --Ciggies UI
+  for i, ciggie in next, self.uiElements.ciggiesUI do
+    ciggie:update(dt)
+  end
 
-	self:updateCanvas(dt)
+  self:updateCanvas(dt)
 end
 
 function RoundScreen:updateCanvas(dt)
-	local currentCanvas = love.graphics.getCanvas()
-	love.graphics.setCanvas(self.canvas)
-	--set background
-	love.graphics.clear()
-	self:drawRightPanel(dt)
-	--Check if a ciggie is being dragged to the screen
-	self:checkForDraggedCiggie()
-	if self.showDeck == false then
-		--PlayersInfos
-		self:drawPlayersInfos(dt)
-		--Dice Tray
-		local px, py = G.calculateParalaxeOffset(3)
-		self:drawDiceTray(self.diceMatx + px, self.diceMaty + py, self.diceFaces, dt)
+  local currentCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.canvas)
+  --set background
+  love.graphics.clear()
+  self:drawRightPanel(dt)
+  --Check if a ciggie is being dragged to the screen
+  self:checkForDraggedCiggie()
+  if self.showDeck == false then
+    --PlayersInfos
+    self:drawPlayersInfos(dt)
+    --Dice Tray
+    local px, py = G.calculateParalaxeOffset(3)
+    self:drawDiceTray(self.diceMatx + px, self.diceMaty + py, self.diceFaces, dt)
 
-		--Dice Details
-		self:updateDiceNet(dt)
-		--self:drawDiceDetails()
-		--First round text
-		if self.showFirstRollText == true and self.round.firstRoll == false then
-			self.firstRollText:update(dt)
-			self.firstRollText:draw(dt)
-		else
-			self.firstRollText:reset()
-		end
+    --Dice Details
+    self:updateDiceNet(dt)
+    --self:drawDiceDetails()
+    --First round text
+    if self.showFirstRollText == true and self.round.firstRoll == false then
+      self.firstRollText:update(dt)
+      self.firstRollText:draw(dt)
+    else
+      self.firstRollText:reset()
+    end
 
-		--Upgrading figure popup
-		if self.addingAvailableHand == true then
-			self:drawUpgradingFigurePopup(dt)
-		end
-	end
+    --Upgrading figure popup
+    if self.addingAvailableHand == true then
+      self:drawUpgradingFigurePopup(dt)
+    end
+  end
 
-	if self.showDeck and self.deckScreen then
-		self.deckScreen:draw()
-	end
+  if self.showDeck and self.deckScreen then
+    self.deckScreen:draw()
+  end
 
-	--Bouttouns de round
-	if self.showDeck == false then
-		self.uiElements.buttons["rerollButton"]:draw()
-	end
+  --Bouttouns de round
+  if self.showDeck == false then
+    self.uiElements.buttons["rerollButton"]:draw()
+  end
 
-	--Figure Buttons
-	self:getCurrentlyHoveredLine() --La figure survolée
-	self:drawFigureGrid(self.gridX, self.gridY)
+  --Figure Buttons
+  self:getCurrentlyHoveredLine() --La figure survolée
+  self:drawFigureGrid(self.gridX, self.gridY)
 
-	--Ciggie Popup
-	if self.showDeck == false and self.previousCiggieDraggedState ~= self.draggedCiggie then
-		if self.draggedCiggie then
-			self:startCiggiePopUp()
-		else
-			self:endCiggiePopup()
-		end
-	end
+  --Ciggie Popup
+  if self.showDeck == false and self.previousCiggieDraggedState ~= self.draggedCiggie then
+    if self.draggedCiggie then
+      self:startCiggiePopUp()
+    else
+      self:endCiggiePopup()
+    end
+  end
 
-	if self.showCiggiePopup and self.showDeck == false then
-		self:drawCiggiePopup(dt)
-	end
+  if self.showCiggiePopup and self.showDeck == false then
+    self:drawCiggiePopup(dt)
+  end
 
-	--Ciggies Tray
-	self:drawCiggiesTray()
+  --Ciggies Tray
+  self:drawCiggiesTray()
 
-	--Ciggies UI
-	for i, ciggie in next, self.uiElements.ciggiesUI do
-		if self.dragAndDroppedCiggie ~= ciggie then
-			ciggie:draw()
-		end
-	end
+  --Ciggies UI
+  for i, ciggie in next, self.uiElements.ciggiesUI do
+    if self.dragAndDroppedCiggie ~= ciggie then
+      ciggie:draw()
+    end
+  end
 
-	self:drawCiggiesTrayFront()
+  self:drawCiggiesTrayFront()
 
-	--EndRoundScreen
-	if self.endRoundPopUp then
-		self.endRoundPopUp:update(dt)
-		self.endRoundPopUp:updateCanvas(dt)
-		self.endRoundPopUp:draw()
-	end
+  --EndRoundScreen
+  if self.endRoundPopUp then
+    self.endRoundPopUp:update(dt)
+    self.endRoundPopUp:updateCanvas(dt)
+    self.endRoundPopUp:draw()
+  end
 
-	if self.gameOverPopup then
-		self.gameOverPopup:update(dt)
-		self.gameOverPopup:updateCanvas(dt)
-		self.gameOverPopup:draw(dt)
-	end
+  if self.gameOverPopup then
+    self.gameOverPopup:update(dt)
+    self.gameOverPopup:updateCanvas(dt)
+    self.gameOverPopup:draw(dt)
+  end
 
-	if self.runWinPopup then
-		self.runWinPopup:update(dt)
-		self.runWinPopup:updateCanvas(dt)
-		self.runWinPopup:draw(dt)
-	end
+  if self.runWinPopup then
+    self.runWinPopup:update(dt)
+    self.runWinPopup:updateCanvas(dt)
+    self.runWinPopup:draw(dt)
+  end
 
-	--Face Details
-	--self:drawDescription(self.descriptionX, self.descriptionY)
+  --Face Details
+  --self:drawDescription(self.descriptionX, self.descriptionY)
 
-	--On dessine l'objet drag and drop au dessus de tout le reste
-	if self.dragAndDroppedCiggie then
-		self.dragAndDroppedCiggie:draw()
-	end
+  --On dessine l'objet drag and drop au dessus de tout le reste
+  if self.dragAndDroppedCiggie then
+    self.dragAndDroppedCiggie:draw()
+  end
 
-	if self.currentlyHoveredObject then
-		--Info bubble (wip)
-		self.infoBubble.x, self.infoBubble.y =
-			self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX,
-			self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
-		--self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
-		self.infoBubble:update(dt)
-		self.infoBubble:draw()
-	end
+  if self.currentlyHoveredObject then
+    --Info bubble (wip)
+    self.infoBubble.x, self.infoBubble.y =
+      self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX,
+      self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
+    --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredFace.x , self.currentlyHoveredFace.y
+    self.infoBubble:update(dt)
+    self.infoBubble:draw()
+  end
 
-	--Texts de trigger
-	for i, text in next, self.triggerTexts do
-		text:update(dt)
-		text:draw()
-	end
+  --Texts de trigger
+  for i, text in next, self.triggerTexts do
+    text:update(dt)
+    text:draw()
+  end
 
-	love.graphics.setCanvas(currentCanvas)
+  love.graphics.setCanvas(currentCanvas)
 end
 
 --==INPUT FUNCTIONS==--
 function RoundScreen:mousemoved(x, y, dx, dy, isDragging)
-	if
-		self.round.phase ~= Constants.ROUND_STATES.END_ROUND
-		and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER
-		and self.round.phase ~= Constants.ROUND_STATES.RUN_END
-		and self.run.displayInfoScreen == false
-	then
-		--Drag and drop dice
-		if isDragging == true then
-			for key, diceui in next, self.diceFaces do
-				if diceui.isDraggable and diceui.isBeingClicked then
-					--On calcule le nombre de dés non sélectionnés à gauche de celui qui eest drag and drop
-					local leftDices = 1
-					for i, f in next, self.unselectedDices do
-						if f.x < diceui.x then
-							leftDices = leftDices + 1
-						end
-					end
+  if
+    self.round.phase ~= Constants.ROUND_STATES.END_ROUND
+    and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER
+    and self.round.phase ~= Constants.ROUND_STATES.RUN_END
+    and self.run.displayInfoScreen == false
+  then
+    --Drag and drop dice
+    if isDragging == true then
+      for key, diceui in next, self.diceFaces do
+        if diceui.isDraggable and diceui.isBeingClicked then
+          --On calcule le nombre de dés non sélectionnés à gauche de celui qui eest drag and drop
+          local leftDices = 1
+          for i, f in next, self.unselectedDices do
+            if f.x < diceui.x then
+              leftDices = leftDices + 1
+            end
+          end
 
-					for i, face in next, self.unselectedDices do
-						if face == diceui then
-							table.remove(self.unselectedDices, i)
-							table.insert(self.unselectedDices, leftDices, diceui)
-							self:updateUnselectedPosDices()
-							break
-						end
-					end
+          for i, face in next, self.unselectedDices do
+            if face == diceui then
+              table.remove(self.unselectedDices, i)
+              table.insert(self.unselectedDices, leftDices, diceui)
+              self:updateUnselectedPosDices()
+              break
+            end
+          end
 
-					diceui.isBeingDragged = true
-					self.dragAndDroppedDice = diceui
+          diceui.isBeingDragged = true
+          self.dragAndDroppedDice = diceui
 
-					--Drag and drop
-					diceui.dragXspeed = dx
-					if
-						diceui.targetX + dx < self.dice_tray:getWidth() - diceui.size / 2
-						and diceui.targetX + dx > 0 + diceui.size / 2
-					then --Vérification qu'on ne dépasse par les limites horizontales
-						diceui.targetX = (diceui.targetX + dx)
-					end
+          --Drag and drop
+          diceui.dragXspeed = dx
+          if
+            diceui.targetX + dx < self.dice_tray:getWidth() - diceui.size / 2
+            and diceui.targetX + dx > 0 + diceui.size / 2
+          then --Vérification qu'on ne dépasse par les limites horizontales
+            diceui.targetX = (diceui.targetX + dx)
+          end
 
-					if
-						diceui.targetY + dy < self.dice_tray:getHeight() - diceui.size / 2 - 85
-						and diceui.targetY + dy > 165 + diceui.size / 2
-					then --Vérification qu'on ne dépasse pas les limites verticales
-						diceui.targetY = (diceui.targetY + dy)
-					end
+          if
+            diceui.targetY + dy < self.dice_tray:getHeight() - diceui.size / 2 - 85
+            and diceui.targetY + dy > 165 + diceui.size / 2
+          then --Vérification qu'on ne dépasse pas les limites verticales
+            diceui.targetY = (diceui.targetY + dy)
+          end
 
-					--Changer l'ordre des dés sélectionnés
-					if diceui:getIsSelected() then
-						local i = math.max(
-							1,
-							math.min(table.getn(self.round.selectedDices), math.floor((diceui.x + 105) / 180))
-						) --Numéro de la case survolée (capée au nombre de dés selectionnés)
-						--Récupérer l'indexe du dé bougé
-						local currentIndex = indexOf(self.round.selectedDices, diceui.representedObject.diceObject)
+          --Changer l'ordre des dés sélectionnés
+          if diceui:getIsSelected() then
+            local i = math.max(1, math.min(table.getn(self.round.selectedDices), math.floor((diceui.x + 105) / 180))) --Numéro de la case survolée (capée au nombre de dés selectionnés)
+            --Récupérer l'indexe du dé bougé
+            local currentIndex = indexOf(self.round.selectedDices, diceui.representedObject.diceObject)
 
-						--Si l'indexe du dé bougé est différent de i :
-						if i ~= currentIndex then
-							--On bouge l'élément dans la liste
-							moveElement(self.round.selectedDices, currentIndex, i)
-							--On met à jour la position des dés (seulement leur anchorX)
-							self:updateSelectedPosDices()
-							--On les fait bouger
-							for i, dice in next, self.diceFaces do
-								if dice:getIsSelected() and not dice.isBeingClicked then
-									dice.targetX = dice.anchorX
-									dice.targetY = dice.anchorY
-								end
-							end
-						end
-					end
+            --Si l'indexe du dé bougé est différent de i :
+            if i ~= currentIndex then
+              --On bouge l'élément dans la liste
+              moveElement(self.round.selectedDices, currentIndex, i)
+              --On met à jour la position des dés (seulement leur anchorX)
+              self:updateSelectedPosDices()
+              --On les fait bouger
+              for i, dice in next, self.diceFaces do
+                if dice:getIsSelected() and not dice.isBeingClicked then
+                  dice.targetX = dice.anchorX
+                  dice.targetY = dice.anchorY
+                end
+              end
+            end
+          end
 
-					break
-				end
-			end
-		end
+          break
+        end
+      end
+    end
 
-		--Drag and drop Ciggies
-		if isDragging == true then
-			for key, ciggie in next, self.uiElements.ciggiesUI do
-				if ciggie.isDraggable and ciggie.isBeingClicked then
-					ciggie.isBeingDragged = true
-					self.dragAndDroppedCiggie = ciggie
-					ciggie.dragXspeed = dx
-					ciggie.targetX = x
-					ciggie.targetY = y
-					break
-				end
-			end
-		end
-	elseif self.endRoundPopUp then
-		self.endRoundPopUp:mousemoved(x, y, dx, dy, isDragging)
-	end
+    --Drag and drop Ciggies
+    if isDragging == true then
+      for key, ciggie in next, self.uiElements.ciggiesUI do
+        if ciggie.isDraggable and ciggie.isBeingClicked then
+          ciggie.isBeingDragged = true
+          self.dragAndDroppedCiggie = ciggie
+          ciggie.dragXspeed = dx
+          ciggie.targetX = x
+          ciggie.targetY = y
+          break
+        end
+      end
+    end
+  elseif self.endRoundPopUp then
+    self.endRoundPopUp:mousemoved(x, y, dx, dy, isDragging)
+  end
 end
 
 function RoundScreen:mousepressed(x, y, button, istouch, presses)
-	if
-		self.round.phase ~= Constants.ROUND_STATES.END_ROUND
-		and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER
-		and self.round.phase ~= Constants.ROUND_STATES.RUN_END
-	then
-		if self.showDeck == false and self.round.phase ~= Constants.ROUND_STATES.TRIGGERING then
-			--DiceFaces
-			for key, uiFace in next, self.diceFaces do
-				uiFace:clickEvent()
-			end
+  if
+    self.round.phase ~= Constants.ROUND_STATES.END_ROUND
+    and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER
+    and self.round.phase ~= Constants.ROUND_STATES.RUN_END
+  then
+    if self.showDeck == false and self.round.phase ~= Constants.ROUND_STATES.TRIGGERING then
+      --DiceFaces
+      for key, uiFace in next, self.diceFaces do
+        uiFace:clickEvent()
+      end
 
-			--Ciggies
-			for key, ciggie in next, self.uiElements.ciggiesUI do
-				ciggie:clickEvent()
-			end
+      --Ciggies
+      for key, ciggie in next, self.uiElements.ciggiesUI do
+        ciggie:clickEvent()
+      end
 
-			--Figure buttons
-			self.clickedFigure = self:getCurrentlyHoveredLine()
-		end
+      --Figure buttons
+      self.clickedFigure = self:getCurrentlyHoveredLine()
+    end
 
-		--Round Buttons
-		for key, button in next, self.uiElements.buttons do
-			if self.showDeck == false or key ~= "rerollButton" then
-				button:clickEvent()
-			end
-		end
-	else
-		if self.endRoundPopUp then
-			self.endRoundPopUp:mousepressed(x, y, button, istouch, pressed)
-		elseif self.gameOverPopup then
-			self.gameOverPopup:mousepressed(x, y, button, istouch, presses)
-		elseif self.runWinPopup then
-			self.runWinPopup:mousepressed(x, y, button, istouch, presses)
-		end
-	end
+    --Round Buttons
+    for key, button in next, self.uiElements.buttons do
+      if self.showDeck == false or key ~= "rerollButton" then
+        button:clickEvent()
+      end
+    end
+  else
+    if self.endRoundPopUp then
+      self.endRoundPopUp:mousepressed(x, y, button, istouch, pressed)
+    elseif self.gameOverPopup then
+      self.gameOverPopup:mousepressed(x, y, button, istouch, presses)
+    elseif self.runWinPopup then
+      self.runWinPopup:mousepressed(x, y, button, istouch, presses)
+    end
+  end
 end
 
 function RoundScreen:mousereleased(x, y, button, istouch, presses)
-	if
-		self.round.phase ~= Constants.ROUND_STATES.END_ROUND
-		and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER
-		and self.round.phase ~= Constants.ROUND_STATES.RUN_END
-	then
-		self.dragAndDroppedCiggie = nil
-		self.dragAndDroppedFace = nil
+  if
+    self.round.phase ~= Constants.ROUND_STATES.END_ROUND
+    and self.round.phase ~= Constants.ROUND_STATES.GAME_OVER
+    and self.round.phase ~= Constants.ROUND_STATES.RUN_END
+  then
+    self.dragAndDroppedCiggie = nil
+    self.dragAndDroppedFace = nil
 
-		--release event for dice faces
-		for key, diceface in next, self.diceFaces do
-			local wasReleased = diceface:releaseEvent()
-			if wasReleased then
-				self.round:updateselectedDices(diceface)
-			end
-			diceface.isBeingDragged = false
-		end
+    --release event for dice faces
+    for key, diceface in next, self.diceFaces do
+      local wasReleased = diceface:releaseEvent()
+      if wasReleased then
+        self.round:updateselectedDices(diceface)
+      end
+      diceface.isBeingDragged = false
+    end
 
-		for key, diceface in next, self.diceFaces do
-			if diceface.anchorX and diceface.anchorY then
-				diceface.targetX = diceface.anchorX
-				diceface.targetY = diceface.anchorY
-			end
-		end
+    for key, diceface in next, self.diceFaces do
+      if diceface.anchorX and diceface.anchorY then
+        diceface.targetX = diceface.anchorX
+        diceface.targetY = diceface.anchorY
+      end
+    end
 
-		--release event on UI elements (buttons)
-		for key, button in next, self.uiElements.buttons do
-			local wasReleased = button:releaseEvent()
-			if wasReleased then --Si le click a été complété
-				button:getCallback()()
-			end
-		end
+    --release event on UI elements (buttons)
+    for key, button in next, self.uiElements.buttons do
+      local wasReleased = button:releaseEvent()
+      if wasReleased then --Si le click a été complété
+        button:getCallback()()
+      end
+    end
 
-		--Figure buttons
-		if self.clickedFigure then
-			if self.clickedFigure == self:getCurrentlyHoveredLine() then
-				if self.round.phase ~= Constants.ROUND_STATES.TRIGGERING then --check qu'on est pas en phase de trigger
-					if self.addingAvailableHand == false then
-						self.calculatePointsFunctions[self.clickedFigure]()
-					else
-						if self.clickedFigure ~= 7 then
-							self:addAvailableHand(self.clickedFigure)
-						end
-					end
-				end
-			end
-		end
+    --Figure buttons
+    if self.clickedFigure then
+      if self.clickedFigure == self:getCurrentlyHoveredLine() then
+        if self.round.phase ~= Constants.ROUND_STATES.TRIGGERING then --check qu'on est pas en phase de trigger
+          if self.addingAvailableHand == false then
+            self.calculatePointsFunctions[self.clickedFigure]()
+          else
+            if self.clickedFigure ~= 7 then
+              self:addAvailableHand(self.clickedFigure)
+            end
+          end
+        end
+      end
+    end
 
-		--Ciggies
-		for key, ciggie in next, self.uiElements.ciggiesUI do
-			ciggie:releaseEvent()
-			self:ciggieReleaseAction(ciggie)
-			ciggie.isBeingDragged = false
-		end
-	elseif self.endRoundPopUp then
-		self.endRoundPopUp:mousereleased(x, y, button, istouch, presses)
-	elseif self.gameOverPopup then
-		self.gameOverPopup:mousereleased(x, y, button, istouch, presses)
-	elseif self.runWinPopup then
-		self.runWinPopup:mousereleased(x, y, button, istouch, presses)
-	end
+    --Ciggies
+    for key, ciggie in next, self.uiElements.ciggiesUI do
+      ciggie:releaseEvent()
+      self:ciggieReleaseAction(ciggie)
+      ciggie.isBeingDragged = false
+    end
+  elseif self.endRoundPopUp then
+    self.endRoundPopUp:mousereleased(x, y, button, istouch, presses)
+  elseif self.gameOverPopup then
+    self.gameOverPopup:mousereleased(x, y, button, istouch, presses)
+  elseif self.runWinPopup then
+    self.runWinPopup:mousereleased(x, y, button, istouch, presses)
+  end
 end
 
 function RoundScreen:keypressed(k)
-	if k == "l" then
-		self.round:resetRound()
-	end
+  if k == "l" then
+    self.round:resetRound()
+  end
 end
 
 function RoundScreen:updateSelectedPosDices()
-	local i = 1
-	for k, d in next, self.round.selectedDices do
-		--self.diceFaces[d].targetY = 70
-		--self.diceFaces[d].targetX = 105 + (i-1)*(180)
+  local i = 1
+  for k, d in next, self.round.selectedDices do
+    --self.diceFaces[d].targetY = 70
+    --self.diceFaces[d].targetX = 105 + (i-1)*(180)
 
-		self.diceFaces[d].anchorY = 70
-		self.diceFaces[d].anchorX = 105 + (i - 1) * 180
+    self.diceFaces[d].anchorY = 70
+    self.diceFaces[d].anchorX = 105 + (i - 1) * 180
 
-		i = i + 1
-	end
+    i = i + 1
+  end
 end
 
 --==DRAW FUNCTIONS==--
 
 function RoundScreen:drawDiceTray(x, y, dices2, dt)
-	local targetCanvas = love.graphics.getCanvas()
-	love.graphics.setCanvas(self.dice_tray)
-	love.graphics.clear()
+  local targetCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.dice_tray)
+  love.graphics.clear()
 
-	--On dessine le background
-	love.graphics.draw(Sprites.DICE_MAT, 0, 0, 0, 1, 1)
+  --On dessine le background
+  love.graphics.draw(Sprites.DICE_MAT, 0, 0, 0, 1, 1)
 
-	--On dessine les stickers
-	for i, sticker in next, self.round.run.uiStickers do
-		sticker:update(dt)
-		sticker:draw()
-	end
+  --On dessine les stickers
+  for i, sticker in next, self.round.run.uiStickers do
+    sticker:update(dt)
+    sticker:draw()
+  end
 
-	--On déssine les autres dés
-	for key, uiFace in next, dices2 do
-		if uiFace ~= self.dragAndDroppedDice then
-			uiFace:draw()
-		end
-	end
+  --On déssine les autres dés
+  for key, uiFace in next, dices2 do
+    if uiFace ~= self.dragAndDroppedDice then
+      uiFace:draw()
+    end
+  end
 
-	--dessiner le dé drag and drop au dessus des autres
-	if self.dragAndDroppedDice then
-		self.dragAndDroppedDice:draw()
-	end
+  --dessiner le dé drag and drop au dessus des autres
+  if self.dragAndDroppedDice then
+    self.dragAndDroppedDice:draw()
+  end
 
-	--Score de la main en direct
-	if self.round.phase == Constants.ROUND_STATES.TRIGGERING then
-		self:drawHandScore()
-	end
+  --Score de la main en direct
+  if self.round.phase == Constants.ROUND_STATES.TRIGGERING then
+    self:drawHandScore()
+  end
 
-	--On retourne au canvas précédent
-	love.graphics.setCanvas(targetCanvas)
-	--On déssine le terrain à dés sur le canvas
-	love.graphics.draw(self.dice_tray, x, y) --On fixe son offset sur son angle superieur droit
+  --On retourne au canvas précédent
+  love.graphics.setCanvas(targetCanvas)
+  --On déssine le terrain à dés sur le canvas
+  love.graphics.draw(self.dice_tray, x, y) --On fixe son offset sur son angle superieur droit
 end
 
 function RoundScreen:drawDicesOnly()
-	--On déssine les autres dés
-	local px, py = G.calculateParalaxeOffset(3)
-	love.graphics.push()
-	love.graphics.translate(self.diceMatx + px, self.diceMaty + py)
+  --On déssine les autres dés
+  local px, py = G.calculateParalaxeOffset(3)
+  love.graphics.push()
+  love.graphics.translate(self.diceMatx + px, self.diceMaty + py)
 
-	for key, uiFace in next, self.diceFaces do
-		uiFace:draw()
-	end
-	love.graphics.pop()
+  for key, uiFace in next, self.diceFaces do
+    uiFace:draw()
+  end
+  love.graphics.pop()
 end
 
 function RoundScreen:drawDiceDetails()
-	local currentCanvas = love.graphics.getCanvas()
-	love.graphics.setCanvas(self.diceDetailsCanvas)
-	love.graphics.clear()
+  local currentCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.diceDetailsCanvas)
+  love.graphics.clear()
 
-	--Draw sprite
-	love.graphics.draw(Sprites.DICE_INFOS, 0, 0)
+  --Draw sprite
+  love.graphics.draw(Sprites.DICE_INFOS, 0, 0)
 
-	--Draw the dice net
-	if self.currentlyHoveredDice then
-		for k, df in next, self.infoFaces do
-			df:draw()
-		end
-	end
+  --Draw the dice net
+  if self.currentlyHoveredDice then
+    for k, df in next, self.infoFaces do
+      df:draw()
+    end
+  end
 
-	love.graphics.setCanvas(currentCanvas)
-	-- Draw dice details canvas with premultiplied alpha to avoid black fringe on rounded corners
-	love.graphics.setBlendMode("alpha", "premultiplied")
-	local px, py = G.calculateParalaxeOffset(2)
-	love.graphics.draw(self.diceDetailsCanvas, 60 + px, 30 + py, 0, 1, 1, 0, 0)
-	love.graphics.setBlendMode("alpha", "alphamultiply")
+  love.graphics.setCanvas(currentCanvas)
+  -- Draw dice details canvas with premultiplied alpha to avoid black fringe on rounded corners
+  love.graphics.setBlendMode("alpha", "premultiplied")
+  local px, py = G.calculateParalaxeOffset(2)
+  love.graphics.draw(self.diceDetailsCanvas, 60 + px, 30 + py, 0, 1, 1, 0, 0)
+  love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 function RoundScreen:drawPlayersInfos(dt, opts)
-	local currentCanvas = love.graphics.getCanvas()
-	local px, py = G.calculateParalaxeOffset(2)
+  local currentCanvas = love.graphics.getCanvas()
+  local px, py = G.calculateParalaxeOffset(2)
 
-	--Player
-	if opts == nil or opts.player == true then
-		local playerYOffset = AnimationUtils.osccilate(self.timers.oscillationTimePlayer, 20, 8)
-		love.graphics.setCanvas(self.playerInfos)
-		love.graphics.clear()
-		love.graphics.draw(Sprites.PLAYER_INFOS, 0, 0)
-		--Avatar du joueur
-		G.playerLion:update(dt)
-		G.playerLion:draw(130, 125, 250, 250)
+  --Player
+  if opts == nil or opts.player == true then
+    local playerYOffset = AnimationUtils.osccilate(self.timers.oscillationTimePlayer, 20, 8)
+    love.graphics.setCanvas(self.playerInfos)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.PLAYER_INFOS, 0, 0)
+    --Avatar du joueur
+    G.playerLion:update(dt)
+    G.playerLion:draw(130, 125, 250, 250)
 
-		--Nom du joueur
-		love.graphics.draw(
-			self.playerName,
-			450,
-			37,
-			0,
-			1,
-			1,
-			self.playerName:getWidth() / 2,
-			self.playerName:getHeight() / 2
-		)
+    --Nom du joueur
+    love.graphics.draw(
+      self.playerName,
+      450,
+      37,
+      0,
+      1,
+      1,
+      self.playerName:getWidth() / 2,
+      self.playerName:getHeight() / 2
+    )
 
-		local scoreText = love.graphics.newText(font, tostring(self.round.roundScore))
+    local scoreText = love.graphics.newText(font, tostring(self.round.roundScore))
 
-		self.playerScoreWavyText:setText(tostring(self.round.roundScore))
-		self.playerScoreWavyText:update(dt)
-		self.playerScoreWavyText:draw(dt)
-		love.graphics.setCanvas(currentCanvas)
-		love.graphics.draw(self.playerInfos, self.playerX + px, self.playerY + py)
-	end
+    self.playerScoreWavyText:setText(tostring(self.round.roundScore))
+    self.playerScoreWavyText:update(dt)
+    self.playerScoreWavyText:draw(dt)
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.playerInfos, self.playerX + px, self.playerY + py)
+  end
 
-	if opts == nil or opts.enemy == true then
-		--Ennemy
-		local enemyYOffset = 0 --AnimationUtils.osccilate(self.timers.oscillationTimeEnemy, 20, 8)
-		love.graphics.setCanvas(self.enemyInfos)
-		love.graphics.clear()
-		love.graphics.draw(Sprites.ENEMY_INFOS, 0, 0)
+  if opts == nil or opts.enemy == true then
+    --Ennemy
+    local enemyYOffset = 0 --AnimationUtils.osccilate(self.timers.oscillationTimeEnemy, 20, 8)
+    love.graphics.setCanvas(self.enemyInfos)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.ENEMY_INFOS, 0, 0)
 
-		--Name
-		love.graphics.draw(
-			self.enemyName,
-			200,
-			175,
-			0,
-			1,
-			1,
-			self.enemyName:getWidth() / 2,
-			self.enemyName:getHeight() / 2
-		)
+    --Name
+    love.graphics.draw(self.enemyName, 200, 175, 0, 1, 1, self.enemyName:getWidth() / 2, self.enemyName:getHeight() / 2)
 
-		local targetScoreText = love.graphics.newText(font, "Target : " .. tostring(self.round.targetScore))
+    local targetScoreText = love.graphics.newText(font, "Target : " .. tostring(self.round.targetScore))
 
-		self.enemyScoreWavyText:update(dt)
-		self.enemyScoreWavyText:draw(dt)
+    self.enemyScoreWavyText:update(dt)
+    self.enemyScoreWavyText:draw(dt)
 
-		--Lion
-		self.round.enemyCharacter:update()
-		self.round.enemyCharacter:draw(390 + 120, 125, 250, 250)
-		love.graphics.setCanvas(currentCanvas)
-		love.graphics.draw(self.enemyInfos, self.enemyX + px, self.enemyY + py)
-	end
+    --Lion
+    self.round.enemyCharacter:update()
+    self.round.enemyCharacter:draw(390 + 120, 125, 250, 250)
+    love.graphics.setCanvas(currentCanvas)
+    love.graphics.draw(self.enemyInfos, self.enemyX + px, self.enemyY + py)
+  end
 end
 
 --==CREATE CANVAS FUNCTIONS==--
 
 function RoundScreen:animateHandScore()
-	local randomAngle = math.random(2, 5) / 10
-	local randomDir = math.random(0, 1) == 0 and -1 or 1
-	self.animator:addGroup({
-		{ property = "handScoreRX", from = 1.4, targetValue = 1, duration = 0.2 }, --Makes it instantly bigger and animate it to its base size
-		{
-			property = "handScoreDisplay",
-			from = self.handScoreDisplay,
-			targetValue = self.round.handScore,
-			duration = 0.2,
-			easing = AnimationUtils.Easing.outCubic,
-		}, --Continuously increase the displayed score
-		{ property = "handScoreRot", from = randomAngle * randomDir, targetValue = 0, duration = 0.2 }, --Makes it instantly bigger and animate it to its base size
-	})
+  local randomAngle = math.random(2, 5) / 10
+  local randomDir = math.random(0, 1) == 0 and -1 or 1
+  self.animator:addGroup({
+    { property = "handScoreRX", from = 1.4, targetValue = 1, duration = 0.2 }, --Makes it instantly bigger and animate it to its base size
+    {
+      property = "handScoreDisplay",
+      from = self.handScoreDisplay,
+      targetValue = self.round.handScore,
+      duration = 0.2,
+      easing = AnimationUtils.Easing.outCubic,
+    }, --Continuously increase the displayed score
+    { property = "handScoreRot", from = randomAngle * randomDir, targetValue = 0, duration = 0.2 }, --Makes it instantly bigger and animate it to its base size
+  })
 end
 
 function RoundScreen:drawHandScore()
-	local currentCanvas = love.graphics.getCanvas()
-	love.graphics.setCanvas(self.handScoreCanvas)
-	love.graphics.clear()
+  local currentCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.handScoreCanvas)
+  love.graphics.clear()
 
-	local scoreText = love.graphics.newText(Fonts.soraBig, math.floor(self.handScoreDisplay))
-	love.graphics.setColor(0, 0, 0, 1)
-	love.graphics.draw(
-		scoreText,
-		self.handScoreCanvas:getWidth() / 2,
-		self.handScoreCanvas:getHeight() / 2,
-		self.handScoreRot,
-		self.handScoreRX,
-		self.handScoreRY,
-		scoreText:getWidth() / 2 - 10,
-		scoreText:getHeight() / 2 - 10
-	)
-	love.graphics.setColor(1, 1, 1, 1)
-	love.graphics.setCanvas(currentCanvas)
-	love.graphics.draw(self.handScoreCanvas, 0, 200)
+  local scoreText = love.graphics.newText(Fonts.soraBig, math.floor(self.handScoreDisplay))
+  love.graphics.setColor(0, 0, 0, 1)
+  love.graphics.draw(
+    scoreText,
+    self.handScoreCanvas:getWidth() / 2,
+    self.handScoreCanvas:getHeight() / 2,
+    self.handScoreRot,
+    self.handScoreRX,
+    self.handScoreRY,
+    scoreText:getWidth() / 2 - 10,
+    scoreText:getHeight() / 2 - 10
+  )
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setCanvas(currentCanvas)
+  love.graphics.draw(self.handScoreCanvas, 0, 200)
 end
 
 function RoundScreen:outAnimation(onEnd)
-	local outDuration = 0.4
-	-- Déclenchement des effets de fin de round.
-	self.animator:addDelay(0.1, function()
-		self.round.run:stickerEndRoundEffect()
-	end)
-	self.animator:addDelay(0.4)
-	self.animator:addGroup({
-		{
-			property = "gridX",
-			from = self.gridX,
-			targetValue = 0 - self.figureButtonsCanvas:getWidth() - 50,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
+  local outDuration = 0.4
+  -- Déclenchement des effets de fin de round.
+  self.animator:addDelay(0.1, function()
+    self.round.run:stickerEndRoundEffect()
+  end)
+  self.animator:addDelay(0.4)
+  self.animator:addGroup({
+    {
+      property = "gridX",
+      from = self.gridX,
+      targetValue = 0 - self.figureButtonsCanvas:getWidth() - 50,
+      duration = outDuration,
+      easing = AnimationUtils.Easing.inOutCubic,
+    },
 
-		{
-			property = "diceMaty",
-			from = self.diceMaty,
-			targetValue = self.canvas:getHeight() + 1000,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inCubic,
-		},
-		{
-			property = "ciggiesTrayX",
-			from = self.ciggiesTrayX,
-			targetValue = self.canvas:getWidth() + 650,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
+    {
+      property = "diceMaty",
+      from = self.diceMaty,
+      targetValue = self.canvas:getHeight() + 1000,
+      duration = outDuration,
+      easing = AnimationUtils.Easing.inCubic,
+    },
+    {
+      property = "ciggiesTrayX",
+      from = self.ciggiesTrayX,
+      targetValue = self.canvas:getWidth() + 650,
+      duration = outDuration,
+      easing = AnimationUtils.Easing.inOutCubic,
+    },
 
-		{
-			property = "rightPanelX",
-			from = self.rightPanelX,
-			targetValue = self.canvas:getWidth() + 550,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inOutCubic,
-		},
-	})
+    {
+      property = "rightPanelX",
+      from = self.rightPanelX,
+      targetValue = self.canvas:getWidth() + 550,
+      duration = outDuration,
+      easing = AnimationUtils.Easing.inOutCubic,
+    },
+  })
 
-	self.uiElements.buttons["rerollButton"].animator:add(
-		"y",
-		self.uiElements.buttons["rerollButton"].y,
-		self.canvas:getHeight() + 200,
-		AnimationUtils.EntryDuration,
-		AnimationUtils.Easing.inOutCubic
-	)
+  self.uiElements.buttons["rerollButton"].animator:add(
+    "y",
+    self.uiElements.buttons["rerollButton"].y,
+    self.canvas:getHeight() + 200,
+    AnimationUtils.EntryDuration,
+    AnimationUtils.Easing.inOutCubic
+  )
 
-	--Ciggarettes
-	for i, c in next, self.uiElements.ciggiesUI do
-		c.animator:addGroup({
-			{ property = "scaleX", from = c.scaleX, targetValue = 0, duration = outDuration / 2 },
-			{ property = "scaleY", from = c.scaleY, targetValue = 0, duration = outDuration / 2 },
-			{
-				property = "baseTargetedScale",
-				from = c.baseTargetedScale,
-				targetValue = 0,
-				duration = outDuration / 2,
-				easing = AnimationUtils.Easing.easeOutBack,
-			},
-			{
-				property = "targetedScale",
-				from = c.targetedScale,
-				targetValue = 0,
-				duration = outDuration / 2,
-				easing = AnimationUtils.Easing.easeOutBack,
-			},
-		})
-	end
+  --Ciggarettes
+  for i, c in next, self.uiElements.ciggiesUI do
+    c.animator:addGroup({
+      { property = "scaleX", from = c.scaleX, targetValue = 0, duration = outDuration / 2 },
+      { property = "scaleY", from = c.scaleY, targetValue = 0, duration = outDuration / 2 },
+      {
+        property = "baseTargetedScale",
+        from = c.baseTargetedScale,
+        targetValue = 0,
+        duration = outDuration / 2,
+        easing = AnimationUtils.Easing.easeOutBack,
+      },
+      {
+        property = "targetedScale",
+        from = c.targetedScale,
+        targetValue = 0,
+        duration = outDuration / 2,
+        easing = AnimationUtils.Easing.easeOutBack,
+      },
+    })
+  end
 
-	self.animator:addDelay(0.2)
-	self.animator:addGroup({
-		{
-			property = "playerX",
-			from = self.playerX,
-			targetValue = -800,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inCubic,
-		},
-		{
-			property = "enemyX",
-			from = self.enemyX,
-			targetValue = self.canvas:getWidth() + 20,
-			duration = outDuration,
-			easing = AnimationUtils.Easing.inCubic,
-		},
-	})
+  self.animator:addDelay(0.2)
+  self.animator:addGroup({
+    {
+      property = "playerX",
+      from = self.playerX,
+      targetValue = -800,
+      duration = outDuration,
+      easing = AnimationUtils.Easing.inCubic,
+    },
+    {
+      property = "enemyX",
+      from = self.enemyX,
+      targetValue = self.canvas:getWidth() + 20,
+      duration = outDuration,
+      easing = AnimationUtils.Easing.inCubic,
+    },
+  })
 
-	self.animator:addDelay(0.2, function()
-		if onEnd == nil then
-			self.round.run:goToNextRound()
-		elseif onEnd == "newRun" then
-			self.round.run.game:startNewRun()
-		else
-			self.round.run.game.mainMenu = MainMenu:new(nil, self.round.run.game)
-			self.round.run.game.currentScreen = 0
-		end
-	end)
-	--Buttons animation
-	--Ajout d'un délais le temps que les objets du shop disparaissent (je crois)
+  self.animator:addDelay(0.2, function()
+    if onEnd == nil then
+      self.round.run:goToNextRound()
+    elseif onEnd == "newRun" then
+      self.round.run.game:startNewRun()
+    else
+      self.round.run.game.mainMenu = MainMenu:new(nil, self.round.run.game)
+      self.round.run.game.currentScreen = 0
+    end
+  end)
+  --Buttons animation
+  --Ajout d'un délais le temps que les objets du shop disparaissent (je crois)
 end
 
 --==UTILS FUNCTIONS==--
 --HOVER FUNCTIONS
 function RoundScreen:getCurrentlyHoveredLine()
-	local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
-	local i = math.floor((mv.y - 90) / 70) + 1
-	if i > 0 and i <= 13 then
-		if mv.x > 0 and mv.x < self.figureButtonsCanvas:getWidth() then
-			self:highlightDices(self.calcBasePoints[i]()[2])
-			return i
-		else
-			self:highlightDices({})
-			return nil
-		end
-	else
-		self:highlightDices({})
-		return nil
-	end
+  local mv = Inputs.getMouseInCanvas(30, 30) --get the mouse position
+  local i = math.floor((mv.y - 90) / 70) + 1
+  if i > 0 and i <= 13 then
+    if mv.x > 0 and mv.x < self.figureButtonsCanvas:getWidth() then
+      self:highlightDices(self.calcBasePoints[i]()[2])
+      return i
+    else
+      self:highlightDices({})
+      return nil
+    end
+  else
+    self:highlightDices({})
+    return nil
+  end
 end
 
 --Permet d'obtenir si la souris et au dessus de la tete du boss, et donc d'afficher une bulle qui donne sa description
 --Retourne une table similaire aux objets type dé, cigarette, etc pour etre utilisé dans une bulle d'info
 
 function RoundScreen:getCurrentlyHoveredBoss()
-	self.currentlyHoveredBoss = nil
-	local vx, vy = Inputs.getVirtualMousePosition(4)
-	if vy < 200 then
-		self.currentlyHoveredBoss = {
-			representedObject = {
-				objectType = "Boss",
-				name = Constants.BOSS_TYPES_DESC[self.round.bossType][1],
-				description = Constants.BOSS_TYPES_DESC[self.round.bossType][2],
-			},
-			x = vx,
-			y = vy,
-			absoluteX = 0,
-			absoluteY = 0,
-		}
-	end
+  self.currentlyHoveredBoss = nil
+  local vx, vy = Inputs.getVirtualMousePosition(4)
+  if vy < 200 then
+    self.currentlyHoveredBoss = {
+      representedObject = {
+        objectType = "Boss",
+        name = Constants.BOSS_TYPES_DESC[self.round.bossType][1],
+        description = Constants.BOSS_TYPES_DESC[self.round.bossType][2],
+      },
+      x = vx,
+      y = vy,
+      absoluteX = 0,
+      absoluteY = 0,
+    }
+  end
 end
 
 --Gets the currenty hovered dice, both in the mat AND in the dice net
 function RoundScreen:getCurrentlyHoveredDice()
-	self.previouslyHoveredFace = self.currentlyHoveredFace
-	self.currentlyHoveredFace = nil
+  self.previouslyHoveredFace = self.currentlyHoveredFace
+  self.currentlyHoveredFace = nil
 
-	self.previouslyHoveredDice = self.currentlyHoveredDice
+  self.previouslyHoveredDice = self.currentlyHoveredDice
 
-	if self.showDeck and self.deckScreen then
-		self.currentlyHoveredFace = self.deckScreen:getCurrentlyHoveredFace()
-		return
-	end
+  if self.showDeck and self.deckScreen then
+    self.currentlyHoveredFace = self.deckScreen:getCurrentlyHoveredFace()
+    return
+  end
 
-	--Dés dans le terrain de jeu
-	for key, diceface in next, self.diceFaces do
-		if diceface:isHovered() then
-			self.currentlyHoveredDice = diceface.diceObject
-			self.currentlyHoveredFace = diceface
-			break
-		end
-	end
+  --Dés dans le terrain de jeu
+  for key, diceface in next, self.diceFaces do
+    if diceface:isHovered() then
+      self.currentlyHoveredDice = diceface.diceObject
+      self.currentlyHoveredFace = diceface
+      break
+    end
+  end
 
-	--Dés dans l'encart à droite
-	for key, diceface in next, self.infoFaces do
-		if diceface:isHovered() and self.currentlyHoveredDice then
-			self.currentlyHoveredFace = diceface
-			break
-		end
-	end
+  --Dés dans l'encart à droite
+  for key, diceface in next, self.infoFaces do
+    if diceface:isHovered() and self.currentlyHoveredDice then
+      self.currentlyHoveredFace = diceface
+      break
+    end
+  end
 end
 
 function RoundScreen:getCurrentlyHoveredCiggie()
-	self.currentlyHoveredCiggie = nil
+  self.currentlyHoveredCiggie = nil
 
-	for i, ciggie in next, self.uiElements.ciggiesUI do
-		if ciggie:isHovered() then
-			self.currentlyHoveredCiggie = ciggie
-			break
-		end
-	end
+  for i, ciggie in next, self.uiElements.ciggiesUI do
+    if ciggie:isHovered() then
+      self.currentlyHoveredCiggie = ciggie
+      break
+    end
+  end
 end
 
 --Gets the currently hovered object (dice, ciggie, etc...)
 function RoundScreen:getCurrentlyHoveredObject()
-	if self.endRoundPopUp then
-		self.currentlyHoveredObject = self.endRoundPopUp.currentlyHoveredFace
-	else
-		if self.currentlyHoveredBoss then
-			self.currentlyHoveredObject = self.currentlyHoveredBoss
-		elseif self.currentlyHoveredCiggie then
-			self.currentlyHoveredObject = self.currentlyHoveredCiggie
-		elseif self.currentlyHoveredFace then
-			self.currentlyHoveredObject = self.currentlyHoveredFace
-		else
-			self.currentlyHoveredObject = nil
-		end
-	end
+  if self.endRoundPopUp then
+    self.currentlyHoveredObject = self.endRoundPopUp.currentlyHoveredFace
+  else
+    if self.currentlyHoveredBoss then
+      self.currentlyHoveredObject = self.currentlyHoveredBoss
+    elseif self.currentlyHoveredCiggie then
+      self.currentlyHoveredObject = self.currentlyHoveredCiggie
+    elseif self.currentlyHoveredFace then
+      self.currentlyHoveredObject = self.currentlyHoveredFace
+    else
+      self.currentlyHoveredObject = nil
+    end
+  end
 end
 
 -- Updates the dice net
 function RoundScreen:updateDiceNet(dt)
-	if self.currentlyHoveredDice ~= self.previouslyHoveredDice then
-		for i = 1, 6 do
-			self.infoFaces[i].animator:finishAll()
-			self.infoFaces[i].baseTargetedScale = 0
-			self.infoFaces[i].scaleX = 0
-			self.infoFaces[i].scaleY = 0
+  if self.currentlyHoveredDice ~= self.previouslyHoveredDice then
+    for i = 1, 6 do
+      self.infoFaces[i].animator:finishAll()
+      self.infoFaces[i].baseTargetedScale = 0
+      self.infoFaces[i].scaleX = 0
+      self.infoFaces[i].scaleY = 0
 
-			self.infoFaces[i].animator:addDelay((i - 1) * 0.05)
-			self.infoFaces[i].animator:addGroup({
-				{
-					property = "baseTargetedScale",
-					from = 0,
-					targetValue = 1,
-					duration = 0.2,
-					easing = AnimationUtils.Easing.easeOutBack,
-				},
-				{
-					property = "scale",
-					from = 0,
-					targetValue = 1,
-					duration = 0.2,
-					easing = AnimationUtils.Easing.easeOutBack,
-				},
-			})
-		end
-	end
+      self.infoFaces[i].animator:addDelay((i - 1) * 0.05)
+      self.infoFaces[i].animator:addGroup({
+        {
+          property = "baseTargetedScale",
+          from = 0,
+          targetValue = 1,
+          duration = 0.2,
+          easing = AnimationUtils.Easing.easeOutBack,
+        },
+        {
+          property = "scale",
+          from = 0,
+          targetValue = 1,
+          duration = 0.2,
+          easing = AnimationUtils.Easing.easeOutBack,
+        },
+      })
+    end
+  end
 
-	if self.currentlyHoveredDice then
-		for i = 1, 6 do
-			self.infoFaces[i]:setRepresentedFace(self.currentlyHoveredDice:getFace(i))
-			self.infoFaces[i]:updateSprite()
-			self.infoFaces[i]:update(dt)
-		end
-	end
+  if self.currentlyHoveredDice then
+    for i = 1, 6 do
+      self.infoFaces[i]:setRepresentedFace(self.currentlyHoveredDice:getFace(i))
+      self.infoFaces[i]:updateSprite()
+      self.infoFaces[i]:update(dt)
+    end
+  end
 end
 
 function RoundScreen:playFigure(figure, params)
-	local points, usedDices = params[1], params[2]
-	if
-		self.round.run.availableFigures[figure] >= 1
-		and table.getn(self.round.selectedDices) >= 1
-		--On vérifie aussi que la run tutorial peut jouer des figures
-		and (G.currentRun.tutorialCanPlayFigure == true or not G.currentRun.tutorial)
-	then
-		if
-			not G.currentRun.tutorial --On est pas en tuto
-			or not G.currentRun.tutorialCanPlayStraights == true --On peut jouer autre chose que des traights
-			or (figure == 12) --La figure est la grd straight
-		then
-			if self.run.tutorial then
-				self.run.tutorial:confirmToast("playFigure")
-			end
+  local points, usedDices = params[1], params[2]
+  if
+    self.round.run.availableFigures[figure] >= 1
+    and table.getn(self.round.selectedDices) >= 1
+    --On vérifie aussi que la run tutorial peut jouer des figures
+    and (G.currentRun.tutorialCanPlayFigure == true or not G.currentRun.tutorial)
+  then
+    if
+      not G.currentRun.tutorial --On est pas en tuto
+      or not G.currentRun.tutorialCanPlayStraights == true --On peut jouer autre chose que des traights
+      or (figure == 12) --La figure est la grd straight
+    then
+      if self.run.tutorial then
+        self.run.tutorial:confirmToast("playFigure")
+      end
 
-			self.round:playFigure(points, usedDices, figure)
-			if not (self.round.numberOfHands == 0 and G.currentRun.firstHandFigureSpare == true) then
-				self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure] - 1
-			end
-			self.round.run:stickerFigurePlayedEffect()
-			self.round.numberOfHands = self.round.numberOfHands + 1
-		end
-	end
+      self.round:playFigure(points, usedDices, figure)
+      if not (self.round.numberOfHands == 0 and G.currentRun.firstHandFigureSpare == true) then
+        self.round.run.availableFigures[figure] = self.round.run.availableFigures[figure] - 1
+      end
+      self.round.run:stickerFigurePlayedEffect()
+      self.round.numberOfHands = self.round.numberOfHands + 1
+    end
+  end
 end
 --Reorganises the UI faces by face order (unselected dices)
 function RoundScreen:sortUnselectedDices(dices)
-	--Reorganise the dice by face (increasing)
+  --Reorganise the dice by face (increasing)
 
-	local reorganisedDices = {}
-	local temp = {}
-	--On créée une liste d'incides, qui sert de base pour trier la liste de dés ET de diceFaces
+  local reorganisedDices = {}
+  local temp = {}
+  --On créée une liste d'incides, qui sert de base pour trier la liste de dés ET de diceFaces
 
-	for _, dice in next, dices do
-		table.insert(temp, dice)
-	end
+  for _, dice in next, dices do
+    table.insert(temp, dice)
+  end
 
-	table.sort(temp, function(a, b)
-		return a.representedObject.faceValue < b.representedObject.faceValue
-	end)
-	for _, dice in ipairs(temp) do
-		table.insert(reorganisedDices, dice)
-	end
+  table.sort(temp, function(a, b)
+    return a.representedObject.faceValue < b.representedObject.faceValue
+  end)
+  for _, dice in ipairs(temp) do
+    table.insert(reorganisedDices, dice)
+  end
 
-	local i = 1
-	self.unselectedDices = {}
-	for key, uiFace in next, reorganisedDices do
-		uiFace.targetX = i * ((self.dice_tray:getWidth() - 100) / (table.getn(reorganisedDices) + 1)) + 50
-		uiFace.targetY = (self.dice_tray:getHeight() / 2 + 140)
+  local i = 1
+  self.unselectedDices = {}
+  for key, uiFace in next, reorganisedDices do
+    uiFace.targetX = i * ((self.dice_tray:getWidth() - 100) / (table.getn(reorganisedDices) + 1)) + 50
+    uiFace.targetY = (self.dice_tray:getHeight() / 2 + 140)
 
-		uiFace.anchorX = i * ((self.dice_tray:getWidth() - 100) / (table.getn(reorganisedDices) + 1)) + 50
+    uiFace.anchorX = i * ((self.dice_tray:getWidth() - 100) / (table.getn(reorganisedDices) + 1)) + 50
 
-		uiFace.anchorY = (self.dice_tray:getHeight() / 2 + 140)
+    uiFace.anchorY = (self.dice_tray:getHeight() / 2 + 140)
 
-		uiFace.baseRotation = 0
-		i = i + 1
+    uiFace.baseRotation = 0
+    i = i + 1
 
-		table.insert(self.unselectedDices, uiFace)
-	end
+    table.insert(self.unselectedDices, uiFace)
+  end
 end
 
 function RoundScreen:updateUnselectedPosDices()
-	for i, uiFace in next, self.unselectedDices do
-		uiFace.anchorX = i * ((self.dice_tray:getWidth() - 100) / (table.getn(self.unselectedDices) + 1)) + 50
+  for i, uiFace in next, self.unselectedDices do
+    uiFace.anchorX = i * ((self.dice_tray:getWidth() - 100) / (table.getn(self.unselectedDices) + 1)) + 50
 
-		uiFace.anchorY = (self.dice_tray:getHeight() / 2 + 140)
+    uiFace.anchorY = (self.dice_tray:getHeight() / 2 + 140)
 
-		if not uiFace.isBeingDragged then
-			uiFace.targetX = uiFace.anchorX
-			uiFace.targetY = uiFace.anchorY
-		end
+    if not uiFace.isBeingDragged then
+      uiFace.targetX = uiFace.anchorX
+      uiFace.targetY = uiFace.anchorY
+    end
 
-		uiFace.baseRotation = 0
-		i = i + 1
-	end
+    uiFace.baseRotation = 0
+    i = i + 1
+  end
 end
 --Highlight the dices when hovering a figure
 function RoundScreen:highlightDices(usedDices)
-	for key, diceface in next, self.diceFaces do
-		diceface:setHighlighted(false)
-		for _, dice in next, usedDices do
-			if self.diceFaces[dice] == diceface then
-				diceface:setHighlighted(true)
-				break
-			end
-		end
-	end
+  for key, diceface in next, self.diceFaces do
+    diceface:setHighlighted(false)
+    for _, dice in next, usedDices do
+      if self.diceFaces[dice] == diceface then
+        diceface:setHighlighted(true)
+        break
+      end
+    end
+  end
 end
 
 --Trigger Texts
@@ -1186,131 +1175,131 @@ end
 --Fonction centralisée pour modifier tous les comportements d'un coup si besoin
 
 function RoundScreen:addTriggerText(text, face, opts)
-	opts = opts or {}
-	local colorStart = opts.colorStart or { 1, 1, 1, 1 }
-	local colorEnd = opts.colorEnd or colorStart
+  opts = opts or {}
+  local colorStart = opts.colorStart or { 1, 1, 1, 1 }
+  local colorEnd = opts.colorEnd or colorStart
 
-	table.insert(
-		self.triggerTexts,
-		UI.Text.TextWavy:new(
-			text,
-			self.diceFaces[face.diceObject].x + self.diceMatx,
-			self.diceFaces[face.diceObject].y + 120 + self.diceMaty,
-			{
-				font = Fonts.soraRewardTotal,
-				colorStart = colorStart,
-				colorEnd = colorEnd,
-				revealSpeed = 0.1,
-				lifetime = 0.5,
-				popAngleStart = 0,
-				popAngleOvershoot = 10,
-				centered = true,
-				popOvershoot = 0.2,
-				popStart = 0.5,
-			}
-		)
-	)
+  table.insert(
+    self.triggerTexts,
+    UI.Text.TextWavy:new(
+      text,
+      self.diceFaces[face.diceObject].x + self.diceMatx,
+      self.diceFaces[face.diceObject].y + 120 + self.diceMaty,
+      {
+        font = Fonts.soraRewardTotal,
+        colorStart = colorStart,
+        colorEnd = colorEnd,
+        revealSpeed = 0.1,
+        lifetime = 0.5,
+        popAngleStart = 0,
+        popAngleOvershoot = 10,
+        centered = true,
+        popOvershoot = 0.2,
+        popStart = 0.5,
+      }
+    )
+  )
 end
 
 --generic functions
 
 function moveElement(list, fromIndex, toIndex)
-	if fromIndex == toIndex then
-		return
-	end
-	local element = table.remove(list, fromIndex)
-	table.insert(list, toIndex, element)
+  if fromIndex == toIndex then
+    return
+  end
+  local element = table.remove(list, fromIndex)
+  table.insert(list, toIndex, element)
 end
 
 function indexOf(list, element)
-	for i, v in ipairs(list) do
-		if v == element then
-			return i
-		end
-	end
-	return nil -- retourne nil si l'élément n'est pas trouvé
+  for i, v in ipairs(list) do
+    if v == element then
+      return i
+    end
+  end
+  return nil -- retourne nil si l'élément n'est pas trouvé
 end
 
 function RoundScreen:cleanup()
-	-- Clear UI faces
-	if self.diceFaces then
-		for _, face in pairs(self.diceFaces) do
-			face = nil
-		end
-		self.diceFaces = {}
-	end
+  -- Clear UI faces
+  if self.diceFaces then
+    for _, face in pairs(self.diceFaces) do
+      face = nil
+    end
+    self.diceFaces = {}
+  end
 
-	-- Clear UI elements
-	if self.uiElements and self.uiElements.buttons then
-		for _, button in pairs(self.uiElements.buttons) do
-			button = nil
-		end
-		self.uiElements.buttons = {}
-	end
+  -- Clear UI elements
+  if self.uiElements and self.uiElements.buttons then
+    for _, button in pairs(self.uiElements.buttons) do
+      button = nil
+    end
+    self.uiElements.buttons = {}
+  end
 
-	-- Clear ciggies UI
-	if self.uiElements and self.uiElements.ciggiesUI then
-		for _, ciggie in pairs(self.uiElements.ciggiesUI) do
-			ciggie = nil
-		end
-		self.uiElements.ciggiesUI = {}
-	end
+  -- Clear ciggies UI
+  if self.uiElements and self.uiElements.ciggiesUI then
+    for _, ciggie in pairs(self.uiElements.ciggiesUI) do
+      ciggie = nil
+    end
+    self.uiElements.ciggiesUI = {}
+  end
 
-	-- Clear additional objects
-	self.dragAndDroppedDice = nil
-	self.dragAndDroppedCiggie = nil
-	self.currentlyHoveredFace = nil
-	self.currentlyHoveredDice = nil
-	self.currentlyHoveredCiggie = nil
-	self.endRoundPopUp = nil
-	self.gameOverPopup = nil
+  -- Clear additional objects
+  self.dragAndDroppedDice = nil
+  self.dragAndDroppedCiggie = nil
+  self.currentlyHoveredFace = nil
+  self.currentlyHoveredDice = nil
+  self.currentlyHoveredCiggie = nil
+  self.endRoundPopUp = nil
+  self.gameOverPopup = nil
 end
 
 function RoundScreen:getRerollButtonStatusTutorial()
-	--On quitte la fonction si on est pas en run tutorial ou qu'on n'est pas au premier bureau
-	if not self.run.tutorial or not (self.run.floorDeskNumber == 1 and self.run.floorNumber == 1) then
-		return true
-	end
-	--Pour le premier lancer, accepté
-	if self.firstThrow == false and self.secondThrow == false then
-		return true
-	end
-	--Après le deuxième lancer : doit être activé si les mêmes trois dés sont sélectionés
-	if self.secondThrow == true then
-		local selectedDices = {}
-		for i, dice in next, self.diceFaces do
-			if dice:getIsSelected() then
-				table.insert(selectedDices, dice.representedObject.faceValue)
-			end
-		end
-		return listsAreEqual(GenerateRandom.sorted(selectedDices), { 3, 4, 5 })
-	end
-	--Après le premier lancer : doit être activé si trois dés sont sélectionnés et qu'il s'agit des bons
-	if self.firstThrow == true and self.secondThrow == false then
-		local selectedDices = {}
-		for i, dice in next, self.diceFaces do
-			if dice:getIsSelected() then
-				table.insert(selectedDices, dice.representedObject.faceValue)
-			end
-		end
-		return listsAreEqual(GenerateRandom.sorted(selectedDices), { 3, 4, 5 })
-	end
+  --On quitte la fonction si on est pas en run tutorial ou qu'on n'est pas au premier bureau
+  if not self.run.tutorial or not (self.run.floorDeskNumber == 1 and self.run.floorNumber == 1) then
+    return true
+  end
+  --Pour le premier lancer, accepté
+  if self.firstThrow == false and self.secondThrow == false then
+    return true
+  end
+  --Après le deuxième lancer : doit être activé si les mêmes trois dés sont sélectionés
+  if self.secondThrow == true then
+    local selectedDices = {}
+    for i, dice in next, self.diceFaces do
+      if dice:getIsSelected() then
+        table.insert(selectedDices, dice.representedObject.faceValue)
+      end
+    end
+    return listsAreEqual(GenerateRandom.sorted(selectedDices), { 3, 4, 5 })
+  end
+  --Après le premier lancer : doit être activé si trois dés sont sélectionnés et qu'il s'agit des bons
+  if self.firstThrow == true and self.secondThrow == false then
+    local selectedDices = {}
+    for i, dice in next, self.diceFaces do
+      if dice:getIsSelected() then
+        table.insert(selectedDices, dice.representedObject.faceValue)
+      end
+    end
+    return listsAreEqual(GenerateRandom.sorted(selectedDices), { 3, 4, 5 })
+  end
 end
 
 function listsAreEqual(list1, list2)
-	-- Vérifie d'abord la longueur
-	if #list1 ~= #list2 then
-		return false
-	end
+  -- Vérifie d'abord la longueur
+  if #list1 ~= #list2 then
+    return false
+  end
 
-	-- Compare chaque valeur dans l'ordre
-	for i = 1, #list1 do
-		if list1[i] ~= list2[i] then
-			return false
-		end
-	end
+  -- Compare chaque valeur dans l'ordre
+  for i = 1, #list1 do
+    if list1[i] ~= list2[i] then
+      return false
+    end
+  end
 
-	return true
+  return true
 end
 
 return RoundScreen
