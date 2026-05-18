@@ -15,7 +15,7 @@ function TutorialEvents.welcomeMessage()
     onConfirm = function()
       G.currentRun.tutorialCanReroll = true
       G.currentRun.tutorial:pushToast({
-        text = "Press the **REROLL!** button.",
+        text = "Press the **ROLL!** button.",
         key = "firstThrow",
         arrows = {
           { x = Constants.VIRTUAL_GAME_WIDTH / 2, y = Constants.VIRTUAL_GAME_HEIGHT - 200, angle = 180 },
@@ -34,7 +34,7 @@ end
 function TutorialEvents.firstRoll()
   --Message affiché après le premier lancer. Explique comment reroll et sélectionner des dés.
   G.currentRun.tutorial:pushOnce("firstRoll1", {
-    text = "Not bad! I can see a 3, 4 and 5. Select these dices and **reroll** the other two, we can try to play a --Large Straight--.",
+    text = "Not bad! I can see a 3, a 4 and a 5. Select these dices and **reroll** the other two, we can try to play a --Large Straight--.",
     pos = "ul",
     onConfirm = function()
       G.currentRun.currentRound.terrain.firstThrow = true
@@ -49,7 +49,7 @@ end
 function TutorialEvents.secondRoll()
   --Message affiché après le premier lancer. Explique comment reroll et sélectionner des dés.
   G.currentRun.tutorial:pushOnce("secondRoll", {
-    text = "Too bad! We didnt roll the dices we needed...",
+    text = "Too bad! We didn't roll the dices we needed...",
     pos = "ul",
   })
   G.currentRun.tutorial:pushOnce("secondRoll2", {
@@ -209,7 +209,7 @@ function TutorialEvents.firstRoundWin()
     end,
   })
   G.currentRun.tutorial:pushOnce("firstWin5", {
-    text = "Finally, you get some ££money££, depending on the coworker you beat, plus ££one dollar££ per unused turn.",
+    text = "Finally, you receive some ££money££, depending on the coworker you beat, plus ££one dollar££ per unused turn.",
     pos = "ul",
     onConfirm = function()
       G.currentRun.tutorialCanPlayStraights = false
@@ -220,7 +220,7 @@ function TutorialEvents.firstRoundWin()
     end,
   })
   G.currentRun.tutorial:pushOnce("firstWin6", {
-    text = "You can click [[Next!]] I'll show you how to customize your dices now.'",
+    text = "You can click [[Next!]], I'll show you how to customize your dices now.'",
     pos = "ul",
   })
 end
@@ -233,7 +233,7 @@ function TutorialEvents.customizationScreen()
 
   G.currentRun.tutorial:pushOnce("customScreenx", {
     pos = "ul",
-    text = "These are your &&5 dices&&, layed down for you to modify them.",
+    text = "These are your &&5 dices&&, laid down for you to modify them.",
     draw = function(opts)
       G.currentGameScreen:drawCustomizationMat()
       G.currentGameScreen:drawDeckDices()
@@ -310,16 +310,16 @@ function TutorialEvents.secondRoundStart()
   })
   G.currentRun.tutorial:pushOnce("secondRound3", {
     pos = "ur",
-    text = "That amount is indicated by the number of dot on each line of the table.",
+    text = "That amount is indicated by the number of dots on each line of the table.",
   })
   G.currentRun.tutorial:pushOnce("secondRound4", {
     pos = "ur",
-    text = "A ::floor:: is composed of two ;;coworkers;; and one ^^manager^^, so you'll have to survive two more rounds before all your --figures-- become available again",
+    text = "A ::floor:: is composed of two ;;coworkers;; and one ^^manager^^, so you'll have to survive two more rounds before all your --figures-- become available",
     onConfirm = function() end,
   })
   G.currentRun.tutorial:pushOnce("secondRound5", {
     pos = "ur",
-    text = "You can click on the [[Info]] button to se how your other figures can be played.",
+    text = "You can click on the [[Info]] button to see how your other figures can be played.",
     onConfirm = function()
       G.currentRun.tutorial:pushToast({
         text = "Open the [[Info]] menu.",
@@ -418,7 +418,7 @@ function TutorialEvents.managerRound()
     end,
   })
   G.currentRun.tutorial:pushOnce("managerRound3", {
-    text = "That means you can reuse the --numercal figures-- you used earlier, even before accessing the ::next floor::. ",
+    text = "That means you can reuse the --numerical figures-- you used earlier, even before accessing the ::next floor::. ",
     pos = "ll",
     draw = function()
       G.currentGameScreen:drawCiggiesTray()
@@ -461,7 +461,7 @@ function TutorialEvents.shop()
     pos = "ul",
   })
   G.currentRun.tutorial:pushOnce("shop1", {
-    text = "Here you can buy differents items to improve your run and enhance your dices. Try to ((drag and drop)) a &&dice face&& to your inventory do buy it!",
+    text = "Here you can buy different items to improve your run and enhance your dices. Try to ((drag and drop)) a &&dice face&& to your inventory do buy it!",
     pos = "ur",
     onConfirm = function()
       G.currentRun.shop.canBuyDiceFace = true
@@ -564,7 +564,7 @@ function TutorialEvents.shop3()
   })
 
   G.currentRun.tutorial:pushOnce("finishingShopPres3", {
-    text = "Finally, the shop can be **rerolled**. But be carefull, doing so cost money, and the price will increase each time you reroll it.",
+    text = "Finally, the shop can be **rerolled**. But be careful, doing so costs money, and the price will increase each time you reroll it.",
     pos = "ul",
     draw = function() --Shop Ciggie UI
       --Coffee UI
@@ -580,7 +580,7 @@ function TutorialEvents.shop3()
   })
 
   G.currentRun.tutorial:pushOnce("finishingShopPres4", {
-    text = "Alright  i'll let you finish your shopping before carrying on to your customization workbench.",
+    text = "Alright I'll let you finish your shopping before carrying on to your customization workbench.",
     pos = "ul",
     onConfirm = function()
       G.currentRun.shop.canBuySticker = true
@@ -605,7 +605,7 @@ function TutorialEvents.secondFloor()
   })
 
   G.currentRun.tutorial:pushOnce("secondFloor3", {
-    text = "Well, I think you know the basis now. You need to reach and beat the manager of the 8th floor to escape this [[sh&#@!ty]] company. Good luck mate!",
+    text = "Well, I think you know the basics now. You need to reach and beat the manager of the 8th floor to escape this [[sh&#@!ty]] company. Good luck mate!",
     pos = "ur",
     onConfirm = function()
       G.currentRun.deskChoice.canSelectRound = true
