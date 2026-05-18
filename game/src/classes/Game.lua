@@ -23,223 +23,230 @@ local gameCanvas = love.graphics.newCanvas(virtualWidth, virtualHeight)
 --gameCanvas:setFilter("nearest", "nearest")
 
 function Game:start()
-	local self = setmetatable({}, Game)
+  local self = setmetatable({}, Game)
 
-	--New dice objects
-	self.diceObjects = diceObjects
+  --New dice objects
+  self.diceObjects = diceObjects
 
-	self.currentScreen = Constants.PAGES.GAME
-	self.run = nil
+  self.currentScreen = Constants.PAGES.GAME
+  self.run = nil
 
-	self.gameCanvas = gameCanvas
-	self.backgroundCanvas = love.graphics.newCanvas(self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
+  self.gameCanvas = gameCanvas
+  self.backgroundCanvas = love.graphics.newCanvas(self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
 
-	--Create a main menu
-	--Si la save data ne contient pas de personnage à l'interieur, on réoriente dans un premier temps
-	--Vers la création de personnage.
-	self.mainMenu = MainMenu:new()
+  --Create a main menu
+  --Si la save data ne contient pas de personnage à l'interieur, on réoriente dans un premier temps
+  --Vers la création de personnage.
+  self.mainMenu = MainMenu:new()
 
-	if not G.saveManager.data.profile then
-		self.characterCreation = CharacterCreation:new()
-		self.currentScreen = Constants.PAGES.CHARACTER_CREATION
-	else
-		self.currentScreen = Constants.PAGES.MAIN_MENU
-		G.playerName = G.saveManager.data.profile.name
-		G.playerLion = Lion:new()
-		G.playerLion:createFromIndexes(G.saveManager.data.profile.avatar)
-	end
+  if not G.saveManager.data.profile then
+    self.characterCreation = CharacterCreation:new()
+    self.currentScreen = Constants.PAGES.CHARACTER_CREATION
+  else
+    self.currentScreen = Constants.PAGES.MAIN_MENU
+    G.playerName = G.saveManager.data.profile.name
+    G.playerLion = Lion:new()
+    G.playerLion:createFromIndexes(G.saveManager.data.profile.avatar)
+  end
 
-	G.game = self
+  G.game = self
 
-	return self
+  return self
 end
 
 function Game:update(dt)
-	if self.currentScreen == Constants.PAGES.MAIN_MENU then
-		self.mainMenu:update(dt)
-	elseif self.currentScreen == Constants.PAGES.GAME then
-		self.run:update(dt)
-	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
-		self.characterCreation:update(dt)
-	end
+  if self.currentScreen == Constants.PAGES.MAIN_MENU then
+    self.mainMenu:update(dt)
+  elseif self.currentScreen == Constants.PAGES.GAME then
+    self.run:update(dt)
+  elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+    self.characterCreation:update(dt)
+  end
 
-	--damped offset
-	G.ox = Animations.dampLerp(G.ox, G.rx + G.waveX, 1.5, dt)
-	G.oy = Animations.dampLerp(G.oy, G.ry + G.waveY, 1.5, dt) / 1.2
+  --damped offset
+  G.ox = Animations.dampLerp(G.ox, G.rx + G.waveX, 1.5, dt)
+  G.oy = Animations.dampLerp(G.oy, G.ry + G.waveY, 1.5, dt) / 1.2
 
-	self:updateCanvas(dt)
+  self:updateCanvas(dt)
 end
 function Game:updateCanvas(dt)
-	love.graphics.setCanvas(self.gameCanvas)
-	love.graphics.clear()
-	self:drawBackground()
-	--Rendu du jeu dans le game canvas--
-	if self.currentScreen == Constants.PAGES.MAIN_MENU then
-		self.mainMenu:draw()
-	elseif self.currentScreen == Constants.PAGES.GAME then
-		self.run:draw(dt)
-	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
-		self.characterCreation:draw()
-	end
+  love.graphics.setCanvas(self.gameCanvas)
+  love.graphics.clear()
+  self:drawBackground()
+  --Rendu du jeu dans le game canvas--
+  if self.currentScreen == Constants.PAGES.MAIN_MENU then
+    self.mainMenu:draw()
+  elseif self.currentScreen == Constants.PAGES.GAME then
+    self.run:draw(dt)
+  elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+    self.characterCreation:draw()
+  end
 
-	love.graphics.setCanvas()
+  love.graphics.setCanvas()
 end
 function Game:draw()
-	--Affichage du jeu--
-	-- Calcule le scale pour garder le ratio
-	local screenWidth, screenHeight = love.graphics.getDimensions()
-	local scale = math.min(screenWidth / virtualWidth, screenHeight / virtualHeight)
+  --Affichage du jeu--
+  -- Calcule le scale pour garder le ratio
+  local screenWidth, screenHeight = love.graphics.getDimensions()
+  local scale = math.min(screenWidth / virtualWidth, screenHeight / virtualHeight)
 
-	local scaledWidth = virtualWidth * scale
-	local scaledHeight = virtualHeight * scale
+  local scaledWidth = virtualWidth * scale
+  local scaledHeight = virtualHeight * scale
 
-	local offsetX = (screenWidth - scaledWidth) / 2 --+ (G.ox*30)
-	local offsetY = (screenHeight - scaledHeight) / 2 --+ (G.oy*30)
+  local offsetX = (screenWidth - scaledWidth) / 2 --+ (G.ox*30)
+  local offsetY = (screenHeight - scaledHeight) / 2 --+ (G.oy*30)
 
-	-- Draw the game canvas using premultiplied alpha to prevent black halos around sprites
-	love.graphics.setBlendMode("alpha", "premultiplied")
-	love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
-	-- Restore default blend mode (alpha blending)
-	love.graphics.setBlendMode("alpha", "alphamultiply")
+  -- Draw the game canvas using premultiplied alpha to prevent black halos around sprites
+  love.graphics.setBlendMode("alpha", "premultiplied")
+  love.graphics.draw(self.gameCanvas, offsetX, offsetY, 0, scale, scale)
+  -- Restore default blend mode (alpha blending)
+  love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 --==GAME FUNCTION==--
 
 function Game:startNewRun(seedText, tutorial)
-	-- Cleanup existing run if exists
+  -- Cleanup existing run if exists
 
-	-- Cleanup main menu
-	if self.mainMenu then
-		self.mainMenu:cleanup()
-		self.mainMenu = nil
-	end
+  -- Cleanup main menu
+  if self.mainMenu then
+    self.mainMenu:cleanup()
+    self.mainMenu = nil
+  end
 
-	--Creation de la seed
-	if seedText and seedText ~= "" then
-		local seed = GenerateRandom.stringToSeed(seedText)
-		G.seedText = seedText
-		G.seed = seed
-		--On reset les random generator
-		G.rngDices = love.math.newRandomGenerator(seed)
-		G.rngShop = love.math.newRandomGenerator(seed)
-		G.rngEnemies = love.math.newRandomGenerator(seed)
-		G.rngGeneral = love.math.newRandomGenerator(seed)
-	else
-		local rndText = GenerateRandom.randomSeedText()
-		local seed = GenerateRandom.stringToSeed(rndText)
+  if not G.saveManager.data["playedTutorial"] then
+    seedText = "IOXAHBAJ"
+    tutorial = true
+    G.saveManager.data["playedTutorial"] = true
+    G.saveManager:save()
+  end
 
-		G.seed = seed
-		G.seedText = rndText
-		--On reset les random generator
-		G.rngDices = love.math.newRandomGenerator(seed)
-		G.rngShop = love.math.newRandomGenerator(seed)
-		G.rngEnemies = love.math.newRandomGenerator(seed)
-		G.rngGeneral = love.math.newRandomGenerator(seed)
-	end
+  --Creation de la seed
+  if seedText and seedText ~= "" then
+    local seed = GenerateRandom.stringToSeed(seedText)
+    G.seedText = seedText
+    G.seed = seed
+    --On reset les random generator
+    G.rngDices = love.math.newRandomGenerator(seed)
+    G.rngShop = love.math.newRandomGenerator(seed)
+    G.rngEnemies = love.math.newRandomGenerator(seed)
+    G.rngGeneral = love.math.newRandomGenerator(seed)
+  else
+    local rndText = GenerateRandom.randomSeedText()
+    local seed = GenerateRandom.stringToSeed(rndText)
 
-	local diceObjects = {} --liste des 6 dés blancs
+    G.seed = seed
+    G.seedText = rndText
+    --On reset les random generator
+    G.rngDices = love.math.newRandomGenerator(seed)
+    G.rngShop = love.math.newRandomGenerator(seed)
+    G.rngEnemies = love.math.newRandomGenerator(seed)
+    G.rngGeneral = love.math.newRandomGenerator(seed)
+  end
 
-	for i = 1, 5 do
-		local fs = {}
-		for j = 1, 6 do
-			local f = FaceTypes.WhiteDice:new(j, 10)
-			table.insert(fs, f)
-		end
-		table.insert(diceObjects, DiceObject:new(fs))
-	end
+  local diceObjects = {} --liste des 6 dés blancs
 
-	self.diceObjects = diceObjects
+  for i = 1, 5 do
+    local fs = {}
+    for j = 1, 6 do
+      local f = FaceTypes.WhiteDice:new(j, 10)
+      table.insert(fs, f)
+    end
+    table.insert(diceObjects, DiceObject:new(fs))
+  end
 
-	self.currentScreen = Constants.PAGES.GAME
-	self.run = Run:new(diceObjects, self.gameCanvas, self, self.diceObjects, tutorial)
+  self.diceObjects = diceObjects
 
-	G.currentRun = self.run
+  self.currentScreen = Constants.PAGES.GAME
+  self.run = Run:new(diceObjects, self.gameCanvas, self, self.diceObjects, tutorial)
+
+  G.currentRun = self.run
 end
 
 --==INPUTS FUNCTIONS==--
 
 function Game:keypressed(key)
-	if self.currentScreen == Constants.PAGES.MAIN_MENU then
-		self.mainMenu:keypressed(key)
-	elseif self.currentScreen == Constants.PAGES.GAME then
-		self.run:keypressed(key)
-	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
-		self.characterCreation:keypressed(key)
-	end
+  if self.currentScreen == Constants.PAGES.MAIN_MENU then
+    self.mainMenu:keypressed(key)
+  elseif self.currentScreen == Constants.PAGES.GAME then
+    self.run:keypressed(key)
+  elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+    self.characterCreation:keypressed(key)
+  end
 end
 
 function Game:textinput(t)
-	if self.currentScreen == Constants.PAGES.MAIN_MENU then
-		self.mainMenu:textinput(t)
-	elseif self.currentScreen == Constants.PAGES.GAME then
-	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
-		self.characterCreation:textinput(t)
-	end
+  if self.currentScreen == Constants.PAGES.MAIN_MENU then
+    self.mainMenu:textinput(t)
+  elseif self.currentScreen == Constants.PAGES.GAME then
+  elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+    self.characterCreation:textinput(t)
+  end
 end
 
 function Game:mousepressed(x, y, button, istouch, presses)
-	local vx, vy = Inputs.getVirtualMousePosition()
+  local vx, vy = Inputs.getVirtualMousePosition()
 
-	if self.currentScreen == Constants.PAGES.MAIN_MENU then
-		self.mainMenu:mousepressed(vx, vy, button, istouch, presses)
-	elseif self.currentScreen == Constants.PAGES.GAME then
-		self.run:mousepressed(vx, vy, button, istouch, presses)
-	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
-		self.characterCreation:mousepressed(vx, vy, button, istouch, presses)
-	end
+  if self.currentScreen == Constants.PAGES.MAIN_MENU then
+    self.mainMenu:mousepressed(vx, vy, button, istouch, presses)
+  elseif self.currentScreen == Constants.PAGES.GAME then
+    self.run:mousepressed(vx, vy, button, istouch, presses)
+  elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+    self.characterCreation:mousepressed(vx, vy, button, istouch, presses)
+  end
 end
 
 function Game:mousereleased(vx, vy, button, istouch, presses)
-	local vx, vy = Inputs.getVirtualMousePosition()
+  local vx, vy = Inputs.getVirtualMousePosition()
 
-	if self.currentScreen == Constants.PAGES.MAIN_MENU then
-		self.mainMenu:mousereleased(vx, vy, button, istouch, presses)
-	elseif self.currentScreen == Constants.PAGES.GAME then
-		self.run:mousereleased(vx, vy, button, istouch, presses)
-	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
-		self.characterCreation:mousereleased(vx, vy, button, istouch, presses)
-	end
+  if self.currentScreen == Constants.PAGES.MAIN_MENU then
+    self.mainMenu:mousereleased(vx, vy, button, istouch, presses)
+  elseif self.currentScreen == Constants.PAGES.GAME then
+    self.run:mousereleased(vx, vy, button, istouch, presses)
+  elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+    self.characterCreation:mousereleased(vx, vy, button, istouch, presses)
+  end
 end
 
 function Game:mousemoved(x, y, dx, dy)
-	local vx, vy = Inputs.getVirtualMousePosition()
-	local scale = Inputs.getCanvasScale()
-	local vdx, vdy = dx / scale, dy / scale
+  local vx, vy = Inputs.getVirtualMousePosition()
+  local scale = Inputs.getCanvasScale()
+  local vdx, vdy = dx / scale, dy / scale
 
-	if self.currentScreen == Constants.PAGES.MAIN_MENU then
-		self.mainMenu:mousemoved(vx, vy, vdx, vdy)
-	elseif self.currentScreen == Constants.PAGES.GAME then
-		self.run:mousemoved(vx, vy, vdx, vdy)
-	elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
-		self.characterCreation:mousemoved(vx, vy, vdx, vdy)
-	end
+  if self.currentScreen == Constants.PAGES.MAIN_MENU then
+    self.mainMenu:mousemoved(vx, vy, vdx, vdy)
+  elseif self.currentScreen == Constants.PAGES.GAME then
+    self.run:mousemoved(vx, vy, vdx, vdy)
+  elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+    self.characterCreation:mousemoved(vx, vy, vdx, vdy)
+  end
 end
 
 function Game:drawBackground()
-	local currentCanvas = love.graphics.getCanvas()
-	-- Draw background to canvas with shader
-	love.graphics.setCanvas(self.backgroundCanvas)
-	love.graphics.clear()
-	love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
-	love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
-	love.graphics.rectangle("fill", 0, 0, self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
+  local currentCanvas = love.graphics.getCanvas()
+  -- Draw background to canvas with shader
+  love.graphics.setCanvas(self.backgroundCanvas)
+  love.graphics.clear()
+  love.graphics.clear(G.backgroundR, G.backgroundG, G.backgroundB)
+  love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
+  love.graphics.rectangle("fill", 0, 0, self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
 
-	-- Set main canvas and draw background with shader
-	love.graphics.setCanvas(currentCanvas)
-	love.graphics.setShader(Shaders.diagonalCircles)
-	Shaders.diagonalCircles:send("time", love.timer.getTime())
-	Shaders.diagonalCircles:send("base_size", 0.05)
-	Shaders.diagonalCircles:send("amplitude", 0.03)
-	Shaders.diagonalCircles:send("spacing", 0.15)
-	Shaders.diagonalCircles:send("speed", 0.8)
-	Shaders.diagonalCircles:send("waveScale", 5.0)
-	Shaders.diagonalCircles:send("moveSpeed", 0.03)
-	Shaders.diagonalCircles:send("darkness", 0.3)
-	love.graphics.draw(self.backgroundCanvas, 0, 0)
-	love.graphics.setShader()
-	-- Restore default blend mode
-	love.graphics.setBlendMode("alpha", "alphamultiply")
-	love.graphics.setColor(1, 1, 1)
+  -- Set main canvas and draw background with shader
+  love.graphics.setCanvas(currentCanvas)
+  love.graphics.setShader(Shaders.diagonalCircles)
+  Shaders.diagonalCircles:send("time", love.timer.getTime())
+  Shaders.diagonalCircles:send("base_size", 0.05)
+  Shaders.diagonalCircles:send("amplitude", 0.03)
+  Shaders.diagonalCircles:send("spacing", 0.15)
+  Shaders.diagonalCircles:send("speed", 0.8)
+  Shaders.diagonalCircles:send("waveScale", 5.0)
+  Shaders.diagonalCircles:send("moveSpeed", 0.03)
+  Shaders.diagonalCircles:send("darkness", 0.3)
+  love.graphics.draw(self.backgroundCanvas, 0, 0)
+  love.graphics.setShader()
+  -- Restore default blend mode
+  love.graphics.setBlendMode("alpha", "alphamultiply")
+  love.graphics.setColor(1, 1, 1)
 end
 function Game:cleanup() end
 
