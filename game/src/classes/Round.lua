@@ -30,6 +30,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
   self.faceRewards = faceRewards
 
   --==Triggering Phase==--
+  self.effectsTriggered = 0
   self.handScore = 0
   self.phase = Constants.ROUND_STATES.PLAYING
   self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
@@ -255,6 +256,9 @@ function Round:getDicesOrder(usedDices)
 end
 
 function Round:startTriggeringPhase(usedDices, figure) --Nouvelle versionn commence par ajouter tous les effets des dés dans la queue des effets
+  --Reset du nombre de triggers total de la phase
+  self.effectsTriggered = 0
+
   self.phase = Constants.ROUND_STATES.TRIGGERING
   self.triggerFaceHistory = {}
   self.usedDices = usedDices
