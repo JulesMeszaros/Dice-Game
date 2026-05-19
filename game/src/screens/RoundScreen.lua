@@ -848,7 +848,7 @@ function RoundScreen:outAnimation(onEnd)
   self.animator:addDelay(0.1, function()
     self.round.run:stickerEndRoundEffect()
   end)
-  self.animator:addDelay(0.4)
+  self.animator:addDelay(0.1)
   self.animator:addGroup({
     {
       property = "gridX",
@@ -912,7 +912,7 @@ function RoundScreen:outAnimation(onEnd)
     })
   end
 
-  self.animator:addDelay(0.2)
+  self.animator:addDelay(0.05)
   self.animator:addGroup({
     {
       property = "playerX",
@@ -930,7 +930,7 @@ function RoundScreen:outAnimation(onEnd)
     },
   })
 
-  self.animator:addDelay(0.2, function()
+  self.animator:addDelay(0.1, function()
     if onEnd == nil then
       self.round.run:goToNextRound()
     elseif onEnd == "newRun" then
