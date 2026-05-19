@@ -350,7 +350,7 @@ function Shop:updateCanvas(dt)
     self.deckScreen:update(dt)
     self.deckScreen:draw()
   end
-  if self.currentlyHoveredObject then
+  if self.currentlyHoveredObject and not self.dragAndDroppedObject then
     --Info bubble (wip)
     self.infoBubble.x, self.infoBubble.y =
       self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX,

@@ -438,7 +438,12 @@ function RoundScreen:updateCanvas(dt)
     self.dragAndDroppedCiggie:draw()
   end
 
-  if self.currentlyHoveredObject then
+  if
+    self.currentlyHoveredObject
+    and not self.dragAndDroppedCiggie
+    and not self.dragAndDroppedDice
+    and not self.dragAndDroppedFace
+  then
     --Info bubble (wip)
     self.infoBubble.x, self.infoBubble.y =
       self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX,
@@ -596,6 +601,7 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
   then
     self.dragAndDroppedCiggie = nil
     self.dragAndDroppedFace = nil
+    self.dragAndDroppedDice = nil
 
     --release event for dice faces
     for key, diceface in next, self.diceFaces do
