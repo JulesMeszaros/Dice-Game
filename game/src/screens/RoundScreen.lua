@@ -625,7 +625,7 @@ function RoundScreen:mousereleased(x, y, button, istouch, presses)
     if self.clickedFigure then
       if self.clickedFigure == self:getCurrentlyHoveredLine() then
         if self.round.phase ~= Constants.ROUND_STATES.TRIGGERING then --check qu'on est pas en phase de trigger
-          if self.addingAvailableHand == false then
+          if self.addingAvailableHand == false and self.round.disabledFigures[self.clickedFigure] == false then
             self.calculatePointsFunctions[self.clickedFigure]()
           else
             if self.clickedFigure ~= 7 then

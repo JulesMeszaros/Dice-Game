@@ -17,7 +17,7 @@ function WhiteDice:new(faceValue, pointsValue)
   local self = setmetatable(FaceObject:new(), WhiteDice)
 
   --Metadatas about the WhiteDice
-  self.name = "White Face"
+  self.name = "White Dice"
   self.id = 1
   self.tier = "Common"
   self.description = "[[+10pts]]"
