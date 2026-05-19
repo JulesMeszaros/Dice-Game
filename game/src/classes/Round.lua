@@ -591,27 +591,44 @@ function Round:makeRoll(dices)
     rerolledDiceFaces[d] = self.terrain.diceFaces[d]
   end
 
+  local function isFarEnough(x, y, positions, minDist)
+    for _, p in ipairs(positions) do
+      local dx = x - p.x
+      local dy = y - p.y
+      if dx * dx + dy * dy < minDist * minDist then
+        return false
+      end
+    end
+    return true
+  end
+
+  local placedPositions = {}
+  local minDist = 170 -- à ajuster selon taille visuelle des dés
+
   for key, dice in next, dices do --Creates the roll animation for the rerolled dices
     self.terrain.diceFaces[dice].isRolling = true
 
-    local randomXPos = G.rngGeneral:random(80, self.terrain.dice_tray:getWidth() - 80)
-    local randomYPos = G.rngGeneral:random(220, self.terrain.dice_tray:getHeight() - 150)
-    local randomR = ((G.rngGeneral:random(0, 1000) / 1000) * 5) - 2.5 --(1001 angles possibles entre -2.5 et 5 radians)
+    local randomXPos, randomYPos
+    local attempts = 0
+
+    repeat
+      randomXPos = G.rngGeneral:random(80, self.terrain.dice_tray:getWidth() - 80)
+      randomYPos = G.rngGeneral:random(230, self.terrain.dice_tray:getHeight() - 150)
+      attempts = attempts + 1
+    until isFarEnough(randomXPos, randomYPos, placedPositions, minDist) or attempts > 20
+
+    table.insert(placedPositions, { x = randomXPos, y = randomYPos })
+
+    local randomR = ((G.rngGeneral:random(0, 1000) / 1000) * 5) - 2.5
 
     --Set initial position (random X axis, under the terrain)
     self.terrain.diceFaces[dice]:setX(self.terrain.dice_tray:getWidth() / 2)
-    --self.terrain.diceFaces[dice].targetX = 2000
     self.terrain.diceFaces[dice]:setY(self.terrain.dice_tray:getHeight() + 100)
-    --self.terrain.diceFaces[dice].targetY = 2000
     self.terrain.diceFaces[dice].rotation = 0
 
-    --Add an animation to make them roll--
-
-    --Add a small delay relative to the number of dices to rolls
     self.terrain.diceFaces[dice].animator:addDelay(((5 - table.getn(dices)) / 5) * 0.4)
-
-    --Add a small random delay to add some relaness
     self.terrain.diceFaces[dice].animator:addDelay((G.rngGeneral:random(0, 100) / 100) * 0.2)
+
     local rollDuration = (G.rngGeneral:random(50, 100) / 100) * 0.6
     if self.availableRerolls == 1 then
       rollDuration = rollDuration + 0.3
@@ -623,7 +640,6 @@ function Round:makeRoll(dices)
         from = self.terrain.canvas:getWidth() / 2,
         targetValue = randomXPos,
         duration = rollDuration,
-        onComplete = function() end,
         easing = AnimationUtils.Easing.outCubic,
       },
       {
@@ -631,14 +647,12 @@ function Round:makeRoll(dices)
         from = self.terrain.canvas:getWidth() / 2,
         targetValue = randomXPos,
         duration = rollDuration,
-        onComplete = function() end,
       },
       {
         property = "y",
         from = self.terrain.canvas:getHeight() + 100,
         targetValue = randomYPos,
         duration = rollDuration,
-        onComplete = function() end,
         easing = AnimationUtils.Easing.outCubic,
       },
       {
@@ -646,22 +660,19 @@ function Round:makeRoll(dices)
         from = self.terrain.canvas:getHeight() + 100,
         targetValue = randomYPos,
         duration = rollDuration,
-        onComplete = function() end,
       },
       {
         property = "rotation",
-        from = -0,
+        from = 0,
         targetValue = randomR,
         duration = rollDuration,
-        onComplete = function() end,
         easing = AnimationUtils.Easing.outCubic,
       },
       {
         property = "baseRotation",
-        from = -0,
+        from = 0,
         targetValue = randomR,
         duration = rollDuration,
-        onComplete = function() end,
         easing = AnimationUtils.Easing.outCubic,
       },
       {
@@ -674,12 +685,12 @@ function Round:makeRoll(dices)
         end),
       },
     })
+
     self.terrain.diceFaces[dice].animator:addDelay(0.00, function()
       self.terrain.diceFaces[dice].displayedNumber = nil
       self.terrain.diceFaces[dice]:updateSprite()
     end)
-    --On stock tous les dés non sélectionnés dans la liste unselectedDiceFaces
-    --self.terrain.unselectedDices = rerolledDiceFaces
+
     self.terrain.diceFaces[dice].animator:addDelay(0.6, function()
       self.terrain:sortUnselectedDices(rerolledDiceFaces)
 

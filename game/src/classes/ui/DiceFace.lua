@@ -353,8 +353,8 @@ end
 function DiceFace:createTriggerAnimation(round, effect)
   -- Courbe en S : plate avant 5, monte vite entre 5 et 10, plateau après
   local t = round.effectsTriggered or 0
-  local speed = 1 / (1 + math.exp(-0.8 * (t - 7))) -- sigmoïde centrée sur 7
-  local duration = 0.3 * (1 - speed * 0.7) -- entre 0.3 et 0.09
+  local speed = 1 / (1 + math.exp(-0.8 * (t - 8))) -- sigmoïde centrée sur 7
+  local duration = 0.3 * (1 - speed * 0.6) -- la durée de base peut etre multipliée jusqu'à 1-0,6 soit 0,4
 
   self.animator:addGroup({
     {
