@@ -19,17 +19,26 @@ function Floor:new(floornumber, run)
   --Create the set of desks (4x3) TODO: changer a 2
   for i = 1, Constants.DESKS_BY_FLOOR do
     local choices = {}
-    for j = 1, 4 do
-      local r = self:generateDesks(i)
-      table.insert(choices, r)
-    end
+    --Desk 1, roujours basique
+    local r = self:generateDesks(i, 0)
+    table.insert(choices, r)
+    --Desk 2, basique ou medium
+    r = self:generateDesks(i, math.random(0, 1))
+    table.insert(choices, r)
+    --Desk 3, medium ou hard
+    r = self:generateDesks(i, math.random(1, 2))
+    table.insert(choices, r)
+    --Desk 4, hard
+    r = self:generateDesks(i, 2)
+    table.insert(choices, r)
+
     table.insert(self.desks, choices)
   end
 
   return self
 end
 
-function Floor:generateDesks(deskRank)
+function Floor:generateDesks(deskRank, difficulty)
   --Generate money reward
   local baseReward = 1 + deskRank * 2
   --Generate target score
@@ -44,6 +53,21 @@ function Floor:generateDesks(deskRank)
     targetScore = CalculateTargets.secondOffice(self.floorNumber)
   end
 
+  --Rareté des rewards
+  local c = 75
+  local u = 20
+  local r = 5
+
+  if difficulty == 1 then
+    c = 0
+    u = 50
+    r = 50
+  elseif difficulty == 2 then
+    c = 0
+    u = 0
+    r = 100
+  end
+
   local r = Round:new(
     1,
     self.floorNumber,
@@ -54,7 +78,8 @@ function Floor:generateDesks(deskRank)
     targetScore,
     self.run.diceObjects,
     Constants.ROUND_TYPES.BASE,
-    self:generateReward()
+    self:generateReward(c, u, r),
+    difficulty or 0
   )
   r.roundType = Constants.ROUND_TYPES.BASE
 

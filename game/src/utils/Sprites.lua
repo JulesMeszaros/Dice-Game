@@ -43,19 +43,19 @@ Sprites.DECK_PANEL = love.graphics.newImage("src/assets/sprites/ui/DeckPannel.pn
 Sprites.COMPOSITION_PANEL = love.graphics.newImage("src/assets/sprites/ui/Composition Frame.png")
 Sprites.STICKERS_PANEL = love.graphics.newImage("src/assets/sprites/ui/Stickers.png")
 Sprites.PLAYCOUNT_DOTS = {
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-0.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-1.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-2.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-3.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-4.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-5.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-6.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-7.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-8.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-9.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-10.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-11.png"),
-	love.graphics.newImage("src/assets/sprites/ui/Playcount-12.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-0.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-1.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-2.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-3.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-4.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-5.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-6.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-7.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-8.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-9.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-10.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-11.png"),
+  love.graphics.newImage("src/assets/sprites/ui/Playcount-12.png"),
 }
 Sprites.REWARDS = love.graphics.newImage("src/assets/sprites/ui/Rewards.png")
 Sprites.CUSTOMIZATION_MAT = love.graphics.newImage("src/assets/sprites/ui/DiceComposition New.png")
@@ -64,6 +64,8 @@ Sprites.MAGIC_WANDS = love.graphics.newImage("src/assets/sprites/ui/Ciggie Tray 
 Sprites.MAGIC_WANDS_FRONT = love.graphics.newImage("src/assets/sprites/ui/Ciggie Tray Front.png")
 
 Sprites.BADGE = love.graphics.newImage("src/assets/sprites/ui/Badge.png")
+Sprites.BADGE_MEDIUM = love.graphics.newImage("src/assets/sprites/ui/Badge Medium.png")
+Sprites.BADGE_HARD = love.graphics.newImage("src/assets/sprites/ui/Badge Hard.png")
 Sprites.BADGE_LARGE = love.graphics.newImage("src/assets/sprites/ui/Badge Large.png")
 Sprites.BOSS_DESC = love.graphics.newImage("src/assets/sprites/ui/Boss Desc.png")
 
@@ -108,19 +110,19 @@ Sprites.PROGRESSION = love.graphics.newImage("src/assets/sprites/ui/Progression.
 
 --COFFE
 Sprites.COFFEE_SPRITES = {
-	love.graphics.newImage("src/assets/sprites/coffee/Ristretto.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Piccolo.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Espresso.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Doppio.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Lungo.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Americano.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Rapido Y Sucio.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Macchiato.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Capuccino.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Mocaccino.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Corretto.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Mazagran.png"),
-	love.graphics.newImage("src/assets/sprites/coffee/Coffee Deluxe.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Ristretto.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Piccolo.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Espresso.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Doppio.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Lungo.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Americano.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Rapido Y Sucio.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Macchiato.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Capuccino.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Mocaccino.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Corretto.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Mazagran.png"),
+  love.graphics.newImage("src/assets/sprites/coffee/Coffee Deluxe.png"),
 }
 
 Sprites.HORIZONTAL_DICE_NET = love.graphics.newImage("src/assets/sprites/ui/Horizontal Dice Net.png")

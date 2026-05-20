@@ -17,8 +17,10 @@ local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 local Round = {}
 Round.__index = Round
 
-function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObjects, roundType, faceRewards)
+function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObjects, roundType, faceRewards, difficulty)
   local self = setmetatable({}, Round)
+
+  self.difficulty = difficulty or 0
 
   self.animator = Animator:new(self)
   self.selectedDices = {}
@@ -132,7 +134,7 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
 
   --Dices
   self.diceObjects = diceObjects
-  self.targetScore = target or (0 + 20 * (n - 1)) --Calcul à revoir bien sur
+  self.targetScore = target * (1 + 0.25 * self.difficulty) or (0 + 20 * (n - 1)) --Calcul à revoir bien sur
 
   self.terrain = RoundScreen:new(self)
 
