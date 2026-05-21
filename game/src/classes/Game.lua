@@ -1,3 +1,5 @@
+local Fonts = require("src.utils.Fonts")
+local Panel = require("src.classes.ui.Panel")
 local Lion = require("src.classes.ui.Lion")
 local CharacterCreation = require("src.screens.CharacterCreation")
 local Run = require("src.classes.Run")
@@ -80,6 +82,12 @@ function Game:updateCanvas(dt)
     self.run:draw(dt)
   elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
     self.characterCreation:draw()
+  end
+
+  if self.panel then
+    self.panel:update(dt)
+    self.panel:updateCanvas()
+    self.panel:draw()
   end
 
   love.graphics.setCanvas()
@@ -166,6 +174,16 @@ end
 --==INPUTS FUNCTIONS==--
 
 function Game:keypressed(key)
+  print(key)
+  if key == "m" then
+    print("panel")
+    if self.panel then
+      self.panel = nil
+    else
+      self.panel = Panel:new(800, 800)
+      self.panel:addText({ text = "Bonjour", font = Fonts.soraSmall }, 0, 200)
+    end
+  end
   if self.currentScreen == Constants.PAGES.MAIN_MENU then
     self.mainMenu:keypressed(key)
   elseif self.currentScreen == Constants.PAGES.GAME then
