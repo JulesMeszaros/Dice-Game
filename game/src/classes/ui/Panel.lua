@@ -19,7 +19,7 @@ function Panel:new(width, height, opts)
   self:setY(Constants.VIRTUAL_GAME_HEIGHT / 2)
 
   -- Background
-  self.bgColor = opts.bgColor or { 0.1, 0.1, 0.1, 0.95 }
+  self.bgColor = opts.bgColor or { 0.1, 0.1, 0.1, 1 }
   self.borderColor = opts.borderColor or { 1, 1, 1, 0.3 }
   self.borderWidth = opts.borderWidth or 2
   self.cornerRadius = opts.cornerRadius or 10
@@ -97,9 +97,9 @@ function Panel:updateCanvas()
   for _, el in next, self.elements do
     if el.type == "text" then
       local o = el.opts
-      local tx = self.width / 2 + el.ox
-      local ty = self.height / 2 + el.oy
-      drawFormattedText(o.text, tx, ty, o.font, o.maxWidth, o.centered ~= false)
+      local tx = el.ox
+      local ty = el.oy
+      drawFormattedText(o.text, tx, ty, o.font, o.maxWidth, o.centered ~= false, { color = o.color })
     end
   end
 

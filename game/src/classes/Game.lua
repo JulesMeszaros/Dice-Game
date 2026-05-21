@@ -181,7 +181,7 @@ function Game:keypressed(key)
       self.panel = nil
     else
       self.panel = Panel:new(800, 800)
-      self.panel:addText({ text = "Bonjour", font = Fonts.soraSmall }, 0, 200)
+      self.panel:addText({ color = { 1, 1, 1, 1 }, text = "Bonjour", font = Fonts.soraSmall, centered = true }, 0, 0)
     end
   end
   if self.currentScreen == Constants.PAGES.MAIN_MENU then

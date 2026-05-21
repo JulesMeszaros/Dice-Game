@@ -225,9 +225,8 @@ end
 
 --Fonction qui permet de dessiner du texte de manière propre sur plusieurs lignes avec des couleurs données par des délimiteurs
 
-function drawFormattedText(text, x, y, font, maxWidth, centered)
+function drawFormattedText(text, x, y, font, maxWidth, centered, opts)
   font = font or love.graphics.getFont()
-  love.graphics.setFont(font)
   -- Configuration des couleurs et délimiteurs
   local textFormats = {
     { open = "[[", close = "]]", color = Constants.COLORS.POINTS }, -- points
@@ -245,7 +244,7 @@ function drawFormattedText(text, x, y, font, maxWidth, centered)
     { open = "--", close = "--", color = Constants.COLORS.FIGURE }, -- mult
   }
 
-  local defaultColor = { 0, 0, 0 }
+  local defaultColor = opts.color or { 0, 0, 0 }
   -- ─── Parser ───────────────────────────────────────────────────────────────
 
   local function findNextMarker(text, pos)
