@@ -16,8 +16,11 @@ function Panel:new(width, height, opts)
   self.animator = Animator:new(self)
 
   -- Position centrée sur l'écran
-  self:setX(Constants.VIRTUAL_GAME_WIDTH / 2)
-  self:setY(Constants.VIRTUAL_GAME_HEIGHT / 2)
+
+  self.x = Constants.VIRTUAL_GAME_WIDTH / 2
+  self.y = Constants.VIRTUAL_GAME_HEIGHT + self.height
+
+  self.animator:add("y", self.y, Constants.VIRTUAL_GAME_HEIGHT / 2, 0.1)
 
   -- Background
   self.bgColor = opts.bgColor or { 0.1, 0.1, 0.1, 1 }
@@ -59,6 +62,8 @@ function Panel:new(width, height, opts)
   -- Visibilité
   self.visible = true
 
+  table.insert(G.game.panelQueue, 1, self)
+
   return self
 end
 
@@ -88,7 +93,9 @@ function Panel:show()
   self.visible = true
 end
 
-function Panel:hide() end
+function Panel:hide()
+  table.remove(G.game.panelQueue, 1)
+end
 
 -- ─── Update ──────────────────────────────────────────────────────────────────
 
@@ -158,15 +165,41 @@ end
 
 -- ─── Events ──────────────────────────────────────────────────────────────────
 
-function Panel:clickEvent()
+function Panel:mousepressed(vx, vy, button, istouch, presses)
   if not self.visible then
     return
   end
   for _, el in next, self.elements do
     if el.type == "button" then
       el.obj:clickEvent()
+    elseif el.type == "checkbox" then
+      el.obj:clickEvent()
+    elseif el.type == "slider" then
+      el.obj:clickEvent()
     end
   end
+end
+
+function Panel:mousereleased(vx, vy, button, istouch, presses)
+  if not self.visible then
+    return
+  end
+  for _, el in next, self.elements do
+    if el.type == "button" then
+      el.obj:getCallback()()
+    elseif el.type == "checkbox" then
+      el.obj:releaseEvent()
+    elseif el.type == "slider" then
+      -- le slider gère son état dans update
+    end
+  end
+end
+
+function Panel:mousemoved(vx, vy, dx, dy)
+  if not self.visible then
+    return
+  end
+  -- rien pour le moment, le slider gère son drag dans update
 end
 
 function Panel:cleanup()

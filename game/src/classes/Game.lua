@@ -27,6 +27,9 @@ local gameCanvas = love.graphics.newCanvas(virtualWidth, virtualHeight)
 function Game:start()
   local self = setmetatable({}, Game)
 
+  --Panel actif et queue de panels
+  self.panelQueue = {}
+
   --New dice objects
   self.diceObjects = diceObjects
 
@@ -84,10 +87,10 @@ function Game:updateCanvas(dt)
     self.characterCreation:draw()
   end
 
-  if self.panel then
-    self.panel:update(dt)
-    self.panel:updateCanvas()
-    self.panel:draw()
+  if #self.panelQueue >= 1 then
+    self.panelQueue[1]:update(dt)
+    self.panelQueue[1]:updateCanvas()
+    self.panelQueue[1]:draw()
   end
 
   love.graphics.setCanvas()
@@ -174,15 +177,8 @@ end
 --==INPUTS FUNCTIONS==--
 
 function Game:keypressed(key)
-  print(key)
   if key == "m" then
-    print("panel")
-    if self.panel then
-      self.panel = nil
-    else
-      self.panel = Panel:new(800, 800)
-      self.panel:addText({ color = { 1, 1, 1, 1 }, text = "Bonjour", font = Fonts.soraSmall, centered = true }, 0, 0)
-    end
+    local panel = Panel:new(500, 500)
   end
   if self.currentScreen == Constants.PAGES.MAIN_MENU then
     self.mainMenu:keypressed(key)
@@ -205,6 +201,11 @@ end
 function Game:mousepressed(x, y, button, istouch, presses)
   local vx, vy = Inputs.getVirtualMousePosition()
 
+  if #self.panelQueue >= 1 then
+    self.panelQueue[1]:mousePressed(x, y, button, istouch, presses)
+    return
+  end
+
   if self.currentScreen == Constants.PAGES.MAIN_MENU then
     self.mainMenu:mousepressed(vx, vy, button, istouch, presses)
   elseif self.currentScreen == Constants.PAGES.GAME then
@@ -216,6 +217,11 @@ end
 
 function Game:mousereleased(vx, vy, button, istouch, presses)
   local vx, vy = Inputs.getVirtualMousePosition()
+
+  if #self.panelQueue >= 1 then
+    self.panelQueue[1]:mouseReleased(vx, vy, button, istouch, presses)
+    return
+  end
 
   if self.currentScreen == Constants.PAGES.MAIN_MENU then
     self.mainMenu:mousereleased(vx, vy, button, istouch, presses)
@@ -230,6 +236,11 @@ function Game:mousemoved(x, y, dx, dy)
   local vx, vy = Inputs.getVirtualMousePosition()
   local scale = Inputs.getCanvasScale()
   local vdx, vdy = dx / scale, dy / scale
+
+  if #self.panelQueue >= 1 then
+    self.panelQueue[1]:mousemoved(x, y, dx, dy)
+    return
+  end
 
   if self.currentScreen == Constants.PAGES.MAIN_MENU then
     self.mainMenu:mousemoved(vx, vy, vdx, vdy)
