@@ -101,7 +101,7 @@ function MainMenu:new()
 
   self.uiElements.buttons["character"] = Button:new(
     function()
-      print("character")
+      G.game:goToCharacterCreation()
     end,
     "src/assets/sprites/ui/CharacterButton.png",
     1370 + 500 / 2,
@@ -158,7 +158,6 @@ function MainMenu:new()
 
   self.uiElements.buttons["stats"]:setActivated(false)
   self.uiElements.buttons["collection"]:setActivated(false)
-  self.uiElements.buttons["character"]:setActivated(false)
 
   --Boutons de liens
   self.uiElements.buttons["website"] = Button:new(

@@ -45,8 +45,7 @@ function Game:start()
   self.mainMenu = MainMenu:new()
 
   if not G.saveManager.data.profile then
-    self.characterCreation = CharacterCreation:new()
-    self.currentScreen = Constants.PAGES.CHARACTER_CREATION
+    self:goToCharacterCreation()
   else
     self.currentScreen = Constants.PAGES.MAIN_MENU
     G.playerName = G.saveManager.data.profile.name
@@ -285,6 +284,12 @@ function Game:drawBackground()
   love.graphics.setBlendMode("alpha", "alphamultiply")
   love.graphics.setColor(1, 1, 1)
 end
+
+function Game:goToCharacterCreation()
+  self.characterCreation = CharacterCreation:new()
+  self.currentScreen = Constants.PAGES.CHARACTER_CREATION
+end
+
 function Game:cleanup() end
 
 return Game
