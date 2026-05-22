@@ -1,3 +1,4 @@
+local Options = require("src.screens.Options")
 local Checkbox = require("src.classes.ui.Checkbox")
 local Slider = require("src.classes.ui.Slider")
 local Fonts = require("src.utils.Fonts")
@@ -72,7 +73,7 @@ function MainMenu:new()
 
   self.uiElements.buttons["options"] = Button:new(
     function()
-      print("options")
+      Options.generalOptions()
     end,
     "src/assets/sprites/ui/OptionsButton.png",
     270,
@@ -160,7 +161,6 @@ function MainMenu:new()
   self.uiElements.buttons["collection"]:setActivated(false)
   self.uiElements.buttons["character"]:setActivated(false)
   self.uiElements.buttons["credits"]:setActivated(false)
-  self.uiElements.buttons["options"]:setActivated(false)
 
   --Boutons de liens
   self.uiElements.buttons["website"] = Button:new(

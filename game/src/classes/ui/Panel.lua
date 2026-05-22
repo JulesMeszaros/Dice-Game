@@ -62,18 +62,20 @@ function Panel:new(width, height, opts)
   -- Visibilité
   self.visible = true
 
-  table.insert(G.game.panelQueue, 1, self)
-
   return self
 end
 
 -- ─── Ajout d'éléments ────────────────────────────────────────────────────────
 
 -- ox, oy : offset depuis le centre du panel
-function Panel:addButton(button, ox, oy)
-  button:setX(self.x + ox)
-  button:setY(self.y + oy)
-  table.insert(self.elements, { type = "button", obj = button, ox = ox, oy = oy })
+function Panel:addButton(button)
+  button.mousePosition = function()
+    return Inputs.getMouseInCanvas(
+      Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
+      Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+    )
+  end
+  table.insert(self.elements, { type = "button", obj = button })
 end
 
 function Panel:addText(opts, ox, oy)
@@ -81,7 +83,9 @@ function Panel:addText(opts, ox, oy)
   table.insert(self.elements, { type = "text", opts = opts, ox = ox, oy = oy })
 end
 
-function Panel:addImage(opts, x, y) end
+function Panel:addImage(sprite, x, y, opts)
+  table.insert(self.elements, { type = "image", sprite = sprite, opts = opts, ox = x, oy = y })
+end
 
 function Panel:addSlider(opts, x, y) end
 
@@ -90,7 +94,7 @@ function Panel:addCheckbox(opts, x, y) end
 -- ─── Affichage / masquage ────────────────────────────────────────────────────
 
 function Panel:show()
-  self.visible = true
+  table.insert(G.game.panelQueue, 1, self)
 end
 
 function Panel:hide()
@@ -133,6 +137,15 @@ function Panel:updateCanvas()
       local ty = el.oy
       drawFormattedText(o.text, tx, ty, o.font, o.maxWidth, o.centered ~= false, { color = o.color })
     end
+
+    if el.type == "image" then
+      local o = el.opts
+      love.graphics.draw(el.sprite, el.ox, el.oy, o.r or 0, o.rx or 1, o.ry or 1, o.cx or 0, o.cy or 0)
+    end
+    if el.type == "button" then
+      love.graphics.setColor(1, 1, 1, 1)
+      el.obj:draw()
+    end
   end
 
   love.graphics.setColor(1, 1, 1)
@@ -154,10 +167,6 @@ function Panel:draw()
   love.graphics.draw(self.uiCanvas, cx, cy, 0, 1, 1, self.width / 2, self.height / 2)
 
   for _, el in next, self.elements do
-    if el.type == "button" then
-      love.graphics.setColor(1, 1, 1, 1)
-      el.obj:draw()
-    end
   end
 
   love.graphics.setColor(1, 1, 1, 1)
@@ -186,7 +195,10 @@ function Panel:mousereleased(vx, vy, button, istouch, presses)
   end
   for _, el in next, self.elements do
     if el.type == "button" then
-      el.obj:getCallback()()
+      local wasReleased = el.obj:releaseEvent()
+      if wasReleased then --Si le click a été complété
+        el.obj:getCallback()()
+      end
     elseif el.type == "checkbox" then
       el.obj:releaseEvent()
     elseif el.type == "slider" then
