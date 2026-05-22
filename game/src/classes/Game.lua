@@ -60,12 +60,16 @@ function Game:start()
 end
 
 function Game:update(dt)
-  if self.currentScreen == Constants.PAGES.MAIN_MENU then
-    self.mainMenu:update(dt)
-  elseif self.currentScreen == Constants.PAGES.GAME then
-    self.run:update(dt)
-  elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
-    self.characterCreation:update(dt)
+  if #self.panelQueue >= 1 then
+    self.panelQueue[1]:update(dt)
+  else
+    if self.currentScreen == Constants.PAGES.MAIN_MENU then
+      self.mainMenu:update(dt)
+    elseif self.currentScreen == Constants.PAGES.GAME then
+      self.run:update(dt)
+    elseif self.currentScreen == Constants.PAGES.CHARACTER_CREATION then
+      self.characterCreation:update(dt)
+    end
   end
 
   --damped offset
@@ -88,7 +92,6 @@ function Game:updateCanvas(dt)
   end
 
   if #self.panelQueue >= 1 then
-    self.panelQueue[1]:update(dt)
     self.panelQueue[1]:updateCanvas()
     self.panelQueue[1]:draw()
   end
@@ -180,6 +183,11 @@ function Game:keypressed(key)
   if key == "m" then
     local panel = Panel:new(500, 500)
   end
+  if key == "k" then
+    if #self.panelQueue >= 1 then
+      self.panelQueue[1]:hide()
+    end
+  end
   if self.currentScreen == Constants.PAGES.MAIN_MENU then
     self.mainMenu:keypressed(key)
   elseif self.currentScreen == Constants.PAGES.GAME then
@@ -202,7 +210,7 @@ function Game:mousepressed(x, y, button, istouch, presses)
   local vx, vy = Inputs.getVirtualMousePosition()
 
   if #self.panelQueue >= 1 then
-    self.panelQueue[1]:mousePressed(x, y, button, istouch, presses)
+    self.panelQueue[1]:mousepressed(x, y, button, istouch, presses)
     return
   end
 
@@ -219,7 +227,7 @@ function Game:mousereleased(vx, vy, button, istouch, presses)
   local vx, vy = Inputs.getVirtualMousePosition()
 
   if #self.panelQueue >= 1 then
-    self.panelQueue[1]:mouseReleased(vx, vy, button, istouch, presses)
+    self.panelQueue[1]:mousereleased(vx, vy, button, istouch, presses)
     return
   end
 
