@@ -1,3 +1,4 @@
+local Checkbox = require("src.classes.ui.Checkbox")
 local Slider = require("src.classes.ui.Slider")
 local Fonts = require("src.utils.Fonts")
 local Inputs = require("src.utils.scripts.Inputs")
@@ -212,6 +213,7 @@ end
 
 function MainMenu:updateCanvas(dt)
   local currentCanvas = love.graphics.getCanvas()
+
   love.graphics.setCanvas(self.canvas)
   love.graphics.clear()
 
