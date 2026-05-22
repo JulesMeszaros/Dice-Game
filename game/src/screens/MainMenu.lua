@@ -1,3 +1,4 @@
+local Slider = require("src.classes.ui.Slider")
 local Fonts = require("src.utils.Fonts")
 local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")

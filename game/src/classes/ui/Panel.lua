@@ -76,6 +76,12 @@ function Panel:addText(opts, ox, oy)
   table.insert(self.elements, { type = "text", opts = opts, ox = ox, oy = oy })
 end
 
+function Panel:addImage(opts, x, y) end
+
+function Panel:addSlider(opts, x, y) end
+
+function Panel:addCheckbox(opts, x, y) end
+
 -- ─── Affichage / masquage ────────────────────────────────────────────────────
 
 function Panel:show()
