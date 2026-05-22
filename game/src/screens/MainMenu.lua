@@ -1,6 +1,5 @@
+local Credits = require("src.screens.Credits")
 local Options = require("src.screens.Options")
-local Checkbox = require("src.classes.ui.Checkbox")
-local Slider = require("src.classes.ui.Slider")
 local Fonts = require("src.utils.Fonts")
 local Inputs = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
@@ -14,7 +13,7 @@ local MainMenu = {}
 
 MainMenu.__index = MainMenu
 
-seedLabel = love.graphics.newText(love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 50), "Seed :")
+local seedLabel = love.graphics.newText(love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 50), "Seed :")
 
 function MainMenu:new()
   local self = setmetatable({}, MainMenu)
@@ -130,7 +129,7 @@ function MainMenu:new()
   )
   self.uiElements.buttons["credits"] = Button:new(
     function()
-      print("credits")
+      Credits.show()
     end,
     "src/assets/sprites/ui/CréditsButton.png",
     270,
@@ -160,7 +159,6 @@ function MainMenu:new()
   self.uiElements.buttons["stats"]:setActivated(false)
   self.uiElements.buttons["collection"]:setActivated(false)
   self.uiElements.buttons["character"]:setActivated(false)
-  self.uiElements.buttons["credits"]:setActivated(false)
 
   --Boutons de liens
   self.uiElements.buttons["website"] = Button:new(
