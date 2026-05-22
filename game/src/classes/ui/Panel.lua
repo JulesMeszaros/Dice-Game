@@ -1,3 +1,4 @@
+local Sprites = require("src.utils.Sprites")
 local Constants = require("src.utils.Constants")
 local UIElement = require("src.classes.ui.UIElement")
 local Animator = require("src.utils.Animator")
@@ -23,6 +24,31 @@ function Panel:new(width, height, opts)
   self.borderColor = opts.borderColor or { 1, 1, 1, 0.3 }
   self.borderWidth = opts.borderWidth or 2
   self.cornerRadius = opts.cornerRadius or 10
+
+  self.baseSprite = Sprites.PANEL_BG
+  self.gridDim = 70
+
+  self.quads = {
+    love.graphics.newQuad(0, 0, self.gridDim, self.gridDim, self.baseSprite:getDimensions()), --Coin superieur gauche
+    love.graphics.newQuad(self.gridDim * 2, 0, self.gridDim, self.gridDim, self.baseSprite:getDimensions()), --Coin superieur droit
+    love.graphics.newQuad(0, self.gridDim * 2, self.gridDim, self.gridDim, self.baseSprite:getDimensions()), --Coin inferieur gauche
+    love.graphics.newQuad(
+      self.gridDim * 2,
+      self.gridDim * 2,
+      self.gridDim,
+      self.gridDim,
+      self.baseSprite:getDimensions()
+    ), --Coin inferieur droit
+    love.graphics.newQuad(self.gridDim, 0, self.gridDim, self.gridDim, self.baseSprite:getDimensions()), --Bordure haute
+    love.graphics.newQuad(self.gridDim * 2, self.gridDim, self.gridDim, self.gridDim, self.baseSprite:getDimensions()), --Bordure droite
+    love.graphics.newQuad(0, self.gridDim, self.gridDim, self.gridDim, self.baseSprite:getDimensions()), --Bordure gauche
+    love.graphics.newQuad(self.gridDim, self.gridDim * 2, self.gridDim, self.gridDim, self.baseSprite:getDimensions()), --Bordure basse
+    love.graphics.newQuad(self.gridDim, self.gridDim, self.gridDim, self.gridDim, self.baseSprite:getDimensions()), --Centre
+  }
+
+  --Calcul de la taille/ratio des sprites à afficher
+  self.hr = (self.height - 2 * self.gridDim) / self.gridDim --ratio de la taille pour les sprites de coté
+  self.wr = (self.width - 2 * self.gridDim) / self.gridDim --ratio de la taille pour les sprites superieurs et inferieurs
 
   -- Contenu
   self.elements = {} -- { type = "button"|"text", obj = ..., ox = ..., oy = ... }
@@ -84,14 +110,7 @@ function Panel:updateCanvas()
   love.graphics.setCanvas(self.uiCanvas)
   love.graphics.clear()
 
-  -- Background arrondi
-  love.graphics.setColor(self.bgColor)
-  love.graphics.rectangle("fill", 0, 0, self.width, self.height, self.cornerRadius)
-
-  -- Bordure
-  love.graphics.setColor(self.borderColor)
-  love.graphics.setLineWidth(self.borderWidth)
-  love.graphics.rectangle("line", 0, 0, self.width, self.height, self.cornerRadius)
+  self:drawBG()
 
   -- Textes
   for _, el in next, self.elements do
@@ -110,7 +129,6 @@ end
 -- ─── Draw ─────────────────────────────────────────────────────────────────────
 
 function Panel:draw()
-  print(self.visible)
   if not self.visible then
     return
   end
@@ -155,6 +173,29 @@ function Panel:cleanup()
       el.obj:cleanup()
     end
   end
+end
+
+function Panel:drawBG()
+  --Dessin du background
+  --	--On dessine les angles
+  love.graphics.draw(self.baseSprite, self.quads[1], 0, 0)
+  love.graphics.draw(self.baseSprite, self.quads[2], self.uiCanvas:getWidth() - self.gridDim, 0)
+  love.graphics.draw(self.baseSprite, self.quads[3], 0, self.uiCanvas:getHeight() - self.gridDim)
+  love.graphics.draw(
+    self.baseSprite,
+    self.quads[4],
+    self.uiCanvas:getWidth() - self.gridDim,
+    self.uiCanvas:getHeight() - self.gridDim
+  )
+
+  --On dessine les cotés
+  love.graphics.draw(self.baseSprite, self.quads[6], self.width - self.gridDim, self.gridDim, 0, 1, self.hr)
+  love.graphics.draw(self.baseSprite, self.quads[7], 0, self.gridDim, 0, 1, self.hr)
+
+  love.graphics.draw(self.baseSprite, self.quads[5], self.gridDim, 0, 0, self.wr, 1)
+  love.graphics.draw(self.baseSprite, self.quads[8], self.gridDim, self.height - self.gridDim, 0, self.wr, 1)
+
+  love.graphics.draw(self.baseSprite, self.quads[9], self.gridDim, self.gridDim, 0, self.wr, self.hr)
 end
 
 return Panel

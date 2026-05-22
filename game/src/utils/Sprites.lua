@@ -10,6 +10,8 @@ Sprites.TUTO_PANEL = love.graphics.newImage("src/assets/sprites/ui/Tuto panel.pn
 Sprites.TUTO_TOAST = love.graphics.newImage("src/assets/sprites/ui/Tuto Toast.png")
 Sprites.POINTER = love.graphics.newImage("src/assets/sprites/ui/Pointer.png")
 
+Sprites.PANEL_BG = love.graphics.newImage("src/assets/sprites/ui/Panel Background.png")
+
 Sprites.BUBBLE = love.graphics.newImage("src/assets/sprites/ui/Description Test.png")
 Sprites.DESCRIPTION = love.graphics.newImage("src/assets/sprites/ui/Description.png")
 Sprites.DICE_INFOS = love.graphics.newImage("src/assets/sprites/ui/Dice Vertical.png")
