@@ -19,5 +19,6 @@ Fonts.soraFirstRoll = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf
 Fonts.soraYouWon = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 65)
 
 Fonts.soraLightMini = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 25)
+Fonts.soraCredits = love.graphics.newFont("src/assets/fonts/Sora-ExtraBold.otf", 40)
 
 return Fonts

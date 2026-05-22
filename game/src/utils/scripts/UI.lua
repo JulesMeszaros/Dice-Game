@@ -226,7 +226,10 @@ end
 --Fonction qui permet de dessiner du texte de manière propre sur plusieurs lignes avec des couleurs données par des délimiteurs
 
 function drawFormattedText(text, x, y, font, maxWidth, centered, opts)
+  local opts = opts or {}
   font = font or love.graphics.getFont()
+  love.graphics.setFont(font) -- manquant !
+
   -- Configuration des couleurs et délimiteurs
   local textFormats = {
     { open = "[[", close = "]]", color = Constants.COLORS.POINTS }, -- points
@@ -286,18 +289,34 @@ function drawFormattedText(text, x, y, font, maxWidth, centered, opts)
 
   if not maxWidth then
     local currentX = x
+    local currentY = y
+
     if centered then
+      -- On calcule la largeur de la première ligne seulement
       local totalWidth = 0
       for _, seg in ipairs(segments) do
-        totalWidth = totalWidth + font:getWidth(seg.text)
+        local firstPart = seg.text:match("([^\n]*)")
+        totalWidth = totalWidth + font:getWidth(firstPart)
       end
       currentX = x - totalWidth / 2
     end
+
     for _, seg in ipairs(segments) do
-      love.graphics.setColor(seg.color)
-      love.graphics.print(seg.text, currentX, y)
-      currentX = currentX + font:getWidth(seg.text)
+      local parts = {}
+      for part in (seg.text .. "\n"):gmatch("([^\n]*)\n") do
+        table.insert(parts, part)
+      end
+      for pi, part in ipairs(parts) do
+        if pi > 1 then
+          currentY = currentY + font:getHeight()
+          currentX = centered and x or x
+        end
+        love.graphics.setColor(seg.color)
+        love.graphics.print(part, currentX, currentY)
+        currentX = currentX + font:getWidth(part)
+      end
     end
+
     love.graphics.setColor(1, 1, 1)
     return
   end
@@ -308,21 +327,40 @@ function drawFormattedText(text, x, y, font, maxWidth, centered, opts)
   local currentLine = {}
   local currentLineWidth = 0
 
-  for _, seg in ipairs(segments) do
-    for word in seg.text:gmatch("%S+") do
-      local wordWithSpace = (#currentLine > 0) and (" " .. word) or word
-      local wordWidth = font:getWidth(wordWithSpace)
+  local function flushLine()
+    if #currentLine > 0 or true then
+      table.insert(lines, { segments = currentLine, width = currentLineWidth })
+      currentLine = {}
+      currentLineWidth = 0
+    end
+  end
 
-      if currentLineWidth + wordWidth > maxWidth and #currentLine > 0 then
-        table.insert(lines, { segments = currentLine, width = currentLineWidth })
-        currentLine = {}
-        currentLineWidth = 0
-        wordWithSpace = word
-        wordWidth = font:getWidth(word)
+  for _, seg in ipairs(segments) do
+    -- Découpe le segment sur les \n
+    local parts = {}
+    for part in (seg.text .. "\n"):gmatch("([^\n]*)\n") do
+      table.insert(parts, part)
+    end
+
+    for pi, part in ipairs(parts) do
+      -- Forcer un retour à la ligne entre chaque part (sauf la première)
+      if pi > 1 then
+        flushLine()
       end
 
-      table.insert(currentLine, { text = wordWithSpace, color = seg.color })
-      currentLineWidth = currentLineWidth + wordWidth
+      for word in part:gmatch("%S+") do
+        local wordWithSpace = (#currentLine > 0) and (" " .. word) or word
+        local wordWidth = font:getWidth(wordWithSpace)
+
+        if currentLineWidth + wordWidth > maxWidth and #currentLine > 0 then
+          flushLine()
+          wordWithSpace = word
+          wordWidth = font:getWidth(word)
+        end
+
+        table.insert(currentLine, { text = wordWithSpace, color = seg.color })
+        currentLineWidth = currentLineWidth + wordWidth
+      end
     end
   end
 
