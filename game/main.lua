@@ -41,9 +41,6 @@ G = {
   rngEnemies = love.math.newRandomGenerator(os.time()),
   --RNG pour les trucs généraux, par exemple les animations etc
   rngGeneral = love.math.newRandomGenerator(os.time()),
-
-  --Audio
-  audio = AudioUtils:new(),
 }
 
 function initSave()
@@ -138,6 +135,10 @@ function G.loadSettings()
   G.sessionSettings.paralaxeEffect = loadSetting(savedSettings["paralaxeEffect"], true)
   G.sessionSettings.CRTEffect = loadSetting(savedSettings["CRTEffect"], true)
 
+  --Audio settings
+  G.sessionSettings.muteSounds = loadSetting(savedSettings["muteSounds"], false)
+  G.sessionSettings.FXLevel = loadSetting(savedSettings["FXLevel"], 1)
+
   print(G.sessionSettings.paralaxeEffect)
 end
 
@@ -202,6 +203,8 @@ local runtimeLoader = require("runtime.loader")
 function love.load()
   G.loadSettings()
   G.saveSettings()
+  --Audio
+  G.audio = AudioUtils:new()
 
   https = runtimeLoader.loadHTTPS()
   -- Your game load here

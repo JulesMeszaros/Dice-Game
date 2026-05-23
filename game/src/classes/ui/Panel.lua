@@ -1,3 +1,4 @@
+local Slider = require("src.classes.ui.Slider")
 local Checkbox = require("src.classes.ui.Checkbox")
 local Sprites = require("src.utils.Sprites")
 local Constants = require("src.utils.Constants")
@@ -91,7 +92,15 @@ function Panel:addImage(sprite, x, y, opts)
   table.insert(self.elements, { type = "image", sprite = sprite, opts = opts, ox = x, oy = y })
 end
 
-function Panel:addSlider(opts, x, y) end
+function Panel:addSlider(opts, x, y)
+  local slider = Slider:new(x, y, opts.width or 50, opts, function()
+    return Inputs.getMouseInCanvas(
+      Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
+      Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+    )
+  end)
+  table.insert(self.elements, { type = "slider", opts = opts, obj = slider })
+end
 
 function Panel:addCheckbox(opts, x, y)
   local checkbox = Checkbox:new(x, y, opts, function()
@@ -130,6 +139,10 @@ function Panel:update(dt)
     if el.type == "checkbox" then
       el.obj:update(dt)
     end
+
+    if el.type == "slider" then
+      el.obj:update(dt)
+    end
   end
 
   self:updateCanvas()
@@ -162,6 +175,9 @@ function Panel:updateCanvas()
       el.obj:draw()
     end
     if el.type == "checkbox" then
+      el.obj:draw()
+    end
+    if el.type == "slider" then
       el.obj:draw()
     end
   end

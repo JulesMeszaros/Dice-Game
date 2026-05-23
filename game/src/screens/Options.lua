@@ -88,6 +88,40 @@ local function audioOptions()
   local optionPanel = Panel:new(1260, 800)
   --Label
   optionPanel:addImage(Sprites.AUDIO_LABEL, 630, 30, { cx = Sprites.AUDIO_LABEL:getWidth() / 2 })
+
+  --Checkbox Mute
+  optionPanel:addText(
+    { color = { 1, 1, 1 }, font = Fonts.soraCredits, centered = false, text = "Mute Sounds" },
+    250,
+    200
+  )
+  optionPanel:addCheckbox({
+    size = 80,
+    defaultValue = G.sessionSettings.muteSounds,
+    onChange = function(val)
+      G.sessionSettings.muteSounds = val
+      G.audio.mute = val
+      G.saveSettings()
+    end,
+  }, 950, 230)
+
+  --Slider FX
+  optionPanel:addText(
+    { color = { 1, 1, 1 }, font = Fonts.soraCredits, centered = false, text = "Audio FX level" },
+    250,
+    330
+  )
+  optionPanel:addSlider({
+    width = 300,
+    height = 50,
+    defaultValue = G.sessionSettings.FXLevel,
+    onChange = function(val)
+      G.sessionSettings.FXLevel = val
+      G.audio.sfxVolume = val
+      G.saveSettings()
+    end,
+  }, 950, 360)
+
   --Bouton retour
   local backButton = Button:new(
     function()
@@ -116,6 +150,7 @@ local function videoOptions()
   local optionPanel = Panel:new(1260, 800)
   --Label
   optionPanel:addImage(Sprites.VIDEO_LABEL, 630, 30, { cx = Sprites.VIDEO_LABEL:getWidth() / 2 })
+
   --Bouton retour
   local backButton = Button:new(
     function()
