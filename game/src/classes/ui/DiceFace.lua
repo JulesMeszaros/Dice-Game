@@ -298,8 +298,7 @@ end
 function DiceFace:triggerEffect(effect, round)
   round.effectsTriggered = round.effectsTriggered + 1
   print(round.effectsTriggered)
-  self.animator:addDelay(0.01)
-  self.animator:addDelay(0.01, function()
+  self.animator:addDelay(0.0, function()
     effect.fn() --Déclenchement de l'effet
     round.terrain:animateHandScore()
   end)
@@ -309,7 +308,7 @@ function DiceFace:triggerEffect(effect, round)
   --Animation de trigger (WIP)
   self:createTriggerAnimation(round, effect)
 
-  self.animator:addDelay(0.1, function()
+  self.animator:addDelay(0.0, function()
     self.targetedScale = 1
     self.round:triggerNextEffect()
   end)

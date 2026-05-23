@@ -13,7 +13,7 @@ local Constants = {
   --Game metadatas
   VIRTUAL_GAME_WIDTH = 1920,
   VIRTUAL_GAME_HEIGHT = 1080,
-  GAME_VERSION = "version alpha-0.1",
+  GAME_VERSION = "alpha version 0.2.0.0",
 
   --Game base stats
   BASE_REROLLS = 2,
