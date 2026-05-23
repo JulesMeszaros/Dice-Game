@@ -1,3 +1,6 @@
+local Options = require("src.screens.Options")
+local Button = require("src.classes.ui.Button")
+local Panel = require("src.classes.ui.Panel")
 local TutorialEvents = require("src.utils.TutorialEvents")
 local PauseMenu = require("src.classes.ui.Pause")
 local Shop = require("src.screens.Shop")
@@ -151,10 +154,6 @@ function Run:update(dt)
     self.tutorial:updateTutoCanvas()
     self.tutorial:updateToastCanvas()
   end
-
-  if self.displayPauseMenu then
-    self.pauseMenu:update(dt)
-  end
 end
 
 function Run:draw(dt) --Render the game into the Game Canvas.
@@ -181,11 +180,6 @@ function Run:draw(dt) --Render the game into the Game Canvas.
   --Tutorial
   if self.tutorial then
     self:drawTutoText(dt)
-  end
-
-  --Pause screen
-  if self.displayPauseMenu == true and self.pauseMenu then
-    self.pauseMenu:draw()
   end
 end
 
@@ -243,8 +237,100 @@ function Run:startInfoScreen()
 end
 
 function Run:startPauseMenu()
-  self.displayPauseMenu = true
-  self.pauseMenu = PauseMenu:new(self)
+  local pausePanel = Panel:new(1247, 800)
+
+  --Resume button
+  local resumeButton = Button:new(
+    function()
+      pausePanel:hide()
+      self.displayPauseMenu = false
+    end,
+    "src/assets/sprites/ui/ResumeRun.png",
+    626,
+    678,
+    1176,
+    80,
+    nil,
+    function()
+      return Inputs.getMouseInCanvas(336, 155)
+    end
+  )
+
+  --Options button
+  local optionsButton = Button:new(
+    function()
+      Options.generalOptions()
+    end,
+    "src/assets/sprites/ui/OptionsButton.png",
+    385 + (477 / 2),
+    180,
+    477,
+    80,
+    nil,
+    function()
+      return Inputs.getMouseInCanvas(336, 155)
+    end
+  )
+
+  --Reset button
+  local resetButton = Button:new(
+    function()
+      pausePanel:hide()
+      self.displayPauseMenu = false
+      G.game:startNewRun(G.seedText)
+    end,
+    "src/assets/sprites/ui/ResetRun.png",
+    385 + (477 / 2),
+    385,
+    477,
+    80,
+    nil,
+    function()
+      return Inputs.getMouseInCanvas(336, 155)
+    end
+  )
+
+  --Quit button
+  local quitButton = Button:new(
+    function()
+      pausePanel:hide()
+      if G.game.run.currentState == Constants.RUN_STATES.ROUND then
+        --Round
+        --G.game.run.currentRound.terrain:outAnimation("mainMenu")
+        G.game.mainMenu = MainMenu:new(nil, G.game)
+        G.game.currentScreen = 0
+      elseif G.game.run.currentState == Constants.RUN_STATES.SHOP then
+        --Shop
+        G.game.mainMenu = MainMenu:new(nil, G.game)
+        G.game.currentScreen = 0
+      elseif G.game.run.currentState == Constants.RUN_STATES.ROUND_CHOICE then
+        --ROUND CHOICE
+        G.game.mainMenu = MainMenu:new(nil, G.game)
+        G.game.currentScreen = 0
+      elseif G.game.run.currentState == Constants.RUN_STATES.DICE_CUSTOMIZATION then
+        G.game.mainMenu = MainMenu:new(nil, G.game)
+        G.game.currentScreen = 0
+
+        --Dice Customization
+      end
+    end,
+    "src/assets/sprites/ui/QuitRun.png",
+    385 + (477 / 2),
+    515,
+    477,
+    80,
+    nil,
+    function()
+      return Inputs.getMouseInCanvas(336, 155)
+    end
+  )
+
+  pausePanel:addButton(optionsButton)
+  pausePanel:addButton(resetButton)
+  pausePanel:addButton(quitButton)
+  pausePanel:addButton(resumeButton)
+
+  pausePanel:show()
 end
 
 function Run:endInfoScreen()
@@ -268,11 +354,8 @@ function Run:toggleInfoScreen()
 end
 
 function Run:togglePauseMenu()
-  if self.displayPauseMenu == true then
-    self.displayPauseMenu = false
-  else
-    self:startPauseMenu()
-  end
+  self.displayPauseMenu = true
+  self:startPauseMenu()
 end
 
 --==DRAW FUNCTIONS==--
@@ -344,10 +427,6 @@ function Run:mousepressed(x, y, button, istouch, presses)
   elseif self.displayInfoScreen == true and self.displayPauseMenu ~= true then
     self.infoScreen:mousepressed(x, y, button, istouch, presses)
   end
-
-  if self.displayPauseMenu then
-    self.pauseMenu:mousepressed(x, y, button, istouch, presses)
-  end
 end
 
 function Run:mousereleased(x, y, button, istouch, presses)
@@ -369,10 +448,6 @@ function Run:mousereleased(x, y, button, istouch, presses)
     self.infoScreen:mousereleased(x, y, button, istouch, presses)
   end
 
-  if self.displayPauseMenu then
-    self.pauseMenu:mousereleased(x, y, button, istouch, presses)
-  end
-
   --Deactivate dragging
   self.isDragging = false
 end
@@ -392,8 +467,6 @@ function Run:mousemoved(x, y, dx, dy)
     end
   elseif self.displayInfoScreen == true and self.displayPauseMenu ~= true then
     self.infoScreen:mousemoved(x, y, dx, dy, self.isDragging)
-  else
-    self.pauseMenu:mousereleased(x, y, dx, dy, self.isDragging)
   end
   --x et y sont la position, dx et dy sont la vitesse.
 

@@ -18,10 +18,13 @@ function Panel:new(width, height, opts)
   -- Position centrée sur l'écran
 
   self.x = Constants.VIRTUAL_GAME_WIDTH / 2
-  self.y = Constants.VIRTUAL_GAME_HEIGHT + self.height
+  if #G.game.panelQueue == 0 then
+    self.y = Constants.VIRTUAL_GAME_HEIGHT + self.height
 
-  self.animator:add("y", self.y, Constants.VIRTUAL_GAME_HEIGHT / 2, 0.1)
-
+    self.animator:add("y", self.y, Constants.VIRTUAL_GAME_HEIGHT / 2, 0.1)
+  else
+    self.y = Constants.VIRTUAL_GAME_HEIGHT / 2
+  end
   -- Background
   self.bgColor = opts.bgColor or { 0.1, 0.1, 0.1, 1 }
   self.borderColor = opts.borderColor or { 1, 1, 1, 0.3 }

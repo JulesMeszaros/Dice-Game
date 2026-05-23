@@ -160,13 +160,13 @@ function Lion:generateRandomLion()
 end
 
 function Lion:createFromIndexes(indexes)
-  head = indexes.head or 1
-  crown_1 = indexes.crown_1 or 1
-  crown_2 = indexes.crown_2 or 1
-  shoulders = indexes.shoulders or 1
-  eyes = indexes.eyes or 1
-  mouth = indexes.mouth or 1
-  nose = indexes.nose or 1
+  local head = indexes.head or 1
+  local crown_1 = indexes.crown_1 or 1
+  local crown_2 = indexes.crown_2 or 1
+  local shoulders = indexes.shoulders or 1
+  local eyes = indexes.eyes or 1
+  local mouth = indexes.mouth or 1
+  local nose = indexes.nose or 1
 
   self.backgroundIndex = 1
   self.crownOneIndex = indexes.crown_1 or 1
