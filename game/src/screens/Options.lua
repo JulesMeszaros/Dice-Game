@@ -1,3 +1,4 @@
+local Constants = require("src.utils.Constants")
 local Fonts = require("src.utils.Fonts")
 local Inputs = require("src.utils.scripts.Inputs")
 local Button = require("src.classes.ui.Button")
@@ -224,6 +225,76 @@ local function gameOptions()
   local optionPanel = Panel:new(1260, 800)
   --Label
   optionPanel:addImage(Sprites.GAME_LABEL, 630, 30, { cx = Sprites.GAME_LABEL:getWidth() / 2 })
+
+  --Delete save
+  if G.game.currentScreen == Constants.PAGES.MAIN_MENU then
+    --Bouton retour
+    local deleteSaveButton = Button:new(
+      function()
+        local resetConfirm = Panel:new(750, 400)
+
+        resetConfirm:addText({
+          color = { 1, 1, 1 },
+          font = Fonts.soraCredits,
+          centered = true,
+          maxWidth = 650,
+          text = [[
+--Delete your save file?--
+This action will close the game
+          ]],
+        }, 375, 50)
+
+        --Cancel
+        local backButton = Button:new(
+          function()
+            optionPanel:hide()
+          end,
+          "src/assets/sprites/ui/Cancel Button.png",
+          180,
+          320,
+          300,
+          100,
+          nil,
+          function()
+            return Inputs.getMouseInCanvas(0, 0)
+          end
+        )
+        resetConfirm:addButton(backButton)
+
+        --Confirm
+        local confirmButton = Button:new(
+          function()
+            optionPanel:hide()
+            love.filesystem.remove("profile.lua")
+            love.event.quit()
+          end,
+          "src/assets/sprites/ui/OK Button.png",
+          570,
+          320,
+          300,
+          100,
+          nil,
+          function()
+            return Inputs.getMouseInCanvas(0, 0)
+          end
+        )
+        resetConfirm:addButton(confirmButton)
+
+        resetConfirm:show()
+      end,
+      "src/assets/sprites/ui/Reset Save.png",
+      630,
+      600,
+      280,
+      60,
+      nil,
+      function()
+        return Inputs.getMouseInCanvas(0, 0)
+      end
+    )
+    optionPanel:addButton(deleteSaveButton)
+  end
+
   --Bouton retour
   local backButton = Button:new(
     function()
