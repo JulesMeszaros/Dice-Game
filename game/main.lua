@@ -175,7 +175,9 @@ end
 
 -- Function to calculate parallax offset
 function G.calculateParalaxeOffset(layer)
-  local Constants = require("src.utils.Constants")
+  if G.sessionSettings.paralaxeEffect == false then
+    return 0, 0
+  end
   return G.ox * Constants.PARALAXE_MAX_OFFSET[layer], G.oy * Constants.PARALAXE_MAX_OFFSET[layer]
 end
 
@@ -360,7 +362,7 @@ function drawBackground()
   if G.sessionSettings.animateBG == false then
     bgtimer = 0
   end
-  Shaders.diagonalCircles:send("time", 0)
+  Shaders.diagonalCircles:send("time", bgtimer)
   Shaders.diagonalCircles:send("base_size", 0.05)
   Shaders.diagonalCircles:send("amplitude", 0.03)
   Shaders.diagonalCircles:send("spacing", 0.15)
