@@ -1,3 +1,4 @@
+local Fonts = require("src.utils.Fonts")
 local Options = require("src.screens.Options")
 local Button = require("src.classes.ui.Button")
 local Panel = require("src.classes.ui.Panel")
@@ -275,10 +276,58 @@ function Run:startPauseMenu()
   --Reset button
   local resetButton = Button:new(
     function()
-      pausePanel:hide()
-      self.displayPauseMenu = false
-      G.game:startNewRun(G.seedText)
+      local resetConfirm = Panel:new(750, 400)
+
+      resetConfirm:addText({
+        color = { 1, 1, 1 },
+        font = Fonts.soraCredits,
+        centered = true,
+        maxWidth = 650,
+        text = [[
+--Reset this run?--
+Your progress will be lost
+          ]],
+      }, 375, 50)
+
+      --Cancel
+      local backButton = Button:new(
+        function()
+          G.game.panelQueue[1]:hide()
+        end,
+        "src/assets/sprites/ui/Cancel Button.png",
+        180,
+        320,
+        300,
+        100,
+        nil,
+        function()
+          return Inputs.getMouseInCanvas(0, 0)
+        end
+      )
+      resetConfirm:addButton(backButton)
+
+      --Confirm
+      local confirmButton = Button:new(
+        function()
+          G.game.panelQueue = {}
+          self.displayPauseMenu = false
+          G.game:startNewRun(G.seedText)
+        end,
+        "src/assets/sprites/ui/OK Button.png",
+        570,
+        320,
+        300,
+        100,
+        nil,
+        function()
+          return Inputs.getMouseInCanvas(0, 0)
+        end
+      )
+      resetConfirm:addButton(confirmButton)
+
+      resetConfirm:show()
     end,
+
     "src/assets/sprites/ui/ResetRun.png",
     385 + (477 / 2),
     385,
@@ -293,27 +342,77 @@ function Run:startPauseMenu()
   --Quit button
   local quitButton = Button:new(
     function()
-      pausePanel:hide()
-      if G.game.run.currentState == Constants.RUN_STATES.ROUND then
-        --Round
-        --G.game.run.currentRound.terrain:outAnimation("mainMenu")
-        G.game.mainMenu = MainMenu:new(nil, G.game)
-        G.game.currentScreen = 0
-      elseif G.game.run.currentState == Constants.RUN_STATES.SHOP then
-        --Shop
-        G.game.mainMenu = MainMenu:new(nil, G.game)
-        G.game.currentScreen = 0
-      elseif G.game.run.currentState == Constants.RUN_STATES.ROUND_CHOICE then
-        --ROUND CHOICE
-        G.game.mainMenu = MainMenu:new(nil, G.game)
-        G.game.currentScreen = 0
-      elseif G.game.run.currentState == Constants.RUN_STATES.DICE_CUSTOMIZATION then
-        G.game.mainMenu = MainMenu:new(nil, G.game)
-        G.game.currentScreen = 0
+      local resetConfirm = Panel:new(750, 400)
 
-        --Dice Customization
-      end
+      resetConfirm:addText({
+        color = { 1, 1, 1 },
+        font = Fonts.soraCredits,
+        centered = true,
+        maxWidth = 650,
+        text = [[
+--Quit this run?--
+Your progress will be lost
+          ]],
+      }, 375, 50)
+
+      --Cancel
+      local backButton = Button:new(
+        function()
+          G.game.panelQueue[1]:hide()
+        end,
+        "src/assets/sprites/ui/Cancel Button.png",
+        180,
+        320,
+        300,
+        100,
+        nil,
+        function()
+          return Inputs.getMouseInCanvas(0, 0)
+        end
+      )
+      resetConfirm:addButton(backButton)
+
+      --Confirm
+      local confirmButton = Button:new(
+
+        function()
+          G.game.panelQueue = {}
+          if G.game.run.currentState == Constants.RUN_STATES.ROUND then
+            --Round
+            --G.game.run.currentRound.terrain:outAnimation("mainMenu")
+            G.game.mainMenu = MainMenu:new(nil, G.game)
+            G.game.currentScreen = 0
+          elseif G.game.run.currentState == Constants.RUN_STATES.SHOP then
+            --Shop
+            G.game.mainMenu = MainMenu:new(nil, G.game)
+            G.game.currentScreen = 0
+          elseif G.game.run.currentState == Constants.RUN_STATES.ROUND_CHOICE then
+            --ROUND CHOICE
+            G.game.mainMenu = MainMenu:new(nil, G.game)
+            G.game.currentScreen = 0
+          elseif G.game.run.currentState == Constants.RUN_STATES.DICE_CUSTOMIZATION then
+            G.game.mainMenu = MainMenu:new(nil, G.game)
+            G.game.currentScreen = 0
+
+            --Dice Customization
+          end
+        end,
+
+        "src/assets/sprites/ui/OK Button.png",
+        570,
+        320,
+        300,
+        100,
+        nil,
+        function()
+          return Inputs.getMouseInCanvas(0, 0)
+        end
+      )
+      resetConfirm:addButton(confirmButton)
+
+      resetConfirm:show()
     end,
+
     "src/assets/sprites/ui/QuitRun.png",
     385 + (477 / 2),
     515,
@@ -390,7 +489,11 @@ function Run:keypressed(key)
   end
 
   if key == "escape" then
-    self:togglePauseMenu()
+    if #G.game.panelQueue > 0 then
+      G.game.panelQueue[1]:hide()
+    else
+      self:togglePauseMenu()
+    end
   end
 
   if Constants.DEBUG == true then
