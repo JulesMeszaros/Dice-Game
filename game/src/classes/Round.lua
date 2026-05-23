@@ -164,6 +164,8 @@ function Round:endRound()
     if self.floorNumber == Constants.FLOORS_BY_RUN and self.roundType == Constants.ROUND_TYPES.BOSS then
       self.terrain.runWinPopup = RunEnd:new(self.run, self)
       self.phase = Constants.ROUND_STATES.RUN_END
+
+      G.saveManager.data.stats.wins = G.saveManager.data.stats.wins + 1
       G.saveManager:save()
     else
       --CREATE A END ROUND SCREEN

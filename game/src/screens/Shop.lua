@@ -1867,6 +1867,14 @@ function Shop:buySticker(sticker)
 
   --On supprime le sticker du shop (ui)
   self.stickersUI[sticker.representedObject] = nil
+
+  --Ajout aux stats
+  if G.saveManager.data.stats.stickers[sticker.representedObject.id] then
+    G.saveManager.data.stats.stickers[sticker.representedObject.id] = G.saveManager.data.stats.stickers[sticker.representedObject.id]
+      + 1
+  else
+    G.saveManager.data.stats.stickers[sticker.representedObject.id] = 1
+  end
 end
 
 function Shop:outAnimation()

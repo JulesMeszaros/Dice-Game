@@ -8,19 +8,19 @@ local FreeRoller = setmetatable({}, { __index = CiggieObject })
 FreeRoller.__index = FreeRoller
 
 function FreeRoller:new()
-	local self = setmetatable(CiggieObject.new(), FreeRoller)
+  local self = setmetatable(CiggieObject.new(), FreeRoller)
 
-	self.usableIn = Constants.RUN_STATES.ROUND
+  self.usableIn = Constants.RUN_STATES.ROUND
+  self.id = 1
+  self.name = "Free Roller"
+  self.description = "**+1 reroll** to the current ++turn++"
 
-	self.name = "Free Roller"
-	self.description = "**+1 reroll** to the current ++turn++"
-
-	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Free Roller Cigarette.png")
-	return self
+  self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Free Roller Cigarette.png")
+  return self
 end
 
 function FreeRoller:effect(screen)
-	screen.round.availableRerolls = screen.round.availableRerolls + 1
+  screen.round.availableRerolls = screen.round.availableRerolls + 1
 end
 
 CiggieTypes.FreeRoller = FreeRoller
@@ -30,19 +30,20 @@ local Turnns = setmetatable({}, { __index = CiggieObject })
 Turnns.__index = Turnns
 
 function Turnns:new()
-	local self = setmetatable(CiggieObject.new(), Turnns)
+  local self = setmetatable(CiggieObject.new(), Turnns)
 
-	self.usableIn = Constants.RUN_STATES.ROUND
+  self.usableIn = Constants.RUN_STATES.ROUND
 
-	self.name = "Turnn's"
-	self.description = "+++1 turn++ to the current ;;office;;"
+  self.id = 2
+  self.name = "Turnn's"
+  self.description = "+++1 turn++ to the current ;;office;;"
 
-	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Turnn's Cigarette.png")
-	return self
+  self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Turnn's Cigarette.png")
+  return self
 end
 
 function Turnns:effect(screen)
-	screen.round.remainingHands = screen.round.remainingHands + 1
+  screen.round.remainingHands = screen.round.remainingHands + 1
 end
 
 CiggieTypes.Turnns = Turnns
@@ -53,19 +54,20 @@ local Fortune = setmetatable({}, { __index = CiggieObject })
 Fortune.__index = Fortune
 
 function Fortune:new()
-	local self = setmetatable(CiggieObject.new(), Fortune)
+  local self = setmetatable(CiggieObject.new(), Fortune)
 
-	self.usableIn = "any"
+  self.usableIn = "any"
 
-	self.name = "Fortune"
-	self.description = "££+5$££"
+  self.id = 3
+  self.name = "Fortune"
+  self.description = "££+5$££"
 
-	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Fortune Cigarette.png")
-	return self
+  self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Fortune Cigarette.png")
+  return self
 end
 
 function Fortune:effect(screen)
-	screen:setMoneyTo(screen.run.money + 5)
+  screen:setMoneyTo(screen.run.money + 5)
 end
 
 CiggieTypes.Fortune = Fortune
@@ -76,35 +78,32 @@ local Rockmans = setmetatable({}, { __index = CiggieObject })
 Rockmans.__index = Rockmans
 
 function Rockmans:new()
-	local self = setmetatable(CiggieObject.new(), Rockmans)
+  local self = setmetatable(CiggieObject.new(), Rockmans)
 
-	self.usableIn = "any"
+  self.usableIn = "any"
+  self.id = 4
+  self.name = "Rockmans"
+  self.description = "Clones one of your ^^Magic Wand^^ (if space left)"
 
-	self.name = "Rockmans"
-	self.description = "Clones one of your ^^Magic Wand^^ (if space left)"
-
-	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Rockmans Cigarette.png")
-	return self
+  self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Rockmans Cigarette.png")
+  return self
 end
 
 function Rockmans:usageCondition(round)
-	local condition = true
-	if table.getn(round.run.ciggiesObjects) <= 1 then
-		condition = false
-	end
-	if
-		round.screenType == Constants.RUN_STATES.SHOP
-		and table.getn(round.run.ciggiesObjects) >= round.run.maxCiggies
-	then
-		condition = false
-	end
-	return condition
+  local condition = true
+  if table.getn(round.run.ciggiesObjects) <= 1 then
+    condition = false
+  end
+  if round.screenType == Constants.RUN_STATES.SHOP and table.getn(round.run.ciggiesObjects) >= round.run.maxCiggies then
+    condition = false
+  end
+  return condition
 end
 
 function Rockmans:effect(screen)
-	local randomCiggie = getRandomExcluding(screen.run.ciggiesObjects, self)
+  local randomCiggie = getRandomExcluding(screen.run.ciggiesObjects, self)
 
-	table.insert(screen.run.ciggiesObjects, getmetatable(randomCiggie):new())
+  table.insert(screen.run.ciggiesObjects, getmetatable(randomCiggie):new())
 end
 
 --CiggieTypes.Rockmans = Rockmans
@@ -115,37 +114,37 @@ local Time = setmetatable({}, { __index = CiggieObject })
 Time.__index = Time
 
 function Time:new()
-	local self = setmetatable(CiggieObject.new(), Time)
+  local self = setmetatable(CiggieObject.new(), Time)
 
-	self.usableIn = { Constants.RUN_STATES.ROUND, Constants.RUN_STATES.SHOP, Constants.RUN_STATES.ROUND_CHOICE }
+  self.usableIn = { Constants.RUN_STATES.ROUND, Constants.RUN_STATES.SHOP, Constants.RUN_STATES.ROUND_CHOICE }
+  self.id = 5
+  self.name = "Time"
+  self.description = "Adds an additional hand per floor to a choosen --figure--."
 
-	self.name = "Time"
-	self.description = "Adds an additional hand per floor to a choosen --figure--."
-
-	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Time Cigarette.png")
-	return self
+  self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Time Cigarette.png")
+  return self
 end
 
 function Time:effect(screen)
-	screen.addingAvailableHand = true
+  screen.addingAvailableHand = true
 end
 
 CiggieTypes.Time = Time
 
 --UTILS--
 function getRandomExcluding(list, excluded)
-	local filtered = {}
-	for _, value in ipairs(list) do
-		if value ~= excluded then
-			table.insert(filtered, value)
-		end
-	end
+  local filtered = {}
+  for _, value in ipairs(list) do
+    if value ~= excluded then
+      table.insert(filtered, value)
+    end
+  end
 
-	if #filtered == 0 then
-		return nil
-	end -- aucun choix possible
+  if #filtered == 0 then
+    return nil
+  end -- aucun choix possible
 
-	return filtered[math.random(#filtered)]
+  return filtered[math.random(#filtered)]
 end
 
 --Ebb--
@@ -154,19 +153,19 @@ local Ebb = setmetatable({}, { __index = CiggieObject })
 Ebb.__index = Ebb
 
 function Ebb:new()
-	local self = setmetatable(CiggieObject.new(), Ebb)
+  local self = setmetatable(CiggieObject.new(), Ebb)
 
-	self.usableIn = { Constants.RUN_STATES.ROUND, Constants.RUN_STATES.SHOP, Constants.RUN_STATES.ROUND_CHOICE }
+  self.usableIn = { Constants.RUN_STATES.ROUND, Constants.RUN_STATES.SHOP, Constants.RUN_STATES.ROUND_CHOICE }
 
-	self.name = "Ebb"
-	self.description = "Restores your hands for every --figures--."
+  self.name = "Ebb"
+  self.description = "Restores your hands for every --figures--."
 
-	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Ebb Cigarette.png")
-	return self
+  self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Ebb Cigarette.png")
+  return self
 end
 
 function Ebb:effect(screen)
-	screen.run:resetAvailableFigures()
+  screen.run:resetAvailableFigures()
 end
 
 CiggieTypes.Ebb = Ebb
@@ -176,50 +175,50 @@ local Channel = setmetatable({}, { __index = CiggieObject })
 Channel.__index = Channel
 
 function Channel:new()
-	local self = setmetatable(CiggieObject.new(), Channel)
+  local self = setmetatable(CiggieObject.new(), Channel)
 
-	self.usableIn = "any"
+  self.usableIn = "any"
 
-	self.name = "Channel"
-	self.description = "Level Up your last leveled up --figure--."
+  self.name = "Channel"
+  self.description = "Level Up your last leveled up --figure--."
 
-	self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Channel Cigarette.png")
-	return self
+  self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Channel Cigarette.png")
+  return self
 end
 
 function Channel:usageCondition(round)
-	return round.run.lastLeveledUpFigure ~= 0
+  return round.run.lastLeveledUpFigure ~= 0
 end
 
 function Channel:getDescription()
-	local lastfig = ""
+  local lastfig = ""
 
-	if G.currentRun.lastLeveledUpFigure ~= 0 then
-		lastfig = " (" .. Constants.FIGURES_LABELS[G.currentRun.lastLeveledUpFigure] .. ")"
-	end
+  if G.currentRun.lastLeveledUpFigure ~= 0 then
+    lastfig = " (" .. Constants.FIGURES_LABELS[G.currentRun.lastLeveledUpFigure] .. ")"
+  end
 
-	return "Level Up your last leveled up --figure --:-- " .. lastfig .. "--"
+  return "Level Up your last leveled up --figure --:-- " .. lastfig .. "--"
 end
 
 function Channel:effect(screen)
-	screen.run:levelUpFigure(screen.run.lastLeveledUpFigure)
+  screen.run:levelUpFigure(screen.run.lastLeveledUpFigure)
 end
 
 CiggieTypes.Channel = Channel
 --UTILS--
 function getRandomExcluding(list, excluded)
-	local filtered = {}
-	for _, value in ipairs(list) do
-		if value ~= excluded then
-			table.insert(filtered, value)
-		end
-	end
+  local filtered = {}
+  for _, value in ipairs(list) do
+    if value ~= excluded then
+      table.insert(filtered, value)
+    end
+  end
 
-	if #filtered == 0 then
-		return nil
-	end -- aucun choix possible
+  if #filtered == 0 then
+    return nil
+  end -- aucun choix possible
 
-	return filtered[math.random(#filtered)]
+  return filtered[math.random(#filtered)]
 end
 
 return CiggieTypes

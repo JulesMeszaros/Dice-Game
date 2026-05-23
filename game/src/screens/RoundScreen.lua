@@ -1110,6 +1110,15 @@ function RoundScreen:playFigure(figure, params)
       self.round.run:stickerFigurePlayedEffect()
       self.round.numberOfHands = self.round.numberOfHands + 1
     end
+
+    --Ajout au save manager
+
+    --Ajout aux stats
+    if G.saveManager.data.stats.figures[figure] then
+      G.saveManager.data.stats.figures[figure] = G.saveManager.data.stats.figures[figure] + 1 + 1
+    else
+      G.saveManager.data.stats.figures[figure] = 1
+    end
   end
 end
 --Reorganises the UI faces by face order (unselected dices)

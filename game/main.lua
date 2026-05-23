@@ -52,7 +52,7 @@ function initSave()
     stickers = {},
     figures = {},
     coffees = {},
-    wins = {},
+    wins = 0,
   }
   G.saveManager:save()
 end
