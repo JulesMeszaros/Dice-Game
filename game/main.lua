@@ -356,7 +356,11 @@ function drawBackground()
   -- Set main canvas and draw background with shader
   love.graphics.setCanvas()
   -- love.graphics.setShader(Shaders.diagonalCircles)
-  Shaders.diagonalCircles:send("time", love.timer.getTime())
+  local bgtimer = love.timer.getTime()
+  if G.sessionSettings.animateBG == false then
+    bgtimer = 0
+  end
+  Shaders.diagonalCircles:send("time", 0)
   Shaders.diagonalCircles:send("base_size", 0.05)
   Shaders.diagonalCircles:send("amplitude", 0.03)
   Shaders.diagonalCircles:send("spacing", 0.15)

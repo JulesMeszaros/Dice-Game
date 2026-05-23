@@ -267,17 +267,25 @@ function Game:drawBackground()
   love.graphics.setColor(G.backgroundR, G.backgroundG, G.backgroundB)
   love.graphics.rectangle("fill", 0, 0, self.gameCanvas:getWidth(), self.gameCanvas:getHeight())
 
+  local bgtimer = love.timer.getTime()
+  if G.sessionSettings.animateBG == false then
+    bgtimer = 0
+  end
   -- Set main canvas and draw background with shader
   love.graphics.setCanvas(currentCanvas)
   love.graphics.setShader(Shaders.diagonalCircles)
-  Shaders.diagonalCircles:send("time", love.timer.getTime())
+  Shaders.diagonalCircles:send("time", bgtimer)
   Shaders.diagonalCircles:send("base_size", 0.05)
   Shaders.diagonalCircles:send("amplitude", 0.03)
   Shaders.diagonalCircles:send("spacing", 0.15)
   Shaders.diagonalCircles:send("speed", 0.8)
   Shaders.diagonalCircles:send("waveScale", 5.0)
   Shaders.diagonalCircles:send("moveSpeed", 0.03)
-  Shaders.diagonalCircles:send("darkness", 0.3)
+  if G.sessionSettings.animateBG == true then
+    Shaders.diagonalCircles:send("darkness", 0.3)
+  else
+    Shaders.diagonalCircles:send("darkness", 0.0)
+  end
   love.graphics.draw(self.backgroundCanvas, 0, 0)
   love.graphics.setShader()
   -- Restore default blend mode
