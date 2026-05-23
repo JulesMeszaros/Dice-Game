@@ -8,6 +8,7 @@ local DiceFace = require("src.classes.ui.DiceFace")
 local UIElement = require("src.classes.ui.UIElement")
 local Inputs = require("src.utils.scripts.Inputs")
 local Sprites = require("src.utils.Sprites")
+local Ciggie = require("src.classes.ui.Ciggie")
 
 local Badge = setmetatable({}, { __index = UIElement })
 Badge.__index = Badge
@@ -41,6 +42,17 @@ function Badge:new(round, x, y, originalY, width, height, mousePosition, large)
   self.height = height
   self.width = width
   self.targetedScale = 1
+
+  --Wand
+  self.ciggie = Ciggie:new(round.ciggieReward, self.width / 2, self.height - 75, false, true, function()
+    return Inputs.getMouseInCanvas(0, 0)
+  end, nil)
+  self.ciggie.layer = 4
+  self.ciggie.baseRotation = 90
+  self.ciggie.rotation = 90
+  self.ciggie.targetedRotation = 90
+  self.ciggie.baseHorizontal = true
+  self.ciggie.static = true
 
   --Hover options
   self.isHoverable = true
