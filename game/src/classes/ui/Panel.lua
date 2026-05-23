@@ -1,3 +1,4 @@
+local Checkbox = require("src.classes.ui.Checkbox")
 local Sprites = require("src.utils.Sprites")
 local Constants = require("src.utils.Constants")
 local UIElement = require("src.classes.ui.UIElement")
@@ -92,7 +93,15 @@ end
 
 function Panel:addSlider(opts, x, y) end
 
-function Panel:addCheckbox(opts, x, y) end
+function Panel:addCheckbox(opts, x, y)
+  local checkbox = Checkbox:new(x, y, opts, function()
+    return Inputs.getMouseInCanvas(
+      Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
+      Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+    )
+  end)
+  table.insert(self.elements, { type = "checkbox", opts = opts, obj = checkbox })
+end
 
 -- ─── Affichage / masquage ────────────────────────────────────────────────────
 
@@ -116,6 +125,9 @@ function Panel:update(dt)
   -- Update des boutons
   for _, el in next, self.elements do
     if el.type == "button" then
+      el.obj:update(dt)
+    end
+    if el.type == "checkbox" then
       el.obj:update(dt)
     end
   end
@@ -147,6 +159,9 @@ function Panel:updateCanvas()
     end
     if el.type == "button" then
       love.graphics.setColor(1, 1, 1, 1)
+      el.obj:draw()
+    end
+    if el.type == "checkbox" then
       el.obj:draw()
     end
   end

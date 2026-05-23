@@ -116,7 +116,35 @@ G.stickerNames = GenerateRandom.sorted(G.stickerNames)
 G.basicStickers = GenerateRandom.sorted(G.basicStickers)
 G.holoStickers = GenerateRandom.sorted(G.holoStickers)
 
-G.applyCRT = true
+if not G.saveManager.data.settings then
+  G.saveManager.data.settings = {}
+  G.saveManager:save()
+end
+
+function G.loadSettings()
+  print("-----------")
+  G.sessionSettings = {}
+  local savedSettings = G.saveManager.data["settings"] or {}
+  print(savedSettings["paralaxeEffect"])
+
+  local function loadSetting(saved, default)
+    if saved == nil then
+      return default
+    end
+    return saved
+  end
+  --Video settings
+  G.sessionSettings.animateBG = loadSetting(savedSettings["animateBG"], true)
+  G.sessionSettings.paralaxeEffect = loadSetting(savedSettings["paralaxeEffect"], true)
+  G.sessionSettings.CRTEffect = loadSetting(savedSettings["CRTEffect"], true)
+
+  print(G.sessionSettings.paralaxeEffect)
+end
+
+function G.saveSettings()
+  G.saveManager.data.settings = G.sessionSettings
+  G.saveManager:save()
+end
 
 function G.backgroundChange(color, time)
   time = time or 0.6
@@ -170,6 +198,9 @@ local overlayStats = require("lib.overlayStats")
 local runtimeLoader = require("runtime.loader")
 
 function love.load()
+  G.loadSettings()
+  G.saveSettings()
+
   https = runtimeLoader.loadHTTPS()
   -- Your game load here
   --bien randomiser le jeu
@@ -213,7 +244,7 @@ function love.draw()
   Shaders.crt:send("scanOpacity", 0.5)
   Shaders.crt:send("lineWidth", love.graphics.getHeight() / 180)
 
-  if G.applyCRT then
+  if G.sessionSettings.CRTEffect then
     love.graphics.setShader(Shaders.crt)
   end
 

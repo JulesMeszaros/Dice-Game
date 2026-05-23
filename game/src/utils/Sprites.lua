@@ -132,5 +132,7 @@ Sprites.HORIZONTAL_DICE_NET = love.graphics.newImage("src/assets/sprites/ui/Hori
 --Options
 Sprites.OPTIONS_LABEL = love.graphics.newImage("src/assets/sprites/ui/Options Label.png")
 Sprites.CREDITS_LABEL = love.graphics.newImage("src/assets/sprites/ui/CréditsButton.png")
-
+Sprites.VIDEO_LABEL = love.graphics.newImage("src/assets/sprites/ui/Video Label.png")
+Sprites.AUDIO_LABEL = love.graphics.newImage("src/assets/sprites/ui/Audio Label.png")
+Sprites.GAME_LABEL = love.graphics.newImage("src/assets/sprites/ui/Game Label.png")
 return Sprites
