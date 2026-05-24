@@ -68,6 +68,7 @@ G.bgAnimator = Animator:new(G)
 G.circleAnimator = Animator:new(G)
 
 G.faceNames = {}
+G.faceIds = {}
 G.commonDices = {}
 G.uncommonDices = {}
 G.rareDices = {}
@@ -77,9 +78,10 @@ G.stickerNames = {}
 G.basicStickers = {}
 G.holoStickers = {}
 
---create list with faces objects placeholdersmain.lua
 for key, facetype in next, FaceTypes do
   local f = facetype:new(1, 10)
+  --Dans la table qui indexe par ID
+  G.faceIds[tostring(f.id)] = key
   if f.tier == "Common" then
     table.insert(G.commonDices, key)
   elseif f.tier == "Uncommon" then
@@ -89,6 +91,7 @@ for key, facetype in next, FaceTypes do
   end
   G.faceNames[key] = f.name
 end
+print(G.faceIds[11])
 
 -- On trie les listes de noms pour qu'elles aient toujours le meme ordre
 -- Cela est nécessaire car la liste FaceTypes est non ordonnée, et donc il est impossible de prévoir

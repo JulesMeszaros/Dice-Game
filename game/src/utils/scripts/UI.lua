@@ -124,7 +124,7 @@ function TextWavy:new(text, x, y, opts)
   o.shadow = opts.shadow or false
 
   -- État interne
-  o.time = 0
+  o.time = opts.time or 0
   o.charWidths, o.totalWidth = computeCharWidths(o.font, o.text)
 
   return o

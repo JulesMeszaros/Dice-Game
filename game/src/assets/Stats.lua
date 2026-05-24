@@ -1,4 +1,6 @@
 local Constants = require("game.src.utils.Constants")
+local DiceFace = require("game.src.classes.ui.DiceFace")
+local Facetypes = require("game.src.classes.FaceTypes")
 local UI = require("src.utils.scripts.UI")
 local Panel = require("game.src.classes.ui.Panel")
 local Fonts = require("game.src.utils.Fonts")
@@ -92,6 +94,9 @@ function Stats:new()
   )
   self:addButton(dicesButton)
 
+  --Création de l'écran de dice stats
+  self:createDiceStats()
+
   self:show()
 
   return self
@@ -111,9 +116,32 @@ local function getBestFigure()
   return Constants.FIGURES_LABELS[bestIndex]
 end
 
+function getTopDices(n)
+  if not G.saveManager.data.stats.dices then
+    return {}
+  end
+  n = n or 5
+  local sorted = {}
+  for id, count in pairs(G.saveManager.data.stats.dices) do
+    table.insert(sorted, { id = id, count = count })
+  end
+  table.sort(sorted, function(a, b)
+    return a.count > b.count
+  end)
+  local result = {}
+  for i = 1, math.min(n, #sorted) do
+    table.insert(result, sorted[i])
+  end
+  return result
+end
+
 function Stats:update(dt)
   --Update de la classe mère
   Panel.update(self, dt)
+
+  if self.category == 2 then
+    self:updateDiceStats(dt)
+  end
 end
 
 function Stats:updateCanvas()
@@ -124,6 +152,7 @@ function Stats:updateCanvas()
   if self.category == 1 then
     self:generalStats()
   elseif self.category == 2 then
+    self:drawDiceStats()
   elseif self.category == 3 then
   end
 
@@ -196,6 +225,67 @@ function Stats:generalStats()
     true,
     { color = { 1, 1, 1, 1 } }
   )
+end
+
+--Dice stats
+
+--Creation de l'écran
+function Stats:createDiceStats()
+  local topDices = getTopDices(5)
+
+  self.faceObjects = {}
+  self.uiFaces = {}
+  self.positionTexts = {}
+  self.triggerTexts = {}
+  print("///")
+  for i, dice in next, topDices do
+    local fo = Facetypes[G.faceIds[tostring(dice["id"])]]:new(math.random(1, 6), 10)
+    local df = DiceFace:new(nil, fo, (127 + 75) + ((i - 1) * 249), 550, 150, false, true, function()
+      return Inputs.getMouseInCanvas(
+        Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
+        Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+      )
+    end, nil, 0, 0)
+
+    --Creation de la position en Wavy
+    local text = UI.Text.TextWavy:new(
+      "#" .. tostring(i),
+      (127 + 75) + ((i - 1) * 249),
+      425,
+      { centered = true, speed = 1, revealSpeed = 0, time = -0.1 * (i - 1) }
+    )
+
+    local textTriggers = UI.Text.TextWavy:new(
+      tostring(dice["count"]) .. "x",
+      (127 + 75) + ((i - 1) * 249),
+      675,
+      { centered = true, speed = 1, revealSpeed = 0, time = -0.1 * i, font = Fonts.soraMedium }
+    )
+
+    table.insert(self.faceObjects, fo)
+    table.insert(self.uiFaces, df)
+    table.insert(self.positionTexts, text)
+    table.insert(self.triggerTexts, textTriggers)
+  end
+end
+
+--Update de l'écran
+function Stats:updateDiceStats(dt)
+  for i, face in next, self.uiFaces do
+    face:update(dt)
+    self.positionTexts[i]:update(dt)
+    self.triggerTexts[i]:update(dt)
+  end
+end
+--Affichage de l'écran
+function Stats:drawDiceStats()
+  UI.Text.drawFormattedText("Most triggered dices", 700, 300, Fonts.soraCredits, 1000, true, { color = { 1, 1, 1, 1 } })
+
+  for i, face in next, self.uiFaces do
+    face:draw()
+    self.positionTexts[i]:draw()
+    self.triggerTexts[i]:draw()
+  end
 end
 
 function Stats:changeCategory(category)
