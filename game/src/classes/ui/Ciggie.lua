@@ -101,6 +101,22 @@ end
 function Ciggie:draw()
   local layer = self.layer or 1
   local px, py = G.calculateParalaxeOffset(layer)
+
+  if self.isBeingDragged then
+    love.graphics.setColor(0, 0, 0, 0.3)
+    love.graphics.draw(
+      self.canvas,
+      self.x + px - 20,
+      self.y + py + 20,
+      self.rotation,
+      self.scaleX,
+      self.scaleY,
+      self.canvas:getWidth() / 2,
+      self.canvas:getHeight() / 2
+    )
+    love.graphics.setColor(1, 1, 1, 1)
+  end
+
   love.graphics.draw(
     self.canvas,
     self.x + px,
