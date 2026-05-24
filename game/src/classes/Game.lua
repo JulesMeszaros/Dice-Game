@@ -120,6 +120,12 @@ end
 
 function Game:startNewRun(seedText, tutorial)
   -- Cleanup existing run if exists
+  if G.saveManager.data.stats.runs then
+    G.saveManager.data.stats.runs = G.saveManager.data.stats.runs + 1
+  else
+    G.saveManager.data.stats.runs = 1
+  end
+  G.saveManager:save()
 
   -- Cleanup main menu
   if self.mainMenu then

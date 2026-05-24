@@ -1,3 +1,4 @@
+local Constants = require("game.src.utils.Constants")
 local UI = require("src.utils.scripts.UI")
 local Panel = require("game.src.classes.ui.Panel")
 local Fonts = require("game.src.utils.Fonts")
@@ -96,6 +97,20 @@ function Stats:new()
   return self
 end
 
+local function getBestFigure()
+  if not G.saveManager.data.stats.figures or #G.saveManager.data.stats.figures == 0 then
+    return "None"
+  end
+  local bestIndex, bestValue = nil, -math.huge
+  for index, value in pairs(G.saveManager.data.stats.figures) do
+    if value > bestValue then
+      bestValue = value
+      bestIndex = index
+    end
+  end
+  return Constants.FIGURES_LABELS[bestIndex]
+end
+
 function Stats:update(dt)
   --Update de la classe mère
   Panel.update(self, dt)
@@ -121,7 +136,7 @@ function Stats:generalStats()
   UI.Text.drawFormattedText("Runs played :", 700, 300, Fonts.soraCredits, 1000, true, { color = { 1, 1, 1, 1 } })
 
   UI.Text.drawFormattedText(
-    tostring(G.saveManager.data.stats.wins),
+    tostring(G.saveManager.data.stats.runs),
     700,
     350,
     Fonts.soraCredits,
@@ -173,7 +188,7 @@ function Stats:generalStats()
   )
 
   UI.Text.drawFormattedText(
-    tostring(G.saveManager.data.stats.wins),
+    tostring(getBestFigure()),
     700,
     725,
     Fonts.soraCredits,
