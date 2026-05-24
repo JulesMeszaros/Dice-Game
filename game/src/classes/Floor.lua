@@ -1,4 +1,5 @@
-local CiggieTypes = require("game.src.classes.CiggieTypes")
+local FaceTypes = require("game.src.classes.FaceTypes")
+local CiggieTypes = require("src.classes.CiggieTypes")
 local Constants = require("src.utils.Constants")
 local FaceTypes = require("src.classes.FaceTypes")
 local Round = require("src.classes.Round")
@@ -78,7 +79,7 @@ function Floor:generateDesks(deskRank, difficulty)
     targetScore,
     self.run.diceObjects,
     Constants.ROUND_TYPES.BASE,
-    self:generateReward(c, u, r),
+    self:generateReward(c, u, r, deskRank),
     difficulty or 0
   )
   r.roundType = Constants.ROUND_TYPES.BASE
@@ -114,14 +115,23 @@ function Floor:generateBoss()
     targetScore,
     self.run.diceObjects,
     Constants.ROUND_TYPES.BOSS,
-    self:generateReward()
+    self:generateReward(0, 70, 30, 3)
   )
   r.roundType = Constants.ROUND_TYPES.BOSS
 
   return r
 end
 
-function Floor:generateReward(c, u, r)
+function Floor:generateReward(c, u, r, deskrank)
+  --Cas de tutorial, premier round, premier etage
+  print(self.run.roundNumber)
+  if self.run.tutorial and self.floorNumber == 1 and deskrank == 1 then
+    return {
+      FaceTypes.MassiveDice:new(6, 10),
+      FaceTypes.GoldDice:new(4, 10),
+    }
+  end
+
   local common = c or 75
   local uncommon = u or 20
   local rare = r or 5 --Les parametres représentent le pourcentage de chances d'avoir un common, uncommon, ou rare
