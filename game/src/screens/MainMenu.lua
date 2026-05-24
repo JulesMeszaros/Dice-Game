@@ -1,3 +1,4 @@
+local Stats = require("game.src.assets.Stats")
 local Panel = require("src.classes.ui.Panel")
 local Credits = require("src.screens.Credits")
 local Options = require("src.screens.Options")
@@ -199,7 +200,7 @@ function MainMenu:new()
   )
   self.uiElements.buttons["stats"] = Button:new(
     function()
-      print("stats")
+      local statsScreen = Stats:new()
     end,
     "src/assets/sprites/ui/StatsButton.png",
     1370 + 500 / 2,
@@ -212,7 +213,6 @@ function MainMenu:new()
     end
   )
 
-  self.uiElements.buttons["stats"]:setActivated(false)
   self.uiElements.buttons["collection"]:setActivated(false)
 
   --Boutons de liens

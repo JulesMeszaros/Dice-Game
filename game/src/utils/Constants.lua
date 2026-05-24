@@ -258,4 +258,20 @@ Constants.BACKGROUND_COLORS = {
   DESK_CHOICE = {},
 }
 
+Constants.TEXT_FORMATTERS = {
+  { open = "[[", close = "]]", color = Constants.COLORS.POINTS }, -- points
+  { open = "((", close = "))", color = Constants.COLORS.MULT }, -- mult
+  { open = "^^", close = "^^", color = Constants.COLORS.WANDS }, -- mult
+  { open = "££", close = "££", color = Constants.COLORS.MONEY }, -- mult
+  { open = "++", close = "++", color = Constants.COLORS.TURNS }, -- mult
+  { open = "**", close = "**", color = Constants.COLORS.REROLLS }, -- mult
+  { open = "!!", close = "!!", color = Constants.COLORS.GHOST }, -- mult
+  { open = "@@", close = "@@", color = Constants.COLORS.BLANK }, -- mult
+  { open = "&&", close = "&&", color = Constants.COLORS.DICE }, -- mult
+  { open = ">>", close = ">>", color = Constants.COLORS.COFFEE }, -- mult
+  { open = "::", close = "::", color = Constants.COLORS.FLOOR }, -- mult
+  { open = ";;", close = ";;", color = Constants.COLORS.OFFICE }, -- mult
+  { open = "--", close = "--", color = Constants.COLORS.FIGURE }, -- mult
+}
+
 return Constants

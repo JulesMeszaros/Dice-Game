@@ -1,3 +1,4 @@
+local UI = require("src.utils.scripts.UI")
 local Slider = require("src.classes.ui.Slider")
 local Checkbox = require("src.classes.ui.Checkbox")
 local Sprites = require("src.utils.Sprites")
@@ -163,11 +164,11 @@ function Panel:updateCanvas()
       local o = el.opts
       local tx = el.ox
       local ty = el.oy
-      drawFormattedText(o.text, tx, ty, o.font, o.maxWidth, o.centered ~= false, { color = o.color })
+      UI.Text.drawFormattedText(o.text, tx, ty, o.font, o.maxWidth, o.centered ~= false, { color = o.color })
     end
 
     if el.type == "image" then
-      local o = el.opts
+      local o = el.opts or {}
       love.graphics.draw(el.sprite, el.ox, el.oy, o.r or 0, o.rx or 1, o.ry or 1, o.cx or 0, o.cy or 0)
     end
     if el.type == "button" then

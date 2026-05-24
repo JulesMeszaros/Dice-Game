@@ -537,21 +537,12 @@ function GameScreen:drawCiggiePopup(dt)
   love.graphics.setColor(1, 1, 1, 1)
 
   --Texts
-  if not self.useCiggyText then
-    self.useCiggyText =
-      UI.Text.TextWavy:new(self.currentlyDraggedCiggie.representedObject.name, self.canvas:getWidth() / 2, 220, {
-        centered = true,
-        font = Fonts.soraFirstRoll,
-        revealSpeed = 0.2,
-        amplitude = 3,
-        speed = 3,
-        colorStart = { 255 / 255, 178 / 255, 89 / 255 },
-        colorEnd = { 249 / 255, 130 / 255, 132 / 255 },
-      })
-  end
 
   self.useCiggyText:update(dt)
   self.useCiggyText:draw()
+
+  self.useCiggyDesc:update(dt)
+  self.useCiggyDesc:draw()
 
   --Sell Rect
   local a = self.ciggiePopupAlpha / self.targetCiggiePopupAlpha
@@ -1241,9 +1232,32 @@ function GameScreen:startCiggiePopUp()
   local d = 0.2
 
   self.sellCiggieText:reset()
-  if self.useCiggyText then
-    self.useCiggyText:reset()
-  end
+  --Texts
+  self.useCiggyText =
+    UI.Text.TextWavy:new(self.currentlyDraggedCiggie.representedObject.name, self.canvas:getWidth() / 2, 220, {
+      centered = true,
+      font = Fonts.soraFirstRoll,
+      revealSpeed = 0.2,
+      amplitude = 3,
+      speed = 3,
+      colorStart = { 255 / 255, 178 / 255, 89 / 255 },
+      colorEnd = { 249 / 255, 130 / 255, 132 / 255 },
+    })
+
+  self.useCiggyDesc = UI.Text.TextWavy:new(
+    UI.Text.stripFormatting(self.currentlyDraggedCiggie.representedObject.description),
+    self.canvas:getWidth() / 2,
+    420,
+    {
+      centered = true,
+      font = Fonts.soraRewardTotal,
+      revealSpeed = 0.4,
+      amplitude = 3,
+      speed = 3,
+      colorStart = { 255 / 255, 178 / 255, 89 / 255 },
+      colorEnd = { 249 / 255, 130 / 255, 132 / 255 },
+    }
+  )
 
   self.animator:addGroup({
     {

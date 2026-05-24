@@ -223,6 +223,17 @@ function TextWavy:draw()
   love.graphics.setColor(1, 1, 1, 1)
 end
 
+local function escapePattern(s)
+  return s:gsub("([%(%)%.%%%+%-%*%?%[%]%^%$])", "%%%1")
+end
+
+function stripFormatting(text)
+  for _, fmt in ipairs(Constants.TEXT_FORMATTERS) do
+    text = text:gsub(escapePattern(fmt.open), "")
+    text = text:gsub(escapePattern(fmt.close), "")
+  end
+  return text
+end
 --Fonction qui permet de dessiner du texte de manière propre sur plusieurs lignes avec des couleurs données par des délimiteurs
 
 function drawFormattedText(text, x, y, font, maxWidth, centered, opts)
@@ -231,22 +242,7 @@ function drawFormattedText(text, x, y, font, maxWidth, centered, opts)
   love.graphics.setFont(font) -- manquant !
 
   -- Configuration des couleurs et délimiteurs
-  local textFormats = {
-    { open = "[[", close = "]]", color = Constants.COLORS.POINTS }, -- points
-    { open = "((", close = "))", color = Constants.COLORS.MULT }, -- mult
-    { open = "^^", close = "^^", color = Constants.COLORS.WANDS }, -- mult
-    { open = "££", close = "££", color = Constants.COLORS.MONEY }, -- mult
-    { open = "++", close = "++", color = Constants.COLORS.TURNS }, -- mult
-    { open = "**", close = "**", color = Constants.COLORS.REROLLS }, -- mult
-    { open = "!!", close = "!!", color = Constants.COLORS.GHOST }, -- mult
-    { open = "@@", close = "@@", color = Constants.COLORS.BLANK }, -- mult
-    { open = "&&", close = "&&", color = Constants.COLORS.DICE }, -- mult
-    { open = ">>", close = ">>", color = Constants.COLORS.COFFEE }, -- mult
-    { open = "::", close = "::", color = Constants.COLORS.FLOOR }, -- mult
-    { open = ";;", close = ";;", color = Constants.COLORS.OFFICE }, -- mult
-    { open = "--", close = "--", color = Constants.COLORS.FIGURE }, -- mult
-  }
-
+  local textFormats = Constants.TEXT_FORMATTERS
   local defaultColor = opts.color or { 0, 0, 0 }
   -- ─── Parser ───────────────────────────────────────────────────────────────
 
@@ -441,8 +437,8 @@ end
 UI.arrangeImagesWrapped = arrangeImagesWrapped
 
 UI.Text.drawFormattedText = drawFormattedText
+UI.Text.stripFormatting = stripFormatting
 UI.Text.TextWavy = TextWavy
-UI.Text.TextPulse = TextPulse
 
 UI.ScreenWave = function(rx, ry)
   --Fonction qui permet de faire bouger le paralaxe de l'écran de manière smooth.
