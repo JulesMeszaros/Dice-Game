@@ -1,3 +1,4 @@
+local InfoBubble = require("src.classes.ui.InfoBubble")
 local Constants = require("game.src.utils.Constants")
 local DiceFace = require("game.src.classes.ui.DiceFace")
 local Facetypes = require("game.src.classes.FaceTypes")
@@ -14,6 +15,7 @@ Stats.__index = Stats
 function Stats:new()
   local self = setmetatable(Panel:new(1400, 1000), Stats)
 
+  self.infoBubble = InfoBubble:new(self)
   --[[
 	Catégories possibles = 
 	1 : Stats générales
@@ -139,6 +141,17 @@ function Stats:update(dt)
   --Update de la classe mère
   Panel.update(self, dt)
 
+  self:getCurrentlyHoveredDice()
+  if self.currentlyHoveredObject and not self.dragAndDroppedObject then
+    --Info bubble (wip)
+    self.infoBubble.x, self.infoBubble.y =
+      self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX,
+      self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
+    --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredObject.x , self.currentlyHoveredObject.y
+
+    self.infoBubble:update(dt)
+  end
+
   if self.category == 2 then
     self:updateDiceStats(dt)
   end
@@ -154,6 +167,10 @@ function Stats:updateCanvas()
   elseif self.category == 2 then
     self:drawDiceStats()
   elseif self.category == 3 then
+  end
+
+  if self.currentlyHoveredObject and not self.dragAndDroppedObject then
+    self.infoBubble:draw()
   end
 
   love.graphics.setCanvas(currentCanvas)
@@ -296,6 +313,18 @@ function Stats:changeCategory(category)
   self.category = category
 
   print(self.category)
+end
+
+function Stats:getCurrentlyHoveredDice()
+  self.previouslyHoveredFace = self.currentlyHoveredObject
+  self.currentlyHoveredObject = nil
+
+  for key, diceface in next, self.uiFaces do
+    if diceface:isHovered() then
+      self.currentlyHoveredObject = diceface
+      break
+    end
+  end
 end
 
 return Stats

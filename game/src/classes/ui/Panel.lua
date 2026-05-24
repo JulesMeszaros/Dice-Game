@@ -64,6 +64,7 @@ function Panel:new(width, height, opts)
 
   -- Canvas
   self.uiCanvas = love.graphics.newCanvas(self.width, self.height)
+  self.canvas = self.uiCanvas
 
   -- Visibilité
   self.visible = true
