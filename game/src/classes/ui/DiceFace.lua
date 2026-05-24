@@ -1,6 +1,7 @@
 --Classe servant à afficher une face de dé, avec ses propriétés et ses effets et ses interractions
 local UIElement = require("src.classes.ui.UIElement")
 --Utils
+local TriggerAnimations = require("src.utils.TriggerAnimations")
 local AnimationUtils = require("src.utils.scripts.Animations")
 local InputsUtils = require("src.utils.scripts.Inputs")
 local Constants = require("src.utils.Constants")
@@ -303,7 +304,15 @@ function DiceFace:triggerEffect(effect, round)
   --Animation de trigger (WIP)
   self:createTriggerAnimation(round, effect)
 
-  self.animator:addDelay(0.0, function()
+  local effectDelay = 0.3
+
+  if
+    #round.effectsTriggerQueue >= 1 and self:getDiceObject() == round.effectsTriggerQueue[1].diceFace:getDiceObject()
+  then
+    effectDelay = 0
+  end
+
+  self.animator:addDelay(effectDelay, function()
     self.targetedScale = 1
     self.round:triggerNextEffect()
   end)
@@ -348,31 +357,20 @@ function DiceFace:createTriggerAnimation(round, effect)
   -- Courbe en S : plate avant 5, monte vite entre 5 et 10, plateau après
   local t = round.effectsTriggered or 0
   local speed = 1 / (1 + math.exp(-0.8 * (t - 8))) -- sigmoïde centrée sur 7
-  local duration = 0.3 * (1 - speed * 0.6) -- la durée de base peut etre multipliée jusqu'à 1-0,6 soit 0,4
-
-  self.animator:addGroup({
-    {
-      property = "scaleX",
-      from = 1.8,
-      targetValue = 1,
-      duration = duration,
-      easing = AnimationUtils.Easing.easeOutBack,
-    },
-    {
-      property = "scaleY",
-      from = 1.8,
-      targetValue = 1,
-      duration = duration,
-      easing = AnimationUtils.Easing.easeOutBack,
-    },
-    {
-      property = "rotation",
-      from = -0.3,
-      targetValue = 0,
-      duration = duration,
-      easing = AnimationUtils.Easing.easeOutBack,
-    },
-  })
+  local baseDuration = 0.4
+  local duration = baseDuration * (1 - speed * 0.4) -- la durée de base peut etre multipliée jusqu'à 1-0,4 soit 0,6
+  --Animation de base
+  if effect.type == "mult" then
+    TriggerAnimations.mult(self, duration)
+  elseif effect.type == "replay" then
+    --Effets reverse
+    TriggerAnimations.baseReverse(self, duration)
+  elseif effect.type == "upgrade" then
+    TriggerAnimations.upgrade(self, duration)
+  else
+    --Utilisée pour les effets de type score et other
+    TriggerAnimations.base(self, duration)
+  end
 end
 
 --==GET/SET FUNCTIONS==--

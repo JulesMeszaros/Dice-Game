@@ -975,7 +975,7 @@ end
 function RoundScreen:getCurrentlyHoveredBoss()
   self.currentlyHoveredBoss = nil
   local vx, vy = Inputs.getVirtualMousePosition(4)
-  if vy < 200 then
+  if vy < 280 and vy > 40 and vx > 1180 and vx < 1430 then
     self.currentlyHoveredBoss = {
       representedObject = {
         objectType = "Boss",
