@@ -466,7 +466,17 @@ function Round:endTriggeringPhase()
     self.roundScore = self.roundScore + self.handScore
 
     if self.handScore > self.run.bestHand then
+      print("okok")
       self.run.bestHand = self.handScore
+      if G.saveManager.data.stats.bestHand then
+        if self.run.bestHand > G.saveManager.data.stats.bestHand then
+          G.saveManager.data.stats.bestHand = self.run.bestHand
+          G.saveManager:save()
+        end
+      else
+        G.saveManager.data.stats.bestHand = self.run.bestHand
+        G.saveManager:save()
+      end
     end
 
     self.handScore = 0

@@ -1,3 +1,4 @@
+local UI = require("src.utils.scripts.UI")
 local Panel = require("game.src.classes.ui.Panel")
 local Fonts = require("game.src.utils.Fonts")
 local Sprites = require("game.src.utils.Sprites")
@@ -93,6 +94,93 @@ function Stats:new()
   self:show()
 
   return self
+end
+
+function Stats:update(dt)
+  --Update de la classe mère
+  Panel.update(self, dt)
+end
+
+function Stats:updateCanvas()
+  Panel.updateCanvas(self)
+  local currentCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.uiCanvas)
+
+  if self.category == 1 then
+    self:generalStats()
+  elseif self.category == 2 then
+  elseif self.category == 3 then
+  end
+
+  love.graphics.setCanvas(currentCanvas)
+end
+
+--Draw General stats
+function Stats:generalStats()
+  --Total Runs
+  UI.Text.drawFormattedText("Runs played :", 700, 300, Fonts.soraCredits, 1000, true, { color = { 1, 1, 1, 1 } })
+
+  UI.Text.drawFormattedText(
+    tostring(G.saveManager.data.stats.wins),
+    700,
+    350,
+    Fonts.soraCredits,
+    1000,
+    true,
+    { color = { 1, 1, 1, 1 } }
+  )
+  --Wins
+  UI.Text.drawFormattedText(tostring("Runs won :"), 700, 425, Fonts.soraCredits, 1000, true, { color = { 1, 1, 1, 1 } })
+
+  UI.Text.drawFormattedText(
+    tostring(G.saveManager.data.stats.wins),
+    700,
+    475,
+    Fonts.soraCredits,
+    1000,
+    true,
+    { color = { 1, 1, 1, 1 } }
+  )
+  --Best Hand
+  UI.Text.drawFormattedText(
+    tostring("Highest hand :"),
+    700,
+    550,
+    Fonts.soraCredits,
+    1000,
+    true,
+    { color = { 1, 1, 1, 1 } }
+  )
+
+  UI.Text.drawFormattedText(
+    tostring(G.saveManager.data.stats.bestHand or 0),
+    700,
+    600,
+    Fonts.soraCredits,
+    1000,
+    true,
+    { color = { 1, 1, 1, 1 } }
+  )
+  --Most played Figure
+  UI.Text.drawFormattedText(
+    tostring("Most played figure :"),
+    700,
+    675,
+    Fonts.soraCredits,
+    1000,
+    true,
+    { color = { 1, 1, 1, 1 } }
+  )
+
+  UI.Text.drawFormattedText(
+    tostring(G.saveManager.data.stats.wins),
+    700,
+    725,
+    Fonts.soraCredits,
+    1000,
+    true,
+    { color = { 1, 1, 1, 1 } }
+  )
 end
 
 function Stats:changeCategory(category)
