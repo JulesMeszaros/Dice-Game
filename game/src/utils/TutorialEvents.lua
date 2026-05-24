@@ -220,7 +220,7 @@ function TutorialEvents.firstRoundWin()
     end,
   })
   G.currentRun.tutorial:pushOnce("firstWin6", {
-    text = "You can click [[Next!]], I'll show you how to customize your dices now.'",
+    text = "You can click [[Next!]], I'll show you how to customize your dices now.",
     pos = "ul",
   })
 end
