@@ -144,26 +144,6 @@ end
 function DiceFace:draw()
   local layer = self.layer or 4
   local px, py = G.calculateParalaxeOffset(layer)
-  --Si activé : ombre au drag and drop
-  -- love.graphics.setShader(Shaders.black)
-  --
-  -- love.graphics.setColor(1, 1, 1, 0.4)
-  --
-  -- love.graphics.draw(
-  -- 	self.diceCanvas,
-  -- 	self.x - self.hoverScale * 100,
-  -- 	self.y + self.hoverScale * 100,
-  -- 	self.rotation,
-  -- 	self.scaleX,
-  -- 	self.scaleY,
-  -- 	self.diceCanvas:getWidth() / 2,
-  -- 	self.diceCanvas:getHeight() / 2
-  -- )
-  --
-  -- love.graphics.setShader()
-  -- love.graphics.setColor(1, 1, 1, 1)
-
-  --Dé
 
   self.rainbowShader:send("time", self.rotation + self.scaleX * 2 + 30)
   self.rainbowShader:send("frequency", 0.3)
@@ -175,6 +155,21 @@ function DiceFace:draw()
   love.graphics.setBlendMode("alpha", "premultiplied")
   -- love.graphics.setShader(self.rainbowShader)
 
+  if self.isBeingDragged then
+    love.graphics.setColor(0, 0, 0, 0.3)
+    love.graphics.draw(
+      self.diceCanvas,
+      self.x + px - 20,
+      self.y + py + 20,
+      self.rotation,
+      self.scaleX,
+      self.scaleY,
+      self.diceCanvas:getWidth() / 2,
+      self.diceCanvas:getHeight() / 2
+    )
+
+    love.graphics.setColor(1, 1, 1, 1)
+  end
   love.graphics.draw(
     self.diceCanvas,
     self.x + px,
