@@ -127,13 +127,6 @@ function Game:startNewRun(seedText, tutorial)
     self.mainMenu = nil
   end
 
-  if not G.saveManager.data["playedTutorial"] then
-    seedText = "IOXAHBAJ"
-    tutorial = true
-    G.saveManager.data["playedTutorial"] = true
-    G.saveManager:save()
-  end
-
   --Creation de la seed
   if seedText and seedText ~= "" then
     local seed = GenerateRandom.stringToSeed(seedText)

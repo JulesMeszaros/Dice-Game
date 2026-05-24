@@ -1,3 +1,4 @@
+local Panel = require("src.classes.ui.Panel")
 local Credits = require("src.screens.Credits")
 local Options = require("src.screens.Options")
 local Fonts = require("src.utils.Fonts")
@@ -42,7 +43,62 @@ function MainMenu:new()
 
   self.uiElements.buttons["newRun"] = Button:new(
     function()
-      G.game:startNewRun(self.seedInput.text, false)
+      if G.saveManager.data.playedTutorial ~= true then
+        local tutoPanel = Panel:new(750, 400)
+
+        tutoPanel:addText({
+          color = { 1, 1, 1 },
+          font = Fonts.soraCredits,
+          centered = true,
+          maxWidth = 650,
+          text = [[
+        Play the tutorial?
+        You can replay it later.
+          ]],
+        }, 375, 50)
+
+        --Cancel
+        local backButton = Button:new(
+          function()
+            tutoPanel:hide()
+            G.game:startNewRun(self.seedInput.text, false)
+          end,
+          "src/assets/sprites/ui/No Button.png",
+          180,
+          320,
+          300,
+          100,
+          nil,
+          function()
+            return Inputs.getMouseInCanvas(0, 0)
+          end
+        )
+        tutoPanel:addButton(backButton)
+
+        --Confirm
+        local confirmButton = Button:new(
+          function()
+            tutoPanel:hide()
+            G.saveManager.data.playedTutorial = true
+            G.saveManager:save()
+            G.game:startNewRun("IOXAHBAJ", true)
+          end,
+          "src/assets/sprites/ui/Yes Button.png",
+          570,
+          320,
+          300,
+          100,
+          nil,
+          function()
+            return Inputs.getMouseInCanvas(0, 0)
+          end
+        )
+        tutoPanel:addButton(confirmButton)
+
+        tutoPanel:show()
+      else
+        G.game:startNewRun(self.seedInput.text, false)
+      end
     end,
     "src/assets/sprites/ui/New Run.png",
     Constants.VIRTUAL_GAME_WIDTH / 2,
