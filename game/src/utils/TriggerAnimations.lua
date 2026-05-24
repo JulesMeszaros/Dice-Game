@@ -139,6 +139,57 @@ function TriggerAnimations.upgrade(diceface, duration)
   })
 end
 
+function TriggerAnimations.money(diceface, duration)
+  -- Saut rapide vers le haut avec overshoot
+  diceface.animator:addGroup({
+    {
+      property = "scaleX",
+      from = 1,
+      targetValue = 0.85, -- légèrement écrasé horizontalement au départ
+      duration = duration * 0.2,
+      easing = AnimationUtils.Easing.inQuad,
+    },
+    {
+      property = "scaleY",
+      from = 1,
+      targetValue = 1.3, -- s'étire vers le haut
+      duration = duration * 0.2,
+      easing = AnimationUtils.Easing.inQuad,
+    },
+    {
+      property = "rotation",
+      from = 0,
+      targetValue = -0.1,
+      duration = duration * 0.2,
+      easing = AnimationUtils.Easing.inQuad,
+    },
+  })
+  -- Retombe avec rebond
+  diceface.animator:addGroup({
+    {
+      property = "scaleX",
+      from = 0.85,
+      targetValue = 1,
+      duration = duration * 0.8,
+      easing = AnimationUtils.Easing.easeOutBack,
+    },
+    {
+      property = "scaleY",
+      from = 1.3,
+      targetValue = 1,
+      duration = duration * 0.8,
+      easing = AnimationUtils.Easing.easeOutBack,
+    },
+    {
+      property = "rotation",
+      from = -0.1,
+      targetValue = 0,
+      duration = duration * 0.8,
+      easing = AnimationUtils.Easing.easeOutBack,
+    },
+  })
+end
+
 function TriggerAnimations.base(diceface, duration)
   diceface.animator:addGroup({
     {

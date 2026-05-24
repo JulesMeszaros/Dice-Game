@@ -367,6 +367,8 @@ function DiceFace:createTriggerAnimation(round, effect)
     TriggerAnimations.baseReverse(self, duration)
   elseif effect.type == "upgrade" then
     TriggerAnimations.upgrade(self, duration)
+  elseif effect.type == "money" then
+    TriggerAnimations.money(self, duration)
   else
     --Utilisée pour les effets de type score et other
     TriggerAnimations.base(self, duration)
