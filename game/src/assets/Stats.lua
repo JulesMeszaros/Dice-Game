@@ -1,3 +1,4 @@
+local AnimationUtils = require("game.src.utils.scripts.Animations")
 local InfoBubble = require("src.classes.ui.InfoBubble")
 local Constants = require("game.src.utils.Constants")
 local DiceFace = require("game.src.classes.ui.DiceFace")
@@ -269,6 +270,11 @@ function Stats:createDiceStats()
       )
     end, nil, Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2)
 
+    df.scaleX = 0
+    df.scaleY = 0
+    df.drawShadow = true
+    self:animateDiceFaceAppear(df, 0.1 * (i - 1))
+
     --Creation de la position en Wavy
     local text = UI.Text.TextWavy:new(
       "#" .. tostring(i),
@@ -345,6 +351,33 @@ function Stats:getCurrentlyHoveredDice()
       end
     end
   end
+end
+
+function Stats:animateDiceFaceAppear(diceface, timeOffset)
+  diceface.animator:addDelay(timeOffset)
+  diceface.animator:addGroup({
+    {
+      property = "scaleX",
+      from = 0,
+      targetValue = 1,
+      duration = 0.4,
+      easing = AnimationUtils.Easing.easeOutBack,
+    },
+    {
+      property = "scaleY",
+      from = 0,
+      targetValue = 1,
+      duration = 0.4,
+      easing = AnimationUtils.Easing.easeOutBack,
+    },
+    {
+      property = "rotation",
+      from = 0.4,
+      targetValue = 0,
+      duration = 0.4,
+      easing = AnimationUtils.Easing.easeOutBack,
+    },
+  })
 end
 
 return Stats

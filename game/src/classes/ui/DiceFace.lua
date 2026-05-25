@@ -51,7 +51,7 @@ function DiceFace:new(
   self.y = y
   self.absoluteX = absoluteX or 0
   self.absoluteY = absoluteY or 0
-
+  self.drawShadow = false
   --Size
   self.baseSize = size
   self.size = self.baseSize
@@ -156,7 +156,7 @@ function DiceFace:draw()
   love.graphics.setBlendMode("alpha", "premultiplied")
   -- love.graphics.setShader(self.rainbowShader)
 
-  if self.isBeingDragged then
+  if self.isBeingDragged or self.drawShadow then
     love.graphics.setColor(0, 0, 0, 0.3)
     love.graphics.draw(
       self.diceCanvas,
