@@ -53,6 +53,8 @@ function Game:start()
     G.playerLion:createFromIndexes(G.saveManager.data.profile.avatar)
   end
 
+  self.dummyRun = self:createDummyRun()
+
   G.game = self
 
   return self
@@ -298,5 +300,11 @@ function Game:goToCharacterCreation()
 end
 
 function Game:cleanup() end
+
+function Game:createDummyRun()
+  local run = Run:new({}, nil, self, {}, nil)
+
+  return run
+end
 
 return Game

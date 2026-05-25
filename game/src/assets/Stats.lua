@@ -13,9 +13,8 @@ local Inputs = require("game.src.utils.scripts.Inputs")
 local Stats = setmetatable({}, { __index = Panel })
 Stats.__index = Stats
 
-function Stats:new()
+function Stats:new(mainmenu)
   local self = setmetatable(Panel:new(1400, 1000), Stats)
-
   self.infoBubble = InfoBubble:new(self)
   self.infoBubble.overflowAllowed = 1000
   --[[
@@ -25,6 +24,8 @@ function Stats:new()
 	3 : Cafés, Wands, Stickers
 	--]]
   self.category = 1
+
+  self.run = G.game.dummyRun
 
   --Bouton retour
   local backButton = Button:new(

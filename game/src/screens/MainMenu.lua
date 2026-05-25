@@ -200,7 +200,7 @@ function MainMenu:new()
   )
   self.uiElements.buttons["stats"] = Button:new(
     function()
-      local statsScreen = Stats:new()
+      local statsScreen = Stats:new(self)
     end,
     "src/assets/sprites/ui/StatsButton.png",
     1370 + 500 / 2,
@@ -364,6 +364,12 @@ function MainMenu:cleanup()
     self.versionText:release()
     self.versionText = nil
   end
+end
+
+function MainMenu:createDummyRun()
+  local run = Run:new()
+
+  return run
 end
 
 return MainMenu
