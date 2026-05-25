@@ -53,17 +53,20 @@ end
 function CoffeeButton:update(dt)
   self.animator:update(dt)
 
-  if self:isHovered() and self.used == false and self.isActivated == true then
-    self.targetedScale = 1.03
-    if love.mouse.isDown(1) and self.isActivated then
-      self.targetedScale = 0.97
-    end
-  else
-    self.targetedScale = 1
-  end
+  if not self.animator:isAnimating("scale") then
+    if self:isHovered() and self.used == false and self.isActivated == true then
+      self.targetedScale = 1.03
 
-  local speed = 30
-  self.scale = self:dampLerp(self.scale, self.targetedScale, speed, dt)
+      if love.mouse.isDown(1) and self.isActivated then
+        self.targetedScale = 0.97
+      end
+    else
+      self.targetedScale = 1
+    end
+
+    local speed = 30
+    self.scale = self:dampLerp(self.scale, self.targetedScale, speed, dt)
+  end
 
   --update the button canvas
   self:updateCanvas()

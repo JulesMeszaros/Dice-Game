@@ -1,3 +1,8 @@
+local CiggieTypes = require("game.src.classes.CiggieTypes")
+local CoffeeButton = require("game.src.classes.ui.CoffeeButton")
+local Ciggie = require("game.src.classes.ui.Ciggie")
+local Sticker = require("game.src.classes.ui.Sticker")
+local StickerTypes = require("game.src.classes.StickerTypes")
 local AnimationUtils = require("game.src.utils.scripts.Animations")
 local InfoBubble = require("src.classes.ui.InfoBubble")
 local Constants = require("game.src.utils.Constants")
@@ -155,6 +160,8 @@ function Stats:update(dt)
 
   if self.category == 2 then
     self:updateDiceStats(dt)
+  elseif self.category == 3 then
+    self:updateObjectsStats(dt)
   end
 end
 
@@ -168,6 +175,7 @@ function Stats:updateCanvas()
   elseif self.category == 2 then
     self:drawDiceStats()
   elseif self.category == 3 then
+    self:drawObjectStats()
   end
 
   love.graphics.setCanvas(currentCanvas)
@@ -320,7 +328,8 @@ function Stats:updateDiceStats(dt)
     self.triggerTexts[i]:update(dt)
   end
 end
---Affichage de l'écran
+
+--Affichage de l'écran de stats des dés
 function Stats:drawDiceStats()
   UI.Text.drawFormattedText("Most triggered dices", 700, 300, Fonts.soraCredits, 1000, true, { color = { 1, 1, 1, 1 } })
 
@@ -331,6 +340,94 @@ function Stats:drawDiceStats()
   end
 end
 
+--Ecran des objets
+
+function Stats:createObjectStats()
+  --Creation des objets
+  --Sticker
+  local stickerTest = StickerTypes.MoneyBagSticker:new()
+  self.uiSticker = Sticker:new(stickerTest, 275, 525, 150, false, true, function()
+    return Inputs.getMouseInCanvas(
+      Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
+      Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+    )
+  end, Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2)
+  self.uiSticker.scaleX = 0
+  self.uiSticker.scaleY = 0
+  Stats:animateDiceFaceAppear(self.uiSticker, 0.1)
+
+  --Ciggie
+  local ciggieTest = CiggieTypes.Ebb:new()
+  self.uiCiggie = Ciggie:new(ciggieTest, 700, 530, false, true, function()
+    return Inputs.getMouseInCanvas(
+      Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
+      Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+    )
+  end, nil)
+  self.uiCiggie.layer = 4
+  self.uiCiggie.baseHorizontal = true
+  self.uiCiggie.scaleX = 0
+  self.uiCiggie.scaleY = 0
+  Stats:animateDiceFaceAppear(self.uiCiggie, 0.3)
+
+  --Coffee
+  self.coffeeButton = CoffeeButton:new(960 + 330 / 2, 530, function()
+    return Inputs.getMouseInCanvas(
+      Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
+      Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+    )
+  end, 7, G.game.dummyRun)
+  self.coffeeButton.scale = 0
+  self.coffeeButton.animator:addDelay(0.5)
+  self.coffeeButton.animator:addGroup({
+    {
+      property = "scale",
+      from = 0,
+      targetValue = 1,
+      duration = 0.4,
+      easing = AnimationUtils.Easing.easeOutBack,
+    },
+  })
+
+  --Texts
+  self.objectTexts = {}
+  --Sticker
+  local text = UI.Text.TextWavy:new("Sticker", 275, 390, { centered = true, speed = 1, revealSpeed = 0.3, time = -0.1 })
+  table.insert(self.objectTexts, text)
+
+  local text =
+    UI.Text.TextWavy:new("Magic Wand", 700, 390, { centered = true, speed = 1, revealSpeed = 0.3, time = -0.3 })
+  table.insert(self.objectTexts, text)
+
+  local text =
+    UI.Text.TextWavy:new("Coffee", 960 + 330 / 2, 390, { centered = true, speed = 1, revealSpeed = 0.3, time = -0.5 })
+  table.insert(self.objectTexts, text)
+end
+
+function Stats:resetObjectStats() end
+
+function Stats:updateObjectsStats(dt)
+  self.uiSticker:update(dt)
+  self.uiCiggie:update(dt)
+  self.coffeeButton:update(dt)
+  for i, text in next, self.objectTexts do
+    text:update(dt)
+  end
+end
+
+function Stats:drawObjectStats()
+  UI.Text.drawFormattedText("Most used Objects", 700, 300, Fonts.soraCredits, 1000, true, { color = { 1, 1, 1, 1 } })
+
+  self.uiSticker:draw()
+  self.uiCiggie:draw()
+  self.coffeeButton:draw()
+
+  for i, text in next, self.objectTexts do
+    text:draw()
+  end
+end
+
+--UTILS--
 function Stats:changeCategory(category)
   if self.category == category then
     return
@@ -342,6 +439,12 @@ function Stats:changeCategory(category)
     self:createDiceStats()
   else
     self:resetDiceStats()
+  end
+
+  if self.category == 3 then
+    self:createObjectStats()
+  else
+    self:resetObjectStats()
   end
 
   print(self.category)
