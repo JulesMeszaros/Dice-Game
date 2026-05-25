@@ -270,6 +270,11 @@ function Stats:createDiceStats()
       )
     end, nil, Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2)
 
+    df.oscillatingScale, df.oscillatingY, df.oscillatingAngle = true, true, true
+    df.oscilScaleAmp, df.oscilYAmp, df.oscilAngleAmp = 0.05, 10, 0.1
+    df.oscilScaleP, df.oscilYP, df.oscilAngleP = 5, 10, 12
+    --df.oscilScale0, df.oscilYO, df.oscilAngleO = 3, 1, 0
+
     df.scaleX = 0
     df.scaleY = 0
     df.drawShadow = true

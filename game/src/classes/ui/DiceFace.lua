@@ -44,6 +44,23 @@ function DiceFace:new(
   self.representedObject = representedFace --Sets the represented face of the dice
   self:updateSprite() --Updates the sprite a first time with the given parameters
 
+  --Oscillations
+  self.oscillatingScale = false
+  self.oscillatingAngle = false
+  self.oscillatingY = false
+  --Amplitude
+  self.oscilYAmp = 0
+  self.oscilAngleAmp = 0
+  self.oscilScaleAmp = 0
+  --Periode en secondes
+  self.oscilYP = 1
+  self.oscilAngleP = 1
+  self.oscilScaleP = 1
+  --Offsets
+  self.oscilYO = math.random(1, 100)
+  self.oscilAngleO = math.random(1, 100)
+  self.oscilScaleO = math.random(1, 100)
+
   --Position
   self.targetX = x
   self.targetY = y
@@ -146,44 +163,42 @@ function DiceFace:draw()
   local layer = self.layer or 4
   local px, py = G.calculateParalaxeOffset(layer)
 
+  local oy, oAngle, oScale = self:getOscillation(love.timer.getTime())
+
   self.rainbowShader:send("time", self.rotation + self.scaleX * 2 + 30)
   self.rainbowShader:send("frequency", 0.3)
   self.rainbowShader:send("intensity", 0.2)
-  --self.rainbowShader:send("scale", 50)
   self.rainbowShader:send("gridSize", 50)
 
-  --Dé
   love.graphics.setBlendMode("alpha", "premultiplied")
-  -- love.graphics.setShader(self.rainbowShader)
 
   if self.isBeingDragged or self.drawShadow then
     love.graphics.setColor(0, 0, 0, 0.3)
     love.graphics.draw(
       self.diceCanvas,
       self.x + px - 20,
-      self.y + py + 20,
-      self.rotation,
-      self.scaleX,
-      self.scaleY,
+      self.y + py + 20 + oy,
+      self.rotation + oAngle,
+      self.scaleX * oScale,
+      self.scaleY * oScale,
       self.diceCanvas:getWidth() / 2,
       self.diceCanvas:getHeight() / 2
     )
-
     love.graphics.setColor(1, 1, 1, 1)
   end
+
   love.graphics.draw(
     self.diceCanvas,
     self.x + px,
-    self.y + py,
-    self.rotation,
-    self.scaleX,
-    self.scaleY,
+    self.y + py + oy,
+    self.rotation + oAngle,
+    self.scaleX * oScale,
+    self.scaleY * oScale,
     self.diceCanvas:getWidth() / 2,
     self.diceCanvas:getHeight() / 2
   )
 
   love.graphics.setShader()
-  -- Restore default blend mode
   love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
@@ -513,6 +528,26 @@ function springUpdate(current, target, velocity, dt, frequency, damping)
   velocity = velocity + accel * dt
   current = current + velocity * dt
   return current, velocity
+end
+
+function DiceFace:getOscillation(time)
+  local x = 0
+  local angle = 0
+  local scale = 1
+
+  if self.oscillatingY then
+    x = math.sin((time + self.oscilYO) * (2 * math.pi / self.oscilYP)) * self.oscilYAmp
+  end
+
+  if self.oscillatingAngle then
+    angle = math.sin((time + self.oscilAngleO) * (2 * math.pi / self.oscilAngleP)) * self.oscilAngleAmp
+  end
+
+  if self.oscillatingScale then
+    scale = 1 + math.sin((time + self.oscilScaleO) * (2 * math.pi / self.oscilScaleP)) * self.oscilScaleAmp
+  end
+
+  return x, angle, scale
 end
 
 return DiceFace
