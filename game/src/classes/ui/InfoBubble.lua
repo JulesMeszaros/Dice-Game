@@ -126,8 +126,6 @@ function InfoBubble:draw()
     oy = self.canvas:getHeight()
   end
 
-  print(x + self.canvas:getWidth() / 2 + 20 > (self.screen.canvas:getWidth() + self.overflowAllowed))
-
   --On repositionne la bulle si j'amais elle dépasse du cadre
   if x + self.canvas:getWidth() / 2 + 20 > (self.screen.canvas:getWidth() + self.overflowAllowed) then
     x = self.screen.canvas:getWidth() - 20 - self.canvas:getWidth() / 2

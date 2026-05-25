@@ -125,7 +125,9 @@ function getTopDices(n)
   n = n or 5
   local sorted = {}
   for id, count in pairs(G.saveManager.data.stats.dices) do
-    table.insert(sorted, { id = id, count = count })
+    if id ~= 1 then
+      table.insert(sorted, { id = id, count = count })
+    end
   end
   table.sort(sorted, function(a, b)
     return a.count > b.count
