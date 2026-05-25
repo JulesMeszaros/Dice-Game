@@ -97,9 +97,6 @@ function Stats:new()
   )
   self:addButton(dicesButton)
 
-  --Création de l'écran de dice stats
-  self:createDiceStats()
-
   self:show()
 
   return self
@@ -251,6 +248,11 @@ end
 
 --Creation de l'écran
 function Stats:createDiceStats()
+  --TODO :
+  --Ajouter animation
+  --Reset quand on switch d'écran
+  --Oscillation des dés
+  --Ombre aux dés
   local topDices = getTopDices(5)
 
   self.faceObjects = {}
@@ -289,6 +291,13 @@ function Stats:createDiceStats()
   end
 end
 
+function Stats:resetDiceStats()
+  self.faceObjects = {}
+  self.uiFaces = {}
+  self.positionTexts = {}
+  self.triggerTexts = {}
+end
+
 --Update de l'écran
 function Stats:updateDiceStats(dt)
   for i, face in next, self.uiFaces do
@@ -315,6 +324,12 @@ function Stats:changeCategory(category)
 
   self.category = category
 
+  if self.category == 2 then
+    self:createDiceStats()
+  else
+    self:resetDiceStats()
+  end
+
   print(self.category)
 end
 
@@ -322,10 +337,12 @@ function Stats:getCurrentlyHoveredDice()
   self.previouslyHoveredFace = self.currentlyHoveredObject
   self.currentlyHoveredObject = nil
 
-  for key, diceface in next, self.uiFaces do
-    if diceface:isHovered() then
-      self.currentlyHoveredObject = diceface
-      break
+  if self.category == 2 then
+    for key, diceface in next, self.uiFaces do
+      if diceface:isHovered() then
+        self.currentlyHoveredObject = diceface
+        break
+      end
     end
   end
 end
