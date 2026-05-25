@@ -16,6 +16,7 @@ function Stats:new()
   local self = setmetatable(Panel:new(1400, 1000), Stats)
 
   self.infoBubble = InfoBubble:new(self)
+  self.infoBubble.overflowAllowed = 1000
   --[[
 	Catégories possibles = 
 	1 : Stats générales
@@ -147,7 +148,6 @@ function Stats:update(dt)
     self.infoBubble.x, self.infoBubble.y =
       self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX,
       self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
-    --self.infoBubble.x, self.infoBubble.y = self.currentlyHoveredObject.x , self.currentlyHoveredObject.y
 
     self.infoBubble:update(dt)
   end
@@ -169,11 +169,14 @@ function Stats:updateCanvas()
   elseif self.category == 3 then
   end
 
+  love.graphics.setCanvas(currentCanvas)
+end
+
+function Stats:draw()
+  Panel.draw(self)
   if self.currentlyHoveredObject and not self.dragAndDroppedObject then
     self.infoBubble:draw()
   end
-
-  love.graphics.setCanvas(currentCanvas)
 end
 
 --Draw General stats
@@ -257,12 +260,12 @@ function Stats:createDiceStats()
   print("///")
   for i, dice in next, topDices do
     local fo = Facetypes[G.faceIds[tostring(dice["id"])]]:new(math.random(1, 6), 10)
-    local df = DiceFace:new(nil, fo, (127 + 75) + ((i - 1) * 249), 550, 150, false, true, function()
+    local df = DiceFace:new(nil, fo, (127 + 75) + ((i - 1) * 249), 550, 120, false, true, function()
       return Inputs.getMouseInCanvas(
         Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
         Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
       )
-    end, nil, 0, 0)
+    end, nil, Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2)
 
     --Creation de la position en Wavy
     local text = UI.Text.TextWavy:new(
