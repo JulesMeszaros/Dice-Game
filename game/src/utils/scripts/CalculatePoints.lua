@@ -90,7 +90,7 @@ function CalculatePoints.brelanBasePoints(dices, level)
   elseif G.currentRun.ThreeOAKFaciliter == true and maxDistrib == 2 then
     for k, d in next, dices do
       if d:getCurrentFaceObject().blank == false then
-        if d:getCurrentFaceObject().faceValue == maxDistribN and usedDices < 2 then
+        if d:getCurrentFaceObject().faceValue == maxDistribN and nUsedDices < 2 then
           score = score + d:getCurrentFaceObject().faceValue
           nUsedDices = nUsedDices + 1
 
