@@ -274,11 +274,6 @@ end
 
 --Creation de l'écran
 function Stats:createDiceStats()
-  --TODO :
-  --Ajouter animation
-  --Reset quand on switch d'écran
-  --Oscillation des dés
-  --Ombre aux dés
   local topDices = getTopDices(5)
 
   self.faceObjects = {}
@@ -357,6 +352,11 @@ end
 --Ecran des objets
 
 function Stats:createObjectStats()
+  --TODO :
+  --Oscillation des objets
+  --Ombres
+  --Info bulles
+
   self.objectTexts = {}
   --Creation des objets
   --Sticker
@@ -373,6 +373,14 @@ function Stats:createObjectStats()
     self.uiSticker.scaleX = 0
     self.uiSticker.scaleY = 0
     Stats:animateDiceFaceAppear(self.uiSticker, 0.1)
+
+    local textTriggers = UI.Text.TextWavy:new(
+      tostring(count) .. "x",
+      275,
+      675,
+      { centered = true, speed = 1, revealSpeed = 0, time = -0.1, font = Fonts.soraMedium }
+    )
+    table.insert(self.objectTexts, textTriggers)
 
     local text =
       UI.Text.TextWavy:new("Sticker", 275, 390, { centered = true, speed = 1, revealSpeed = 0.3, time = -0.1 })
@@ -394,6 +402,14 @@ function Stats:createObjectStats()
     self.uiCiggie.scaleX = 0
     self.uiCiggie.scaleY = 0
     Stats:animateDiceFaceAppear(self.uiCiggie, 0.3)
+
+    local textTriggers = UI.Text.TextWavy:new(
+      tostring(count) .. "x",
+      700,
+      675,
+      { centered = true, speed = 1, revealSpeed = 0, time = -0.3, font = Fonts.soraMedium }
+    )
+    table.insert(self.objectTexts, textTriggers)
   end
 
   --Coffee
@@ -416,6 +432,14 @@ function Stats:createObjectStats()
         easing = AnimationUtils.Easing.easeOutBack,
       },
     })
+
+    local textTriggers = UI.Text.TextWavy:new(
+      tostring(count) .. "x",
+      960 + 330 / 2,
+      675,
+      { centered = true, speed = 1, revealSpeed = 0, time = -0.5, font = Fonts.soraMedium }
+    )
+    table.insert(self.objectTexts, textTriggers)
   end
 
   --Texts
@@ -449,7 +473,15 @@ function Stats:updateObjectsStats(dt)
 end
 
 function Stats:drawObjectStats()
-  UI.Text.drawFormattedText("Most used Objects", 700, 300, Fonts.soraCredits, 1000, true, { color = { 1, 1, 1, 1 } })
+  UI.Text.drawFormattedText(
+    "Most bought & used Objects",
+    700,
+    300,
+    Fonts.soraCredits,
+    1000,
+    true,
+    { color = { 1, 1, 1, 1 } }
+  )
 
   if self.uiSticker then
     self.uiSticker:draw()
