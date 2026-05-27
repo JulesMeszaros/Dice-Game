@@ -159,6 +159,7 @@ function Ebb:new()
 
   self.name = "Ebb"
   self.description = "Restores your hands for every --figures--."
+  self.id = 6
 
   self.sprite = love.graphics.newImage("src/assets/sprites/ciggies/Ebb Cigarette.png")
   return self
@@ -179,6 +180,7 @@ function Channel:new()
 
   self.usableIn = "any"
 
+  self.id = 7
   self.name = "Channel"
   self.description = "Level Up your last leveled up --figure--."
 

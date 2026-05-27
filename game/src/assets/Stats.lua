@@ -23,7 +23,7 @@ function Stats:new(mainmenu)
   self.infoBubble = InfoBubble:new(self)
   self.infoBubble.overflowAllowed = 1000
   --[[
-	Catégories possibles = 
+	Catégories possibles =
 	1 : Stats générales
 	2 : Dés
 	3 : Cafés, Wands, Stickers
@@ -142,6 +142,20 @@ function getTopDices(n)
     table.insert(result, sorted[i])
   end
   return result
+end
+
+function Stats:getTopStat(stats)
+  if not stats or not next(stats) then
+    return nil, nil
+  end
+  local bestId, bestCount = nil, -math.huge
+  for id, count in pairs(stats) do
+    if count > bestCount then
+      bestCount = count
+      bestId = id
+    end
+  end
+  return bestId, bestCount
 end
 
 function Stats:update(dt)
@@ -343,57 +357,70 @@ end
 --Ecran des objets
 
 function Stats:createObjectStats()
+  self.objectTexts = {}
   --Creation des objets
   --Sticker
-  local stickerTest = StickerTypes.MoneyBagSticker:new()
-  self.uiSticker = Sticker:new(stickerTest, 275, 525, 150, false, true, function()
-    return Inputs.getMouseInCanvas(
-      Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
-      Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
-    )
-  end, Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2)
-  self.uiSticker.scaleX = 0
-  self.uiSticker.scaleY = 0
-  Stats:animateDiceFaceAppear(self.uiSticker, 0.1)
+  local id, count = self:getTopStat(G.saveManager.data.stats.stickers)
+  print(id, count)
+  if id then
+    local stickerTest = StickerTypes[G.stickerIds[tostring(id)]]:new()
+    self.uiSticker = Sticker:new(stickerTest, 275, 525, 150, false, true, function()
+      return Inputs.getMouseInCanvas(
+        Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
+        Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+      )
+    end, Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2)
+    self.uiSticker.scaleX = 0
+    self.uiSticker.scaleY = 0
+    Stats:animateDiceFaceAppear(self.uiSticker, 0.1)
 
+    local text =
+      UI.Text.TextWavy:new("Sticker", 275, 390, { centered = true, speed = 1, revealSpeed = 0.3, time = -0.1 })
+    table.insert(self.objectTexts, text)
+  end
   --Ciggie
-  local ciggieTest = CiggieTypes.Ebb:new()
-  self.uiCiggie = Ciggie:new(ciggieTest, 700, 530, false, true, function()
-    return Inputs.getMouseInCanvas(
-      Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
-      Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
-    )
-  end, nil)
-  self.uiCiggie.layer = 4
-  self.uiCiggie.baseHorizontal = true
-  self.uiCiggie.scaleX = 0
-  self.uiCiggie.scaleY = 0
-  Stats:animateDiceFaceAppear(self.uiCiggie, 0.3)
+  local id, count = self:getTopStat(G.saveManager.data.stats.wands)
+  if id then
+    print(G.wandIds[tostring(id)])
+    local ciggieTest = CiggieTypes[G.wandIds[tostring(id)]]:new()
+    self.uiCiggie = Ciggie:new(ciggieTest, 700, 530, false, true, function()
+      return Inputs.getMouseInCanvas(
+        Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
+        Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+      )
+    end, nil)
+    self.uiCiggie.layer = 4
+    self.uiCiggie.baseHorizontal = true
+    self.uiCiggie.scaleX = 0
+    self.uiCiggie.scaleY = 0
+    Stats:animateDiceFaceAppear(self.uiCiggie, 0.3)
+  end
 
   --Coffee
-  self.coffeeButton = CoffeeButton:new(960 + 330 / 2, 530, function()
-    return Inputs.getMouseInCanvas(
-      Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
-      Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
-    )
-  end, 7, G.game.dummyRun)
-  self.coffeeButton.scale = 0
-  self.coffeeButton.animator:addDelay(0.5)
-  self.coffeeButton.animator:addGroup({
-    {
-      property = "scale",
-      from = 0,
-      targetValue = 1,
-      duration = 0.4,
-      easing = AnimationUtils.Easing.easeOutBack,
-    },
-  })
+  local id, count = self:getTopStat(G.saveManager.data.stats.coffees)
+  if id then
+    self.coffeeButton = CoffeeButton:new(960 + 330 / 2, 530, function()
+      return Inputs.getMouseInCanvas(
+        Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
+        Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+      )
+    end, id, G.game.dummyRun)
+    self.coffeeButton.scale = 0
+    self.coffeeButton.animator:addDelay(0.5)
+    self.coffeeButton.animator:addGroup({
+      {
+        property = "scale",
+        from = 0,
+        targetValue = 1,
+        duration = 0.4,
+        easing = AnimationUtils.Easing.easeOutBack,
+      },
+    })
+  end
 
   --Texts
-  self.objectTexts = {}
+
   --Sticker
-  local text = UI.Text.TextWavy:new("Sticker", 275, 390, { centered = true, speed = 1, revealSpeed = 0.3, time = -0.1 })
-  table.insert(self.objectTexts, text)
 
   local text =
     UI.Text.TextWavy:new("Magic Wand", 700, 390, { centered = true, speed = 1, revealSpeed = 0.3, time = -0.3 })
@@ -407,9 +434,15 @@ end
 function Stats:resetObjectStats() end
 
 function Stats:updateObjectsStats(dt)
-  self.uiSticker:update(dt)
-  self.uiCiggie:update(dt)
-  self.coffeeButton:update(dt)
+  if self.uiSticker then
+    self.uiSticker:update(dt)
+  end
+  if self.uiCiggie then
+    self.uiCiggie:update(dt)
+  end
+  if self.coffeeButton then
+    self.coffeeButton:update(dt)
+  end
   for i, text in next, self.objectTexts do
     text:update(dt)
   end
@@ -418,9 +451,15 @@ end
 function Stats:drawObjectStats()
   UI.Text.drawFormattedText("Most used Objects", 700, 300, Fonts.soraCredits, 1000, true, { color = { 1, 1, 1, 1 } })
 
-  self.uiSticker:draw()
-  self.uiCiggie:draw()
-  self.coffeeButton:draw()
+  if self.uiSticker then
+    self.uiSticker:draw()
+  end
+  if self.uiCiggie then
+    self.uiCiggie:draw()
+  end
+  if self.coffeeButton then
+    self.coffeeButton:draw()
+  end
 
   for i, text in next, self.objectTexts do
     text:draw()

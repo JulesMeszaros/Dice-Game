@@ -1,4 +1,5 @@
 local Animator = require("src.utils.Animator")
+local CiggieTypes = require("game.src.classes.CiggieTypes")
 local AudioUtils = require("src.utils.AudioUtils")
 local Shaders = require("src.utils.Shaders")
 local Inputs = require("src.utils.scripts.Inputs")
@@ -77,6 +78,7 @@ G.faceTypes = FaceTypes
 G.stickerNames = {}
 G.basicStickers = {}
 G.holoStickers = {}
+G.stickerIds = {}
 
 for key, facetype in next, FaceTypes do
   local f = facetype:new(1, 10)
@@ -110,11 +112,21 @@ for key, facetype in next, StickerTypes do
     G.basicStickers[key] = s
   end
   G.stickerNames[key] = s.name
+  G.stickerIds[tostring(s.id)] = key
 end
 
 G.stickerNames = GenerateRandom.sorted(G.stickerNames)
 G.basicStickers = GenerateRandom.sorted(G.basicStickers)
 G.holoStickers = GenerateRandom.sorted(G.holoStickers)
+
+--On fait idem avec les wands
+G.wandIds = {}
+for key, wand in next, CiggieTypes do
+  local c = wand:new()
+  G.wandIds[tostring(c.id)] = key
+  print(G.wandIds[tostring(c.id)])
+  print(c.name)
+end
 
 if not G.saveManager.data.settings then
   G.saveManager.data.settings = {}
