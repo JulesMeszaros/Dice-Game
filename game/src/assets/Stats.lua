@@ -400,6 +400,9 @@ function Stats:createObjectStats()
     self.uiCiggie.baseHorizontal = true
     self.uiCiggie.scaleX = 0
     self.uiCiggie.scaleY = 0
+    self.uiCiggie.absoluteX, self.uiCiggie.absoluteY =
+      Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+
     Stats:animateDiceFaceAppear(self.uiCiggie, 0.3)
 
     local textTriggers = UI.Text.TextWavy:new(
@@ -420,6 +423,10 @@ function Stats:createObjectStats()
         Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
       )
     end, id, G.game.dummyRun)
+
+    self.coffeeButton.absoluteX, self.coffeeButton.absoluteY =
+      Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+
     self.coffeeButton.scale = 0
     self.coffeeButton.animator:addDelay(0.5)
     self.coffeeButton.animator:addGroup({

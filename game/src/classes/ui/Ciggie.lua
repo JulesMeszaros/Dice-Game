@@ -182,9 +182,9 @@ function Ciggie:isHovered()
   end
 
   local layer = self.layer or 1
+  local pos = self.mousePosition()
 
-  local vx, vy = InputsUtils.getVirtualMousePosition(1)
-  -- Décale les coordonnées souris par rapport au centre de rotation
+  local vx, vy = pos.x, pos.y -- Décale les coordonnées souris par rapport au centre de rotation
   local dx = vx - self.x
   local dy = vy - self.y
 
