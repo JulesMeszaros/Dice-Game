@@ -161,7 +161,6 @@ end
 function Stats:update(dt)
   --Update de la classe mère
   Panel.update(self, dt)
-
   self:getCurrentlyHoveredDice()
   if self.currentlyHoveredObject and not self.dragAndDroppedObject then
     --Info bubble (wip)
@@ -532,6 +531,26 @@ function Stats:getCurrentlyHoveredDice()
         break
       end
     end
+  elseif self.category == 3 then
+    if self.uiCiggie:isHovered() then
+      self.currentlyHoveredObject = self.uiCiggie
+    elseif self.uiSticker:isHovered() then
+      self.currentlyHoveredObject = self.uiSticker
+    elseif self.coffeeButton:isHovered() then
+      self.currentlyHoveredObject = self.coffeeButton
+    end
+  end
+end
+
+function Stats:getCurrentlyHoveredObject()
+  self.currentlyHoveredObject = nil
+
+  if self.uiCiggie:isHovered() then
+    self.currentlyHoveredObject = self.uiCiggie
+  elseif self.uiSticker:isHovered() then
+    self.currentlyHoveredObject = self.uiSticker
+  elseif self.coffeeButton:isHovered() then
+    self.currentlyHoveredObject = self.coffeeButton
   end
 end
 
