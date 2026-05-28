@@ -47,6 +47,23 @@ function CoffeeButton:new(x, y, mousePosition, figureIndex, run)
   self.absoluteX = 0
   self.absoluteY = 0
 
+  --Oscillations
+  self.oscillatingScale = false
+  self.oscillatingAngle = false
+  self.oscillatingY = false
+  --Amplitude
+  self.oscilYAmp = 0
+  self.oscilAngleAmp = 0
+  self.oscilScaleAmp = 0
+  --Periode en secondes
+  self.oscilYP = 1
+  self.oscilAngleP = 1
+  self.oscilScaleP = 1
+  --Offsets
+  self.oscilYO = math.random(1, 100)
+  self.oscilAngleO = math.random(1, 100)
+  self.oscilScaleO = math.random(1, 100)
+
   return self
 end
 
@@ -95,6 +112,38 @@ function CoffeeButton:updateCanvas()
   love.graphics.setCanvas(currentCanvas)
 end
 
+function CoffeeButton:draw()
+  local layer = self.layer or 4
+  local px, py = G.calculateParalaxeOffset(layer)
+  local oy, oAngle, oScale = self:getOscillation(love.timer.getTime())
+
+  if self.drawShadow == true then
+    love.graphics.setColor(0, 0, 0, 0.3)
+    love.graphics.draw(
+      self.uiCanvas,
+      self.x + px - 20,
+      self.y + py + oy + 20,
+      0 + oAngle,
+      self.scale * oScale,
+      self.scale * oScale,
+      self.uiCanvas:getWidth() / 2,
+      self.uiCanvas:getHeight() / 2
+    )
+    love.graphics.setColor(1, 1, 1, 1)
+  end
+
+  love.graphics.draw(
+    self.uiCanvas,
+    self.x + px,
+    self.y + py + oy,
+    0 + oAngle,
+    self.scale * oScale,
+    self.scale * oScale,
+    self.uiCanvas:getWidth() / 2,
+    self.uiCanvas:getHeight() / 2
+  )
+end
+
 --Interaction functions
 function CoffeeButton:clickAction()
   if self.run.money >= Constants.BASE_COFFEE_PRICE and self.used == false then
@@ -121,6 +170,26 @@ function CoffeeButton:clickAction()
       end
     end
   end
+end
+
+function CoffeeButton:getOscillation(time)
+  local x = 0
+  local angle = 0
+  local scale = 1
+
+  if self.oscillatingY then
+    x = math.sin((time + self.oscilYO) * (2 * math.pi / self.oscilYP)) * self.oscilYAmp
+  end
+
+  if self.oscillatingAngle then
+    angle = math.sin((time + self.oscilAngleO) * (2 * math.pi / self.oscilAngleP)) * self.oscilAngleAmp
+  end
+
+  if self.oscillatingScale then
+    scale = 1 + math.sin((time + self.oscilScaleO) * (2 * math.pi / self.oscilScaleP)) * self.oscilScaleAmp
+  end
+
+  return x, angle, scale
 end
 
 return CoffeeButton

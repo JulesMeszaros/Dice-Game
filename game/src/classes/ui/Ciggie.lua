@@ -67,6 +67,23 @@ function Ciggie:new(ciggieObject, x, y, isSelectable, isHoverable, mousePosition
 
   self.topY = 0
 
+  --Oscillations
+  self.oscillatingScale = false
+  self.oscillatingAngle = false
+  self.oscillatingY = false
+  --Amplitude
+  self.oscilYAmp = 0
+  self.oscilAngleAmp = 0
+  self.oscilScaleAmp = 0
+  --Periode en secondes
+  self.oscilYP = 1
+  self.oscilAngleP = 1
+  self.oscilScaleP = 1
+  --Offsets
+  self.oscilYO = math.random(1, 100)
+  self.oscilAngleO = math.random(1, 100)
+  self.oscilScaleO = math.random(1, 100)
+
   return self
 end
 
@@ -102,15 +119,17 @@ function Ciggie:draw()
   local layer = self.layer or 1
   local px, py = G.calculateParalaxeOffset(layer)
 
-  if self.isBeingDragged then
+  local oy, oAngle, oScale = self:getOscillation(love.timer.getTime())
+
+  if self.isBeingDragged or self.drawShadow then
     love.graphics.setColor(0, 0, 0, 0.3)
     love.graphics.draw(
       self.canvas,
       self.x + px - 20,
-      self.y + py + 20,
-      self.rotation,
-      self.scaleX,
-      self.scaleY,
+      self.y + py + 20 + oy,
+      self.rotation + oAngle,
+      self.scaleX * oScale,
+      self.scaleY * oScale,
       self.canvas:getWidth() / 2,
       self.canvas:getHeight() / 2
     )
@@ -120,10 +139,10 @@ function Ciggie:draw()
   love.graphics.draw(
     self.canvas,
     self.x + px,
-    self.y + py,
-    self.rotation,
-    self.scaleX,
-    self.scaleY,
+    self.y + py + oy,
+    self.rotation + oAngle,
+    self.scaleX * oScale,
+    self.scaleY * oScale,
     self.canvas:getWidth() / 2,
     self.canvas:getHeight() / 2
   )
@@ -214,6 +233,26 @@ function Ciggie:releaseEvent() --S'active lorsqu'un click est complété
     self.targetY = self.anchorY
   end
   return wasReleased
+end
+
+function Ciggie:getOscillation(time)
+  local x = 0
+  local angle = 0
+  local scale = 1
+
+  if self.oscillatingY then
+    x = math.sin((time + self.oscilYO) * (2 * math.pi / self.oscilYP)) * self.oscilYAmp
+  end
+
+  if self.oscillatingAngle then
+    angle = math.sin((time + self.oscilAngleO) * (2 * math.pi / self.oscilAngleP)) * self.oscilAngleAmp
+  end
+
+  if self.oscillatingScale then
+    scale = 1 + math.sin((time + self.oscilScaleO) * (2 * math.pi / self.oscilScaleP)) * self.oscilScaleAmp
+  end
+
+  return x, angle, scale
 end
 
 return Ciggie

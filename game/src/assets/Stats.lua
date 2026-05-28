@@ -279,6 +279,7 @@ function Stats:createDiceStats()
   self.uiFaces = {}
   self.positionTexts = {}
   self.triggerTexts = {}
+
   print("///")
   for i, dice in next, topDices do
     local fo = Facetypes[G.faceIds[tostring(dice["id"])]]:new(math.random(1, 6), 10)
@@ -373,6 +374,11 @@ function Stats:createObjectStats()
     self.uiSticker.scaleY = 0
     Stats:animateDiceFaceAppear(self.uiSticker, 0.1)
 
+    self.uiSticker.oscillatingScale, self.uiSticker.oscillatingY, self.uiSticker.oscillatingAngle = true, true, true
+    self.uiSticker.oscilScaleAmp, self.uiSticker.oscilYAmp, self.uiSticker.oscilAngleAmp = 0.05, 10, 0.1
+    self.uiSticker.oscilScaleP, self.uiSticker.oscilYP, self.uiSticker.oscilAngleP = 5, 10, 12
+    self.uiSticker.drawShadow = true
+
     local textTriggers = UI.Text.TextWavy:new(
       tostring(count) .. "x",
       275,
@@ -402,6 +408,11 @@ function Stats:createObjectStats()
     self.uiCiggie.scaleY = 0
     self.uiCiggie.absoluteX, self.uiCiggie.absoluteY =
       Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+    self.uiCiggie.drawShadow = true
+
+    self.uiCiggie.oscillatingScale, self.uiCiggie.oscillatingY, self.uiCiggie.oscillatingAngle = true, true, true
+    self.uiCiggie.oscilScaleAmp, self.uiCiggie.oscilYAmp, self.uiCiggie.oscilAngleAmp = 0.05, 10, 0.1
+    self.uiCiggie.oscilScaleP, self.uiCiggie.oscilYP, self.uiCiggie.oscilAngleP = 5, 10, 12
 
     Stats:animateDiceFaceAppear(self.uiCiggie, 0.3)
 
@@ -439,6 +450,11 @@ function Stats:createObjectStats()
       },
     })
 
+    self.coffeeButton.drawShadow = true
+    self.coffeeButton.oscillatingScale, self.coffeeButton.oscillatingY, self.coffeeButton.oscillatingAngle =
+      true, true, true
+    self.coffeeButton.oscilScaleAmp, self.coffeeButton.oscilYAmp, self.coffeeButton.oscilAngleAmp = 0.05, 10, 0.1
+    self.coffeeButton.oscilScaleP, self.coffeeButton.oscilYP, self.coffeeButton.oscilAngleP = 5, 10, 12
     local textTriggers = UI.Text.TextWavy:new(
       tostring(count) .. "x",
       960 + 330 / 2,
