@@ -26,6 +26,26 @@ function Collection:new(mainmenu)
 
   self.run = G.game.dummyRun
 
+  --Ajout des elements d'UI
+  self:addImage(Sprites.COLLECTION_LABEL, 800, 95, { cx = 250, cy = 65 })
+
+  --Bouton retour
+  local backButton = Button:new(
+    function()
+      self:hide()
+    end,
+    "src/assets/sprites/ui/Home Button.png",
+    800,
+    925,
+    660,
+    100,
+    nil,
+    function()
+      return Inputs.getMouseInCanvas(0, 0)
+    end
+  )
+  self:addButton(backButton)
+
   self:show()
 
   return self

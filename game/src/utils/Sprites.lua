@@ -136,4 +136,5 @@ Sprites.VIDEO_LABEL = love.graphics.newImage("src/assets/sprites/ui/Video Label.
 Sprites.AUDIO_LABEL = love.graphics.newImage("src/assets/sprites/ui/Audio Label.png")
 Sprites.GAME_LABEL = love.graphics.newImage("src/assets/sprites/ui/Game Label.png")
 Sprites.STATS_LABEL = love.graphics.newImage("src/assets/sprites/ui/StatsButton.png")
+Sprites.COLLECTION_LABEL = love.graphics.newImage("src/assets/sprites/ui/CollectionButton.png")
 return Sprites
