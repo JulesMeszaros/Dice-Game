@@ -1,3 +1,4 @@
+local Collection = require("game.src.screens.Collection")
 local Stats = require("game.src.assets.Stats")
 local Panel = require("src.classes.ui.Panel")
 local Credits = require("src.screens.Credits")
@@ -172,7 +173,7 @@ function MainMenu:new()
   )
   self.uiElements.buttons["collection"] = Button:new(
     function()
-      print("collection")
+      local collectionScreen = Collection:new(self)
     end,
     "src/assets/sprites/ui/CollectionButton.png",
     1370 + 500 / 2,
@@ -212,8 +213,6 @@ function MainMenu:new()
       return Inputs.getMouseInCanvas(0, 0)
     end
   )
-
-  self.uiElements.buttons["collection"]:setActivated(false)
 
   --Boutons de liens
   self.uiElements.buttons["website"] = Button:new(
