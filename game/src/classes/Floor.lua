@@ -1,4 +1,4 @@
-local CiggieTypes = require("game.src.classes.CiggieTypes")
+local CiggieTypes = require("src.classes.CiggieTypes")
 local Constants = require("src.utils.Constants")
 local FaceTypes = require("src.classes.FaceTypes")
 local Round = require("src.classes.Round")
