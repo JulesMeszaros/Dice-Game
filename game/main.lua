@@ -1,5 +1,5 @@
 local Animator = require("src.utils.Animator")
-local CiggieTypes = require("game.src.classes.CiggieTypes")
+local CiggieTypes = require("src.classes.CiggieTypes")
 local AudioUtils = require("src.utils.AudioUtils")
 local Shaders = require("src.utils.Shaders")
 local Inputs = require("src.utils.scripts.Inputs")
