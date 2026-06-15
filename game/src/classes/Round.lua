@@ -1,5 +1,5 @@
 local AudioFiles = require("src.utils.AudioFiles")
-local CiggieTypes = require("game.src.classes.CiggieTypes")
+local CiggieTypes = require("src.classes.CiggieTypes")
 local TutorialEvents = require("src.utils.TutorialEvents")
 local Constants = require("src.utils.Constants")
 local DiceFace = require("src.classes.ui.DiceFace")

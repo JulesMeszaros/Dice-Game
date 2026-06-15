@@ -1,5 +1,5 @@
-local Collection = require("game.src.screens.Collection")
-local Stats = require("game.src.assets.Stats")
+local Collection = require("src.screens.Collection")
+local Stats = require("src.assets.Stats")
 local Panel = require("src.classes.ui.Panel")
 local Credits = require("src.screens.Credits")
 local Options = require("src.screens.Options")
