@@ -93,7 +93,6 @@ for key, facetype in next, FaceTypes do
   end
   G.faceNames[key] = f.name
 end
-print(G.faceIds[11])
 
 -- On trie les listes de noms pour qu'elles aient toujours le meme ordre
 -- Cela est nécessaire car la liste FaceTypes est non ordonnée, et donc il est impossible de prévoir
@@ -124,8 +123,6 @@ G.wandIds = {}
 for key, wand in next, CiggieTypes do
   local c = wand:new()
   G.wandIds[tostring(c.id)] = key
-  print(G.wandIds[tostring(c.id)])
-  print(c.name)
 end
 
 if not G.saveManager.data.settings then
@@ -134,10 +131,8 @@ if not G.saveManager.data.settings then
 end
 
 function G.loadSettings()
-  print("-----------")
   G.sessionSettings = {}
   local savedSettings = G.saveManager.data["settings"] or {}
-  print(savedSettings["paralaxeEffect"])
 
   local function loadSetting(saved, default)
     if saved == nil then
@@ -153,8 +148,6 @@ function G.loadSettings()
   --Audio settings
   G.sessionSettings.muteSounds = loadSetting(savedSettings["muteSounds"], false)
   G.sessionSettings.FXLevel = loadSetting(savedSettings["FXLevel"], 1)
-
-  print(G.sessionSettings.paralaxeEffect)
 end
 
 function G.saveSettings()

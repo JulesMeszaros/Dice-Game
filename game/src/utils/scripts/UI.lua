@@ -454,4 +454,29 @@ UI.ScreenWave = function(rx, ry)
   })
 end
 
+function UI.spaceBetween(l, n, center)
+  local positions = {}
+
+  if n <= 1 then
+    return { center or l / 2 }
+  end
+
+  local step = l / (n - 1)
+  local start
+
+  if center then
+    -- on décale pour que le milieu soit centré sur "center"
+    start = center - l / 2
+  else
+    -- comportement classique
+    start = 0
+  end
+
+  for i = 0, n - 1 do
+    positions[#positions + 1] = start + i * step
+  end
+
+  return positions
+end
+
 return UI

@@ -64,7 +64,6 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
   self.handRefunded = false --utilisée pour annuler l'utilisation d'une main
   self.usedCiggiesRound = 0
   --Récompenses fixes pour les rounds de tutorial
-  print(self.run.floorDeskNumber)
   if self.run.tutorial == true then
     --Premier round : Turnns
     if self.nround == 0 then
