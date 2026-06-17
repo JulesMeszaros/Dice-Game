@@ -172,6 +172,7 @@ function DiceFace:draw()
 
   love.graphics.setBlendMode("alpha", "premultiplied")
 
+  --Dessin de l'ombre
   if self.isBeingDragged or self.drawShadow then
     love.graphics.setColor(0, 0, 0, 0.3)
     love.graphics.draw(
@@ -187,6 +188,13 @@ function DiceFace:draw()
     love.graphics.setColor(1, 1, 1, 1)
   end
 
+  --Dessin du dé
+
+  --Si locked, on met en grayscale
+  if self.representedObject.locked then
+    love.graphics.setColor(0.3, 0.3, 0.3)
+  end
+
   love.graphics.draw(
     self.diceCanvas,
     self.x + px,
@@ -198,6 +206,7 @@ function DiceFace:draw()
     self.diceCanvas:getHeight() / 2
   )
 
+  love.graphics.setColor(1, 1, 1)
   love.graphics.setShader()
   love.graphics.setBlendMode("alpha", "alphamultiply")
 end

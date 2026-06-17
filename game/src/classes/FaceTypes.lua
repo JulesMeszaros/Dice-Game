@@ -2151,9 +2151,8 @@ function Upcycling:buildTriggerEffects(round)
 end
 
 function Upcycling:getDescription(run)
-  return "[[+20pts]] for each **reroll** spared in this building (currently : [[+"
-    .. 20 * G.currentRun.savedRerolls
-    .. "pts]])"
+  local run = G.currentRun or G.game.dummyRun
+  return "[[+20pts]] for each **reroll** spared in this building (currently : [[+" .. 20 * run.savedRerolls .. "pts]])"
 end
 
 FaceTypes.Upcycling = Upcycling

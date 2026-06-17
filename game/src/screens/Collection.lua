@@ -44,6 +44,33 @@ function slice(t, i, j)
   return result
 end
 
+local function animateDiceFaceAppear(diceface, timeOffset)
+  diceface.animator:addDelay(timeOffset)
+  diceface.animator:addGroup({
+    {
+      property = "scaleX",
+      from = 0,
+      targetValue = 1,
+      duration = 0.4,
+      easing = AnimationUtils.Easing.easeOutBack,
+    },
+    {
+      property = "scaleY",
+      from = 0,
+      targetValue = 1,
+      duration = 0.4,
+      easing = AnimationUtils.Easing.easeOutBack,
+    },
+    {
+      property = "rotation",
+      from = 0.4,
+      targetValue = 0,
+      duration = 0.4,
+      easing = AnimationUtils.Easing.easeOutBack,
+    },
+  })
+end
+
 local Collection = setmetatable({}, { __index = Panel })
 Collection.__index = Collection
 
@@ -135,11 +162,19 @@ function Collection:draw()
 end
 
 function Collection:update(dt)
+  self:getCurrentlyHoveredObject()
   --Update de la classe mère
   Panel.update(self, dt)
-
   for i, df in next, self.displayedDices do
     df:update(dt)
+  end
+  if self.currentlyHoveredObject and not self.dragAndDroppedObject then
+    --Info bubble (wip)
+    self.infoBubble.x, self.infoBubble.y =
+      self.currentlyHoveredObject.x + self.currentlyHoveredObject.absoluteX,
+      self.currentlyHoveredObject.y + self.currentlyHoveredObject.absoluteY
+
+    self.infoBubble:update(dt)
   end
 end
 
@@ -212,9 +247,12 @@ function Collection:initDices(p)
           Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
           Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
         )
-      end, nil, 0, 0)
+      end, nil, Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+)
 
       df.drawShadow = true
+      df.scaleX = 0
+      df.scaleY = 0
 
       df.oscillatingScale, df.oscillatingY, df.oscillatingAngle = true, false, false
       df.oscilScaleAmp, df.oscilYAmp, df.oscilAngleAmp = 0.05, 3, 0.01
@@ -222,12 +260,25 @@ function Collection:initDices(p)
 
       df.baseRotation = aOffset(x)
 
+      --Animation
+      animateDiceFaceAppear(df, _ * 0.05)
+
       table.insert(self.displayedDices, df)
       i = i + 1
       --On stop si jamais on a plus de dé à afficher
       if not idsToDisplay[i] then
         return
       end
+    end
+  end
+end
+
+function Collection:getCurrentlyHoveredObject()
+  self.currentlyHoveredObject = nil
+  for _, df in next, self.displayedDices do
+    if df:isHovered() then
+      self.currentlyHoveredObject = df
+      return
     end
   end
 end

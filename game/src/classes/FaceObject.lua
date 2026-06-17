@@ -10,49 +10,50 @@ local FaceObject = {}
 FaceObject.__index = FaceObject
 
 function FaceObject:new()
-	local self = setmetatable({}, FaceObject)
+  local self = setmetatable({}, FaceObject)
 
-	self.objectType = "Dice Face"
+  self.objectType = "Dice Face"
 
-	--Metadatas about the FaceObject
-	self.name = "FACE OBJECT"
-	self.id = 0
-	self.tier = "??"
-	self.description = "???"
+  --Metadatas about the FaceObject
+  self.name = "FACE OBJECT"
+  self.id = 0
+  self.tier = "??"
+  self.description = "???"
 
-	--Metadatas about the graphics of the FaceObject
-	self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
-	self.spriteSheet:setFilter("linear", "linear")
-	self.faceDimmension = 120 --sets the dimmensions for a face of the FaceObject in px (in the png)
-	self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
-		{ 120, 120 }, -- 1
-		{ 0, 120 }, -- 2
-		{ 120, 240 }, -- 3
-		{ 120, 0 }, -- 4
-		{ 240, 120 }, -- 5
-		{ 120, 360 }, -- 6
-	}
+  --Metadatas about the graphics of the FaceObject
+  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
+  self.spriteSheet:setFilter("linear", "linear")
+  self.faceDimmension = 120 --sets the dimmensions for a face of the FaceObject in px (in the png)
+  self.faceSpritesCoordinates = { --dict for the coordinate of the different faces in the spritesheet
+    { 120, 120 }, -- 1
+    { 0, 120 }, -- 2
+    { 120, 240 }, -- 3
+    { 120, 0 }, -- 4
+    { 240, 120 }, -- 5
+    { 120, 360 }, -- 6
+  }
 
-	--Booleans status
-	self.disabled = false
-	--About the type of effects the dice has
-	self.backup = false
-	self.ghost = false
-	self.replay = false
-	self.blank = false
-	self.fullHand = false
-	self.fullDice = false
-	self.first = false
-	self.unique = false
+  --Booleans status
+  self.disabled = false
+  self.locked = false
+  --About the type of effects the dice has
+  self.backup = false
+  self.ghost = false
+  self.replay = false
+  self.blank = false
+  self.fullHand = false
+  self.fullDice = false
+  self.first = false
+  self.unique = false
 
-	self.totaldisabled = 0
+  self.totaldisabled = 0
 
-	--Numbered status
-	self.faceValue = 1 --This is the face represented by the face (the number shown)
-	self.pointsValue = 0 --This is the points scored by the dice
-	self.totalTriggered = 0
-	self.roundTriggered = 0
-	return self
+  --Numbered status
+  self.faceValue = 1 --This is the face represented by the face (the number shown)
+  self.pointsValue = 0 --This is the points scored by the dice
+  self.totalTriggered = 0
+  self.roundTriggered = 0
+  return self
 end
 
 --==Trigger functions==--
@@ -61,133 +62,133 @@ end
 
 --Detecte si il est premier
 function FaceObject:isFirst(round)
-	local _, dicesOrder = round:getDicesOrder(round.usedDices)
-	return self == dicesOrder[1]:getCurrentFaceObject()
+  local _, dicesOrder = round:getDicesOrder(round.usedDices)
+  return self == dicesOrder[1]:getCurrentFaceObject()
 end
 
 --Detexte s'il est unique dans la main
 function FaceObject:isUnique(round)
-	local _, dicesOrder = round:getDicesOrder(round.usedDices)
-	for _, dice in next, dicesOrder do
-		if dice:getCurrentFaceObject() ~= self and dice:getCurrentFaceObject().name == self.name then
-			return false
-		end
-	end
-	return true
+  local _, dicesOrder = round:getDicesOrder(round.usedDices)
+  for _, dice in next, dicesOrder do
+    if dice:getCurrentFaceObject() ~= self and dice:getCurrentFaceObject().name == self.name then
+      return false
+    end
+  end
+  return true
 end
 
 --Detecte s'il est full hand (surement jamais utilisé...)
 function FaceObject:isFullHand(round)
-	local _, dicesOrder = round:getDicesOrder(round.usedDices)
-	for _, dice in next, dicesOrder do
-		if dice:getCurrentFaceObject().name ~= self.name then
-			return false
-		end
-	end
-	return true
+  local _, dicesOrder = round:getDicesOrder(round.usedDices)
+  for _, dice in next, dicesOrder do
+    if dice:getCurrentFaceObject().name ~= self.name then
+      return false
+    end
+  end
+  return true
 end
 
 --Construction de la chaîne d'effets (vides)
 function FaceObject:buildTriggerEffects(round)
-	return {}
+  return {}
 end
 function FaceObject:buildFirstEffects(round)
-	return {}
+  return {}
 end
 function FaceObject:buildReplayEffects(round)
-	return {}
+  return {}
 end
 function FaceObject:buildFullHandEffects(round)
-	return {}
+  return {}
 end
 function FaceObject:buildUniqueEffects(round)
-	return {}
+  return {}
 end
 
 function FaceObject:buildBackupEffects(round)
-	return {}
+  return {}
 end
 
 function FaceObject:buildEffects(round)
-	--Cette fonction construit la chaine d'effet totale de la face de dé, en commencant par les effets first, puis replay, puis fullHand, puis unique, puis classiques.
-	--Elle retourne une liste d'effets dans une grande liste.
-	local effects = {}
+  --Cette fonction construit la chaine d'effet totale de la face de dé, en commencant par les effets first, puis replay, puis fullHand, puis unique, puis classiques.
+  --Elle retourne une liste d'effets dans une grande liste.
+  local effects = {}
 
-	-- Compteurs incrémentés à chaque trigger, peu importe la source
-	self.totalTriggered = self.totalTriggered + 1
-	self.roundTriggered = self.roundTriggered + 1
+  -- Compteurs incrémentés à chaque trigger, peu importe la source
+  self.totalTriggered = self.totalTriggered + 1
+  self.roundTriggered = self.roundTriggered + 1
 
-	-- Stats de save
-	if G.saveManager.data["stats"]["dices"][self.id] then
-		G.saveManager.data["stats"]["dices"][self.id] = G.saveManager.data["stats"]["dices"][self.id] + 1
-	else
-		G.saveManager.data["stats"]["dices"][self.id] = 1
-	end
+  -- Stats de save
+  if G.saveManager.data["stats"]["dices"][self.id] then
+    G.saveManager.data["stats"]["dices"][self.id] = G.saveManager.data["stats"]["dices"][self.id] + 1
+  else
+    G.saveManager.data["stats"]["dices"][self.id] = 1
+  end
 
-	local function append(list)
-		for _, e in next, list do
-			table.insert(effects, e)
-		end
-	end
+  local function append(list)
+    for _, e in next, list do
+      table.insert(effects, e)
+    end
+  end
 
-	if self.first == true and self:isFirst(round) then
-		append(self:buildFirstEffects(round))
-	end
+  if self.first == true and self:isFirst(round) then
+    append(self:buildFirstEffects(round))
+  end
 
-	if self.roundTriggered > 1 and self.replay == true then
-		append(self:buildReplayEffects(round))
-	end
+  if self.roundTriggered > 1 and self.replay == true then
+    append(self:buildReplayEffects(round))
+  end
 
-	if self.fullHand == true and self:isFullHand(round) then
-		append(self:buildFullHandEffects(round))
-	end
+  if self.fullHand == true and self:isFullHand(round) then
+    append(self:buildFullHandEffects(round))
+  end
 
-	if self.unique == true and self:isUnique(round) then
-		append(self:buildUniqueEffects(round))
-	end
+  if self.unique == true and self:isUnique(round) then
+    append(self:buildUniqueEffects(round))
+  end
 
-	append(self:buildTriggerEffects(round))
+  append(self:buildTriggerEffects(round))
 
-	return effects
+  return effects
 end
 
 function FaceObject:builBackUpEffects(round)
-	--Cette fonction construit la chaine d'effet totale de la face de dé, en commencant par les effets first, puis replay, puis fullHand, puis unique, puis classiques.
-	--Elle retourne une liste d'effets dans une grande liste.
-	local effects = {}
+  --Cette fonction construit la chaine d'effet totale de la face de dé, en commencant par les effets first, puis replay, puis fullHand, puis unique, puis classiques.
+  --Elle retourne une liste d'effets dans une grande liste.
+  local effects = {}
 
-	-- Compteurs incrémentés à chaque trigger, peu importe la source
-	self.totalTriggered = self.totalTriggered + 1
-	self.roundTriggered = self.roundTriggered + 1
+  -- Compteurs incrémentés à chaque trigger, peu importe la source
+  self.totalTriggered = self.totalTriggered + 1
+  self.roundTriggered = self.roundTriggered + 1
 
-	-- Stats de save
-	if G.saveManager.data["stats"]["dices"][self.id] then
-		G.saveManager.data["stats"]["dices"][self.id] = G.saveManager.data["stats"]["dices"][self.id] + 1
-	else
-		G.saveManager.data["stats"]["dices"][self.id] = 1
-	end
+  -- Stats de save
+  if G.saveManager.data["stats"]["dices"][self.id] then
+    G.saveManager.data["stats"]["dices"][self.id] = G.saveManager.data["stats"]["dices"][self.id] + 1
+  else
+    G.saveManager.data["stats"]["dices"][self.id] = 1
+  end
 
-	local function append(list)
-		for _, e in next, list do
-			table.insert(effects, e)
-		end
-	end
+  local function append(list)
+    for _, e in next, list do
+      table.insert(effects, e)
+    end
+  end
 
-	append(self:buildBackupTriggerEffects(round))
+  append(self:buildBackupTriggerEffects(round))
 
-	return effects
+  return effects
 end
 
 function FaceObject:resetStats()
-	self.roundTriggered = 0
-	self.disabled = false
+  self.roundTriggered = 0
+  self.disabled = false
 end
 
 --Triggers effects
 
 function FaceObject:triggerEffect(round)
-	--Complementary effect triggered by the face
-	return
+  --Complementary effect triggered by the face
+  return
 end
 
 function FaceObject:backupEffect(round) end
@@ -197,49 +198,49 @@ function FaceObject:fullHandEffect(round) end
 function FaceObject:replayEffect(round) end
 
 function FaceObject:uniqueEffect(round)
-	--Effect that triggers only if the dice is the only dice this type in scored hand
+  --Effect that triggers only if the dice is the only dice this type in scored hand
 end
 
 function FaceObject:firstEffect(round)
-	--Effet qui se trigger si le dé est le scoré le plus à gauche
+  --Effet qui se trigger si le dé est le scoré le plus à gauche
 end
 
 --Sprite
 function FaceObject:getSpriteSheet()
-	return self.spriteSheet
+  return self.spriteSheet
 end
 
 function FaceObject:getQuad(i)
-	quad = love.graphics.newQuad(
-		self.faceSpritesCoordinates[i][1],
-		self.faceSpritesCoordinates[i][2], -- x, y dans l'image source
-		200,
-		200, -- largeur, hauteur de la portion
-		self.spriteSheet:getDimensions() -- taille totale de l'image
-	)
-	return quad
+  quad = love.graphics.newQuad(
+    self.faceSpritesCoordinates[i][1],
+    self.faceSpritesCoordinates[i][2], -- x, y dans l'image source
+    200,
+    200, -- largeur, hauteur de la portion
+    self.spriteSheet:getDimensions() -- taille totale de l'image
+  )
+  return quad
 end
 
 function FaceObject:getFaceDim()
-	return self.faceDimmension
+  return self.faceDimmension
 end
 
 function FaceObject:setDiceObject(diceObject)
-	self.diceObject = diceObject
+  self.diceObject = diceObject
 end
 
 function FaceObject:setFacePoints(n)
-	self.pointsValue = n
+  self.pointsValue = n
 end
 
 function FaceObject:getDescription(run)
-	local d = self.description or "[[No description.]]"
-	return d
+  local d = self.description or "[[No description.]]"
+  return d
 end
 
 function FaceObject:getPointsValue(run)
-	local p = self.pointsValue or 0
-	return p
+  local p = self.pointsValue or 0
+  return p
 end
 
 return FaceObject
