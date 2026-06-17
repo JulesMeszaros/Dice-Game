@@ -200,6 +200,10 @@ function Collection:initDices(p)
     return math.sin(x / 500) * 70
   end
 
+  local function aOffset(x)
+    return -math.cos(x / 500) * 0.2
+  end
+
   for __, y in next, yPos do
     for _, x in next, xPos do
       local fo = Facetypes[G.faceIds[idsToDisplay[i]]]:new(1, 10)
@@ -212,9 +216,12 @@ function Collection:initDices(p)
 
       df.drawShadow = true
 
-      df.oscillatingScale, df.oscillatingY, df.oscillatingAngle = false, true, true
+      df.oscillatingScale, df.oscillatingY, df.oscillatingAngle = true, false, false
       df.oscilScaleAmp, df.oscilYAmp, df.oscilAngleAmp = 0.05, 3, 0.01
       df.oscilScaleP, df.oscilYP, df.oscilAngleP = 30, 40, 45
+
+      df.baseRotation = aOffset(x)
+
       table.insert(self.displayedDices, df)
       i = i + 1
       --On stop si jamais on a plus de dé à afficher
