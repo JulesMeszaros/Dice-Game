@@ -729,6 +729,15 @@ function Shop:buyDiceFace(face, faceUI, key)
     --Update the positions of the dices
     self:updateInventoryPositions()
 
+    --Ajouter le dé aux dés débloqués
+    if not G.saveManager.data.unlockedDices then
+      G.saveManager.data.unlockedDices = {}
+      G.saveManager.data.unlockedDices[face.id] = true
+    else
+      G.saveManager.data.unlockedDices[face.id] = true
+    end
+    G.saveManager:save()
+
     if self.run.tutorial then
       self.animator:addDelay(0.2, TutorialEvents.shop2())
     end

@@ -242,13 +242,19 @@ function Collection:initDices(p)
   for __, y in next, yPos do
     for _, x in next, xPos do
       local fo = Facetypes[G.faceIds[idsToDisplay[i]]]:new(1, 10)
+      print(idsToDisplay[i], G.saveManager.data.unlockedDices[idsToDisplay[i]])
+      if G.saveManager.data["unlockedDices"][tonumber(idsToDisplay[i])] then
+        fo.locked = false
+      else
+        fo.locked = true
+      end
+
       local df = DiceFace:new(nil, fo, x, y - yOffset(x), 120, false, true, function()
         return Inputs.getMouseInCanvas(
           Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
           Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
         )
-      end, nil, Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
-)
+      end, nil, Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2, Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2)
 
       df.drawShadow = true
       df.scaleX = 0
