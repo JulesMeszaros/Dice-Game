@@ -55,9 +55,8 @@ function Collection:new(mainmenu)
 
   self.run = G.game.dummyRun
   self.pageNumber = 1
-  self.pageNumberText = love.graphics.newText(Fonts.soraCredits, tostring(self.pageNumber) .. "/10")
 
-  self.dicePerRow = 7
+  self.dicePerRow = 8
   self.dicePerCol = 3
   --Récupération des ID des dés dans l'ordre
   self.sortedIDs = get_sorted_keys(G.faceIds)
@@ -65,6 +64,7 @@ function Collection:new(mainmenu)
   print(self.nPages)
   --Récupération des id des dés
 
+  self.pageNumberText = love.graphics.newText(Fonts.soraCredits, tostring(self.pageNumber) .. "/" .. self.nPages)
   --Ajout des elements d'UI
   self:addImage(Sprites.COLLECTION_LABEL, 800, 95, { cx = 250, cy = 65 })
 
@@ -174,14 +174,17 @@ function Collection:changePage(i)
   if self.pageNumber > self.nPages then
     self.pageNumber = 1
   end
-  self.pageNumberText = love.graphics.newText(Fonts.soraCredits, tostring(self.pageNumber) .. "/10")
+  if self.pageNumber < 1 then
+    self.pageNumber = self.nPages
+  end
+  self.pageNumberText = love.graphics.newText(Fonts.soraCredits, tostring(self.pageNumber) .. "/" .. self.nPages)
   self:initDices(self.pageNumber)
 end
 
 function Collection:initDices(p)
   local page = p or 1
   local xPos = UI.spaceBetween(1300, self.dicePerRow, 800)
-  local yPos = UI.spaceBetween(360, self.dicePerCol, 460)
+  local yPos = UI.spaceBetween(360, self.dicePerCol, 500)
 
   local idsToDisplay = slice(
     self.sortedIDs,
@@ -192,12 +195,26 @@ function Collection:initDices(p)
 
   self.displayedDices = {}
 
+  --Fonction locale pour calculer le décalage en arc de cercle
+  local function yOffset(x)
+    return math.sin(x / 500) * 70
+  end
+
   for __, y in next, yPos do
     for _, x in next, xPos do
-      local fo = Facetypes[G.faceIds[idsToDisplay[i]]]:new(math.random(1, 6), math.random(1, 6))
-      local df = DiceFace:new(nil, fo, x, y, 120, false, true, function()
-        return Inputs.getMouseInCanvas(0, 0)
+      local fo = Facetypes[G.faceIds[idsToDisplay[i]]]:new(1, 10)
+      local df = DiceFace:new(nil, fo, x, y - yOffset(x), 120, false, true, function()
+        return Inputs.getMouseInCanvas(
+          Constants.VIRTUAL_GAME_WIDTH / 2 - self.width / 2,
+          Constants.VIRTUAL_GAME_HEIGHT / 2 - self.height / 2
+        )
       end, nil, 0, 0)
+
+      df.drawShadow = true
+
+      df.oscillatingScale, df.oscillatingY, df.oscillatingAngle = false, true, true
+      df.oscilScaleAmp, df.oscilYAmp, df.oscilAngleAmp = 0.05, 3, 0.01
+      df.oscilScaleP, df.oscilYP, df.oscilAngleP = 30, 40, 45
       table.insert(self.displayedDices, df)
       i = i + 1
       --On stop si jamais on a plus de dé à afficher
