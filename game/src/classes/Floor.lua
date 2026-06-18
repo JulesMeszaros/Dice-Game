@@ -55,18 +55,18 @@ function Floor:generateDesks(deskRank, difficulty)
   end
 
   --Rareté des rewards
-  local c = 75
+  local c = 79
   local u = 20
-  local r = 5
+  local r = 1
 
   if difficulty == 1 then
     c = 0
-    u = 50
-    r = 50
+    u = 70
+    r = 25
   elseif difficulty == 2 then
     c = 0
-    u = 0
-    r = 100
+    u = 25
+    r = 75
   end
 
   local r = Round:new(
