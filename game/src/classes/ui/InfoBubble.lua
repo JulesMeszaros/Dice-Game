@@ -274,8 +274,10 @@ function InfoBubble:generateDiceBubble()
 
   self.time = 0
   --Name
-  local name = "Dice"
-  if not self.object.representedObject.blank then
+  local name = nil
+  if self.object.representedObject.locked == true then
+    name = love.graphics.newText(Fonts.soraName, "?????")
+  elseif not self.object.representedObject.blank then
     name = love.graphics.newText(
       Fonts.soraName,
       self.object.representedObject.name .. " – " .. self.object.representedObject.faceValue .. ""
@@ -313,6 +315,9 @@ function InfoBubble:generateDiceBubble()
 
   --Description
   local descriptionText = self.object.representedObject:getDescription(self.screen.run)
+  if self.object.representedObject.locked == true then
+    descriptionText = "????????"
+  end
   local textW, wrappedText = Fonts.soraDesc:getWrap(descriptionText, lineWidth)
   local textLines = {}
   for i, line in next, wrappedText do
@@ -362,8 +367,14 @@ function InfoBubble:generateDiceBubble()
   love.graphics.setColor(0, 0, 0)
   love.graphics.draw(self.name, self.canvas:getWidth() / 2, 5, 0, 1, 1, self.name:getWidth() / 2, 0)
 
+  local t = self.object.representedObject:getDescription(self.screen.run)
+
+  if self.object.representedObject.locked == true then
+    t = descriptionText
+  end
+
   local formatedText = UI.Text.drawFormattedText(
-    self.object.representedObject:getDescription(self.screen.run),
+    t,
     self.canvas:getWidth() / 2,
     getMaxY(self.tagsPositions),
     Fonts.soraDesc,

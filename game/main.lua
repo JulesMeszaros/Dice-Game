@@ -58,9 +58,17 @@ function initSave()
   G.saveManager:save()
 end
 
+function checkSave()
+  if not G.saveManager.data.unlockedDices then
+    G.saveManager.data.unlockedDices = {}
+  end
+end
+
 --Initialisation d'un fichier de sauvegarde vide de stats s'il n'existe pas
 if not G.saveManager.data.stats then
   initSave()
+else
+  checkSave()
 end
 
 --Animators
