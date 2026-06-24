@@ -321,6 +321,10 @@ end
 function love.keypressed(key)
   game:keypressed(key)
 
+  if key == "b" then
+    print(2 + "e")
+  end
+
   if key == "@" then
     G.saveManager:save()
   end
@@ -394,4 +398,39 @@ function drawBackground()
   love.graphics.setBlendMode("alpha", "alphamultiply")
 
   love.graphics.setColor(1, 1, 1)
+end
+
+love.errorhandler = function(msg)
+  -- Ton code custom
+  pcall(function()
+    print("il y a eu une erreur : " .. tostring(msg))
+  end)
+
+  -- Reproduction du handler natif de Love2D
+  if not love.window or not love.graphics or not love.event then
+    return
+  end
+
+  love.graphics.reset()
+  love.graphics.setFont(Fonts.soraLightMini)
+  love.graphics.setBackgroundColor(89 / 255, 157 / 255, 220 / 255) -- le bleu classique
+  love.graphics.setColor(1, 1, 1, 1)
+
+  local trace = debug.traceback("", 2)
+
+  local sanitizedMsg = tostring(msg):gsub("\n", "\n  ")
+
+  return function()
+    love.event.pump()
+    for e, a, b in love.event.poll() do
+      if e == "quit" then
+        return 1
+      elseif e == "keypressed" and a == "escape" then
+        return 1
+      end
+    end
+    love.graphics.clear()
+    love.graphics.printf("Error:\n\n  " .. sanitizedMsg .. "\n\n" .. trace, 20, 20, love.graphics.getWidth() - 40)
+    love.graphics.present()
+  end
 end
