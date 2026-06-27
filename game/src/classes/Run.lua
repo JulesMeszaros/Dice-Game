@@ -313,7 +313,7 @@ Your progress will be lost
           self.displayPauseMenu = false
           G.game:startNewRun(G.seedText)
         end,
-        "src/assets/sprites/ui/OK Button.png",
+        "src/assets/sprites/ui/OKButton.png",
         570,
         320,
         300,
@@ -398,7 +398,7 @@ Your progress will be lost
           end
         end,
 
-        "src/assets/sprites/ui/OK Button.png",
+        "src/assets/sprites/ui/OKButton.png",
         570,
         320,
         300,

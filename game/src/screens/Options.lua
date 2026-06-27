@@ -268,7 +268,7 @@ This action will close the game
             love.filesystem.remove("profile.lua")
             love.event.quit()
           end,
-          "src/assets/sprites/ui/OK Button.png",
+          "src/assets/sprites/ui/OKButton.png",
           570,
           320,
           300,
