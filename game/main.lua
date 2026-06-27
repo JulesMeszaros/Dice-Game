@@ -264,7 +264,7 @@ function love.draw()
   Shaders.crt:send("warp", 0.15)
   Shaders.crt:send("scan", 0.2)
   -- set scanline opacity (0 = no scanlines, 1 = full effect)
-  Shaders.crt:send("scanOpacity", 0.5)
+  Shaders.crt:send("scanOpacity", 0.6)
   Shaders.crt:send("lineWidth", love.graphics.getHeight() / 180)
 
   if G.sessionSettings.CRTEffect then

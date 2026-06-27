@@ -345,7 +345,7 @@ Shaders.diagonalCircles = love.graphics.newShader([[
 
         // Décalage par ligne (row index)
         float rowIndex = floor(uv.y / spacing);
-        float rowOffset = mod(rowIndex, 2.0) * (spacing * 0.5); 
+        float rowOffset = mod(rowIndex, 2.0) * (spacing * 0.5);
         // 👆 alterne une ligne sur deux, décalée de la moitié de spacing
 
         vec2 animatedUV = uv + movement + vec2(rowOffset, 0.0);

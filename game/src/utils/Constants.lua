@@ -25,10 +25,10 @@ local Constants = {
   BASE_MAX_HANDS_FIGURES = 3,
 
   --Debug
-  SHOP_EVERY_DESK = true,
+  SHOP_EVERY_DESK = false,
   LOG_URL = "http://127.0.0.1:8000/log",
   OVERPOWER = false,
-  DEBUG = true,
+  DEBUG = false,
 
   --Prices
   BASE_STICKER_PRICE = 10,
