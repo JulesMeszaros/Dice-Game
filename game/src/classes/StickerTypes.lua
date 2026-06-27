@@ -334,7 +334,7 @@ function BandaidSticker:buyEffect(run)
   run.FourOAKFaciliter = true
 end
 
-StickerTypes.BandaidSticker = BandaidSticker
+--StickerTypes.BandaidSticker = BandaidSticker
 
 --Trophy Sticker
 local TrophySticker = setmetatable({}, { __index = StickerObject })

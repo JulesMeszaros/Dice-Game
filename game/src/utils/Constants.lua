@@ -13,7 +13,7 @@ local Constants = {
   --Game metadatas
   VIRTUAL_GAME_WIDTH = 1920,
   VIRTUAL_GAME_HEIGHT = 1080,
-  GAME_VERSION = "alpha version 0.2.0.0",
+  GAME_VERSION = "0.2.0.0",
 
   --Game base stats
   BASE_REROLLS = 2,
@@ -25,7 +25,8 @@ local Constants = {
   BASE_MAX_HANDS_FIGURES = 3,
 
   --Debug
-  SHOP_EVERY_DESK = true,
+  SHOP_EVERY_DESK = false,
+  LOG_URL = "http://127.0.0.1:8000/log",
   OVERPOWER = false,
   DEBUG = true,
 

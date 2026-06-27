@@ -1,3 +1,4 @@
+local ErrorHandler = require("src.utils.ErrorHandler")
 local Animator = require("src.utils.Animator")
 local CiggieTypes = require("src.classes.CiggieTypes")
 local AudioUtils = require("src.utils.AudioUtils")
@@ -9,6 +10,7 @@ local FaceTypes = require("src.classes.FaceTypes")
 local StickerTypes = require("src.classes.StickerTypes")
 local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 local SaveManager = require("src.utils.SaveManager")
+local http = require("socket.http")
 
 G = {
   saveManager = SaveManager:new("profile.lua"),
@@ -402,8 +404,11 @@ end
 
 love.errorhandler = function(msg)
   -- Ton code custom
+  local trace = debug.traceback("", 2)
+  local info = debug.getinfo(2, "Sl")
+
   pcall(function()
-    print("il y a eu une erreur : " .. tostring(msg))
+    --ErrorHandler.sendBugReport(msg, trace)
   end)
 
   -- Reproduction du handler natif de Love2D
@@ -415,8 +420,6 @@ love.errorhandler = function(msg)
   love.graphics.setFont(Fonts.soraLightMini)
   love.graphics.setBackgroundColor(89 / 255, 157 / 255, 220 / 255) -- le bleu classique
   love.graphics.setColor(1, 1, 1, 1)
-
-  local trace = debug.traceback("", 2)
 
   local sanitizedMsg = tostring(msg):gsub("\n", "\n  ")
 
@@ -430,7 +433,15 @@ love.errorhandler = function(msg)
       end
     end
     love.graphics.clear()
-    love.graphics.printf("Error:\n\n  " .. sanitizedMsg .. "\n\n" .. trace, 20, 20, love.graphics.getWidth() - 40)
+    love.graphics.printf(
+      "...Sorry, the game crashed :^( \n(A report was sent to the devs) \n\n Error:\n\n  "
+        .. sanitizedMsg
+        .. "\n\n"
+        .. trace,
+      20,
+      20,
+      love.graphics.getWidth() - 40
+    )
     love.graphics.present()
   end
 end

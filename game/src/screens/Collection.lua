@@ -44,7 +44,7 @@ function slice(t, i, j)
   return result
 end
 
-local function animateDiceFaceAppear(diceface, timeOffset)
+local function animateDiceFaceAppear(diceface, timeOffset, finalAngle)
   diceface.animator:addDelay(timeOffset)
   diceface.animator:addGroup({
     {
@@ -62,9 +62,9 @@ local function animateDiceFaceAppear(diceface, timeOffset)
       easing = AnimationUtils.Easing.easeOutBack,
     },
     {
-      property = "rotation",
+      property = "baseRotation",
       from = 0.4,
-      targetValue = 0,
+      targetValue = finalAngle,
       duration = 0.4,
       easing = AnimationUtils.Easing.easeOutBack,
     },
@@ -264,10 +264,8 @@ function Collection:initDices(p)
       df.oscilScaleAmp, df.oscilYAmp, df.oscilAngleAmp = 0.05, 3, 0.01
       df.oscilScaleP, df.oscilYP, df.oscilAngleP = 30, 40, 45
 
-      df.baseRotation = aOffset(x)
-
       --Animation
-      animateDiceFaceAppear(df, _ * 0.05)
+      animateDiceFaceAppear(df, _ * 0.05, aOffset(x))
 
       table.insert(self.displayedDices, df)
       i = i + 1
