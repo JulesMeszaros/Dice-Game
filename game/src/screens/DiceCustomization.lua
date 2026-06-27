@@ -29,6 +29,22 @@ function DiceCustomization:new(previousRound, newFaceObjects)
   self.run = previousRound.run
   --Table where we store the ui faces of the face objects earned
   self.newFaceObjects = newFaceObjects
+
+  print(#self.newFaceObjects)
+
+  --On ajoute les faces dans les rewards au dés débloqués si elles n'y sont pas déjà
+  for i, face in next, self.run.facesRewardsInventory do
+    --Ajouter le dé aux dés débloqués
+    print(face.id)
+    if not G.saveManager.data.unlockedDices then
+      G.saveManager.data.unlockedDices = {}
+      G.saveManager.data.unlockedDices[face.id] = true
+    else
+      G.saveManager.data.unlockedDices[face.id] = true
+    end
+    G.saveManager:save()
+  end
+
   --Table where we store the ui dice faces, grouped by dice
   self.uiDices = {}
   self.newUIFaces = {}
@@ -349,6 +365,7 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
       end
 
       if isAlreadyCovered == false then
+        --On place le dé
         face.anchorX = closestFace[1]
         face.anchorY = closestFace[2]
       end

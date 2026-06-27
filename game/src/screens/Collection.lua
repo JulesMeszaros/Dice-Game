@@ -88,7 +88,6 @@ function Collection:new(mainmenu)
   --Récupération des ID des dés dans l'ordre
   self.sortedIDs = get_sorted_keys(G.faceIds)
   self.nPages = math.ceil(#self.sortedIDs / (self.dicePerRow * self.dicePerCol))
-  print(self.nPages)
   --Récupération des id des dés
 
   self.pageNumberText = love.graphics.newText(Fonts.soraCredits, tostring(self.pageNumber) .. "/" .. self.nPages)
@@ -242,7 +241,6 @@ function Collection:initDices(p)
   for __, y in next, yPos do
     for _, x in next, xPos do
       local fo = Facetypes[G.faceIds[idsToDisplay[i]]]:new(1, 10)
-      print(idsToDisplay[i], G.saveManager.data.unlockedDices[idsToDisplay[i]])
       if G.saveManager.data["unlockedDices"][tonumber(idsToDisplay[i])] then
         fo.locked = false
       else
