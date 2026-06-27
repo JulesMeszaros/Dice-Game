@@ -488,14 +488,6 @@ function Run:keypressed(key)
     self.customizationScreen:keypressed(key)
   end
 
-  if key == "escape" then
-    if #G.game.panelQueue > 0 then
-      G.game.panelQueue[1]:hide()
-    else
-      self:togglePauseMenu()
-    end
-  end
-
   if Constants.DEBUG == true then
     if key == "m" then
       self.money = 20000

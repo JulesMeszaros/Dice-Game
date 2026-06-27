@@ -323,15 +323,17 @@ end
 function love.keypressed(key)
   game:keypressed(key)
 
-  if key == "b" then
-    print(2 + "e")
-  end
-
-  if key == "@" then
-    G.saveManager:save()
-  end
-
   if Constants.DEBUG == true then
+    if key == "b" then
+      --Déclenche un crash artificiel
+      print(2 + "e")
+    end
+
+    if key == "@" then
+      --Ecrit dans le fichier de sauvegarde
+      G.saveManager:save()
+    end
+
     if key == "$" then
       currentFpsIndex = currentFpsIndex % #fpsOptions + 1
       fpsLimit = fpsOptions[currentFpsIndex]
@@ -341,11 +343,10 @@ function love.keypressed(key)
         print("FPS illimité")
       end
     end
-  end
-
-  if key == "escape" and love.system.getOS() ~= "Web" then
-  else
-    overlayStats.handleKeyboard(key) -- Should always be called last
+    if key == "escape" and love.system.getOS() ~= "Web" then
+    else
+      overlayStats.handleKeyboard(key) -- Should always be called last
+    end
   end
 end
 
