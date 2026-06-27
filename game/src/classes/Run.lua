@@ -262,7 +262,7 @@ function Run:startPauseMenu()
     function()
       Options.generalOptions()
     end,
-    "src/assets/sprites/ui/OptionsButton.png",
+    "src/assets/sprites/ui/Settings Pause.png",
     385 + (477 / 2),
     180,
     477,
