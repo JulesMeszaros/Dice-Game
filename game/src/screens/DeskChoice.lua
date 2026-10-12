@@ -536,16 +536,6 @@ function DeskChoice:getCurrentlyHoveredFace()
     end
   end
 
-  --Pour les faces dans le patron à droite
-  --[[
-	for i, face in next, self.infoFaces do
-		if face:isHovered() and self.currentlySelectedDice then
-			self.currentlyHoveredFace = face
-			break
-		end
-	end]]
-  --
-
   --Pour les faces de badges
   for i, badge in next, self.badges do
     if badge.currentlyHoveredFace then

@@ -7,7 +7,7 @@ local managerFactor = 2 --Facteur multipliant pour obtenir le score du manager p
 local factorPerThreeFloors = 0.8 --Tout les trois étages, le score du premier bureau est multiplié par ce facteur
 local baseFloorMultiplier = 2.3
 
-function firstOffice(floor)
+local function firstOffice(floor)
   if floor == 1 then
     return 80
   else
@@ -20,7 +20,7 @@ end
 
 CalculateTarget.firstOffice = firstOffice
 
-function secondOffice(floor)
+local function secondOffice(floor)
   local baseTarget = firstOffice(floor)
   local target = baseTarget * secondOfficeFactor
 
@@ -29,7 +29,7 @@ end
 
 CalculateTarget.secondOffice = secondOffice
 
-function manager(floor)
+local function manager(floor)
   local baseTarget = firstOffice(floor)
   local target = baseTarget * managerFactor
 

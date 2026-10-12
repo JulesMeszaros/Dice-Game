@@ -132,13 +132,6 @@ function DiceFace:update(dt)
   self:updateAngle(dt)
   self.animator:update(dt)
 
-  --Selection state--
-  --[[ if(self.isSelected)then
-        self.isDraggable = false
-    else
-        self.isDraggable = true
-    end ]]
-
   if self.isTriggering then
     self.isHoverable = false
     self.isSelectable = false
@@ -317,7 +310,6 @@ end
 --==TRIGGER FUNCTIONS==--
 function DiceFace:triggerEffect(effect, round)
   round.effectsTriggered = round.effectsTriggered + 1
-  print(round.effectsTriggered)
   self.animator:addDelay(0.0, function()
     effect.fn() --Déclenchement de l'effet
     round.terrain:animateHandScore()
@@ -459,8 +451,8 @@ function DiceFace:updatePosition(dt)
       self.x = self.targetX
       self.y = self.targetY
     else
-      self.x, self.velx = springUpdate(self.x, self.targetX, self.velx, dt, 4, 0.8)
-      self.y, self.vely = springUpdate(self.y, self.targetY, self.vely, dt, 4, 0.8)
+      self.x, self.velx = AnimationUtils.springUpdate(self.x, self.targetX, self.velx, dt, 4, 0.8)
+      self.y, self.vely = AnimationUtils.springUpdate(self.y, self.targetY, self.vely, dt, 4, 0.8)
     end
   else
     self.targetX = self.x
@@ -502,7 +494,8 @@ function DiceFace:updateAngle(dt)
     if math.abs(self.rotation - self.targetedRotation) < 0.001 then
       self.rotation = self.targetedRotation
     else
-      self.rotation, self.velrotation = springUpdate(self.rotation, self.targetedRotation, self.velrotation, dt, 5, 0.4)
+      self.rotation, self.velrotation =
+        AnimationUtils.springUpdate(self.rotation, self.targetedRotation, self.velrotation, dt, 5, 0.4)
     end
   else
     self.baseRotation = self.rotation
@@ -514,30 +507,20 @@ function DiceFace:updateScale(dt)
     if math.abs(self.scaleX - self.targetedScale) < 0.001 then --Update scaleX
       self.scaleX = self.targetedScale
     else
-      self.scaleX, self.velscale = springUpdate(self.scaleX, self.targetedScale, self.velscale, dt, 4, 0.6)
+      self.scaleX, self.velscale =
+        AnimationUtils.springUpdate(self.scaleX, self.targetedScale, self.velscale, dt, 4, 0.6)
     end
 
     if math.abs(self.scaleY - self.targetedScale) < 0.001 then --update scaleY
       self.scaleY = self.targetedScale
     else
-      self.scaleY, self.velscale = springUpdate(self.scaleY, self.targetedScale, self.velscale, dt, 4, 0.6)
+      self.scaleY, self.velscale =
+        AnimationUtils.springUpdate(self.scaleY, self.targetedScale, self.velscale, dt, 4, 0.6)
     end
   end
 end
 
 --==Animations==--
-function springUpdate(current, target, velocity, dt, frequency, damping)
-  --On met un cap sur le dt
-  dt = math.min(dt, 1 / 30)
-
-  local f = frequency * 2 * math.pi
-  local g = damping
-  local delta = target - current
-  local accel = f * f * delta - 2 * g * f * velocity
-  velocity = velocity + accel * dt
-  current = current + velocity * dt
-  return current, velocity
-end
 
 function DiceFace:getOscillation(time)
   local x = 0

@@ -15,7 +15,7 @@ local Sprites = require("src.utils.Sprites")
 local Button = require("src.classes.ui.Button")
 local Inputs = require("src.utils.scripts.Inputs")
 
-function get_sorted_keys(dict)
+local function get_sorted_keys(dict)
   local keys = {}
 
   -- extraction des clés
@@ -31,7 +31,7 @@ function get_sorted_keys(dict)
   return keys
 end
 
-function slice(t, i, j)
+local function slice(t, i, j)
   local result = {}
 
   i = i or 1

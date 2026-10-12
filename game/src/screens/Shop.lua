@@ -2169,6 +2169,9 @@ function Shop:getCurrentlyHoveredLine()
 end
 
 function Shop:cleanup()
+  -- Libère les canvases génériques de GameScreen (shopCanvas, dice_tray, etc.)
+  Screen.cleanup(self)
+
   -- Release canvases to free GPU memory
   for _, canvas in pairs(self.facesPriceTags or {}) do
     canvas:release()

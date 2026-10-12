@@ -3,6 +3,8 @@ local CiggieObject = {}
 
 CiggieObject.__index = CiggieObject
 
+local isInList, isList
+
 function CiggieObject:new()
   local self = setmetatable({}, CiggieObject)
   self.objectType = "Magic Wand"
@@ -42,7 +44,7 @@ function CiggieObject:trigger(screen, screenType)
     for i, sticker in next, screen.run.stickers do
       sticker:ciggieUsedEffect(screen.run)
     end
-  else
+  elseif Constants.DEBUG == true then
     print("not usable here", screenType)
   end
 end
@@ -70,7 +72,9 @@ function CiggieObject:triggerInShop(screen, key)
     screen:generateCiggiesUI()
     return true
   else
-    print("not usable here", screenType)
+    if Constants.DEBUG == true then
+      print("not usable here", screenType)
+    end
     return false
   end
 end
@@ -79,9 +83,7 @@ function CiggieObject:usageCondition(round)
   return true
 end
 
-function CiggieObject:effect(round)
-  print("Clope fumée")
-end
+function CiggieObject:effect(round) end
 
 function CiggieObject:destruct(screen)
   for i, v in next, screen.run.ciggiesObjects do

@@ -37,7 +37,6 @@ function Round:new(n, floor, desk, gameCanvas, run, baseReward, target, diceObje
   self.phase = Constants.ROUND_STATES.PLAYING
   self.diceFacesOrder = {} --Base order when the hand is played. doenst get modified during the phase and is used to construct the queue
   self.dicesOrder = {} --Same but for the dice objects
-  self.dicesBackupQueue = {} --Same but for the dices
 
   self.currentlyTriggeredDice = nil
   self.diceFaces = {} -- Objets visuels
@@ -347,38 +346,6 @@ function Round:injectDiceEffectsAtFront(dice)
 end
 
 function Round:startBackupPhase()
-  self.backupDiceHistory = {}
-  self.backupFaceHistory = {}
-
-  --Get the list of dices to use
-  local unselectedDices = self:getUnSelectedDices()
-  local dices = {}
-
-  for i, b in next, unselectedDices do
-    table.insert(dices, i)
-  end
-
-  --On récupère l'ordre à la fois des objets UI et des dés associés
-  local facesOrder, dicesOrder = self:getDicesOrder(dices)
-
-  --On alimente la liste de dés à
-  for i, f in next, facesOrder do
-    if f.representedObject.backup == true then
-      table.insert(self.diceFacesBackupQueue, f)
-    end
-  end
-
-  for i, d in next, dicesOrder do
-    if d:getCurrentFaceObject().backup == true then
-      table.insert(self.dicesBackupQueue, d)
-    end
-  end
-
-  --trigger the first backup dice
-  self:triggerNextBackupDice()
-end
-
-function Round:startBackupPhase() --Nouvelle version
   self.backupEffectsQueue = {}
 
   local unselectedDices = self:getUnSelectedDices()
@@ -465,7 +432,6 @@ function Round:endTriggeringPhase()
     self.roundScore = self.roundScore + self.handScore
 
     if self.handScore > self.run.bestHand then
-      print("okok")
       self.run.bestHand = self.handScore
       if G.saveManager.data.stats.bestHand then
         if self.run.bestHand > G.saveManager.data.stats.bestHand then

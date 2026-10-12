@@ -30,12 +30,9 @@ function DiceCustomization:new(previousRound, newFaceObjects)
   --Table where we store the ui faces of the face objects earned
   self.newFaceObjects = newFaceObjects
 
-  print(#self.newFaceObjects)
-
   --On ajoute les faces dans les rewards au dés débloqués si elles n'y sont pas déjà
   for i, face in next, self.run.facesRewardsInventory do
     --Ajouter le dé aux dés débloqués
-    print(face.id)
     if not G.saveManager.data.unlockedDices then
       G.saveManager.data.unlockedDices = {}
       G.saveManager.data.unlockedDices[face.id] = true
@@ -422,8 +419,7 @@ function DiceCustomization:mousereleased(x, y, button, istouch, presses)
       and (
         face.targetY > self.inventoryMDTY
         and face.targetY < self.inventoryMDTY + self.inventoryCanvasMedium:getHeight()
-      ) --[[ and
-            (table.getn(self.run.facesInventory)< 8) ]]
+      )
     then
       self:addRewardToInventory(face, i)
     elseif (face.x > 0 and face.x < 500) and (face.y > 850 and face.y < self.canvas:getHeight()) then
@@ -1421,6 +1417,9 @@ function DiceCustomization:updateInventoryPositions()
 end
 
 function DiceCustomization:cleanup()
+  -- Libère les canvases génériques de GameScreen (customizationMat, newFacesCanvas, etc.)
+  Screen.cleanup(self)
+
   -- Clear UI dice faces
   if self.uiDices then
     for _, dice in pairs(self.uiDices) do

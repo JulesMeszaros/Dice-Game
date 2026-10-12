@@ -1,5 +1,7 @@
 local CalculatePoints = {}
 
+local getValueDistribution, hasValue, hasAllValues, getStraight
+
 function CalculatePoints.numberBasePoints(number, dices, level)
   local score = 0
   local usedDices = {}

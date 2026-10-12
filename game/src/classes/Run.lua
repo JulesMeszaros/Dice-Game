@@ -377,6 +377,7 @@ Your progress will be lost
 
         function()
           G.game.panelQueue = {}
+          G.game.run:cleanup()
           if G.game.run.currentState == Constants.RUN_STATES.ROUND then
             --Round
             --G.game.run.currentRound.terrain:outAnimation("mainMenu")
@@ -621,29 +622,27 @@ end
 function Run:cleanup()
   -- Cleanup shop screen
   if self.shop then
-    if self.shop.shopCanvas then
-      self.shop.shopCanvas:release()
-      self.shop.shopCanvas = nil
-    end
+    self.shop:cleanup()
     self.shop = nil
   end
 
   -- Cleanup desk choice screen
   if self.deskChoice then
+    self.deskChoice:cleanup()
     self.deskChoice = nil
   end
 
   -- Cleanup current round
   if self.currentRound then
-    if self.currentRound.terrain and self.currentRound.terrain.canvas then
-      self.currentRound.terrain.canvas:release()
-      self.currentRound.terrain.canvas = nil
+    if self.currentRound.terrain then
+      self.currentRound.terrain:cleanup()
     end
     self.currentRound = nil
   end
 
   -- Cleanup customization screen
   if self.customizationScreen then
+    self.customizationScreen:cleanup()
     self.customizationScreen = nil
   end
 

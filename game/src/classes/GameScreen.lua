@@ -439,6 +439,48 @@ function GameScreen:updateCanvas(dt) end
 
 function GameScreen:draw() end
 
+--Libère explicitement tous les canvases créés par cet écran (sinon leur ressource GPU ne traîne
+--jusqu'au prochain passage du GC Lua), à appeler quand l'écran est abandonné (changement de round/shop/etc.)
+function GameScreen:cleanup()
+  local canvasFields = {
+    "canvas",
+    "upgradingFigureCanvas",
+    "customizationMat",
+    "newFacesCanvas",
+    "dice_tray",
+    "descriptionCanvas",
+    "figureButtonsCanvas",
+    "rerollsCanvas",
+    "handsCanvas",
+    "roundNumberCanvas",
+    "moneyCanvas",
+    "deckCanvas",
+    "diceDetailsCanvas",
+    "ciggiesTray",
+    "ciggiesTrayFront",
+    "playerInfos",
+    "enemyInfos",
+    "handScoreCanvas",
+    "inventoryCanvas",
+    "inventoryCanvasSmall",
+    "inventoryCanvasMedium",
+    "shopCanvas",
+    "rewardsSmallCanvas",
+    "rewardsMediumCanvas",
+    "ciggiePopupCanvas",
+    "bossDesc",
+    "rightPanel",
+    "horizontalDiceNet",
+  }
+
+  for _, field in next, canvasFields do
+    if self[field] then
+      self[field]:release()
+      self[field] = nil
+    end
+  end
+end
+
 --==UI Draw functions==--
 
 function GameScreen:drawRightPanel(dt, opts)
@@ -552,19 +594,6 @@ function GameScreen:drawCiggiePopup(dt)
   self.sellCiggieText:update(dt)
   self.sellCiggieText:draw()
 
-  --Lighter
-  --[[
-	love.graphics.draw(
-		Sprites.LIGHTER,
-		self.lighterX,
-		self.lighterY,
-		0,
-		1,
-		1,
-		Sprites.LIGHTER:getWidth() / 2,
-		Sprites.LIGHTER:getHeight() / 2
-	)
-	]]
   love.graphics.setCanvas(currentCanvas)
   love.graphics.draw(self.ciggiePopupCanvas, 0, 0, 0, 1, 1)
 end
@@ -573,33 +602,38 @@ end
 function GameScreen:drawDescription()
   local hoveredObject = self:getCurrentlyHoveredObject()
 
-  local currentCanvas = love.graphics.getCanvas()
-  love.graphics.setCanvas(self.descriptionCanvas)
-  love.graphics.clear()
-  --Draw Sprite
-  love.graphics.draw(Sprites.DESCRIPTION, 0, 0)
+  --Le contenu du canvas ne dépend que de l'objet survolé : on ne redessine que si celui-ci a changé
+  if hoveredObject ~= self.lastHoveredDescriptionObject then
+    self.lastHoveredDescriptionObject = hoveredObject
 
-  if hoveredObject then
-    --Name
-    local objectName = hoveredObject.name
-    local nameText = love.graphics.newText(Fonts.sora30, objectName)
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.descriptionCanvas)
+    love.graphics.clear()
+    --Draw Sprite
+    love.graphics.draw(Sprites.DESCRIPTION, 0, 0)
 
-    --Face tier
-    local tierText = love.graphics.newText(Fonts.soraSmall, hoveredObject.tier)
+    if hoveredObject then
+      --Name
+      local objectName = hoveredObject.name
+      local nameText = love.graphics.newText(Fonts.sora30, objectName)
 
-    --Description
-    local faceDescription = hoveredObject.description
-    local descWidth, descWrappedtext = Fonts.soraDesc:getWrap(faceDescription, self.descriptionCanvas:getWidth() - 18)
-    local descText = love.graphics.newText(Fonts.soraDesc, table.concat(descWrappedtext, "\n"))
+      --Face tier
+      local tierText = love.graphics.newText(Fonts.soraSmall, hoveredObject.tier)
 
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.draw(nameText, self.descriptionCanvas:getWidth() / 2, 65, 0, 1, 1, nameText:getWidth() / 2, 0)
-    love.graphics.draw(tierText, self.descriptionCanvas:getWidth() / 2, 105, 0, 1, 1, tierText:getWidth() / 2, 0)
-    love.graphics.draw(descText, self.descriptionCanvas:getWidth() / 2, 140, 0, 1, 1, descText:getWidth() / 2, 0)
-    love.graphics.setColor(1, 1, 1, 1)
+      --Description
+      local faceDescription = hoveredObject.description
+      local descWidth, descWrappedtext = Fonts.soraDesc:getWrap(faceDescription, self.descriptionCanvas:getWidth() - 18)
+      local descText = love.graphics.newText(Fonts.soraDesc, table.concat(descWrappedtext, "\n"))
+
+      love.graphics.setColor(0, 0, 0, 1)
+      love.graphics.draw(nameText, self.descriptionCanvas:getWidth() / 2, 65, 0, 1, 1, nameText:getWidth() / 2, 0)
+      love.graphics.draw(tierText, self.descriptionCanvas:getWidth() / 2, 105, 0, 1, 1, tierText:getWidth() / 2, 0)
+      love.graphics.draw(descText, self.descriptionCanvas:getWidth() / 2, 140, 0, 1, 1, descText:getWidth() / 2, 0)
+      love.graphics.setColor(1, 1, 1, 1)
+    end
+
+    love.graphics.setCanvas(currentCanvas)
   end
-
-  love.graphics.setCanvas(currentCanvas)
 
   love.graphics.draw(
     self.descriptionCanvas,
@@ -616,101 +650,104 @@ end
 --Round details canvas
 function GameScreen:drawRoundDetails(dt)
   local currentCanvas = love.graphics.getCanvas()
-  --Create the texts
-  local rerollText = love.graphics.newText(Fonts.soraBig, "-")
-  local currentHands = love.graphics.newText(Fonts.soraBig, "-")
-  currentRoundText = love.graphics.newText(Fonts.soraFloorDesk, {
-    { 108 / 255, 86 / 255, 113 / 255, 1 },
-    "FLOOR ",
-    { 1, 104 / 255, 147 / 255, 1 },
-    tostring("-"),
-  })
-  currentDeskText = love.graphics.newText(Fonts.soraFloorDesk, {
-    { 108 / 255, 86 / 255, 113 / 255, 1 },
-    "OFFICE ",
-    { 176 / 255, 169 / 255, 228 / 255, 1 },
-    tostring("-"),
-  })
-  local moneyText = love.graphics.newText(Fonts.soraBig, tostring(self.run.money) .. "€")
-  local moneyText = tostring(math.floor(self.run.money)) .. "$"
 
-  if self.round then
-    rerollText = love.graphics.newText(Fonts.soraBig, tostring(self.round.availableRerolls))
-    currentHands = love.graphics.newText(Fonts.soraBig, tostring(self.round.remainingHands))
-    currentRoundText = love.graphics.newText(Fonts.soraFloorDesk, {
+  local floorNumber = self.round and self.round.floorNumber or "-"
+  local deskNumber = self.round and self.round.deskNumber or "-"
+  local remainingHands = self.round and self.round.remainingHands or "-"
+  local availableRerolls = self.round and self.round.availableRerolls or "-"
+  local moneyText = self.round and (tostring(math.floor(self.round.run.money)) .. "$")
+    or (tostring(math.floor(self.run.money)) .. "$")
+
+  --ROUND : ne redessine que si l'étage ou le bureau affiché a changé
+  if floorNumber ~= self.lastFloorNumber or deskNumber ~= self.lastDeskNumber then
+    self.lastFloorNumber = floorNumber
+    self.lastDeskNumber = deskNumber
+
+    local currentRoundText = love.graphics.newText(Fonts.soraFloorDesk, {
       { 108 / 255, 86 / 255, 113 / 255, 1 },
       "FLOOR ",
       { 1, 104 / 255, 147 / 255, 1 },
-      tostring(self.round.floorNumber),
+      tostring(floorNumber),
     })
-    currentDeskText = love.graphics.newText(Fonts.soraFloorDesk, {
+    local currentDeskText = love.graphics.newText(Fonts.soraFloorDesk, {
       { 108 / 255, 86 / 255, 113 / 255, 1 },
       "OFFICE ",
       { 176 / 255, 169 / 255, 228 / 255, 1 },
-      tostring(self.round.deskNumber),
+      tostring(deskNumber),
     })
-    moneyText = tostring(math.floor(self.round.run.money)) .. "$"
+
+    love.graphics.setCanvas(self.roundNumberCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.FLOOR_INFOS, 0, 0)
+    love.graphics.draw(
+      currentRoundText,
+      self.roundNumberCanvas:getWidth() / 2,
+      self.roundNumberCanvas:getHeight() / 4,
+      0,
+      1,
+      1,
+      currentRoundText:getWidth() / 2,
+      currentRoundText:getHeight() / 2
+    )
+    love.graphics.draw(
+      currentDeskText,
+      self.roundNumberCanvas:getWidth() / 2,
+      3 * self.roundNumberCanvas:getHeight() / 4,
+      0,
+      1,
+      1,
+      currentDeskText:getWidth() / 2,
+      currentDeskText:getHeight() / 2
+    )
   end
 
-  --ROUND
-  love.graphics.setCanvas(self.roundNumberCanvas)
-  love.graphics.clear()
-  love.graphics.draw(Sprites.FLOOR_INFOS, 0, 0)
-  love.graphics.draw(
-    currentRoundText,
-    self.roundNumberCanvas:getWidth() / 2,
-    self.roundNumberCanvas:getHeight() / 4,
-    0,
-    1,
-    1,
-    currentRoundText:getWidth() / 2,
-    currentRoundText:getHeight() / 2
-  )
-  love.graphics.draw(
-    currentDeskText,
-    self.roundNumberCanvas:getWidth() / 2,
-    3 * self.roundNumberCanvas:getHeight() / 4,
-    0,
-    1,
-    1,
-    currentDeskText:getWidth() / 2,
-    currentDeskText:getHeight() / 2
-  )
-  --HANDS
-  love.graphics.setCanvas(self.handsCanvas)
-  love.graphics.clear()
-  love.graphics.draw(Sprites.TURNS, 0, 0)
-  love.graphics.setColor(245 / 255, 247 / 255, 228 / 255, 1)
-  love.graphics.draw(
-    currentHands,
-    self.handsCanvas:getWidth() / 2,
-    self.handsCanvas:getHeight() / 2 + 27,
-    0,
-    1,
-    1,
-    currentHands:getWidth() / 2,
-    currentHands:getHeight() / 2 + 3
-  )
-  love.graphics.setColor(1, 1, 1, 1)
+  --HANDS : ne redessine que si le nombre de mains restantes a changé
+  if remainingHands ~= self.lastRemainingHands then
+    self.lastRemainingHands = remainingHands
 
-  --REROLLS
-  love.graphics.setCanvas(self.rerollsCanvas)
-  love.graphics.clear()
-  love.graphics.draw(Sprites.REROLLS, 0, 0)
-  love.graphics.setColor(245 / 255, 247 / 255, 228 / 255, 1)
-  love.graphics.draw(
-    rerollText,
-    self.rerollsCanvas:getWidth() / 2,
-    self.rerollsCanvas:getHeight() / 2 + 27,
-    0,
-    1,
-    1,
-    rerollText:getWidth() / 2,
-    rerollText:getHeight() / 2 + 3
-  )
-  love.graphics.setColor(1, 1, 1, 1)
+    local currentHands = love.graphics.newText(Fonts.soraBig, tostring(remainingHands))
 
-  --MONEY
+    love.graphics.setCanvas(self.handsCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.TURNS, 0, 0)
+    love.graphics.setColor(245 / 255, 247 / 255, 228 / 255, 1)
+    love.graphics.draw(
+      currentHands,
+      self.handsCanvas:getWidth() / 2,
+      self.handsCanvas:getHeight() / 2 + 27,
+      0,
+      1,
+      1,
+      currentHands:getWidth() / 2,
+      currentHands:getHeight() / 2 + 3
+    )
+    love.graphics.setColor(1, 1, 1, 1)
+  end
+
+  --REROLLS : ne redessine que si le nombre de rerolls disponibles a changé
+  if availableRerolls ~= self.lastAvailableRerolls then
+    self.lastAvailableRerolls = availableRerolls
+
+    local rerollText = love.graphics.newText(Fonts.soraBig, tostring(availableRerolls))
+
+    love.graphics.setCanvas(self.rerollsCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.REROLLS, 0, 0)
+    love.graphics.setColor(245 / 255, 247 / 255, 228 / 255, 1)
+    love.graphics.draw(
+      rerollText,
+      self.rerollsCanvas:getWidth() / 2,
+      self.rerollsCanvas:getHeight() / 2 + 27,
+      0,
+      1,
+      1,
+      rerollText:getWidth() / 2,
+      rerollText:getHeight() / 2 + 3
+    )
+    love.graphics.setColor(1, 1, 1, 1)
+  end
+
+  --MONEY (toujours redessiné : le texte vagué s'anime en continu même à valeur inchangée)
   love.graphics.setCanvas(self.moneyCanvas)
   love.graphics.clear()
   love.graphics.draw(Sprites.MONEY, 0, 0)
@@ -734,33 +771,39 @@ function GameScreen:drawRoundDetails(dt)
 end
 
 function GameScreen:drawCiggiesTray()
-  local currentCanvas = love.graphics.getCanvas()
-  love.graphics.setCanvas(self.ciggiesTray)
+  --Contenu statique : on ne le dessine dans le sous-canvas qu'une seule fois
+  if not self.ciggiesTrayDrawn then
+    self.ciggiesTrayDrawn = true
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.ciggiesTray)
+    love.graphics.draw(Sprites.MAGIC_WANDS, 0, 0)
+    love.graphics.setCanvas(currentCanvas)
+  end
 
-  love.graphics.draw(Sprites.MAGIC_WANDS, 0, 0)
   local px, py = G.calculateParalaxeOffset(1)
-
-  love.graphics.setCanvas(currentCanvas)
   love.graphics.draw(self.ciggiesTray, self.ciggiesTrayX + px, self.ciggiesTrayY + py, 0, 1, 1)
 end
 
 function GameScreen:drawCiggiesTrayFront()
-  local currentCanvas = love.graphics.getCanvas()
-  love.graphics.setCanvas(self.ciggiesTrayFront)
+  --Contenu statique : on ne le dessine dans le sous-canvas qu'une seule fois
+  if not self.ciggiesTrayFrontDrawn then
+    self.ciggiesTrayFrontDrawn = true
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.ciggiesTrayFront)
+    love.graphics.draw(
+      Sprites.MAGIC_WANDS_FRONT,
+      0,
+      self.ciggiesTrayFront:getHeight(),
+      0,
+      1,
+      1,
+      0,
+      Sprites.MAGIC_WANDS_FRONT:getHeight()
+    )
+    love.graphics.setCanvas(currentCanvas)
+  end
 
-  love.graphics.draw(
-    Sprites.MAGIC_WANDS_FRONT,
-    0,
-    self.ciggiesTrayFront:getHeight(),
-    0,
-    1,
-    1,
-    0,
-    Sprites.MAGIC_WANDS_FRONT:getHeight()
-  )
   local px, py = G.calculateParalaxeOffset(1)
-
-  love.graphics.setCanvas(currentCanvas)
   love.graphics.draw(
     self.ciggiesTrayFront,
     self.ciggiesTrayX + px,
@@ -955,24 +998,32 @@ function GameScreen:drawInventoryBackGround()
 end
 
 function GameScreen:drawInventoryBackGroundSmall()
-  local px, py = G.calculateParalaxeOffset(3)
+  --Contenu statique : on ne le dessine dans le sous-canvas qu'une seule fois
+  if not self.inventoryCanvasSmallDrawn then
+    self.inventoryCanvasSmallDrawn = true
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.inventoryCanvasSmall)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.INVENTORY, 0, 0)
+    love.graphics.setCanvas(currentCanvas)
+  end
 
-  local currentCanvas = love.graphics.getCanvas()
-  love.graphics.setCanvas(self.inventoryCanvasSmall)
-  love.graphics.clear()
-  love.graphics.draw(Sprites.INVENTORY, 0, 0)
-  love.graphics.setCanvas(currentCanvas)
+  local px, py = G.calculateParalaxeOffset(3)
   love.graphics.draw(self.inventoryCanvasSmall, self.inventorySMX + px, self.inventorySMY + py)
 end
 
 function GameScreen:drawRewardsSmall()
-  local px, py = G.calculateParalaxeOffset(3)
+  --Contenu statique : on ne le dessine dans le sous-canvas qu'une seule fois
+  if not self.rewardsSmallCanvasDrawn then
+    self.rewardsSmallCanvasDrawn = true
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.rewardsSmallCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.REWARDS_SMALL, 0, 0)
+    love.graphics.setCanvas(currentCanvas)
+  end
 
-  local currentCanvas = love.graphics.getCanvas()
-  love.graphics.setCanvas(self.rewardsSmallCanvas)
-  love.graphics.clear()
-  love.graphics.draw(Sprites.REWARDS_SMALL, 0, 0)
-  love.graphics.setCanvas(currentCanvas)
+  local px, py = G.calculateParalaxeOffset(3)
   love.graphics.draw(self.rewardsSmallCanvas, self.rewardsSMX + px, self.rewardsSMY + py)
 end
 
@@ -999,24 +1050,32 @@ function GameScreen:drawDiceDetails(dt)
 end
 
 function GameScreen:drawInventoryBackGroundMedium()
-  local px, py = G.calculateParalaxeOffset(3)
+  --Contenu statique : on ne le dessine dans le sous-canvas qu'une seule fois
+  if not self.inventoryCanvasMediumDrawn then
+    self.inventoryCanvasMediumDrawn = true
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.inventoryCanvasMedium)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.INVENTORY_MEDIUM, 0, 0)
+    love.graphics.setCanvas(currentCanvas)
+  end
 
-  local currentCanvas = love.graphics.getCanvas()
-  love.graphics.setCanvas(self.inventoryCanvasMedium)
-  love.graphics.clear()
-  love.graphics.draw(Sprites.INVENTORY_MEDIUM, 0, 0)
-  love.graphics.setCanvas(currentCanvas)
+  local px, py = G.calculateParalaxeOffset(3)
   love.graphics.draw(self.inventoryCanvasMedium, self.inventoryMDX + px, self.inventoryMDY + py)
 end
 
 function GameScreen:drawRewardsMedium()
-  local px, py = G.calculateParalaxeOffset(3)
+  --Contenu statique : on ne le dessine dans le sous-canvas qu'une seule fois
+  if not self.rewardsMediumCanvasDrawn then
+    self.rewardsMediumCanvasDrawn = true
+    local currentCanvas = love.graphics.getCanvas()
+    love.graphics.setCanvas(self.rewardsMediumCanvas)
+    love.graphics.clear()
+    love.graphics.draw(Sprites.REWARDS_MEDIUM, 0, 0)
+    love.graphics.setCanvas(currentCanvas)
+  end
 
-  local currentCanvas = love.graphics.getCanvas()
-  love.graphics.setCanvas(self.rewardsMediumCanvas)
-  love.graphics.clear()
-  love.graphics.draw(Sprites.REWARDS_MEDIUM, 0, 0)
-  love.graphics.setCanvas(currentCanvas)
+  local px, py = G.calculateParalaxeOffset(3)
   love.graphics.draw(self.rewardsMediumCanvas, self.rewardsMDX + px, self.rewardsMDY + py)
 end
 

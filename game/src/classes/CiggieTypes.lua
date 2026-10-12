@@ -3,6 +3,8 @@ local CiggieObject = require("src.classes.CiggieObject")
 
 local CiggieTypes = {}
 
+local getRandomExcluding
+
 --Free Roller--
 local FreeRoller = setmetatable({}, { __index = CiggieObject })
 FreeRoller.__index = FreeRoller
@@ -207,20 +209,5 @@ function Channel:effect(screen)
 end
 
 CiggieTypes.Channel = Channel
---UTILS--
-function getRandomExcluding(list, excluded)
-  local filtered = {}
-  for _, value in ipairs(list) do
-    if value ~= excluded then
-      table.insert(filtered, value)
-    end
-  end
-
-  if #filtered == 0 then
-    return nil
-  end -- aucun choix possible
-
-  return filtered[math.random(#filtered)]
-end
 
 return CiggieTypes

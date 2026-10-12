@@ -1,11 +1,14 @@
 local Fonts = require("src.utils.Fonts")
 local UI = require("src.utils.scripts.UI")
+local Sprites = require("src.utils.Sprites")
 local FaceObject = require("src.classes.FaceObject")
 local Constants = require("src.utils.Constants")
 local CiggieTypes = require("src.classes.CiggieTypes")
 local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 
 local FaceTypes = {}
+
+local multiplyScore, addScore, addMoney, removeMoney, setMoney, upgradeStat
 
 --==COMMON==--
 
@@ -23,7 +26,7 @@ function WhiteDice:new(faceValue, pointsValue)
   self.description = "[[+10pts]]"
 
   --Metadatas about the graphics of the WhiteDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Base Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Base Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the WhiteDice in px (in the png)
 
@@ -63,7 +66,7 @@ function ChunkyDice:new(faceValue, pointsValue)
   self.tier = "Common"
   self.description = "[[+30pts]]"
 
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Chunky Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Chunky Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120
 
@@ -100,7 +103,7 @@ function MassiveDice:new(faceValue, pointsValue)
   self.tier = "Uncommon"
   self.description = "[[+80pts]]"
 
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Massive Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Massive Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120
 
@@ -138,7 +141,7 @@ function BlueDice:new(faceValue, pointsValue)
   self.id = 4
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Blue Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Blue Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -185,7 +188,7 @@ function GoldDice:new(faceValue, pointsValue)
   self.description = "[[+10pts]], ££+5$££"
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Gold Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Gold Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -231,7 +234,7 @@ function StrikeOfLuck:new(faceValue, pointsValue)
   self.description = "[[+10pts]]. Adds a random ^^Magic Wand^^ to the inventory"
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Strike of Luck.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Strike of Luck.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -293,7 +296,7 @@ function Copyprinter:new(faceValue, pointsValue)
   self.description = "Triggers the &&scoring dice&& to its left again."
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Copyprinter.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Copyprinter.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -345,7 +348,7 @@ function Apparition:new(faceValue, pointsValue)
   self.description = "((X2))"
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Apparition.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Apparition.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -387,7 +390,7 @@ function BlackStar:new(faceValue, pointsValue)
   self.description = "[[+30pts]]"
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Black Star.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Black Star.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
 
@@ -428,7 +431,7 @@ function ClockWorkDice:new(faceValue, pointsValue)
     "[[+30pts]] multiplied by its face number. Face number decreases by 1 on first trigger in each ;;office;;."
 
   --Metadatas about the graphics of the ClockWorkDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Clockwork Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Clockwork Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the ClockWorkDice in px (in the png)
 
@@ -481,7 +484,7 @@ function AshtrayDice:new(faceValue, pointsValue)
   self.description = "((x1)). This factor is upgraded by ((0.1)) for each ^^Magic Wand^^ used during this run."
 
   --Metadatas about the graphics of the AshtrayDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ashtray Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Ashtray Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the AshtrayDice in px (in the png)
 
@@ -527,7 +530,7 @@ function SteelDice:new(faceValue, pointsValue)
   self.description = "[[+15pts]] per ££$££ under ££10$££"
 
   --Metadatas about the graphics of the SteelDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Steel Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Steel Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the SteelDice in px (in the png)
 
@@ -571,7 +574,7 @@ function DoubleDown:new(faceValue, pointsValue)
   self.description = "[[+40pts]] per &&even dices&& scored"
 
   --Metadatas about the graphics of the DoubleDown
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Double Down.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Double Down.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the DoubleDown in px (in the png)
 
@@ -616,7 +619,7 @@ function OddJob:new(faceValue, pointsValue)
   self.description = "[[+40pts]] per &&odd dices&& scored"
 
   --Metadatas about the graphics of the OddJob
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Odd Job.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Odd Job.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the OddJob in px (in the png)
 
@@ -660,7 +663,7 @@ function MusicDice:new(faceValue, pointsValue)
   self.description = "[[+10pts]]. ((X4)) if exactly &&4 dices&& are scored."
 
   --Metadatas about the graphics of the MusicDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Tempo Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Tempo Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the MusicDice in px (in the png)
 
@@ -709,7 +712,7 @@ function Signature:new(faceValue, pointsValue)
   self.description = "[[+10pts]]. ((X3)) if the only &&Signature&& in the played hand."
 
   --Metadatas about the graphics of the Signature
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Signature Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Signature Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the Signature in px (in the png)
 
@@ -759,7 +762,7 @@ function SniperDice:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the SniperDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crosshairs Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Crosshairs Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the SniperDice in px (in the png)
 
@@ -813,7 +816,7 @@ function Spotlight:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the Spotlight
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Spotlight Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Spotlight Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.description = "[[+10pts]]. ((X3)) when scored first."
   self.faceDimmension = 120 --sets the dimmensions for a face of the Spotlight in px (in the png)
@@ -864,7 +867,7 @@ function RiskyBusiness:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the RiskyBusiness
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Risky Business.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Risky Business.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.description = "[[+150pts]], ££-10$££."
   self.faceDimmension = 120 --sets the dimmensions for a face of the RiskyBusiness in px (in the png)
@@ -908,7 +911,7 @@ function CryptoDice:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the CryptoDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crypto Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Crypto Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.description = "((x3)), lowers the money to ££0$££"
   self.faceDimmension = 120 --sets the dimmensions for a face of the CryptoDice in px (in the png)
@@ -936,7 +939,6 @@ function CryptoDice:buildTriggerEffects(round)
         local money = round.run.money
         --Calcul du facteur
         local factor = math.floor(round.run.money / 10) * 0.5
-        print(round.run.money)
         --Si le facteur est sup à 0, on ajoute.
         if factor > 0 then
           self.multFactor = self.multFactor + factor
@@ -986,7 +988,7 @@ function Patience:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the Patience
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Patience.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Patience.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the Patience in px (in the png)
 
@@ -1033,7 +1035,7 @@ function DataDice:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the DataDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Number Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Number Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the DataDice in px (in the png)
@@ -1098,7 +1100,7 @@ function StockOption:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the StockOption
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Stock Option.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Stock Option.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.description = "Scoring : [[+10pts]]. ££+10$££, 1/2 chance of loosing ££5$££ instead."
   self.faceDimmension = 120 --sets the dimmensions for a face of the StockOption in px (in the png)
@@ -1155,7 +1157,7 @@ function RainbowDice:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the RainbowDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Straight Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Straight Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the RainbowDice in px (in the png)
 
@@ -1209,7 +1211,7 @@ function MagicDice:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the MagicDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Magic Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Magic Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the MagicDice in px (in the png)
@@ -1257,7 +1259,7 @@ function ReturnOnInvestment:new(faceValue, pointsValue)
   self.tier = "Rare"
 
   --Metadatas about the graphics of the ReturnOnInvestment
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Return On Invenstment.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Return On Invenstment.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the ReturnOnInvestment in px (in the png)
 
@@ -1308,7 +1310,7 @@ function LoyaltyCard:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the LoyaltyCard
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Royalty Card.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Royalty Card.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.description = "[[+10pts]]. Gives the level of the --played figure-- in ££$££"
   self.faceDimmension = 120 --sets the dimmensions for a face of the LoyaltyCard in px (in the png)
@@ -1353,7 +1355,7 @@ function MirrorDice:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the MirrorDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Mirror Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Mirror Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the MirrorDice in px (in the png)
 
@@ -1415,7 +1417,7 @@ function CookieDice:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the CookieDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Cookie Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Cookie Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.description = "[[+10pts]], 1/3 chances of upgrading the --played figure-- by one level"
   self.faceDimmension = 120 --sets the dimmensions for a face of the CookieDice in px (in the png)
@@ -1466,7 +1468,7 @@ function InsomniacDice:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the InsomniacDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Eclipse Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Eclipse Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.description = " "
   self.faceDimmension = 120 --sets the dimmensions for a face of the InsomniacDice in px (in the png)
@@ -1510,7 +1512,7 @@ function TwinFlame:new(faceValue, pointsValue)
   self.tier = "Rare"
 
   --Metadatas about the graphics of the TwinFlame
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Twin Flame.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Twin Flame.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.description = "[[+10pts]]. Clones a random ^^Magic Wand^^ held."
   self.faceDimmension = 120 --sets the dimmensions for a face of the TwinFlame in px (in the png)
@@ -1563,7 +1565,7 @@ function FaxMachine:new(faceValue, pointsValue)
   self.tier = "Rare"
 
   --Metadatas about the graphics of the FaxMachine
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Fax Machine.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Fax Machine.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.description = "Retriggers the first &&scored dice&&"
   self.faceDimmension = 120 --sets the dimmensions for a face of the FaxMachine in px (in the png)
@@ -1616,7 +1618,7 @@ function Necromancer:new(faceValue, pointsValue)
   self.tier = "Rare"
 
   --Metadatas about the graphics of the Necromancer
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Necromancer Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Necromancer Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.description = " "
   self.faceDimmension = 120 --sets the dimmensions for a face of the Necromancer in px (in the png)
@@ -1665,7 +1667,7 @@ function SixthSense:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the SixthSense
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ghost Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Ghost Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the SixthSense in px (in the png)
 
@@ -1737,7 +1739,7 @@ function Sacrifice:new(faceValue, pointsValue)
   self.tier = "Rare"
 
   --Metadatas about the graphics of the Sacrifice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Marble Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Marble Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the Sacrifice in px (in the png)
 
@@ -1801,7 +1803,7 @@ function CheckeredDice:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the CheckeredDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Checkered Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Checkered Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the CheckeredDice in px (in the png)
   self.description =
@@ -1851,7 +1853,7 @@ function StarDice:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the StarDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Star Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Star Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the StarDice in px (in the png)
   self.description = "[[+70pts]]. Can be played as any number in --numbered figures--."
@@ -1891,7 +1893,7 @@ function Resurection:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the Resurection
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Resurection.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Resurection.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the Resurection in px (in the png)
   --Numbered status
@@ -1960,7 +1962,7 @@ function Adrenaline:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the Adrenaline
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Adrenaline.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Adrenaline.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the Resurection in px (in the png)
   --Numbered status
@@ -2012,7 +2014,7 @@ function NegativeDice:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the NegativeDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Negative Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Negative Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the NegativeDice in px (in the png)
   --Numbered status
@@ -2060,7 +2062,7 @@ function BountyHunter:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the BountyHunter
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Bounty Hunter Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Bounty Hunter Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the BountyHunter in px (in the png)
   --Numbered status
@@ -2128,7 +2130,7 @@ function Upcycling:new(faceValue, pointsValue)
   self.tier = "Common"
 
   --Metadatas about the graphics of the Upcycling
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Upcycling Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Upcycling Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the Upcycling in px (in the png)
   --Numbered status
@@ -2170,7 +2172,7 @@ function Ectoplasm:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the Ectoplasm
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Ectoplasm.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Ectoplasm.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the Ectoplasm in px (in the png)
   --Numbered status
@@ -2213,7 +2215,7 @@ function DieAndRetry:new(faceValue, pointsValue)
   self.tier = "Rare"
 
   --Metadatas about the graphics of the UndeadDice
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Die And Retry.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Die And Retry.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the UndeadDice in px (in the png)
   --Numbered status
@@ -2258,7 +2260,7 @@ function InvisibleHand:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the InvisibleHand
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Invisible Hand Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Invisible Hand Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the InvisibleHand in px (in the png)
   --Numbered status
@@ -2299,7 +2301,7 @@ function UndeadDice:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Undead Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Undead Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the UndeadDice in px (in the png)
   --Numbered status
@@ -2357,7 +2359,7 @@ function AllIn:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/All In.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/All In.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the AllIn in px (in the png)
   --Numbered status
@@ -2400,7 +2402,7 @@ function Poltergeist:new(faceValue, pointsValue)
   self.tier = "Uncommon"
 
   --Metadatas about the graphics of the
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Poltergeist.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Poltergeist.png")
   self.spriteSheet:setFilter("linear", "linear")
   self.faceDimmension = 120 --sets the dimmensions for a face of the Poltergeist in px (in the png)
   --Numbered status
@@ -2451,7 +2453,7 @@ function FortuneDice:new(faceValue, pointsValue)
   self.description = "Adds a ^^Fortune Magic Wand^^ to your inventory"
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Fortune Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Fortune Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -2513,7 +2515,7 @@ function DimeDice:new(faceValue, pointsValue)
   self.description = "[[+10pts]]. ££+4$££ per --scored dice-- with the same --face number-- as this one."
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Dime Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Dime Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -2570,7 +2572,7 @@ function CapitalistDice:new(faceValue, pointsValue)
   self.id = 53
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Capitalist Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Capitalist Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -2613,7 +2615,7 @@ function LuckyStar:new(faceValue, pointsValue)
   self.id = 54
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Lucky Star.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Lucky Star.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -2665,7 +2667,7 @@ function Doom:new(faceValue, pointsValue)
   self.id = 55
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Doom Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Doom Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -2720,7 +2722,7 @@ function Godspeed:new(faceValue, pointsValue)
   self.id = 56
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Godspeed.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Godspeed.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -2773,7 +2775,7 @@ function WitchDice:new(faceValue, pointsValue)
   self.id = 57
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Witch Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Witch Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -2822,7 +2824,7 @@ function WizardDice:new(faceValue, pointsValue)
   self.id = 58
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Wizard Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Wizard Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -2870,7 +2872,7 @@ function RecursiveDice:new(faceValue, pointsValue)
   self.id = 59
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Recursive Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Recursive Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -2913,7 +2915,7 @@ function Echo:new(faceValue, pointsValue)
   self.id = 60
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Echo.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Echo.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -2990,7 +2992,7 @@ function CrossedOut:new(faceValue, pointsValue)
   self.id = 61
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Crossed Out.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Crossed Out.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -3050,7 +3052,7 @@ function TimeDice:new(faceValue, pointsValue)
   self.id = 62
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Time Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Time Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -3120,7 +3122,7 @@ function Hivemind:new(faceValue, pointsValue)
   self.id = 63
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Hivemind.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Hivemind.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)
@@ -3171,7 +3173,7 @@ function DiamondDice:new(faceValue, pointsValue)
   self.id = 64
 
   --Metadatas about the graphics of the BlackStar
-  self.spriteSheet = love.graphics.newImage("src/assets/sprites/dices/Diamond Dice.png")
+  self.spriteSheet = Sprites.getCached("src/assets/sprites/dices/Diamond Dice.png")
   self.spriteSheet:setFilter("linear", "linear")
 
   self.faceDimmension = 120 --sets the dimmensions for a face of the BlackStar in px (in the png)

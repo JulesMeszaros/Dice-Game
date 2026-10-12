@@ -1,6 +1,8 @@
 local Lion = {}
 Lion.__index = Lion
 
+local countFilesInFolder
+
 function Lion:new()
   local self = setmetatable({}, Lion)
 

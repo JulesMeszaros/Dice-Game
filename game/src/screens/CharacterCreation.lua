@@ -30,7 +30,6 @@ function CharacterCreation:new()
   local name = "Lionnel.le"
   if G.saveManager.data.profile then
     name = G.saveManager.data.profile.name
-    print(name)
   end
   --Text en haut
   self.welcomeText = UI.Text.TextWavy:new("Create your avatar !", self.canvas:getWidth() / 2, 100, {
@@ -305,13 +304,10 @@ function CharacterCreation:new()
   self.lion = Lion:new()
 
   if G.saveManager.data.profile then
-    print(G.saveManager.data.profile.avatar.head)
     self.lion:createFromIndexes(G.saveManager.data.profile.avatar)
     self.lion:update()
     self.lion:updateSprite()
   end
-
-  print(self.lion.headIndex)
 
   return self
 end

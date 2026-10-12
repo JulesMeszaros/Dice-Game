@@ -1,6 +1,19 @@
 --Enum used to store all the sprites paths
 local Sprites = {}
 
+--Cache d'images par chemin, pour les sprites chargés à la demande (ex. une image par instance de face
+--de dé) plutôt qu'une fois au chargement du module comme le reste de ce fichier.
+local imageCache = {}
+
+function Sprites.getCached(path)
+  local image = imageCache[path]
+  if not image then
+    image = love.graphics.newImage(path)
+    imageCache[path] = image
+  end
+  return image
+end
+
 Sprites.MAIN_LOGO = love.graphics.newImage("src/assets/sprites/ui/Main Logo.png")
 
 Sprites.LION_FRAME = love.graphics.newImage("src/assets/sprites/ui/LionFrame.png")

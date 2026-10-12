@@ -2,6 +2,8 @@ local StickerObject = require("src.classes.StickerObject")
 
 local StickerTypes = {}
 
+local checkForSticker
+
 --MoneyBag Sticker
 
 local MoneyBagSticker = setmetatable({}, { __index = StickerObject })

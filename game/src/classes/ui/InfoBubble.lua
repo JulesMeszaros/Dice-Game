@@ -10,6 +10,8 @@ InfoBubble.__index = InfoBubble
 
 local lineWidth = 320
 
+local getMaxY
+
 function InfoBubble:new(screen)
   local self = setmetatable({}, InfoBubble)
 

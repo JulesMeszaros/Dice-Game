@@ -227,7 +227,7 @@ local function escapePattern(s)
   return s:gsub("([%(%)%.%%%+%-%*%?%[%]%^%$])", "%%%1")
 end
 
-function stripFormatting(text)
+local function stripFormatting(text)
   for _, fmt in ipairs(Constants.TEXT_FORMATTERS) do
     text = text:gsub(escapePattern(fmt.open), "")
     text = text:gsub(escapePattern(fmt.close), "")
@@ -236,7 +236,7 @@ function stripFormatting(text)
 end
 --Fonction qui permet de dessiner du texte de manière propre sur plusieurs lignes avec des couleurs données par des délimiteurs
 
-function drawFormattedText(text, x, y, font, maxWidth, centered, opts)
+local function drawFormattedText(text, x, y, font, maxWidth, centered, opts)
   local opts = opts or {}
   font = font or love.graphics.getFont()
   love.graphics.setFont(font) -- manquant !
@@ -378,7 +378,7 @@ function drawFormattedText(text, x, y, font, maxWidth, centered, opts)
   love.graphics.setColor(1, 1, 1)
 end
 
-function arrangeImagesWrapped(images, centerX, startY, maxWidth, spacingX, spacingY)
+local function arrangeImagesWrapped(images, centerX, startY, maxWidth, spacingX, spacingY)
   spacingX = spacingX or 0
   spacingY = spacingY or 0
 

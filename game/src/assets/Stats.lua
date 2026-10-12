@@ -123,7 +123,7 @@ local function getBestFigure()
   return Constants.FIGURES_LABELS[bestIndex]
 end
 
-function getTopDices(n)
+local function getTopDices(n)
   if not G.saveManager.data.stats.dices then
     return {}
   end
@@ -280,7 +280,6 @@ function Stats:createDiceStats()
   self.positionTexts = {}
   self.triggerTexts = {}
 
-  print("///")
   for i, dice in next, topDices do
     local fo = Facetypes[G.faceIds[tostring(dice["id"])]]:new(math.random(1, 6), 10)
     local df = DiceFace:new(nil, fo, (127 + 75) + ((i - 1) * 249), 550, 120, false, true, function()
@@ -361,7 +360,6 @@ function Stats:createObjectStats()
   --Creation des objets
   --Sticker
   local id, count = self:getTopStat(G.saveManager.data.stats.stickers)
-  print(id, count)
   if id then
     local stickerTest = StickerTypes[G.stickerIds[tostring(id)]]:new()
     self.uiSticker = Sticker:new(stickerTest, 275, 525, 150, false, true, function()
@@ -394,7 +392,6 @@ function Stats:createObjectStats()
   --Ciggie
   local id, count = self:getTopStat(G.saveManager.data.stats.wands)
   if id then
-    print(G.wandIds[tostring(id)])
     local ciggieTest = CiggieTypes[G.wandIds[tostring(id)]]:new()
     self.uiCiggie = Ciggie:new(ciggieTest, 700, 530, false, true, function()
       return Inputs.getMouseInCanvas(
@@ -539,8 +536,6 @@ function Stats:changeCategory(category)
   else
     self:resetObjectStats()
   end
-
-  print(self.category)
 end
 
 function Stats:getCurrentlyHoveredDice()

@@ -10,7 +10,6 @@ local FaceTypes = require("src.classes.FaceTypes")
 local StickerTypes = require("src.classes.StickerTypes")
 local GenerateRandom = require("src.utils.scripts.GenerateRandom")
 local SaveManager = require("src.utils.SaveManager")
-local http = require("socket.http")
 
 G = {
   saveManager = SaveManager:new("profile.lua"),
@@ -214,9 +213,7 @@ local backgroundCanvas = nil
 
 bgShader = love.graphics.newShader("src/utils/bg.glsl")
 
-https = nil
 local overlayStats = require("lib.overlayStats")
-local runtimeLoader = require("runtime.loader")
 
 function love.load()
   G.loadSettings()
@@ -224,7 +221,6 @@ function love.load()
   --Audio
   G.audio = AudioUtils:new()
 
-  https = runtimeLoader.loadHTTPS()
   -- Your game load here
   --bien randomiser le jeu
   math.randomseed(os.clock() * 1000000)

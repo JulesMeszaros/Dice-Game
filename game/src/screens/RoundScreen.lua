@@ -25,6 +25,8 @@ RoundScreen.__index = RoundScreen
 local font = Fonts.soraSmall
 local font30 = Fonts.soraMedium
 
+local moveElement, indexOf, listsAreEqual
+
 function RoundScreen:new(round)
   local self =
     setmetatable(Screen:new(round.run.currentFloor, round.run, Constants.RUN_STATES.ROUND, round), RoundScreen)
@@ -1236,6 +1238,9 @@ function indexOf(list, element)
 end
 
 function RoundScreen:cleanup()
+  -- Libère les canvases génériques de GameScreen (dice_tray, figureButtonsCanvas, etc.)
+  Screen.cleanup(self)
+
   -- Clear UI faces
   if self.diceFaces then
     for _, face in pairs(self.diceFaces) do

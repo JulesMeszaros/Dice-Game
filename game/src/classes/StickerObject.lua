@@ -25,60 +25,29 @@ function Sticker:unlockCondition(run)
 end
 
 --Effects
-function Sticker:startRoundEffect(run)
-	print("StartRound")
-end
+function Sticker:startRoundEffect(run) end
 
-function Sticker:endRoundEffect(run)
-	print("endRound")
-end
+function Sticker:endRoundEffect(run) end
 
 function Sticker:figurePlayedEffect(run) end
 
-function Sticker:startTriggerEffect(run)
-	--A implementer
-	print("starttrigger")
-end
+function Sticker:startTriggerEffect(run) end
 
-function Sticker:endTriggerEffect(run)
-	--A implementer
-	print("endtrigger")
-end
+function Sticker:endTriggerEffect(run) end
 
-function Sticker:diceTriggeredEffect(run)
-	--A implementer
-	print("diceTrigger")
-end
+function Sticker:diceTriggeredEffect(run) end
 
-function Sticker:rerollEffect(run)
-	--A implementer
-	print("reroll")
-end
+function Sticker:rerollEffect(run) end
 
-function Sticker:caseEffect(run)
-	--A implementer
-	print("caseeffect")
-end
+function Sticker:caseEffect(run) end
 
-function Sticker:ciggieUsedEffect(run)
-	--A implementer
-	print("ciggieUsed")
-end
+function Sticker:ciggieUsedEffect(run) end
 
-function Sticker:coffeeUsedEffect(run)
-	--A implementer
-	print("coffeUsed")
-end
+function Sticker:coffeeUsedEffect(run) end
 
-function Sticker:diceFaceBoughtEffect(run)
-	--A implementer
-	print("diceFaceBought")
-end
+function Sticker:diceFaceBoughtEffect(run) end
 
 --Effet qui se déclenche une seule fois, au moment ou le sticker est acheté et placé sur le terrain
-function Sticker:buyEffect(run)
-	--A implementer
-	print("sticker bought")
-end
+function Sticker:buyEffect(run) end
 
 return Sticker

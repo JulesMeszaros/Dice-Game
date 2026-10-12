@@ -122,6 +122,11 @@ end
 
 function Game:startNewRun(seedText, tutorial)
   -- Cleanup existing run if exists
+  if self.run then
+    self.run:cleanup()
+    self.run = nil
+  end
+
   if G.saveManager.data.stats.runs then
     G.saveManager.data.stats.runs = G.saveManager.data.stats.runs + 1
   else
