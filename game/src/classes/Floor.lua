@@ -124,7 +124,6 @@ end
 
 function Floor:generateReward(c, u, r, deskrank)
   --Cas de tutorial, premier round, premier etage
-  print(self.run.roundNumber)
   if self.run.tutorial and self.floorNumber == 1 and deskrank == 1 then
     return {
       FaceTypes.MassiveDice:new(6, 10),
